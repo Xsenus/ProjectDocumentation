@@ -126,6 +126,7 @@
             this.barBtnAdd.ImageOptions.Image = global::ProjectDocumentation.NET.Properties.Resources.addfile_16x16;
             this.barBtnAdd.ImageOptions.LargeImage = global::ProjectDocumentation.NET.Properties.Resources.addfile_32x32;
             this.barBtnAdd.Name = "barBtnAdd";
+            this.barBtnAdd.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.barBtnAdd_ItemClick);
             // 
             // barBtnEdit
             // 

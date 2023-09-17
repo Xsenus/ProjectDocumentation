@@ -1,6 +1,7 @@
 ﻿using System.IO;
 using System.Text;
 using System.Xml.Serialization;
+using static DevExpress.Xpo.Helpers.AssociatedCollectionCriteriaHelper;
 
 namespace Core.NET.Extensions
 {
@@ -19,6 +20,15 @@ namespace Core.NET.Extensions
             {
                 serializer.Serialize(textWriter, obj);
                 return textWriter.ToString();
+            }
+        }
+
+        public static T DeserializeObjectByString<T>(string str)
+        {
+            var serializer = new XmlSerializer(typeof(T));
+            using (TextReader reader = new StringReader(str))
+            {
+                return (T)serializer.Deserialize(reader);
             }
         }
 

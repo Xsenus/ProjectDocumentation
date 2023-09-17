@@ -1,5 +1,5 @@
-﻿using Core.NET.Extensions;
-using Core.NET.Models.Conclusion;
+﻿using Core.NET.AutoModels;
+using Core.NET.Extensions;
 using Core.NET.Models.XPO;
 using System;
 using System.IO;
@@ -11,7 +11,7 @@ namespace Core.NET.Controllers
     {
         public static async Task<ConclusionXPO> CreateConclusionByPath(string path, string name = default)
         {
-            var conclusion = GetConclusionGetByPath(path);
+            var conclusion = GetConclusionByPath(path);
             if (conclusion is null)
             {
                 return default;
@@ -47,7 +47,7 @@ namespace Core.NET.Controllers
             return default;
         }
 
-        public static Conclusion GetConclusionGetByPath(string path)
+        public static Conclusion GetConclusionByPath(string path)
         {
             if (FileController.CheckFile(path))
             {
@@ -55,6 +55,16 @@ namespace Core.NET.Controllers
             }
 
             return default;
+        }
+
+        public static Conclusion GetConclusionByString(string obj)
+        {
+            if (string.IsNullOrWhiteSpace(obj))
+            {
+                return default;
+            }
+
+            return Serializer.DeserializeObjectByString<Conclusion>(obj);
         }
 
         public static string GetSerializerConclusion(this Conclusion conclusion)

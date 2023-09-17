@@ -23,7 +23,6 @@ namespace Core.NET.Models.XPO
         public DateTime DateCreate { get; private set; }
 
         public string GuidString => Guid?.ToString();
-        public string Name { get; set; }
 
         public void SetGuid(Guid guid)
         {
@@ -32,7 +31,7 @@ namespace Core.NET.Models.XPO
 
         public override string ToString()
         {
-            return Name;
+            return Guid?.ToString() ?? base.ToString();
         }
     }
 }

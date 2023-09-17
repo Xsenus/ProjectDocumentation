@@ -6,6 +6,7 @@ using DevExpress.XtraBars;
 using DevExpress.XtraEditors;
 using DevExpress.XtraGrid.Columns;
 using DevExpress.XtraGrid.Views.Grid;
+using ProjectDocumentation.NET.Forms.ObjectChange;
 using System;
 using System.Drawing;
 using System.IO;
@@ -51,18 +52,20 @@ namespace ProjectDocumentation.NET.Forms
                 form.ShowDialog();
                 if (form.ObjXPO != null)
                 {
-                    await UpdateGridDataSource(nameof(XmlObjXPO.Guid), form.ObjXPO);
+                    await UpdateGridDataSourceAsync(nameof(XmlObjXPO.Guid), form.ObjXPO);
                 }
             }
         }
 
         private async void MainForm_Load(object sender, EventArgs e)
         {
-            await UpdateGridDataSource();
+            await DataBaseController.FillingDataBaseAsync();
+
+            await UpdateGridDataSourceAsync();
             InitialSetupGridControl();
         }
 
-        private async Task UpdateGridDataSource(string columnName = default, object obj = default)
+        private async Task UpdateGridDataSourceAsync(string columnName = default, object obj = default)
         {
             gridControl.DataSource = await new XPQuery<XmlObjXPO>(_session).ToListAsync();
 
@@ -134,11 +137,15 @@ namespace ProjectDocumentation.NET.Forms
             }
         }
 
-        private void barBtnEdit_ItemClick(object sender, ItemClickEventArgs e)
+        private async void barBtnEdit_ItemClick(object sender, ItemClickEventArgs e)
         {
             if (gridView.GetRow(gridView.FocusedRowHandle) is ConclusionXPO conclusionXPO)
             {
-
+                var xml = conclusionXPO.GetObj();
+                var conclusion = ConclusionController.GetConclusionByString(xml);
+                var form = new ConclusionEdit(conclusion);
+                form.ShowDialog();
+                await UpdateGridDataSource(gridView.FocusedRowHandle);
             }
             else if (gridView.GetRow(gridView.FocusedRowHandle) is ExplanatoryNoteXPO explanatoryNoteXPO)
             {
@@ -192,6 +199,12 @@ namespace ProjectDocumentation.NET.Forms
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Error);
             }
+        }
+
+        private void barBtnAdd_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            var form = new ConclusionEdit();
+            form.ShowDialog();
         }
     }
 }

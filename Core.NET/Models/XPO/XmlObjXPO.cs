@@ -8,6 +8,7 @@ namespace Core.NET.Models.XPO
         public XmlObjXPO() : base() { }
         public XmlObjXPO(Session session) : base(session) { }
 
+        public string Name { get; set; }
         public virtual string NameXML => Name ?? "NameXML";
 
         public void SetObj(string obj)
