@@ -1,4 +1,5 @@
 ﻿using ProjectDocumentation.Forms;
+using ProjectDocumentation.Forms.ObjectChange;
 using System;
 using System.Windows.Forms;
 
@@ -14,7 +15,7 @@ namespace ProjectDocumentation
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new MainForm());
+            Application.Run(new ConclusionEdit());
         }
     }
 }
