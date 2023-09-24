@@ -58,6 +58,20 @@
             this.xtraTabControlBase = new DevExpress.XtraTab.XtraTabControl();
             this.xtraTabPage1 = new DevExpress.XtraTab.XtraTabPage();
             this.layoutControl_I = new DevExpress.XtraLayout.LayoutControl();
+            this.checkCmbExaminationType = new DevExpress.XtraEditors.CheckedComboBoxEdit();
+            this.barManager = new DevExpress.XtraBars.BarManager(this.components);
+            this.barDockControlTop = new DevExpress.XtraBars.BarDockControl();
+            this.barDockControlBottom = new DevExpress.XtraBars.BarDockControl();
+            this.barDockControlLeft = new DevExpress.XtraBars.BarDockControl();
+            this.barDockControlRight = new DevExpress.XtraBars.BarDockControl();
+            this.barBtnExpertAdd = new DevExpress.XtraBars.BarButtonItem();
+            this.barBtnExpertEdit = new DevExpress.XtraBars.BarButtonItem();
+            this.barBtnExpertDel = new DevExpress.XtraBars.BarButtonItem();
+            this.barBtnMismatchesAdd = new DevExpress.XtraBars.BarButtonItem();
+            this.barBtnMismatchesEdit = new DevExpress.XtraBars.BarButtonItem();
+            this.barBtnMismatchesDel = new DevExpress.XtraBars.BarButtonItem();
+            this.barBtnCadastralNumberAdd = new DevExpress.XtraBars.BarButtonItem();
+            this.barBtnCadastralNumberDel = new DevExpress.XtraBars.BarButtonItem();
             this.cmbExaminationResult = new DevExpress.XtraEditors.ComboBoxEdit();
             this.cmbExaminationForm = new DevExpress.XtraEditors.ComboBoxEdit();
             this.cmbExaminationObjectType = new DevExpress.XtraEditors.ComboBoxEdit();
@@ -74,6 +88,7 @@
             this.layoutControlItemExaminationForm = new DevExpress.XtraLayout.LayoutControlItem();
             this.layoutControlItemExaminationStage = new DevExpress.XtraLayout.LayoutControlItem();
             this.emptySpaceItemConstructionType = new DevExpress.XtraLayout.EmptySpaceItem();
+            this.layoutControlItemExaminationType = new DevExpress.XtraLayout.LayoutControlItem();
             this.xtraTabPage2 = new DevExpress.XtraTab.XtraTabPage();
             this.xtraTabControl1 = new DevExpress.XtraTab.XtraTabControl();
             this.xtraTabPage7 = new DevExpress.XtraTab.XtraTabPage();
@@ -95,19 +110,6 @@
             this.xtraTabPage9 = new DevExpress.XtraTab.XtraTabPage();
             this.layoutControl5 = new DevExpress.XtraLayout.LayoutControl();
             this.checkCmbClimateDistrict = new DevExpress.XtraEditors.CheckedComboBoxEdit();
-            this.barManager = new DevExpress.XtraBars.BarManager(this.components);
-            this.barDockControlTop = new DevExpress.XtraBars.BarDockControl();
-            this.barDockControlBottom = new DevExpress.XtraBars.BarDockControl();
-            this.barDockControlLeft = new DevExpress.XtraBars.BarDockControl();
-            this.barDockControlRight = new DevExpress.XtraBars.BarDockControl();
-            this.barBtnExpertAdd = new DevExpress.XtraBars.BarButtonItem();
-            this.barBtnExpertEdit = new DevExpress.XtraBars.BarButtonItem();
-            this.barBtnExpertDel = new DevExpress.XtraBars.BarButtonItem();
-            this.barBtnMismatchesAdd = new DevExpress.XtraBars.BarButtonItem();
-            this.barBtnMismatchesEdit = new DevExpress.XtraBars.BarButtonItem();
-            this.barBtnMismatchesDel = new DevExpress.XtraBars.BarButtonItem();
-            this.barBtnCadastralNumberAdd = new DevExpress.XtraBars.BarButtonItem();
-            this.barBtnCadastralNumberDel = new DevExpress.XtraBars.BarButtonItem();
             this.checkedComboBoxEdit11 = new DevExpress.XtraEditors.CheckedComboBoxEdit();
             this.checkedComboBoxEdit12 = new DevExpress.XtraEditors.CheckedComboBoxEdit();
             this.checkedComboBoxEdit13 = new DevExpress.XtraEditors.CheckedComboBoxEdit();
@@ -178,13 +180,13 @@
             this.popupMenuExpert = new DevExpress.XtraBars.PopupMenu(this.components);
             this.popupMenuMismatches = new DevExpress.XtraBars.PopupMenu(this.components);
             this.popupMenuCadastralNumber = new DevExpress.XtraBars.PopupMenu(this.components);
-            this.checkCmbExaminationType = new DevExpress.XtraEditors.CheckedComboBoxEdit();
-            this.layoutControlItemExaminationType = new DevExpress.XtraLayout.LayoutControlItem();
             ((System.ComponentModel.ISupportInitialize)(this.xtraTabControlBase)).BeginInit();
             this.xtraTabControlBase.SuspendLayout();
             this.xtraTabPage1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControl_I)).BeginInit();
             this.layoutControl_I.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.checkCmbExaminationType.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.barManager)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.cmbExaminationResult.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.cmbExaminationForm.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.cmbExaminationObjectType.Properties)).BeginInit();
@@ -201,6 +203,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemExaminationForm)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemExaminationStage)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.emptySpaceItemConstructionType)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemExaminationType)).BeginInit();
             this.xtraTabPage2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.xtraTabControl1)).BeginInit();
             this.xtraTabControl1.SuspendLayout();
@@ -224,7 +227,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.layoutControl5)).BeginInit();
             this.layoutControl5.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.checkCmbClimateDistrict.Properties)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.barManager)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.checkedComboBoxEdit11.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.checkedComboBoxEdit12.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.checkedComboBoxEdit13.Properties)).BeginInit();
@@ -294,8 +296,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.popupMenuExpert)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.popupMenuMismatches)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.popupMenuCadastralNumber)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.checkCmbExaminationType.Properties)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemExaminationType)).BeginInit();
             this.SuspendLayout();
             // 
             // xtraTabControlBase
@@ -342,481 +342,18 @@
             this.layoutControl_I.TabIndex = 0;
             this.layoutControl_I.Text = "layoutControl1";
             // 
-            // cmbExaminationResult
-            // 
-            this.cmbExaminationResult.EditValue = "";
-            this.cmbExaminationResult.Location = new System.Drawing.Point(163, 7);
-            this.cmbExaminationResult.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
-            this.cmbExaminationResult.Name = "cmbExaminationResult";
-            this.cmbExaminationResult.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
-            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo),
-            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Ellipsis, "", -1, true, false, false, editorButtonImageOptions1, new DevExpress.Utils.KeyShortcut(System.Windows.Forms.Keys.None), serializableAppearanceObject1, serializableAppearanceObject2, serializableAppearanceObject3, serializableAppearanceObject4, "", null, null, DevExpress.Utils.ToolTipAnchor.Default),
-            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Delete)});
-            this.cmbExaminationResult.Properties.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.DisableTextEditor;
-            this.cmbExaminationResult.Size = new System.Drawing.Size(292, 22);
-            this.cmbExaminationResult.StyleController = this.layoutControl_I;
-            this.cmbExaminationResult.TabIndex = 6;
-            this.cmbExaminationResult.ButtonPressed += new DevExpress.XtraEditors.Controls.ButtonPressedEventHandler(this.cmbExaminationResult_ButtonPressed);
-            // 
-            // cmbExaminationForm
-            // 
-            this.cmbExaminationForm.EditValue = "";
-            this.cmbExaminationForm.Location = new System.Drawing.Point(595, 7);
-            this.cmbExaminationForm.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
-            this.cmbExaminationForm.Name = "cmbExaminationForm";
-            this.cmbExaminationForm.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
-            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo),
-            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Ellipsis, "", -1, true, false, false, editorButtonImageOptions2, new DevExpress.Utils.KeyShortcut(System.Windows.Forms.Keys.None), serializableAppearanceObject5, serializableAppearanceObject6, serializableAppearanceObject7, serializableAppearanceObject8, "", null, null, DevExpress.Utils.ToolTipAnchor.Default),
-            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Delete)});
-            this.cmbExaminationForm.Properties.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.DisableTextEditor;
-            this.cmbExaminationForm.Size = new System.Drawing.Size(313, 22);
-            this.cmbExaminationForm.StyleController = this.layoutControl_I;
-            this.cmbExaminationForm.TabIndex = 6;
-            this.cmbExaminationForm.ButtonPressed += new DevExpress.XtraEditors.Controls.ButtonPressedEventHandler(this.cmbExaminationResult_ButtonPressed);
-            // 
-            // cmbExaminationObjectType
-            // 
-            this.cmbExaminationObjectType.EditValue = "";
-            this.cmbExaminationObjectType.Location = new System.Drawing.Point(176, 33);
-            this.cmbExaminationObjectType.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
-            this.cmbExaminationObjectType.Name = "cmbExaminationObjectType";
-            this.cmbExaminationObjectType.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
-            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo),
-            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Ellipsis, "", -1, true, false, false, editorButtonImageOptions3, new DevExpress.Utils.KeyShortcut(System.Windows.Forms.Keys.None), serializableAppearanceObject9, serializableAppearanceObject10, serializableAppearanceObject11, serializableAppearanceObject12, "", null, null, DevExpress.Utils.ToolTipAnchor.Default),
-            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Delete)});
-            this.cmbExaminationObjectType.Properties.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.DisableTextEditor;
-            this.cmbExaminationObjectType.Size = new System.Drawing.Size(279, 22);
-            this.cmbExaminationObjectType.StyleController = this.layoutControl_I;
-            this.cmbExaminationObjectType.TabIndex = 6;
-            this.cmbExaminationObjectType.ButtonPressed += new DevExpress.XtraEditors.Controls.ButtonPressedEventHandler(this.cmbExaminationResult_ButtonPressed);
-            // 
-            // cmbExaminationStage
-            // 
-            this.cmbExaminationStage.EditValue = "";
-            this.cmbExaminationStage.Location = new System.Drawing.Point(577, 33);
-            this.cmbExaminationStage.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
-            this.cmbExaminationStage.Name = "cmbExaminationStage";
-            this.cmbExaminationStage.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
-            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo),
-            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Ellipsis, "", -1, true, false, false, editorButtonImageOptions4, new DevExpress.Utils.KeyShortcut(System.Windows.Forms.Keys.None), serializableAppearanceObject13, serializableAppearanceObject14, serializableAppearanceObject15, serializableAppearanceObject16, "", null, null, DevExpress.Utils.ToolTipAnchor.Default),
-            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Delete)});
-            this.cmbExaminationStage.Properties.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.DisableTextEditor;
-            this.cmbExaminationStage.Size = new System.Drawing.Size(331, 22);
-            this.cmbExaminationStage.StyleController = this.layoutControl_I;
-            this.cmbExaminationStage.TabIndex = 6;
-            this.cmbExaminationStage.ButtonPressed += new DevExpress.XtraEditors.Controls.ButtonPressedEventHandler(this.cmbExaminationResult_ButtonPressed);
-            // 
-            // cmbConstructionType
-            // 
-            this.cmbConstructionType.EditValue = "";
-            this.cmbConstructionType.Location = new System.Drawing.Point(92, 59);
-            this.cmbConstructionType.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
-            this.cmbConstructionType.Name = "cmbConstructionType";
-            this.cmbConstructionType.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
-            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo),
-            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Ellipsis, "", -1, true, false, false, editorButtonImageOptions5, new DevExpress.Utils.KeyShortcut(System.Windows.Forms.Keys.None), serializableAppearanceObject17, serializableAppearanceObject18, serializableAppearanceObject19, serializableAppearanceObject20, "", null, null, DevExpress.Utils.ToolTipAnchor.Default),
-            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Delete)});
-            this.cmbConstructionType.Properties.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.DisableTextEditor;
-            this.cmbConstructionType.Size = new System.Drawing.Size(363, 22);
-            this.cmbConstructionType.StyleController = this.layoutControl_I;
-            this.cmbConstructionType.TabIndex = 6;
-            this.cmbConstructionType.ButtonPressed += new DevExpress.XtraEditors.Controls.ButtonPressedEventHandler(this.cmbExaminationResult_ButtonPressed);
-            // 
-            // memoExaminationStageNote
-            // 
-            this.memoExaminationStageNote.Location = new System.Drawing.Point(7, 327);
-            this.memoExaminationStageNote.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
-            this.memoExaminationStageNote.Name = "memoExaminationStageNote";
-            this.memoExaminationStageNote.Properties.ScrollBars = System.Windows.Forms.ScrollBars.None;
-            this.memoExaminationStageNote.Size = new System.Drawing.Size(901, 206);
-            this.memoExaminationStageNote.StyleController = this.layoutControl_I;
-            this.memoExaminationStageNote.TabIndex = 7;
-            // 
-            // memoName
-            // 
-            this.memoName.Location = new System.Drawing.Point(7, 131);
-            this.memoName.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
-            this.memoName.Name = "memoName";
-            this.memoName.Properties.ScrollBars = System.Windows.Forms.ScrollBars.None;
-            this.memoName.Size = new System.Drawing.Size(901, 172);
-            this.memoName.StyleController = this.layoutControl_I;
-            this.memoName.TabIndex = 7;
-            // 
-            // layoutControlGroup_I
-            // 
-            this.layoutControlGroup_I.EnableIndentsWithoutBorders = DevExpress.Utils.DefaultBoolean.True;
-            this.layoutControlGroup_I.GroupBordersVisible = false;
-            this.layoutControlGroup_I.Items.AddRange(new DevExpress.XtraLayout.BaseLayoutItem[] {
-            this.layoutControlItemExaminationResult,
-            this.layoutControlItemExaminationObjectType,
-            this.layoutControlItemConstructionType,
-            this.layoutControlItemExaminationStageNote,
-            this.layoutControlItemName,
-            this.layoutControlItemExaminationForm,
-            this.layoutControlItemExaminationStage,
-            this.emptySpaceItemConstructionType,
-            this.layoutControlItemExaminationType});
-            this.layoutControlGroup_I.Name = "Root";
-            this.layoutControlGroup_I.OptionsItemText.TextAlignMode = DevExpress.XtraLayout.TextAlignModeGroup.AutoSize;
-            this.layoutControlGroup_I.Padding = new DevExpress.XtraLayout.Utils.Padding(5, 5, 5, 5);
-            this.layoutControlGroup_I.Size = new System.Drawing.Size(915, 540);
-            this.layoutControlGroup_I.TextVisible = false;
-            // 
-            // layoutControlItemExaminationResult
-            // 
-            this.layoutControlItemExaminationResult.Control = this.cmbExaminationResult;
-            this.layoutControlItemExaminationResult.ControlAlignment = System.Drawing.ContentAlignment.TopLeft;
-            this.layoutControlItemExaminationResult.CustomizationFormText = "Результат экспертизы *";
-            this.layoutControlItemExaminationResult.Location = new System.Drawing.Point(0, 0);
-            this.layoutControlItemExaminationResult.Name = "layoutControlItemExaminationResult";
-            this.layoutControlItemExaminationResult.Size = new System.Drawing.Size(452, 26);
-            this.layoutControlItemExaminationResult.Text = "Результат экспертизы *";
-            this.layoutControlItemExaminationResult.TextSize = new System.Drawing.Size(142, 16);
-            // 
-            // layoutControlItemExaminationObjectType
-            // 
-            this.layoutControlItemExaminationObjectType.Control = this.cmbExaminationObjectType;
-            this.layoutControlItemExaminationObjectType.ControlAlignment = System.Drawing.ContentAlignment.TopLeft;
-            this.layoutControlItemExaminationObjectType.CustomizationFormText = "layoutControlItem3";
-            this.layoutControlItemExaminationObjectType.Location = new System.Drawing.Point(0, 26);
-            this.layoutControlItemExaminationObjectType.Name = "layoutControlItemExaminationObjectType";
-            this.layoutControlItemExaminationObjectType.Size = new System.Drawing.Size(452, 26);
-            this.layoutControlItemExaminationObjectType.Text = "Вид объекта экспертизы *";
-            this.layoutControlItemExaminationObjectType.TextSize = new System.Drawing.Size(155, 16);
-            // 
-            // layoutControlItemConstructionType
-            // 
-            this.layoutControlItemConstructionType.Control = this.cmbConstructionType;
-            this.layoutControlItemConstructionType.ControlAlignment = System.Drawing.ContentAlignment.TopLeft;
-            this.layoutControlItemConstructionType.CustomizationFormText = "layoutControlItem3";
-            this.layoutControlItemConstructionType.Location = new System.Drawing.Point(0, 52);
-            this.layoutControlItemConstructionType.Name = "layoutControlItemConstructionType";
-            this.layoutControlItemConstructionType.Size = new System.Drawing.Size(452, 26);
-            this.layoutControlItemConstructionType.Text = "Вид работ *";
-            this.layoutControlItemConstructionType.TextSize = new System.Drawing.Size(71, 16);
-            // 
-            // layoutControlItemExaminationStageNote
-            // 
-            this.layoutControlItemExaminationStageNote.Control = this.memoExaminationStageNote;
-            this.layoutControlItemExaminationStageNote.ControlAlignment = System.Drawing.ContentAlignment.TopLeft;
-            this.layoutControlItemExaminationStageNote.CustomizationFormText = "layoutControlItem9";
-            this.layoutControlItemExaminationStageNote.Location = new System.Drawing.Point(0, 300);
-            this.layoutControlItemExaminationStageNote.Name = "layoutControlItemExaminationStageNote";
-            this.layoutControlItemExaminationStageNote.Size = new System.Drawing.Size(905, 230);
-            this.layoutControlItemExaminationStageNote.Text = "Дополнительные сведения о виде проведения экспертизы";
-            this.layoutControlItemExaminationStageNote.TextLocation = DevExpress.Utils.Locations.Top;
-            this.layoutControlItemExaminationStageNote.TextSize = new System.Drawing.Size(348, 16);
-            // 
-            // layoutControlItemName
-            // 
-            this.layoutControlItemName.Control = this.memoName;
-            this.layoutControlItemName.ControlAlignment = System.Drawing.ContentAlignment.TopLeft;
-            this.layoutControlItemName.CustomizationFormText = "Наименование объекта экспертизы *";
-            this.layoutControlItemName.Location = new System.Drawing.Point(0, 104);
-            this.layoutControlItemName.Name = "layoutControlItemName";
-            this.layoutControlItemName.Size = new System.Drawing.Size(905, 196);
-            this.layoutControlItemName.Text = "Наименование объекта экспертизы *";
-            this.layoutControlItemName.TextLocation = DevExpress.Utils.Locations.Top;
-            this.layoutControlItemName.TextSize = new System.Drawing.Size(220, 16);
-            // 
-            // layoutControlItemExaminationForm
-            // 
-            this.layoutControlItemExaminationForm.Control = this.cmbExaminationForm;
-            this.layoutControlItemExaminationForm.ControlAlignment = System.Drawing.ContentAlignment.TopLeft;
-            this.layoutControlItemExaminationForm.CustomizationFormText = "layoutControlItem3";
-            this.layoutControlItemExaminationForm.Location = new System.Drawing.Point(452, 0);
-            this.layoutControlItemExaminationForm.Name = "layoutControlItemExaminationForm";
-            this.layoutControlItemExaminationForm.Size = new System.Drawing.Size(453, 26);
-            this.layoutControlItemExaminationForm.Text = "Форма экспертизы *";
-            this.layoutControlItemExaminationForm.TextSize = new System.Drawing.Size(122, 16);
-            // 
-            // layoutControlItemExaminationStage
-            // 
-            this.layoutControlItemExaminationStage.Control = this.cmbExaminationStage;
-            this.layoutControlItemExaminationStage.ControlAlignment = System.Drawing.ContentAlignment.TopLeft;
-            this.layoutControlItemExaminationStage.CustomizationFormText = "layoutControlItem3";
-            this.layoutControlItemExaminationStage.Location = new System.Drawing.Point(452, 26);
-            this.layoutControlItemExaminationStage.Name = "layoutControlItemExaminationStage";
-            this.layoutControlItemExaminationStage.Size = new System.Drawing.Size(453, 26);
-            this.layoutControlItemExaminationStage.Text = "Вид экспертизы *";
-            this.layoutControlItemExaminationStage.TextSize = new System.Drawing.Size(104, 16);
-            // 
-            // emptySpaceItemConstructionType
-            // 
-            this.emptySpaceItemConstructionType.AllowHotTrack = false;
-            this.emptySpaceItemConstructionType.Location = new System.Drawing.Point(452, 52);
-            this.emptySpaceItemConstructionType.Name = "emptySpaceItemConstructionType";
-            this.emptySpaceItemConstructionType.Size = new System.Drawing.Size(453, 26);
-            this.emptySpaceItemConstructionType.TextSize = new System.Drawing.Size(0, 0);
-            // 
-            // xtraTabPage2
-            // 
-            this.xtraTabPage2.Controls.Add(this.xtraTabControl1);
-            this.xtraTabPage2.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
-            this.xtraTabPage2.Name = "xtraTabPage2";
-            this.xtraTabPage2.Size = new System.Drawing.Size(915, 540);
-            this.xtraTabPage2.Text = "II. Сведения, содержащиеся в документах, представленных для проведения экспертизы" +
-    " проектной документации";
-            // 
-            // xtraTabControl1
-            // 
-            this.xtraTabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.xtraTabControl1.HeaderLocation = DevExpress.XtraTab.TabHeaderLocation.Bottom;
-            this.xtraTabControl1.HeaderOrientation = DevExpress.XtraTab.TabOrientation.Horizontal;
-            this.xtraTabControl1.Location = new System.Drawing.Point(0, 0);
-            this.xtraTabControl1.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
-            this.xtraTabControl1.MultiLine = DevExpress.Utils.DefaultBoolean.True;
-            this.xtraTabControl1.Name = "xtraTabControl1";
-            this.xtraTabControl1.SelectedTabPage = this.xtraTabPage7;
-            this.xtraTabControl1.Size = new System.Drawing.Size(915, 540);
-            this.xtraTabControl1.TabIndex = 0;
-            this.xtraTabControl1.TabPages.AddRange(new DevExpress.XtraTab.XtraTabPage[] {
-            this.xtraTabPage7,
-            this.xtraTabPage8,
-            this.xtraTabPage9,
-            this.xtraTabPage10,
-            this.xtraTabPage11,
-            this.xtraTabPage12,
-            this.xtraTabPage13});
-            // 
-            // xtraTabPage7
-            // 
-            this.xtraTabPage7.Controls.Add(this.layoutControl2);
-            this.xtraTabPage7.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
-            this.xtraTabPage7.Name = "xtraTabPage7";
-            this.xtraTabPage7.Size = new System.Drawing.Size(913, 342);
-            this.xtraTabPage7.Text = "Сведения об объекте капитального строитвельства, применительно к которому подгото" +
-    "влена проектная документация";
-            // 
-            // layoutControl2
-            // 
-            this.layoutControl2.Controls.Add(this.memoObjectName);
-            this.layoutControl2.Controls.Add(this.cmbObjectType);
-            this.layoutControl2.Controls.Add(this.cmbFunctionsClass);
-            this.layoutControl2.Controls.Add(this.cmbObjectAddress);
-            this.layoutControl2.Controls.Add(this.radioGroup11);
-            this.layoutControl2.Controls.Add(this.radioGroup111);
-            this.layoutControl2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.layoutControl2.Location = new System.Drawing.Point(0, 0);
-            this.layoutControl2.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
-            this.layoutControl2.Name = "layoutControl2";
-            this.layoutControl2.Root = this.layoutControlGroup2;
-            this.layoutControl2.Size = new System.Drawing.Size(913, 342);
-            this.layoutControl2.TabIndex = 0;
-            this.layoutControl2.Text = "layoutControl2";
-            // 
-            // memoObjectName
-            // 
-            this.memoObjectName.Location = new System.Drawing.Point(14, 34);
-            this.memoObjectName.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
-            this.memoObjectName.Name = "memoObjectName";
-            this.memoObjectName.Size = new System.Drawing.Size(885, 22);
-            this.memoObjectName.StyleController = this.layoutControl2;
-            this.memoObjectName.TabIndex = 8;
-            // 
-            // cmbObjectType
-            // 
-            this.cmbObjectType.Location = new System.Drawing.Point(14, 80);
-            this.cmbObjectType.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
-            this.cmbObjectType.Name = "cmbObjectType";
-            this.cmbObjectType.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
-            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo),
-            new DevExpress.XtraEditors.Controls.EditorButton(),
-            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Delete)});
-            this.cmbObjectType.Properties.Items.AddRange(new object[] {
-            "Объект производственного назначения",
-            "Объект непроизводственного назначения",
-            "Линейный объект"});
-            this.cmbObjectType.Size = new System.Drawing.Size(885, 22);
-            this.cmbObjectType.StyleController = this.layoutControl2;
-            this.cmbObjectType.TabIndex = 6;
-            // 
-            // cmbFunctionsClass
-            // 
-            this.cmbFunctionsClass.Location = new System.Drawing.Point(14, 126);
-            this.cmbFunctionsClass.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
-            this.cmbFunctionsClass.Name = "cmbFunctionsClass";
-            this.cmbFunctionsClass.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
-            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo),
-            new DevExpress.XtraEditors.Controls.EditorButton(),
-            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Delete)});
-            this.cmbFunctionsClass.Size = new System.Drawing.Size(885, 22);
-            this.cmbFunctionsClass.StyleController = this.layoutControl2;
-            this.cmbFunctionsClass.TabIndex = 6;
-            // 
-            // cmbObjectAddress
-            // 
-            this.cmbObjectAddress.Location = new System.Drawing.Point(14, 172);
-            this.cmbObjectAddress.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
-            this.cmbObjectAddress.Name = "cmbObjectAddress";
-            this.cmbObjectAddress.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
-            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo),
-            new DevExpress.XtraEditors.Controls.EditorButton(),
-            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Delete)});
-            this.cmbObjectAddress.Properties.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.DisableTextEditor;
-            this.cmbObjectAddress.Size = new System.Drawing.Size(885, 22);
-            this.cmbObjectAddress.StyleController = this.layoutControl2;
-            this.cmbObjectAddress.TabIndex = 6;
-            this.cmbObjectAddress.ButtonPressed += new DevExpress.XtraEditors.Controls.ButtonPressedEventHandler(this.cmbObjectAddress_ButtonPressed);
-            // 
-            // radioGroup11
-            // 
-            this.radioGroup11.Location = new System.Drawing.Point(14, 218);
-            this.radioGroup11.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
-            this.radioGroup11.Name = "radioGroup11";
-            this.radioGroup11.Properties.Items.AddRange(new DevExpress.XtraEditors.Controls.RadioGroupItem[] {
-            new DevExpress.XtraEditors.Controls.RadioGroupItem(true, "Да", true, "Да"),
-            new DevExpress.XtraEditors.Controls.RadioGroupItem(false, "Нет", true, "Нет")});
-            this.radioGroup11.Size = new System.Drawing.Size(885, 43);
-            this.radioGroup11.StyleController = this.layoutControl2;
-            this.radioGroup11.TabIndex = 10;
-            // 
-            // radioGroup111
-            // 
-            this.radioGroup111.Location = new System.Drawing.Point(14, 285);
-            this.radioGroup111.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
-            this.radioGroup111.Name = "radioGroup111";
-            this.radioGroup111.Properties.Items.AddRange(new DevExpress.XtraEditors.Controls.RadioGroupItem[] {
-            new DevExpress.XtraEditors.Controls.RadioGroupItem(true, "Да", true, "Да"),
-            new DevExpress.XtraEditors.Controls.RadioGroupItem(false, "Нет", true, "Нет")});
-            this.radioGroup111.Size = new System.Drawing.Size(885, 43);
-            this.radioGroup111.StyleController = this.layoutControl2;
-            this.radioGroup111.TabIndex = 10;
-            // 
-            // layoutControlGroup2
-            // 
-            this.layoutControlGroup2.EnableIndentsWithoutBorders = DevExpress.Utils.DefaultBoolean.True;
-            this.layoutControlGroup2.GroupBordersVisible = false;
-            this.layoutControlGroup2.Items.AddRange(new DevExpress.XtraLayout.BaseLayoutItem[] {
-            this.layoutControlItemObjectName,
-            this.layoutControlItemObjectType,
-            this.layoutControlItemFunctionsClass,
-            this.layoutControlItemObjectAddress,
-            this.layoutControlItem16,
-            this.layoutControlItem17});
-            this.layoutControlGroup2.Name = "layoutControlGroup2";
-            this.layoutControlGroup2.Size = new System.Drawing.Size(913, 342);
-            this.layoutControlGroup2.TextVisible = false;
-            // 
-            // layoutControlItemObjectName
-            // 
-            this.layoutControlItemObjectName.Control = this.memoObjectName;
-            this.layoutControlItemObjectName.ControlAlignment = System.Drawing.ContentAlignment.TopLeft;
-            this.layoutControlItemObjectName.CustomizationFormText = "Наименование объекта капитального строительства *";
-            this.layoutControlItemObjectName.Location = new System.Drawing.Point(0, 0);
-            this.layoutControlItemObjectName.Name = "layoutControlItemObjectName";
-            this.layoutControlItemObjectName.Size = new System.Drawing.Size(889, 46);
-            this.layoutControlItemObjectName.Text = "Наименование объекта капитального строительства *";
-            this.layoutControlItemObjectName.TextLocation = DevExpress.Utils.Locations.Top;
-            this.layoutControlItemObjectName.TextSize = new System.Drawing.Size(560, 16);
-            // 
-            // layoutControlItemObjectType
-            // 
-            this.layoutControlItemObjectType.Control = this.cmbObjectType;
-            this.layoutControlItemObjectType.ControlAlignment = System.Drawing.ContentAlignment.TopLeft;
-            this.layoutControlItemObjectType.CustomizationFormText = "layoutControlItem3";
-            this.layoutControlItemObjectType.Location = new System.Drawing.Point(0, 46);
-            this.layoutControlItemObjectType.Name = "layoutControlItemObjectType";
-            this.layoutControlItemObjectType.Size = new System.Drawing.Size(889, 46);
-            this.layoutControlItemObjectType.Text = "Вид объекта капитального строительства *";
-            this.layoutControlItemObjectType.TextLocation = DevExpress.Utils.Locations.Top;
-            this.layoutControlItemObjectType.TextSize = new System.Drawing.Size(560, 16);
-            // 
-            // layoutControlItemFunctionsClass
-            // 
-            this.layoutControlItemFunctionsClass.Control = this.cmbFunctionsClass;
-            this.layoutControlItemFunctionsClass.ControlAlignment = System.Drawing.ContentAlignment.TopLeft;
-            this.layoutControlItemFunctionsClass.CustomizationFormText = "layoutControlItem3";
-            this.layoutControlItemFunctionsClass.Location = new System.Drawing.Point(0, 92);
-            this.layoutControlItemFunctionsClass.Name = "layoutControlItemFunctionsClass";
-            this.layoutControlItemFunctionsClass.Size = new System.Drawing.Size(889, 46);
-            this.layoutControlItemFunctionsClass.Text = "Функциональное назначение объекта капитального строительства (код по классификато" +
-    "ру) *";
-            this.layoutControlItemFunctionsClass.TextLocation = DevExpress.Utils.Locations.Top;
-            this.layoutControlItemFunctionsClass.TextSize = new System.Drawing.Size(560, 16);
-            // 
-            // layoutControlItemObjectAddress
-            // 
-            this.layoutControlItemObjectAddress.Control = this.cmbObjectAddress;
-            this.layoutControlItemObjectAddress.ControlAlignment = System.Drawing.ContentAlignment.TopLeft;
-            this.layoutControlItemObjectAddress.CustomizationFormText = "layoutControlItem3";
-            this.layoutControlItemObjectAddress.Location = new System.Drawing.Point(0, 138);
-            this.layoutControlItemObjectAddress.Name = "layoutControlItemObjectAddress";
-            this.layoutControlItemObjectAddress.Size = new System.Drawing.Size(889, 46);
-            this.layoutControlItemObjectAddress.Text = "Адрес объекта капитального строительства *";
-            this.layoutControlItemObjectAddress.TextLocation = DevExpress.Utils.Locations.Top;
-            this.layoutControlItemObjectAddress.TextSize = new System.Drawing.Size(560, 16);
-            // 
-            // layoutControlItem16
-            // 
-            this.layoutControlItem16.Control = this.radioGroup11;
-            this.layoutControlItem16.ControlAlignment = System.Drawing.ContentAlignment.TopLeft;
-            this.layoutControlItem16.CustomizationFormText = "Технико-экономические показатели предусмотрены?";
-            this.layoutControlItem16.Location = new System.Drawing.Point(0, 184);
-            this.layoutControlItem16.Name = "layoutControlItem16";
-            this.layoutControlItem16.Size = new System.Drawing.Size(889, 67);
-            this.layoutControlItem16.Text = "Технико-экономические показатели предусмотрены?";
-            this.layoutControlItem16.TextLocation = DevExpress.Utils.Locations.Top;
-            this.layoutControlItem16.TextSize = new System.Drawing.Size(560, 16);
-            // 
-            // layoutControlItem17
-            // 
-            this.layoutControlItem17.Control = this.radioGroup111;
-            this.layoutControlItem17.ControlAlignment = System.Drawing.ContentAlignment.TopLeft;
-            this.layoutControlItem17.CustomizationFormText = "Технико-экономические показатели предусмотрены?";
-            this.layoutControlItem17.Location = new System.Drawing.Point(0, 251);
-            this.layoutControlItem17.Name = "layoutControlItem17";
-            this.layoutControlItem17.Size = new System.Drawing.Size(889, 67);
-            this.layoutControlItem17.Text = "Предусмотрены здания (соорудения). входящие в состав сложного объекта?";
-            this.layoutControlItem17.TextLocation = DevExpress.Utils.Locations.Top;
-            this.layoutControlItem17.TextSize = new System.Drawing.Size(560, 16);
-            // 
-            // xtraTabPage8
-            // 
-            this.xtraTabPage8.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
-            this.xtraTabPage8.Name = "xtraTabPage8";
-            this.xtraTabPage8.Size = new System.Drawing.Size(913, 342);
-            this.xtraTabPage8.Text = "Сведения об источнике (источниках) и размере финансирования строительства, реконс" +
-    "трукции, капитального ремонта, сноса объекта капитального строительства";
-            // 
-            // xtraTabPage9
-            // 
-            this.xtraTabPage9.Controls.Add(this.layoutControl5);
-            this.xtraTabPage9.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
-            this.xtraTabPage9.Name = "xtraTabPage9";
-            this.xtraTabPage9.Size = new System.Drawing.Size(913, 342);
-            this.xtraTabPage9.Text = "Сведения о природных и техногенных условиях территории";
-            // 
-            // layoutControl5
-            // 
-            this.layoutControl5.AllowCustomization = false;
-            this.layoutControl5.Controls.Add(this.checkCmbClimateDistrict);
-            this.layoutControl5.Controls.Add(this.checkedComboBoxEdit11);
-            this.layoutControl5.Controls.Add(this.checkedComboBoxEdit12);
-            this.layoutControl5.Controls.Add(this.checkedComboBoxEdit13);
-            this.layoutControl5.Controls.Add(this.checkedComboBoxEdit14);
-            this.layoutControl5.Controls.Add(this.memoEdit1);
-            this.layoutControl5.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.layoutControl5.Location = new System.Drawing.Point(0, 0);
-            this.layoutControl5.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
-            this.layoutControl5.Name = "layoutControl5";
-            this.layoutControl5.Root = this.layoutControlGroup5;
-            this.layoutControl5.Size = new System.Drawing.Size(913, 342);
-            this.layoutControl5.TabIndex = 0;
-            this.layoutControl5.Text = "layoutControl5";
-            // 
-            // checkCmbClimateDistrict
-            // 
-            this.checkCmbClimateDistrict.Location = new System.Drawing.Point(8, 28);
-            this.checkCmbClimateDistrict.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
-            this.checkCmbClimateDistrict.MenuManager = this.barManager;
-            this.checkCmbClimateDistrict.Name = "checkCmbClimateDistrict";
-            this.checkCmbClimateDistrict.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
+            // checkCmbExaminationType
+            // 
+            this.checkCmbExaminationType.Location = new System.Drawing.Point(152, 85);
+            this.checkCmbExaminationType.MenuManager = this.barManager;
+            this.checkCmbExaminationType.Name = "checkCmbExaminationType";
+            this.checkCmbExaminationType.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo),
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Delete)});
-            this.checkCmbClimateDistrict.Size = new System.Drawing.Size(446, 22);
-            this.checkCmbClimateDistrict.StyleController = this.layoutControl5;
-            this.checkCmbClimateDistrict.TabIndex = 4;
+            this.checkCmbExaminationType.Size = new System.Drawing.Size(756, 22);
+            this.checkCmbExaminationType.StyleController = this.layoutControl_I;
+            this.checkCmbExaminationType.TabIndex = 8;
+            this.checkCmbExaminationType.ButtonPressed += new DevExpress.XtraEditors.Controls.ButtonPressedEventHandler(this.clearEditValue_ButtonPressed);
             // 
             // barManager
             // 
@@ -928,10 +465,496 @@
             this.barBtnCadastralNumberDel.Name = "barBtnCadastralNumberDel";
             this.barBtnCadastralNumberDel.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.barBtnCadastralNumberDel_ItemClick);
             // 
+            // cmbExaminationResult
+            // 
+            this.cmbExaminationResult.EditValue = "";
+            this.cmbExaminationResult.Location = new System.Drawing.Point(161, 7);
+            this.cmbExaminationResult.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
+            this.cmbExaminationResult.Name = "cmbExaminationResult";
+            this.cmbExaminationResult.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo),
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Ellipsis, "", -1, true, false, false, editorButtonImageOptions1, new DevExpress.Utils.KeyShortcut(System.Windows.Forms.Keys.None), serializableAppearanceObject1, serializableAppearanceObject2, serializableAppearanceObject3, serializableAppearanceObject4, "", null, null, DevExpress.Utils.ToolTipAnchor.Default),
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Delete)});
+            this.cmbExaminationResult.Properties.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.DisableTextEditor;
+            this.cmbExaminationResult.Size = new System.Drawing.Size(294, 22);
+            this.cmbExaminationResult.StyleController = this.layoutControl_I;
+            this.cmbExaminationResult.TabIndex = 6;
+            this.cmbExaminationResult.ButtonPressed += new DevExpress.XtraEditors.Controls.ButtonPressedEventHandler(this.clearEditValue_ButtonPressed);
+            // 
+            // cmbExaminationForm
+            // 
+            this.cmbExaminationForm.EditValue = "";
+            this.cmbExaminationForm.Location = new System.Drawing.Point(593, 7);
+            this.cmbExaminationForm.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
+            this.cmbExaminationForm.Name = "cmbExaminationForm";
+            this.cmbExaminationForm.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo),
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Ellipsis, "", -1, true, false, false, editorButtonImageOptions2, new DevExpress.Utils.KeyShortcut(System.Windows.Forms.Keys.None), serializableAppearanceObject5, serializableAppearanceObject6, serializableAppearanceObject7, serializableAppearanceObject8, "", null, null, DevExpress.Utils.ToolTipAnchor.Default),
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Delete)});
+            this.cmbExaminationForm.Properties.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.DisableTextEditor;
+            this.cmbExaminationForm.Size = new System.Drawing.Size(315, 22);
+            this.cmbExaminationForm.StyleController = this.layoutControl_I;
+            this.cmbExaminationForm.TabIndex = 6;
+            this.cmbExaminationForm.ButtonPressed += new DevExpress.XtraEditors.Controls.ButtonPressedEventHandler(this.clearEditValue_ButtonPressed);
+            // 
+            // cmbExaminationObjectType
+            // 
+            this.cmbExaminationObjectType.EditValue = "";
+            this.cmbExaminationObjectType.Location = new System.Drawing.Point(174, 33);
+            this.cmbExaminationObjectType.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
+            this.cmbExaminationObjectType.Name = "cmbExaminationObjectType";
+            this.cmbExaminationObjectType.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo),
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Ellipsis, "", -1, true, false, false, editorButtonImageOptions3, new DevExpress.Utils.KeyShortcut(System.Windows.Forms.Keys.None), serializableAppearanceObject9, serializableAppearanceObject10, serializableAppearanceObject11, serializableAppearanceObject12, "", null, null, DevExpress.Utils.ToolTipAnchor.Default),
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Delete)});
+            this.cmbExaminationObjectType.Properties.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.DisableTextEditor;
+            this.cmbExaminationObjectType.Size = new System.Drawing.Size(281, 22);
+            this.cmbExaminationObjectType.StyleController = this.layoutControl_I;
+            this.cmbExaminationObjectType.TabIndex = 6;
+            this.cmbExaminationObjectType.ButtonPressed += new DevExpress.XtraEditors.Controls.ButtonPressedEventHandler(this.clearEditValue_ButtonPressed);
+            // 
+            // cmbExaminationStage
+            // 
+            this.cmbExaminationStage.EditValue = "";
+            this.cmbExaminationStage.Location = new System.Drawing.Point(575, 33);
+            this.cmbExaminationStage.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
+            this.cmbExaminationStage.Name = "cmbExaminationStage";
+            this.cmbExaminationStage.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo),
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Ellipsis, "", -1, true, false, false, editorButtonImageOptions4, new DevExpress.Utils.KeyShortcut(System.Windows.Forms.Keys.None), serializableAppearanceObject13, serializableAppearanceObject14, serializableAppearanceObject15, serializableAppearanceObject16, "", null, null, DevExpress.Utils.ToolTipAnchor.Default),
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Delete)});
+            this.cmbExaminationStage.Properties.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.DisableTextEditor;
+            this.cmbExaminationStage.Size = new System.Drawing.Size(333, 22);
+            this.cmbExaminationStage.StyleController = this.layoutControl_I;
+            this.cmbExaminationStage.TabIndex = 6;
+            this.cmbExaminationStage.ButtonPressed += new DevExpress.XtraEditors.Controls.ButtonPressedEventHandler(this.clearEditValue_ButtonPressed);
+            // 
+            // cmbConstructionType
+            // 
+            this.cmbConstructionType.EditValue = "";
+            this.cmbConstructionType.Location = new System.Drawing.Point(90, 59);
+            this.cmbConstructionType.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
+            this.cmbConstructionType.Name = "cmbConstructionType";
+            this.cmbConstructionType.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo),
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Ellipsis, "", -1, true, false, false, editorButtonImageOptions5, new DevExpress.Utils.KeyShortcut(System.Windows.Forms.Keys.None), serializableAppearanceObject17, serializableAppearanceObject18, serializableAppearanceObject19, serializableAppearanceObject20, "", null, null, DevExpress.Utils.ToolTipAnchor.Default),
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Delete)});
+            this.cmbConstructionType.Properties.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.DisableTextEditor;
+            this.cmbConstructionType.Size = new System.Drawing.Size(365, 22);
+            this.cmbConstructionType.StyleController = this.layoutControl_I;
+            this.cmbConstructionType.TabIndex = 6;
+            this.cmbConstructionType.ButtonPressed += new DevExpress.XtraEditors.Controls.ButtonPressedEventHandler(this.clearEditValue_ButtonPressed);
+            // 
+            // memoExaminationStageNote
+            // 
+            this.memoExaminationStageNote.Location = new System.Drawing.Point(7, 326);
+            this.memoExaminationStageNote.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
+            this.memoExaminationStageNote.Name = "memoExaminationStageNote";
+            this.memoExaminationStageNote.Properties.ScrollBars = System.Windows.Forms.ScrollBars.None;
+            this.memoExaminationStageNote.Size = new System.Drawing.Size(901, 207);
+            this.memoExaminationStageNote.StyleController = this.layoutControl_I;
+            this.memoExaminationStageNote.TabIndex = 7;
+            // 
+            // memoName
+            // 
+            this.memoName.Location = new System.Drawing.Point(7, 130);
+            this.memoName.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
+            this.memoName.Name = "memoName";
+            this.memoName.Properties.ScrollBars = System.Windows.Forms.ScrollBars.None;
+            this.memoName.Size = new System.Drawing.Size(901, 173);
+            this.memoName.StyleController = this.layoutControl_I;
+            this.memoName.TabIndex = 7;
+            // 
+            // layoutControlGroup_I
+            // 
+            this.layoutControlGroup_I.EnableIndentsWithoutBorders = DevExpress.Utils.DefaultBoolean.True;
+            this.layoutControlGroup_I.GroupBordersVisible = false;
+            this.layoutControlGroup_I.Items.AddRange(new DevExpress.XtraLayout.BaseLayoutItem[] {
+            this.layoutControlItemExaminationResult,
+            this.layoutControlItemExaminationObjectType,
+            this.layoutControlItemConstructionType,
+            this.layoutControlItemExaminationStageNote,
+            this.layoutControlItemName,
+            this.layoutControlItemExaminationForm,
+            this.layoutControlItemExaminationStage,
+            this.emptySpaceItemConstructionType,
+            this.layoutControlItemExaminationType});
+            this.layoutControlGroup_I.Name = "Root";
+            this.layoutControlGroup_I.OptionsItemText.TextAlignMode = DevExpress.XtraLayout.TextAlignModeGroup.AutoSize;
+            this.layoutControlGroup_I.Padding = new DevExpress.XtraLayout.Utils.Padding(5, 5, 5, 5);
+            this.layoutControlGroup_I.Size = new System.Drawing.Size(915, 540);
+            this.layoutControlGroup_I.TextVisible = false;
+            // 
+            // layoutControlItemExaminationResult
+            // 
+            this.layoutControlItemExaminationResult.Control = this.cmbExaminationResult;
+            this.layoutControlItemExaminationResult.ControlAlignment = System.Drawing.ContentAlignment.TopLeft;
+            this.layoutControlItemExaminationResult.CustomizationFormText = "Результат экспертизы *";
+            this.layoutControlItemExaminationResult.Location = new System.Drawing.Point(0, 0);
+            this.layoutControlItemExaminationResult.Name = "layoutControlItemExaminationResult";
+            this.layoutControlItemExaminationResult.Size = new System.Drawing.Size(452, 26);
+            this.layoutControlItemExaminationResult.Text = "Результат экспертизы *";
+            this.layoutControlItemExaminationResult.TextSize = new System.Drawing.Size(142, 16);
+            // 
+            // layoutControlItemExaminationObjectType
+            // 
+            this.layoutControlItemExaminationObjectType.Control = this.cmbExaminationObjectType;
+            this.layoutControlItemExaminationObjectType.ControlAlignment = System.Drawing.ContentAlignment.TopLeft;
+            this.layoutControlItemExaminationObjectType.CustomizationFormText = "layoutControlItem3";
+            this.layoutControlItemExaminationObjectType.Location = new System.Drawing.Point(0, 26);
+            this.layoutControlItemExaminationObjectType.Name = "layoutControlItemExaminationObjectType";
+            this.layoutControlItemExaminationObjectType.Size = new System.Drawing.Size(452, 26);
+            this.layoutControlItemExaminationObjectType.Text = "Вид объекта экспертизы *";
+            this.layoutControlItemExaminationObjectType.TextSize = new System.Drawing.Size(155, 16);
+            // 
+            // layoutControlItemConstructionType
+            // 
+            this.layoutControlItemConstructionType.Control = this.cmbConstructionType;
+            this.layoutControlItemConstructionType.ControlAlignment = System.Drawing.ContentAlignment.TopLeft;
+            this.layoutControlItemConstructionType.CustomizationFormText = "layoutControlItem3";
+            this.layoutControlItemConstructionType.Location = new System.Drawing.Point(0, 52);
+            this.layoutControlItemConstructionType.Name = "layoutControlItemConstructionType";
+            this.layoutControlItemConstructionType.Size = new System.Drawing.Size(452, 26);
+            this.layoutControlItemConstructionType.Text = "Вид работ *";
+            this.layoutControlItemConstructionType.TextSize = new System.Drawing.Size(71, 16);
+            // 
+            // layoutControlItemExaminationStageNote
+            // 
+            this.layoutControlItemExaminationStageNote.Control = this.memoExaminationStageNote;
+            this.layoutControlItemExaminationStageNote.ControlAlignment = System.Drawing.ContentAlignment.TopLeft;
+            this.layoutControlItemExaminationStageNote.CustomizationFormText = "layoutControlItem9";
+            this.layoutControlItemExaminationStageNote.Location = new System.Drawing.Point(0, 300);
+            this.layoutControlItemExaminationStageNote.Name = "layoutControlItemExaminationStageNote";
+            this.layoutControlItemExaminationStageNote.Size = new System.Drawing.Size(905, 230);
+            this.layoutControlItemExaminationStageNote.Text = "Дополнительные сведения о виде проведения экспертизы";
+            this.layoutControlItemExaminationStageNote.TextLocation = DevExpress.Utils.Locations.Top;
+            this.layoutControlItemExaminationStageNote.TextSize = new System.Drawing.Size(348, 16);
+            // 
+            // layoutControlItemName
+            // 
+            this.layoutControlItemName.Control = this.memoName;
+            this.layoutControlItemName.ControlAlignment = System.Drawing.ContentAlignment.TopLeft;
+            this.layoutControlItemName.CustomizationFormText = "Наименование объекта экспертизы *";
+            this.layoutControlItemName.Location = new System.Drawing.Point(0, 104);
+            this.layoutControlItemName.Name = "layoutControlItemName";
+            this.layoutControlItemName.Size = new System.Drawing.Size(905, 196);
+            this.layoutControlItemName.Text = "Наименование объекта экспертизы *";
+            this.layoutControlItemName.TextLocation = DevExpress.Utils.Locations.Top;
+            this.layoutControlItemName.TextSize = new System.Drawing.Size(220, 16);
+            // 
+            // layoutControlItemExaminationForm
+            // 
+            this.layoutControlItemExaminationForm.Control = this.cmbExaminationForm;
+            this.layoutControlItemExaminationForm.ControlAlignment = System.Drawing.ContentAlignment.TopLeft;
+            this.layoutControlItemExaminationForm.CustomizationFormText = "layoutControlItem3";
+            this.layoutControlItemExaminationForm.Location = new System.Drawing.Point(452, 0);
+            this.layoutControlItemExaminationForm.Name = "layoutControlItemExaminationForm";
+            this.layoutControlItemExaminationForm.Size = new System.Drawing.Size(453, 26);
+            this.layoutControlItemExaminationForm.Text = "Форма экспертизы *";
+            this.layoutControlItemExaminationForm.TextSize = new System.Drawing.Size(122, 16);
+            // 
+            // layoutControlItemExaminationStage
+            // 
+            this.layoutControlItemExaminationStage.Control = this.cmbExaminationStage;
+            this.layoutControlItemExaminationStage.ControlAlignment = System.Drawing.ContentAlignment.TopLeft;
+            this.layoutControlItemExaminationStage.CustomizationFormText = "layoutControlItem3";
+            this.layoutControlItemExaminationStage.Location = new System.Drawing.Point(452, 26);
+            this.layoutControlItemExaminationStage.Name = "layoutControlItemExaminationStage";
+            this.layoutControlItemExaminationStage.Size = new System.Drawing.Size(453, 26);
+            this.layoutControlItemExaminationStage.Text = "Вид экспертизы *";
+            this.layoutControlItemExaminationStage.TextSize = new System.Drawing.Size(104, 16);
+            // 
+            // emptySpaceItemConstructionType
+            // 
+            this.emptySpaceItemConstructionType.AllowHotTrack = false;
+            this.emptySpaceItemConstructionType.Location = new System.Drawing.Point(452, 52);
+            this.emptySpaceItemConstructionType.Name = "emptySpaceItemConstructionType";
+            this.emptySpaceItemConstructionType.Size = new System.Drawing.Size(453, 26);
+            this.emptySpaceItemConstructionType.TextSize = new System.Drawing.Size(0, 0);
+            // 
+            // layoutControlItemExaminationType
+            // 
+            this.layoutControlItemExaminationType.Control = this.checkCmbExaminationType;
+            this.layoutControlItemExaminationType.Location = new System.Drawing.Point(0, 78);
+            this.layoutControlItemExaminationType.Name = "layoutControlItemExaminationType";
+            this.layoutControlItemExaminationType.Size = new System.Drawing.Size(905, 26);
+            this.layoutControlItemExaminationType.Text = "Предмет экспертизы *";
+            this.layoutControlItemExaminationType.TextSize = new System.Drawing.Size(133, 16);
+            // 
+            // xtraTabPage2
+            // 
+            this.xtraTabPage2.Controls.Add(this.xtraTabControl1);
+            this.xtraTabPage2.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
+            this.xtraTabPage2.Name = "xtraTabPage2";
+            this.xtraTabPage2.Size = new System.Drawing.Size(915, 540);
+            this.xtraTabPage2.Text = "II. Сведения, содержащиеся в документах, представленных для проведения экспертизы" +
+    " проектной документации";
+            // 
+            // xtraTabControl1
+            // 
+            this.xtraTabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.xtraTabControl1.HeaderLocation = DevExpress.XtraTab.TabHeaderLocation.Bottom;
+            this.xtraTabControl1.HeaderOrientation = DevExpress.XtraTab.TabOrientation.Horizontal;
+            this.xtraTabControl1.Location = new System.Drawing.Point(0, 0);
+            this.xtraTabControl1.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
+            this.xtraTabControl1.MultiLine = DevExpress.Utils.DefaultBoolean.True;
+            this.xtraTabControl1.Name = "xtraTabControl1";
+            this.xtraTabControl1.SelectedTabPage = this.xtraTabPage7;
+            this.xtraTabControl1.Size = new System.Drawing.Size(915, 540);
+            this.xtraTabControl1.TabIndex = 0;
+            this.xtraTabControl1.TabPages.AddRange(new DevExpress.XtraTab.XtraTabPage[] {
+            this.xtraTabPage7,
+            this.xtraTabPage8,
+            this.xtraTabPage9,
+            this.xtraTabPage10,
+            this.xtraTabPage11,
+            this.xtraTabPage12,
+            this.xtraTabPage13});
+            // 
+            // xtraTabPage7
+            // 
+            this.xtraTabPage7.Controls.Add(this.layoutControl2);
+            this.xtraTabPage7.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
+            this.xtraTabPage7.Name = "xtraTabPage7";
+            this.xtraTabPage7.Size = new System.Drawing.Size(913, 342);
+            this.xtraTabPage7.Text = "Сведения об объекте капитального строитвельства, применительно к которому подгото" +
+    "влена проектная документация";
+            // 
+            // layoutControl2
+            // 
+            this.layoutControl2.Controls.Add(this.memoObjectName);
+            this.layoutControl2.Controls.Add(this.cmbObjectType);
+            this.layoutControl2.Controls.Add(this.cmbFunctionsClass);
+            this.layoutControl2.Controls.Add(this.cmbObjectAddress);
+            this.layoutControl2.Controls.Add(this.radioGroup11);
+            this.layoutControl2.Controls.Add(this.radioGroup111);
+            this.layoutControl2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.layoutControl2.Location = new System.Drawing.Point(0, 0);
+            this.layoutControl2.Margin = new System.Windows.Forms.Padding(4);
+            this.layoutControl2.Name = "layoutControl2";
+            this.layoutControl2.Root = this.layoutControlGroup2;
+            this.layoutControl2.Size = new System.Drawing.Size(913, 342);
+            this.layoutControl2.TabIndex = 0;
+            this.layoutControl2.Text = "layoutControl2";
+            // 
+            // memoObjectName
+            // 
+            this.memoObjectName.Location = new System.Drawing.Point(12, 31);
+            this.memoObjectName.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
+            this.memoObjectName.Name = "memoObjectName";
+            this.memoObjectName.Properties.ScrollBars = System.Windows.Forms.ScrollBars.None;
+            this.memoObjectName.Size = new System.Drawing.Size(889, 24);
+            this.memoObjectName.StyleController = this.layoutControl2;
+            this.memoObjectName.TabIndex = 8;
+            // 
+            // cmbObjectType
+            // 
+            this.cmbObjectType.Location = new System.Drawing.Point(12, 78);
+            this.cmbObjectType.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
+            this.cmbObjectType.Name = "cmbObjectType";
+            this.cmbObjectType.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo),
+            new DevExpress.XtraEditors.Controls.EditorButton(),
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Delete)});
+            this.cmbObjectType.Properties.Items.AddRange(new object[] {
+            "Объект производственного назначения",
+            "Объект непроизводственного назначения",
+            "Линейный объект"});
+            this.cmbObjectType.Size = new System.Drawing.Size(889, 22);
+            this.cmbObjectType.StyleController = this.layoutControl2;
+            this.cmbObjectType.TabIndex = 6;
+            // 
+            // cmbFunctionsClass
+            // 
+            this.cmbFunctionsClass.Location = new System.Drawing.Point(12, 123);
+            this.cmbFunctionsClass.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
+            this.cmbFunctionsClass.Name = "cmbFunctionsClass";
+            this.cmbFunctionsClass.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo),
+            new DevExpress.XtraEditors.Controls.EditorButton(),
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Delete)});
+            this.cmbFunctionsClass.Size = new System.Drawing.Size(889, 22);
+            this.cmbFunctionsClass.StyleController = this.layoutControl2;
+            this.cmbFunctionsClass.TabIndex = 6;
+            // 
+            // cmbObjectAddress
+            // 
+            this.cmbObjectAddress.Location = new System.Drawing.Point(12, 168);
+            this.cmbObjectAddress.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
+            this.cmbObjectAddress.Name = "cmbObjectAddress";
+            this.cmbObjectAddress.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo),
+            new DevExpress.XtraEditors.Controls.EditorButton(),
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Delete)});
+            this.cmbObjectAddress.Properties.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.DisableTextEditor;
+            this.cmbObjectAddress.Size = new System.Drawing.Size(889, 22);
+            this.cmbObjectAddress.StyleController = this.layoutControl2;
+            this.cmbObjectAddress.TabIndex = 6;
+            this.cmbObjectAddress.ButtonPressed += new DevExpress.XtraEditors.Controls.ButtonPressedEventHandler(this.cmbObjectAddress_ButtonPressed);
+            // 
+            // radioGroup11
+            // 
+            this.radioGroup11.Location = new System.Drawing.Point(12, 213);
+            this.radioGroup11.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
+            this.radioGroup11.Name = "radioGroup11";
+            this.radioGroup11.Properties.Items.AddRange(new DevExpress.XtraEditors.Controls.RadioGroupItem[] {
+            new DevExpress.XtraEditors.Controls.RadioGroupItem(true, "Да", true, "Да"),
+            new DevExpress.XtraEditors.Controls.RadioGroupItem(false, "Нет", true, "Нет")});
+            this.radioGroup11.Size = new System.Drawing.Size(889, 47);
+            this.radioGroup11.StyleController = this.layoutControl2;
+            this.radioGroup11.TabIndex = 10;
+            // 
+            // radioGroup111
+            // 
+            this.radioGroup111.Location = new System.Drawing.Point(12, 283);
+            this.radioGroup111.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
+            this.radioGroup111.Name = "radioGroup111";
+            this.radioGroup111.Properties.Items.AddRange(new DevExpress.XtraEditors.Controls.RadioGroupItem[] {
+            new DevExpress.XtraEditors.Controls.RadioGroupItem(true, "Да", true, "Да"),
+            new DevExpress.XtraEditors.Controls.RadioGroupItem(false, "Нет", true, "Нет")});
+            this.radioGroup111.Size = new System.Drawing.Size(889, 47);
+            this.radioGroup111.StyleController = this.layoutControl2;
+            this.radioGroup111.TabIndex = 10;
+            // 
+            // layoutControlGroup2
+            // 
+            this.layoutControlGroup2.EnableIndentsWithoutBorders = DevExpress.Utils.DefaultBoolean.True;
+            this.layoutControlGroup2.GroupBordersVisible = false;
+            this.layoutControlGroup2.Items.AddRange(new DevExpress.XtraLayout.BaseLayoutItem[] {
+            this.layoutControlItemObjectName,
+            this.layoutControlItemObjectType,
+            this.layoutControlItemFunctionsClass,
+            this.layoutControlItemObjectAddress,
+            this.layoutControlItem16,
+            this.layoutControlItem17});
+            this.layoutControlGroup2.Name = "layoutControlGroup2";
+            this.layoutControlGroup2.Size = new System.Drawing.Size(913, 342);
+            this.layoutControlGroup2.TextVisible = false;
+            // 
+            // layoutControlItemObjectName
+            // 
+            this.layoutControlItemObjectName.Control = this.memoObjectName;
+            this.layoutControlItemObjectName.ControlAlignment = System.Drawing.ContentAlignment.TopLeft;
+            this.layoutControlItemObjectName.CustomizationFormText = "Наименование объекта капитального строительства *";
+            this.layoutControlItemObjectName.Location = new System.Drawing.Point(0, 0);
+            this.layoutControlItemObjectName.Name = "layoutControlItemObjectName";
+            this.layoutControlItemObjectName.Size = new System.Drawing.Size(893, 47);
+            this.layoutControlItemObjectName.Text = "Наименование объекта капитального строительства *";
+            this.layoutControlItemObjectName.TextLocation = DevExpress.Utils.Locations.Top;
+            this.layoutControlItemObjectName.TextSize = new System.Drawing.Size(560, 16);
+            // 
+            // layoutControlItemObjectType
+            // 
+            this.layoutControlItemObjectType.Control = this.cmbObjectType;
+            this.layoutControlItemObjectType.ControlAlignment = System.Drawing.ContentAlignment.TopLeft;
+            this.layoutControlItemObjectType.CustomizationFormText = "layoutControlItem3";
+            this.layoutControlItemObjectType.Location = new System.Drawing.Point(0, 47);
+            this.layoutControlItemObjectType.Name = "layoutControlItemObjectType";
+            this.layoutControlItemObjectType.Size = new System.Drawing.Size(893, 45);
+            this.layoutControlItemObjectType.Text = "Вид объекта капитального строительства *";
+            this.layoutControlItemObjectType.TextLocation = DevExpress.Utils.Locations.Top;
+            this.layoutControlItemObjectType.TextSize = new System.Drawing.Size(560, 16);
+            // 
+            // layoutControlItemFunctionsClass
+            // 
+            this.layoutControlItemFunctionsClass.Control = this.cmbFunctionsClass;
+            this.layoutControlItemFunctionsClass.ControlAlignment = System.Drawing.ContentAlignment.TopLeft;
+            this.layoutControlItemFunctionsClass.CustomizationFormText = "layoutControlItem3";
+            this.layoutControlItemFunctionsClass.Location = new System.Drawing.Point(0, 92);
+            this.layoutControlItemFunctionsClass.Name = "layoutControlItemFunctionsClass";
+            this.layoutControlItemFunctionsClass.Size = new System.Drawing.Size(893, 45);
+            this.layoutControlItemFunctionsClass.Text = "Функциональное назначение объекта капитального строительства (код по классификато" +
+    "ру) *";
+            this.layoutControlItemFunctionsClass.TextLocation = DevExpress.Utils.Locations.Top;
+            this.layoutControlItemFunctionsClass.TextSize = new System.Drawing.Size(560, 16);
+            // 
+            // layoutControlItemObjectAddress
+            // 
+            this.layoutControlItemObjectAddress.Control = this.cmbObjectAddress;
+            this.layoutControlItemObjectAddress.ControlAlignment = System.Drawing.ContentAlignment.TopLeft;
+            this.layoutControlItemObjectAddress.CustomizationFormText = "layoutControlItem3";
+            this.layoutControlItemObjectAddress.Location = new System.Drawing.Point(0, 137);
+            this.layoutControlItemObjectAddress.Name = "layoutControlItemObjectAddress";
+            this.layoutControlItemObjectAddress.Size = new System.Drawing.Size(893, 45);
+            this.layoutControlItemObjectAddress.Text = "Адрес объекта капитального строительства *";
+            this.layoutControlItemObjectAddress.TextLocation = DevExpress.Utils.Locations.Top;
+            this.layoutControlItemObjectAddress.TextSize = new System.Drawing.Size(560, 16);
+            // 
+            // layoutControlItem16
+            // 
+            this.layoutControlItem16.Control = this.radioGroup11;
+            this.layoutControlItem16.ControlAlignment = System.Drawing.ContentAlignment.TopLeft;
+            this.layoutControlItem16.CustomizationFormText = "Технико-экономические показатели предусмотрены?";
+            this.layoutControlItem16.Location = new System.Drawing.Point(0, 182);
+            this.layoutControlItem16.Name = "layoutControlItem16";
+            this.layoutControlItem16.Size = new System.Drawing.Size(893, 70);
+            this.layoutControlItem16.Text = "Технико-экономические показатели предусмотрены?";
+            this.layoutControlItem16.TextLocation = DevExpress.Utils.Locations.Top;
+            this.layoutControlItem16.TextSize = new System.Drawing.Size(560, 16);
+            // 
+            // layoutControlItem17
+            // 
+            this.layoutControlItem17.Control = this.radioGroup111;
+            this.layoutControlItem17.ControlAlignment = System.Drawing.ContentAlignment.TopLeft;
+            this.layoutControlItem17.CustomizationFormText = "Технико-экономические показатели предусмотрены?";
+            this.layoutControlItem17.Location = new System.Drawing.Point(0, 252);
+            this.layoutControlItem17.Name = "layoutControlItem17";
+            this.layoutControlItem17.Size = new System.Drawing.Size(893, 70);
+            this.layoutControlItem17.Text = "Предусмотрены здания (соорудения). входящие в состав сложного объекта?";
+            this.layoutControlItem17.TextLocation = DevExpress.Utils.Locations.Top;
+            this.layoutControlItem17.TextSize = new System.Drawing.Size(560, 16);
+            // 
+            // xtraTabPage8
+            // 
+            this.xtraTabPage8.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
+            this.xtraTabPage8.Name = "xtraTabPage8";
+            this.xtraTabPage8.Size = new System.Drawing.Size(913, 342);
+            this.xtraTabPage8.Text = "Сведения об источнике (источниках) и размере финансирования строительства, реконс" +
+    "трукции, капитального ремонта, сноса объекта капитального строительства";
+            // 
+            // xtraTabPage9
+            // 
+            this.xtraTabPage9.Controls.Add(this.layoutControl5);
+            this.xtraTabPage9.Margin = new System.Windows.Forms.Padding(4);
+            this.xtraTabPage9.Name = "xtraTabPage9";
+            this.xtraTabPage9.Size = new System.Drawing.Size(913, 342);
+            this.xtraTabPage9.Text = "Сведения о природных и техногенных условиях территории";
+            // 
+            // layoutControl5
+            // 
+            this.layoutControl5.AllowCustomization = false;
+            this.layoutControl5.Controls.Add(this.checkCmbClimateDistrict);
+            this.layoutControl5.Controls.Add(this.checkedComboBoxEdit11);
+            this.layoutControl5.Controls.Add(this.checkedComboBoxEdit12);
+            this.layoutControl5.Controls.Add(this.checkedComboBoxEdit13);
+            this.layoutControl5.Controls.Add(this.checkedComboBoxEdit14);
+            this.layoutControl5.Controls.Add(this.memoEdit1);
+            this.layoutControl5.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.layoutControl5.Location = new System.Drawing.Point(0, 0);
+            this.layoutControl5.Margin = new System.Windows.Forms.Padding(4);
+            this.layoutControl5.Name = "layoutControl5";
+            this.layoutControl5.Root = this.layoutControlGroup5;
+            this.layoutControl5.Size = new System.Drawing.Size(913, 342);
+            this.layoutControl5.TabIndex = 0;
+            this.layoutControl5.Text = "layoutControl5";
+            // 
+            // checkCmbClimateDistrict
+            // 
+            this.checkCmbClimateDistrict.Location = new System.Drawing.Point(8, 27);
+            this.checkCmbClimateDistrict.Margin = new System.Windows.Forms.Padding(4);
+            this.checkCmbClimateDistrict.MenuManager = this.barManager;
+            this.checkCmbClimateDistrict.Name = "checkCmbClimateDistrict";
+            this.checkCmbClimateDistrict.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo),
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Delete)});
+            this.checkCmbClimateDistrict.Size = new System.Drawing.Size(446, 22);
+            this.checkCmbClimateDistrict.StyleController = this.layoutControl5;
+            this.checkCmbClimateDistrict.TabIndex = 4;
+            // 
             // checkedComboBoxEdit11
             // 
-            this.checkedComboBoxEdit11.Location = new System.Drawing.Point(458, 28);
-            this.checkedComboBoxEdit11.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.checkedComboBoxEdit11.Location = new System.Drawing.Point(458, 27);
+            this.checkedComboBoxEdit11.Margin = new System.Windows.Forms.Padding(4);
             this.checkedComboBoxEdit11.Name = "checkedComboBoxEdit11";
             this.checkedComboBoxEdit11.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo),
@@ -942,8 +965,8 @@
             // 
             // checkedComboBoxEdit12
             // 
-            this.checkedComboBoxEdit12.Location = new System.Drawing.Point(8, 74);
-            this.checkedComboBoxEdit12.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.checkedComboBoxEdit12.Location = new System.Drawing.Point(8, 72);
+            this.checkedComboBoxEdit12.Margin = new System.Windows.Forms.Padding(4);
             this.checkedComboBoxEdit12.Name = "checkedComboBoxEdit12";
             this.checkedComboBoxEdit12.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo),
@@ -954,8 +977,8 @@
             // 
             // checkedComboBoxEdit13
             // 
-            this.checkedComboBoxEdit13.Location = new System.Drawing.Point(458, 74);
-            this.checkedComboBoxEdit13.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.checkedComboBoxEdit13.Location = new System.Drawing.Point(458, 72);
+            this.checkedComboBoxEdit13.Margin = new System.Windows.Forms.Padding(4);
             this.checkedComboBoxEdit13.Name = "checkedComboBoxEdit13";
             this.checkedComboBoxEdit13.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo),
@@ -966,8 +989,8 @@
             // 
             // checkedComboBoxEdit14
             // 
-            this.checkedComboBoxEdit14.Location = new System.Drawing.Point(8, 120);
-            this.checkedComboBoxEdit14.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.checkedComboBoxEdit14.Location = new System.Drawing.Point(8, 117);
+            this.checkedComboBoxEdit14.Margin = new System.Windows.Forms.Padding(4);
             this.checkedComboBoxEdit14.Name = "checkedComboBoxEdit14";
             this.checkedComboBoxEdit14.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo),
@@ -978,11 +1001,11 @@
             // 
             // memoEdit1
             // 
-            this.memoEdit1.Location = new System.Drawing.Point(220, 146);
-            this.memoEdit1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.memoEdit1.Location = new System.Drawing.Point(218, 143);
+            this.memoEdit1.Margin = new System.Windows.Forms.Padding(4);
             this.memoEdit1.MenuManager = this.barManager;
             this.memoEdit1.Name = "memoEdit1";
-            this.memoEdit1.Size = new System.Drawing.Size(685, 188);
+            this.memoEdit1.Size = new System.Drawing.Size(687, 191);
             this.memoEdit1.StyleController = this.layoutControl5;
             this.memoEdit1.TabIndex = 5;
             // 
@@ -1007,7 +1030,7 @@
             this.layoutControlItemClimateDistrict.Control = this.checkCmbClimateDistrict;
             this.layoutControlItemClimateDistrict.Location = new System.Drawing.Point(0, 0);
             this.layoutControlItemClimateDistrict.Name = "layoutControlItemClimateDistrict";
-            this.layoutControlItemClimateDistrict.Size = new System.Drawing.Size(450, 46);
+            this.layoutControlItemClimateDistrict.Size = new System.Drawing.Size(450, 45);
             this.layoutControlItemClimateDistrict.Text = "Климатический район (подрайон)";
             this.layoutControlItemClimateDistrict.TextLocation = DevExpress.Utils.Locations.Top;
             this.layoutControlItemClimateDistrict.TextSize = new System.Drawing.Size(198, 16);
@@ -1017,9 +1040,9 @@
             this.layoutControlItem5.Control = this.checkedComboBoxEdit14;
             this.layoutControlItem5.ControlAlignment = System.Drawing.ContentAlignment.TopLeft;
             this.layoutControlItem5.CustomizationFormText = "layoutControlItem1";
-            this.layoutControlItem5.Location = new System.Drawing.Point(0, 92);
+            this.layoutControlItem5.Location = new System.Drawing.Point(0, 90);
             this.layoutControlItem5.Name = "layoutControlItem5";
-            this.layoutControlItem5.Size = new System.Drawing.Size(901, 46);
+            this.layoutControlItem5.Size = new System.Drawing.Size(901, 45);
             this.layoutControlItem5.Text = "layoutControlItem1";
             this.layoutControlItem5.TextLocation = DevExpress.Utils.Locations.Top;
             this.layoutControlItem5.TextSize = new System.Drawing.Size(198, 16);
@@ -1031,7 +1054,7 @@
             this.layoutControlItem2.CustomizationFormText = "layoutControlItem1";
             this.layoutControlItem2.Location = new System.Drawing.Point(450, 0);
             this.layoutControlItem2.Name = "layoutControlItem2";
-            this.layoutControlItem2.Size = new System.Drawing.Size(451, 46);
+            this.layoutControlItem2.Size = new System.Drawing.Size(451, 45);
             this.layoutControlItem2.Text = "layoutControlItem1";
             this.layoutControlItem2.TextLocation = DevExpress.Utils.Locations.Top;
             this.layoutControlItem2.TextSize = new System.Drawing.Size(198, 16);
@@ -1041,9 +1064,9 @@
             this.layoutControlItem3.Control = this.checkedComboBoxEdit12;
             this.layoutControlItem3.ControlAlignment = System.Drawing.ContentAlignment.TopLeft;
             this.layoutControlItem3.CustomizationFormText = "layoutControlItem1";
-            this.layoutControlItem3.Location = new System.Drawing.Point(0, 46);
+            this.layoutControlItem3.Location = new System.Drawing.Point(0, 45);
             this.layoutControlItem3.Name = "layoutControlItem3";
-            this.layoutControlItem3.Size = new System.Drawing.Size(450, 46);
+            this.layoutControlItem3.Size = new System.Drawing.Size(450, 45);
             this.layoutControlItem3.Text = "layoutControlItem1";
             this.layoutControlItem3.TextLocation = DevExpress.Utils.Locations.Top;
             this.layoutControlItem3.TextSize = new System.Drawing.Size(198, 16);
@@ -1053,9 +1076,9 @@
             this.layoutControlItem4.Control = this.checkedComboBoxEdit13;
             this.layoutControlItem4.ControlAlignment = System.Drawing.ContentAlignment.TopLeft;
             this.layoutControlItem4.CustomizationFormText = "layoutControlItem1";
-            this.layoutControlItem4.Location = new System.Drawing.Point(450, 46);
+            this.layoutControlItem4.Location = new System.Drawing.Point(450, 45);
             this.layoutControlItem4.Name = "layoutControlItem4";
-            this.layoutControlItem4.Size = new System.Drawing.Size(451, 46);
+            this.layoutControlItem4.Size = new System.Drawing.Size(451, 45);
             this.layoutControlItem4.Text = "layoutControlItem1";
             this.layoutControlItem4.TextLocation = DevExpress.Utils.Locations.Top;
             this.layoutControlItem4.TextSize = new System.Drawing.Size(198, 16);
@@ -1063,14 +1086,14 @@
             // layoutControlItem6
             // 
             this.layoutControlItem6.Control = this.memoEdit1;
-            this.layoutControlItem6.Location = new System.Drawing.Point(0, 138);
+            this.layoutControlItem6.Location = new System.Drawing.Point(0, 135);
             this.layoutControlItem6.Name = "layoutControlItem6";
-            this.layoutControlItem6.Size = new System.Drawing.Size(901, 192);
+            this.layoutControlItem6.Size = new System.Drawing.Size(901, 195);
             this.layoutControlItem6.TextSize = new System.Drawing.Size(198, 16);
             // 
             // xtraTabPage10
             // 
-            this.xtraTabPage10.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.xtraTabPage10.Margin = new System.Windows.Forms.Padding(4);
             this.xtraTabPage10.Name = "xtraTabPage10";
             this.xtraTabPage10.Size = new System.Drawing.Size(913, 342);
             this.xtraTabPage10.Text = "Сведения об индивидуальных предпринимателях и (или) юридических лицах, подготовив" +
@@ -1078,7 +1101,7 @@
             // 
             // xtraTabPage11
             // 
-            this.xtraTabPage11.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.xtraTabPage11.Margin = new System.Windows.Forms.Padding(4);
             this.xtraTabPage11.Name = "xtraTabPage11";
             this.xtraTabPage11.Size = new System.Drawing.Size(913, 342);
             this.xtraTabPage11.Text = "Сведения об использовании при подготовке проектной документации экономически эффе" +
@@ -1087,7 +1110,7 @@
             // xtraTabPage12
             // 
             this.xtraTabPage12.Controls.Add(this.gridControlCadastralNumber);
-            this.xtraTabPage12.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.xtraTabPage12.Margin = new System.Windows.Forms.Padding(4);
             this.xtraTabPage12.Name = "xtraTabPage12";
             this.xtraTabPage12.Size = new System.Drawing.Size(913, 342);
             this.xtraTabPage12.Text = "Кадастровый номер земельного участка (земельных участков), в пределах которого (к" +
@@ -1120,7 +1143,7 @@
             // 
             // xtraTabPage13
             // 
-            this.xtraTabPage13.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.xtraTabPage13.Margin = new System.Windows.Forms.Padding(4);
             this.xtraTabPage13.Name = "xtraTabPage13";
             this.xtraTabPage13.Size = new System.Drawing.Size(913, 342);
             this.xtraTabPage13.Text = "Сведения о застройщике (техническом заказчике), обеспечившим подготовку проектной" +
@@ -1153,11 +1176,11 @@
             // gridControlMismatches
             // 
             this.gridControlMismatches.EmbeddedNavigator.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
-            this.gridControlMismatches.Location = new System.Drawing.Point(7, 258);
+            this.gridControlMismatches.Location = new System.Drawing.Point(7, 256);
             this.gridControlMismatches.MainView = this.gridViewMismatches;
             this.gridControlMismatches.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
             this.gridControlMismatches.Name = "gridControlMismatches";
-            this.gridControlMismatches.Size = new System.Drawing.Size(905, 275);
+            this.gridControlMismatches.Size = new System.Drawing.Size(905, 277);
             this.gridControlMismatches.TabIndex = 8;
             this.gridControlMismatches.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
             this.gridViewMismatches});
@@ -1176,28 +1199,28 @@
             // 
             // memoEstimateNorms
             // 
-            this.memoEstimateNorms.Location = new System.Drawing.Point(7, 27);
+            this.memoEstimateNorms.Location = new System.Drawing.Point(7, 26);
             this.memoEstimateNorms.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
             this.memoEstimateNorms.MenuManager = this.barManager;
             this.memoEstimateNorms.Name = "memoEstimateNorms";
             this.memoEstimateNorms.Properties.ScrollBars = System.Windows.Forms.ScrollBars.None;
-            this.memoEstimateNorms.Size = new System.Drawing.Size(905, 135);
+            this.memoEstimateNorms.Size = new System.Drawing.Size(905, 136);
             this.memoEstimateNorms.StyleController = this.layoutControl1;
             this.memoEstimateNorms.TabIndex = 4;
             // 
             // txtEstimatedCost
             // 
-            this.txtEstimatedCost.Location = new System.Drawing.Point(65, 166);
+            this.txtEstimatedCost.Location = new System.Drawing.Point(63, 166);
             this.txtEstimatedCost.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
             this.txtEstimatedCost.MenuManager = this.barManager;
             this.txtEstimatedCost.Name = "txtEstimatedCost";
-            this.txtEstimatedCost.Size = new System.Drawing.Size(847, 22);
+            this.txtEstimatedCost.Size = new System.Drawing.Size(849, 22);
             this.txtEstimatedCost.StyleController = this.layoutControl1;
             this.txtEstimatedCost.TabIndex = 5;
             // 
             // txtEstimatedCompleteCostBefore
             // 
-            this.txtEstimatedCompleteCostBefore.Location = new System.Drawing.Point(7, 212);
+            this.txtEstimatedCompleteCostBefore.Location = new System.Drawing.Point(7, 211);
             this.txtEstimatedCompleteCostBefore.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
             this.txtEstimatedCompleteCostBefore.MenuManager = this.barManager;
             this.txtEstimatedCompleteCostBefore.Name = "txtEstimatedCompleteCostBefore";
@@ -1207,7 +1230,7 @@
             // 
             // txtEstimatedCompleteCostPost
             // 
-            this.txtEstimatedCompleteCostPost.Location = new System.Drawing.Point(522, 212);
+            this.txtEstimatedCompleteCostPost.Location = new System.Drawing.Point(522, 211);
             this.txtEstimatedCompleteCostPost.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
             this.txtEstimatedCompleteCostPost.MenuManager = this.barManager;
             this.txtEstimatedCompleteCostPost.Name = "txtEstimatedCompleteCostPost";
@@ -1255,7 +1278,7 @@
             this.layoutControlItemEstimatedCompleteCostBefore.Control = this.txtEstimatedCompleteCostBefore;
             this.layoutControlItemEstimatedCompleteCostBefore.Location = new System.Drawing.Point(0, 185);
             this.layoutControlItemEstimatedCompleteCostBefore.Name = "layoutControlItemEstimatedCompleteCostBefore";
-            this.layoutControlItemEstimatedCompleteCostBefore.Size = new System.Drawing.Size(515, 46);
+            this.layoutControlItemEstimatedCompleteCostBefore.Size = new System.Drawing.Size(515, 45);
             this.layoutControlItemEstimatedCompleteCostBefore.Text = "Сметная стоимость на дату представления документации для проведения экспертизы";
             this.layoutControlItemEstimatedCompleteCostBefore.TextLocation = DevExpress.Utils.Locations.Top;
             this.layoutControlItemEstimatedCompleteCostBefore.TextSize = new System.Drawing.Size(511, 16);
@@ -1265,7 +1288,7 @@
             this.layoutControlItemEstimatedCompleteCostPost.Control = this.txtEstimatedCompleteCostPost;
             this.layoutControlItemEstimatedCompleteCostPost.Location = new System.Drawing.Point(515, 185);
             this.layoutControlItemEstimatedCompleteCostPost.Name = "layoutControlItemEstimatedCompleteCostPost";
-            this.layoutControlItemEstimatedCompleteCostPost.Size = new System.Drawing.Size(394, 46);
+            this.layoutControlItemEstimatedCompleteCostPost.Size = new System.Drawing.Size(394, 45);
             this.layoutControlItemEstimatedCompleteCostPost.Text = "Сметная стоимость на дату утверждения заключения экспертизы";
             this.layoutControlItemEstimatedCompleteCostPost.TextLocation = DevExpress.Utils.Locations.Top;
             this.layoutControlItemEstimatedCompleteCostPost.TextSize = new System.Drawing.Size(390, 16);
@@ -1273,9 +1296,9 @@
             // layoutControlItemMismatches
             // 
             this.layoutControlItemMismatches.Control = this.gridControlMismatches;
-            this.layoutControlItemMismatches.Location = new System.Drawing.Point(0, 231);
+            this.layoutControlItemMismatches.Location = new System.Drawing.Point(0, 230);
             this.layoutControlItemMismatches.Name = "layoutControlItemMismatches";
-            this.layoutControlItemMismatches.Size = new System.Drawing.Size(909, 299);
+            this.layoutControlItemMismatches.Size = new System.Drawing.Size(909, 300);
             this.layoutControlItemMismatches.Text = "Сведения о несоответствии сметной части проектной документации установленным треб" +
     "ованиям";
             this.layoutControlItemMismatches.TextLocation = DevExpress.Utils.Locations.Top;
@@ -1301,7 +1324,7 @@
             this.layoutControl3.Controls.Add(this.memoEstimateSummary);
             this.layoutControl3.Dock = System.Windows.Forms.DockStyle.Fill;
             this.layoutControl3.Location = new System.Drawing.Point(0, 0);
-            this.layoutControl3.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.layoutControl3.Margin = new System.Windows.Forms.Padding(4);
             this.layoutControl3.Name = "layoutControl3";
             this.layoutControl3.Root = this.layoutControlGroup3;
             this.layoutControl3.Size = new System.Drawing.Size(915, 540);
@@ -1310,8 +1333,8 @@
             // 
             // checkCmbEngineeringSurveyType
             // 
-            this.checkCmbEngineeringSurveyType.Location = new System.Drawing.Point(8, 180);
-            this.checkCmbEngineeringSurveyType.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.checkCmbEngineeringSurveyType.Location = new System.Drawing.Point(8, 179);
+            this.checkCmbEngineeringSurveyType.Margin = new System.Windows.Forms.Padding(4);
             this.checkCmbEngineeringSurveyType.MenuManager = this.barManager;
             this.checkCmbEngineeringSurveyType.Name = "checkCmbEngineeringSurveyType";
             this.checkCmbEngineeringSurveyType.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
@@ -1322,19 +1345,19 @@
             // 
             // memoEngineeringSurveySummary
             // 
-            this.memoEngineeringSurveySummary.Location = new System.Drawing.Point(8, 28);
-            this.memoEngineeringSurveySummary.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.memoEngineeringSurveySummary.Location = new System.Drawing.Point(8, 27);
+            this.memoEngineeringSurveySummary.Margin = new System.Windows.Forms.Padding(4);
             this.memoEngineeringSurveySummary.MenuManager = this.barManager;
             this.memoEngineeringSurveySummary.Name = "memoEngineeringSurveySummary";
             this.memoEngineeringSurveySummary.Properties.ScrollBars = System.Windows.Forms.ScrollBars.None;
-            this.memoEngineeringSurveySummary.Size = new System.Drawing.Size(899, 52);
+            this.memoEngineeringSurveySummary.Size = new System.Drawing.Size(899, 53);
             this.memoEngineeringSurveySummary.StyleController = this.layoutControl3;
             this.memoEngineeringSurveySummary.TabIndex = 4;
             // 
             // memoEngineeringSurveySummaryDate
             // 
             this.memoEngineeringSurveySummaryDate.Location = new System.Drawing.Point(8, 114);
-            this.memoEngineeringSurveySummaryDate.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.memoEngineeringSurveySummaryDate.Margin = new System.Windows.Forms.Padding(4);
             this.memoEngineeringSurveySummaryDate.MenuManager = this.barManager;
             this.memoEngineeringSurveySummaryDate.Name = "memoEngineeringSurveySummaryDate";
             this.memoEngineeringSurveySummaryDate.Properties.ScrollBars = System.Windows.Forms.ScrollBars.None;
@@ -1344,8 +1367,8 @@
             // 
             // memoProjectDocumentsSummary
             // 
-            this.memoProjectDocumentsSummary.Location = new System.Drawing.Point(8, 236);
-            this.memoProjectDocumentsSummary.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.memoProjectDocumentsSummary.Location = new System.Drawing.Point(8, 235);
+            this.memoProjectDocumentsSummary.Margin = new System.Windows.Forms.Padding(4);
             this.memoProjectDocumentsSummary.MenuManager = this.barManager;
             this.memoProjectDocumentsSummary.Name = "memoProjectDocumentsSummary";
             this.memoProjectDocumentsSummary.Properties.ScrollBars = System.Windows.Forms.ScrollBars.None;
@@ -1355,8 +1378,8 @@
             // 
             // memoProjectDocumentsSummaryDate
             // 
-            this.memoProjectDocumentsSummaryDate.Location = new System.Drawing.Point(8, 318);
-            this.memoProjectDocumentsSummaryDate.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.memoProjectDocumentsSummaryDate.Location = new System.Drawing.Point(8, 317);
+            this.memoProjectDocumentsSummaryDate.Margin = new System.Windows.Forms.Padding(4);
             this.memoProjectDocumentsSummaryDate.MenuManager = this.barManager;
             this.memoProjectDocumentsSummaryDate.Name = "memoProjectDocumentsSummaryDate";
             this.memoProjectDocumentsSummaryDate.Properties.ScrollBars = System.Windows.Forms.ScrollBars.None;
@@ -1366,8 +1389,8 @@
             // 
             // memoEstimateNormsAndWorksSummary
             // 
-            this.memoEstimateNormsAndWorksSummary.Location = new System.Drawing.Point(8, 401);
-            this.memoEstimateNormsAndWorksSummary.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.memoEstimateNormsAndWorksSummary.Location = new System.Drawing.Point(8, 400);
+            this.memoEstimateNormsAndWorksSummary.Margin = new System.Windows.Forms.Padding(4);
             this.memoEstimateNormsAndWorksSummary.MenuManager = this.barManager;
             this.memoEstimateNormsAndWorksSummary.Name = "memoEstimateNormsAndWorksSummary";
             this.memoEstimateNormsAndWorksSummary.Properties.ScrollBars = System.Windows.Forms.ScrollBars.None;
@@ -1377,12 +1400,12 @@
             // 
             // memoEstimateSummary
             // 
-            this.memoEstimateSummary.Location = new System.Drawing.Point(8, 483);
-            this.memoEstimateSummary.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.memoEstimateSummary.Location = new System.Drawing.Point(8, 482);
+            this.memoEstimateSummary.Margin = new System.Windows.Forms.Padding(4);
             this.memoEstimateSummary.MenuManager = this.barManager;
             this.memoEstimateSummary.Name = "memoEstimateSummary";
             this.memoEstimateSummary.Properties.ScrollBars = System.Windows.Forms.ScrollBars.None;
-            this.memoEstimateSummary.Size = new System.Drawing.Size(899, 49);
+            this.memoEstimateSummary.Size = new System.Drawing.Size(899, 50);
             this.memoEstimateSummary.StyleController = this.layoutControl3;
             this.memoEstimateSummary.TabIndex = 10;
             // 
@@ -1419,7 +1442,7 @@
             this.layoutControlItemEngineeringSurveyType.Control = this.checkCmbEngineeringSurveyType;
             this.layoutControlItemEngineeringSurveyType.Location = new System.Drawing.Point(0, 152);
             this.layoutControlItemEngineeringSurveyType.Name = "layoutControlItemEngineeringSurveyType";
-            this.layoutControlItemEngineeringSurveyType.Size = new System.Drawing.Size(903, 46);
+            this.layoutControlItemEngineeringSurveyType.Size = new System.Drawing.Size(903, 45);
             this.layoutControlItemEngineeringSurveyType.Text = "Вид инженерных изысканий, на соответствие которым проводилась экспертиза проектно" +
     "й документации";
             this.layoutControlItemEngineeringSurveyType.TextLocation = DevExpress.Utils.Locations.Top;
@@ -1440,7 +1463,7 @@
             // layoutControlItemProjectDocumentsSummary
             // 
             this.layoutControlItemProjectDocumentsSummary.Control = this.memoProjectDocumentsSummary;
-            this.layoutControlItemProjectDocumentsSummary.Location = new System.Drawing.Point(0, 198);
+            this.layoutControlItemProjectDocumentsSummary.Location = new System.Drawing.Point(0, 197);
             this.layoutControlItemProjectDocumentsSummary.Name = "layoutControlItemProjectDocumentsSummary";
             this.layoutControlItemProjectDocumentsSummary.Size = new System.Drawing.Size(903, 82);
             this.layoutControlItemProjectDocumentsSummary.Text = "Вывод о соответствии технической части проектной документации результатам инженер" +
@@ -1454,7 +1477,7 @@
             // layoutControlItemProjectDocumentsSummaryDate
             // 
             this.layoutControlItemProjectDocumentsSummaryDate.Control = this.memoProjectDocumentsSummaryDate;
-            this.layoutControlItemProjectDocumentsSummaryDate.Location = new System.Drawing.Point(0, 280);
+            this.layoutControlItemProjectDocumentsSummaryDate.Location = new System.Drawing.Point(0, 279);
             this.layoutControlItemProjectDocumentsSummaryDate.Name = "layoutControlItemProjectDocumentsSummaryDate";
             this.layoutControlItemProjectDocumentsSummaryDate.Size = new System.Drawing.Size(903, 83);
             this.layoutControlItemProjectDocumentsSummaryDate.Text = resources.GetString("layoutControlItemProjectDocumentsSummaryDate.Text");
@@ -1466,7 +1489,7 @@
             // layoutControlItemEstimateNormsAndWorksSummary
             // 
             this.layoutControlItemEstimateNormsAndWorksSummary.Control = this.memoEstimateNormsAndWorksSummary;
-            this.layoutControlItemEstimateNormsAndWorksSummary.Location = new System.Drawing.Point(0, 363);
+            this.layoutControlItemEstimateNormsAndWorksSummary.Location = new System.Drawing.Point(0, 362);
             this.layoutControlItemEstimateNormsAndWorksSummary.Name = "layoutControlItemEstimateNormsAndWorksSummary";
             this.layoutControlItemEstimateNormsAndWorksSummary.Size = new System.Drawing.Size(903, 82);
             this.layoutControlItemEstimateNormsAndWorksSummary.Text = resources.GetString("layoutControlItemEstimateNormsAndWorksSummary.Text");
@@ -1478,9 +1501,9 @@
             // layoutControlItemEstimateSummary
             // 
             this.layoutControlItemEstimateSummary.Control = this.memoEstimateSummary;
-            this.layoutControlItemEstimateSummary.Location = new System.Drawing.Point(0, 445);
+            this.layoutControlItemEstimateSummary.Location = new System.Drawing.Point(0, 444);
             this.layoutControlItemEstimateSummary.Name = "layoutControlItemEstimateSummary";
-            this.layoutControlItemEstimateSummary.Size = new System.Drawing.Size(903, 83);
+            this.layoutControlItemEstimateSummary.Size = new System.Drawing.Size(903, 84);
             this.layoutControlItemEstimateSummary.Text = resources.GetString("layoutControlItemEstimateSummary.Text");
             this.layoutControlItemEstimateSummary.TextAlignMode = DevExpress.XtraLayout.TextAlignModeItem.CustomSize;
             this.layoutControlItemEstimateSummary.TextLocation = DevExpress.Utils.Locations.Top;
@@ -1501,7 +1524,7 @@
             this.layoutControl4.Controls.Add(this.memoExaminationSummary);
             this.layoutControl4.Dock = System.Windows.Forms.DockStyle.Fill;
             this.layoutControl4.Location = new System.Drawing.Point(0, 0);
-            this.layoutControl4.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.layoutControl4.Margin = new System.Windows.Forms.Padding(4);
             this.layoutControl4.Name = "layoutControl4";
             this.layoutControl4.Root = this.layoutControlGroup4;
             this.layoutControl4.Size = new System.Drawing.Size(915, 540);
@@ -1511,7 +1534,7 @@
             // memoExaminationSummary
             // 
             this.memoExaminationSummary.Location = new System.Drawing.Point(8, 38);
-            this.memoExaminationSummary.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.memoExaminationSummary.Margin = new System.Windows.Forms.Padding(4);
             this.memoExaminationSummary.Name = "memoExaminationSummary";
             this.memoExaminationSummary.Properties.ScrollBars = System.Windows.Forms.ScrollBars.None;
             this.memoExaminationSummary.Size = new System.Drawing.Size(899, 494);
@@ -1616,11 +1639,11 @@
             // 
             // txtFileName
             // 
-            this.txtFileName.Location = new System.Drawing.Point(107, 665);
-            this.txtFileName.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.txtFileName.Location = new System.Drawing.Point(105, 665);
+            this.txtFileName.Margin = new System.Windows.Forms.Padding(4);
             this.txtFileName.MenuManager = this.barManager;
             this.txtFileName.Name = "txtFileName";
-            this.txtFileName.Size = new System.Drawing.Size(126, 22);
+            this.txtFileName.Size = new System.Drawing.Size(128, 22);
             this.txtFileName.StyleController = this.layoutControl;
             this.txtFileName.TabIndex = 6;
             // 
@@ -1709,26 +1732,6 @@
             this.popupMenuCadastralNumber.Manager = this.barManager;
             this.popupMenuCadastralNumber.Name = "popupMenuCadastralNumber";
             // 
-            // checkCmbExaminationType
-            // 
-            this.checkCmbExaminationType.Location = new System.Drawing.Point(154, 85);
-            this.checkCmbExaminationType.MenuManager = this.barManager;
-            this.checkCmbExaminationType.Name = "checkCmbExaminationType";
-            this.checkCmbExaminationType.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
-            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
-            this.checkCmbExaminationType.Size = new System.Drawing.Size(754, 22);
-            this.checkCmbExaminationType.StyleController = this.layoutControl_I;
-            this.checkCmbExaminationType.TabIndex = 8;
-            // 
-            // layoutControlItemExaminationType
-            // 
-            this.layoutControlItemExaminationType.Control = this.checkCmbExaminationType;
-            this.layoutControlItemExaminationType.Location = new System.Drawing.Point(0, 78);
-            this.layoutControlItemExaminationType.Name = "layoutControlItemExaminationType";
-            this.layoutControlItemExaminationType.Size = new System.Drawing.Size(905, 26);
-            this.layoutControlItemExaminationType.Text = "Предмет экспертизы *";
-            this.layoutControlItemExaminationType.TextSize = new System.Drawing.Size(133, 16);
-            // 
             // ConclusionEdit
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 16F);
@@ -1749,6 +1752,8 @@
             this.xtraTabPage1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.layoutControl_I)).EndInit();
             this.layoutControl_I.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.checkCmbExaminationType.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.barManager)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.cmbExaminationResult.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.cmbExaminationForm.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.cmbExaminationObjectType.Properties)).EndInit();
@@ -1765,6 +1770,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemExaminationForm)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemExaminationStage)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.emptySpaceItemConstructionType)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemExaminationType)).EndInit();
             this.xtraTabPage2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.xtraTabControl1)).EndInit();
             this.xtraTabControl1.ResumeLayout(false);
@@ -1788,7 +1794,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.layoutControl5)).EndInit();
             this.layoutControl5.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.checkCmbClimateDistrict.Properties)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.barManager)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.checkedComboBoxEdit11.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.checkedComboBoxEdit12.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.checkedComboBoxEdit13.Properties)).EndInit();
@@ -1858,8 +1863,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.popupMenuExpert)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.popupMenuMismatches)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.popupMenuCadastralNumber)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.checkCmbExaminationType.Properties)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemExaminationType)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 

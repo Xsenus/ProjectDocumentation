@@ -533,9 +533,26 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
             }
         }
 
-        private void cmbExaminationResult_ButtonPressed(object sender, ButtonPressedEventArgs e)
+        private void clearEditValue_ButtonPressed(object sender, ButtonPressedEventArgs e)
         {
+            if (sender is CheckedComboBoxEdit checkedComboBoxEdit)
+            {
+                if (e.Button.Kind == ButtonPredefines.Delete)
+                {
+                    foreach (CheckedListBoxItem item in checkedComboBoxEdit.Properties.Items)
+                    {
+                        item.CheckState = CheckState.Unchecked;
+                    }
+                }
+            }
 
+            if (sender is ButtonEdit buttonEdit)
+            {
+                if (e.Button.Kind == ButtonPredefines.Delete)
+                {
+                    buttonEdit.EditValue = null;
+                }
+            }
         }
     }
 }
