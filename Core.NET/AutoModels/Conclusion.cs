@@ -693,6 +693,11 @@ namespace Core.NET.AutoModels
                 this.noteField = value;
             }
         }
+
+        public override string ToString()
+        {
+            return $"{Country} {Region.GetEnumXmlAttributeValue()} {City} {Street}";
+        }
     }
 
     /// <remarks/>

@@ -7,6 +7,16 @@ namespace Core.NET.Extensions
 {
     public static class EnumExtension
     {
+        public static int? GetEnumXmlAttributeValueInt(this Enum genericEnum)
+        {
+            if (int.TryParse(genericEnum.GetEnumXmlAttributeValue()?.ToString(), out int result))
+            {
+                return result;
+            }
+
+            return default;
+        }
+
         public static object GetEnumXmlAttributeValue(this Enum genericEnum)
         {
             if (genericEnum is null)

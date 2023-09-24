@@ -144,7 +144,16 @@ namespace ProjectDocumentation.NET.Forms
                 var xml = conclusionXPO.GetObj();
                 var conclusion = ConclusionController.GetConclusionByString(xml);
                 var form = new ConclusionEdit(conclusion);
+                form.SetFileName(conclusionXPO.Name);
                 form.ShowDialog();
+
+                if (form.IsSave)
+                {
+                    conclusionXPO.Name = form.FileName;
+                    conclusionXPO.SetObj(form.Conclusion.GetSerializerConclusion());
+                    await _session.SaveAsync(conclusionXPO);
+                }
+
                 await UpdateGridDataSource(gridView.FocusedRowHandle);
             }
             else if (gridView.GetRow(gridView.FocusedRowHandle) is ExplanatoryNoteXPO explanatoryNoteXPO)
@@ -201,10 +210,22 @@ namespace ProjectDocumentation.NET.Forms
             }
         }
 
-        private void barBtnAdd_ItemClick(object sender, ItemClickEventArgs e)
+        private async void barBtnAdd_ItemClick(object sender, ItemClickEventArgs e)
         {
             var form = new ConclusionEdit();
             form.ShowDialog();
+
+            if (form.IsSave)
+            {
+                var conclusionXPO = new ConclusionXPO(_session)
+                {
+                    Name = form.FileName
+                };
+                conclusionXPO.SetObj(form.Conclusion.GetSerializerConclusion());
+                await _session.SaveAsync(conclusionXPO);
+
+                await UpdateGridDataSourceAsync(nameof(XmlObjXPO.Guid), conclusionXPO.Guid);
+            }
         }
     }
 }
