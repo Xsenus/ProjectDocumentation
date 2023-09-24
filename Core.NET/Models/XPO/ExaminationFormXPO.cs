@@ -30,9 +30,14 @@ namespace Core.NET.Models.XPO
         ConstructionType,
 
         /// <summary>
-        /// Предмет экспертизы
+        /// Предмет экспертизы.
         /// </summary>
-        ExaminationType
+        ExaminationType,
+
+        /// <summary>
+        /// Вид объекта капитального строительства.
+        /// </summary>
+        ObjectType
     }
 
     public class GeneralizedDictionaryXPO : BaseObjectXPO

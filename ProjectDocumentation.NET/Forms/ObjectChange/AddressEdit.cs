@@ -2,6 +2,7 @@
 using Core.NET.Extensions;
 using DevExpress.XtraEditors;
 using System;
+using System.Windows.Forms;
 
 namespace ProjectDocumentation.NET.Forms.ObjectChange
 {
@@ -37,7 +38,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                 cmbRegion.EditValue = Address.Region.GetEnumXmlAttributeValue();
                 txtDistrict.EditValue = Address.District;
                 txtCity.EditValue = Address.City;
-                //txtSettlement.EditValue = Address.Settlement;
+                txtSettlement.EditValue = Address.Settlement;
                 txtStreet.EditValue = Address.Street;
                 txtBuilding.EditValue = Address.Building;
                 txtRoom.EditValue = Address.Room;
@@ -50,20 +51,29 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
             Address.Country = txtCountry.Text;
             Address.District = txtDistrict.Text;
             Address.City = txtCity.Text;
-            //Address.Settlement = txtSettlement.EditValue;
+            Address.Settlement = txtSettlement.Text;
             Address.Street = txtStreet.Text;
             Address.Building = txtBuilding.Text;
             Address.Room = txtRoom.Text;
             Address.Note = txtNote.Text;
 
+            var region = default(tRegionsRF?);
             foreach (tRegionsRF type in Enum.GetValues(typeof(tRegionsRF)))
             {
                 if (type.GetEnumXmlAttributeValue()?.ToString()?.Equals(cmbRegion.Text) is true)
                 {
-                    Address.Region = type;
+                    region = type;
                     break;
                 }
             }
+
+            if (region is null)
+            {
+                XtraMessageBox.Show("Укажите регион.", "Информационное сообщение", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                cmbRegion.Focus();
+                return;
+            }
+            Address.Region = region.Value;
 
             IsSave = true;
             Close();

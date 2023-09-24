@@ -2,10 +2,12 @@
 using Core.NET.Controllers;
 using Core.NET.Extensions;
 using Core.NET.Models.XPO;
+using DevExpress.Utils.Extensions;
 using DevExpress.Xpo;
 using DevExpress.XtraBars;
 using DevExpress.XtraEditors;
 using DevExpress.XtraEditors.Controls;
+using DevExpress.XtraGrid.Columns;
 using DevExpress.XtraGrid.Views.Grid;
 using System;
 using System.Collections.Generic;
@@ -28,6 +30,11 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
         public string FileName { get; private set; }
         public bool IsSave { get; private set; }
         public Conclusion Conclusion { get; private set; }
+
+
+        private List<tTEI> _tTEIs;
+        private List<tObjectPart> _tObjectParts;
+
 
         private List<tExpert> _experts = new List<tExpert>();
         private List<tMismatch> _mismatch = new List<tMismatch>();
@@ -71,6 +78,11 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
             checkCmbExaminationType.Properties.Items.AddRange(collection
                 .Where(w => w.GeneralizedDictionary == GeneralizedDictionary.ExaminationType).ToArray());
             #endregion
+
+
+            cmbObjectType.Properties.Items.AddRange(collection
+                .Where(w => w.GeneralizedDictionary == GeneralizedDictionary.ObjectType).ToArray());
+
         }
 
         private async void ConclusionEdit_Load(object sender, EventArgs e)
@@ -120,15 +132,40 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                 #endregion
 
 
-
-
-
-
-
-
-
-                memoEstimateNorms.EditValue = Conclusion.ExpertEstimate?.EstimateNorms;
-                txtEstimatedCost.Text = Conclusion.EstimatedCost?.Currency;
+                memoObjectName.EditValue = Conclusion.Object?.Name;
+                cmbObjectType.EditValue = cmbObjectType.Properties.Items
+                  ?.Cast<GeneralizedDictionaryXPO>()
+                  ?.Where(w => w.GeneralizedDictionary == GeneralizedDictionary.ObjectType)
+                  ?.FirstOrDefault(f => f.ValueInt == Conclusion?.Object?.Type.GetEnumXmlAttributeValueInt());
+                cmbFunctionsClass.EditValue = Conclusion.Object?.Item;
+                cmbObjectAddress.EditValue = Conclusion.Object?.Address?.FirstOrDefault();
+                _tTEIs = Conclusion.Object?.TEI?.ToList() ?? new List<tTEI>();
+                gridControlTEI.DataSource = _tTEIs;
+                if (gridViewTEI.Columns[nameof(tTEI.Name)] is GridColumn gridTEIName)
+                {
+                    gridTEIName.Caption = "Наименование показателя";
+                }
+                if (gridViewTEI.Columns[nameof(tTEI.Measure)] is GridColumn gridTEIMeasure)
+                {
+                    gridTEIMeasure.Caption = "Единица измерения показателя";
+                }
+                if (gridViewTEI.Columns[nameof(tTEI.Value)] is GridColumn gridTEIValue)
+                {
+                    gridTEIValue.Caption = "Значение показателя";
+                }
+                _tObjectParts = Conclusion.Object?.ObjectPart?.ToList() ?? new List<tObjectPart>();
+                gridControlObjectPart.DataSource = _tObjectParts;
+                foreach (GridColumn column in gridViewObjectPart.Columns)
+                {
+                    column.Visible = false;
+                }
+                if (gridViewObjectPart.Columns[nameof(tObjectPart.Name)] is GridColumn gridObjectPartName)
+                {
+                    gridObjectPartName.Caption = "Наименование объекта";
+                    gridObjectPartName.Visible = true;
+                }
+                //memoEstimateNorms.EditValue = Conclusion.ExpertEstimate?.EstimateNorms;
+                //txtEstimatedCost.Text = Conclusion.EstimatedCost?.Currency;
                 //txtEstimatedCompleteCostBefore.Text
                 //txtEstimatedCompleteCostPost.Text
 
@@ -174,7 +211,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
             gridControlCadastralNumber.DataSource = _cadastralNumbers;
         }
 
-        private static void SetCheckComboBoxByItems<T>(ICollection<T> collection, CheckedComboBoxEdit comboBoxEdit) where T : Enum
+        public static void SetCheckComboBoxByItems<T>(ICollection<T> collection, CheckedComboBoxEdit comboBoxEdit) where T : Enum
         {
             foreach (var item in collection)
             {
@@ -187,7 +224,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
             }
         }
 
-        private static ICollection<T> GetCheckComboBoxItems<T>(CheckedComboBoxEdit sender, string message = default, bool isNullable = false) where T : Enum
+        public static ICollection<T> GetCheckComboBoxItems<T>(CheckedComboBoxEdit sender, string message = default, bool isNullable = false) where T : Enum
         {
             var result = new List<T>();
 
@@ -220,7 +257,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
             throw new Exception(message ?? "Не заполнен один из параметров.");
         }
 
-        private static GeneralizedDictionaryXPO GetValueGeneralizedDictionary(object sender, string message = default, bool isNullable = false)
+        public static GeneralizedDictionaryXPO GetValueGeneralizedDictionary(object sender, string message = default, bool isNullable = false)
         {
             if (sender is ButtonEdit buttonEdit)
             {
@@ -250,7 +287,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
             throw new Exception(message ?? "Не заполнен один из параметров.");
         }
 
-        private static T GetEnumByAttributeValue<T>(string value) where T : Enum
+        public static T GetEnumByAttributeValue<T>(string value) where T : Enum
         {
             foreach (T type in Enum.GetValues(typeof(T)))
             {
@@ -263,7 +300,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
             throw new Exception();
         }
 
-        private static string GetStringValue(object sender, object control = default, string message = default, bool isNullable = false)
+        public static string GetStringValue(object sender, object control = default, string message = default, bool isNullable = false)
         {
             var result = sender?.ToString();
             if (!string.IsNullOrWhiteSpace(result))
@@ -292,34 +329,84 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
             {
                 #region Page I
                 Conclusion.ExaminationObject = new tExaminationObject();
-
                 Conclusion.ExaminationObject.ExaminationResult = GetEnumByAttributeValue<tExaminationResult>(GetValueGeneralizedDictionary(
                     cmbExaminationResult,
                     message: "Заполните поле результат экспертизы").Value);
-
                 Conclusion.ExaminationObject.ExaminationForm = GetEnumByAttributeValue<tExaminationForm>(GetValueGeneralizedDictionary(
                     cmbExaminationForm,
                     message: "Заполните поле формы экспертизы").Value);
-
                 Conclusion.ExaminationObject.ExaminationObjectType = GetEnumByAttributeValue<tExaminationObjectType>(GetValueGeneralizedDictionary(
                     cmbExaminationObjectType,
                     message: "Заполните поле вида объекта экспертизы").Value);
-
                 Conclusion.ExaminationObject.ExaminationStage = GetEnumByAttributeValue<tExaminationStage>(GetValueGeneralizedDictionary(
                    cmbExaminationStage,
                    message: "Заполните поле вид экспертизы").Value);
-
                 Conclusion.ExaminationObject.ConstructionType = GetEnumByAttributeValue<tConstractionType>(GetValueGeneralizedDictionary(
                    cmbConstructionType,
                    message: "Заполните поле вид работ").Value);
-
                 Conclusion.ExaminationObject.ExaminationType = GetCheckComboBoxItems<tExaminationType>(
                     checkCmbExaminationType,
                     "Заполните поле предмет экпертизы").ToArray();
-
                 Conclusion.ExaminationObject.Name = GetStringValue(memoName.Text, memoName, "Заполните поле наименование объекта экспертизы");
                 Conclusion.ExaminationObject.ExaminationStageNote = GetStringValue(memoExaminationStageNote.Text, isNullable: true);
                 #endregion
+
+                Conclusion.Object = new tObject();
+                Conclusion.Object.Name = GetStringValue(memoObjectName.Text, memoObjectName, "Заполните поле наименование объекта капитального строительства");
+                Conclusion.Object.Type = GetEnumByAttributeValue<tObjectType>(GetValueGeneralizedDictionary(
+                   cmbObjectType,
+                   message: "Заполните поле вид объекта капитального строительства").Value);
+                Conclusion.Object.Item = GetStringValue(cmbFunctionsClass.EditValue?.ToString(), cmbFunctionsClass, "Функциональное назначение объекта капитального строительства (код по классификатору)");
+                if (cmbObjectAddress.EditValue is tAddress objectAddress)
+                {
+                    Conclusion.Object.Address = new tAddress[] { objectAddress };
+                }
+                else
+                {
+                    XtraMessageBox.Show("Укажите адрес объекта.", "Информационное сообщение", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    cmbObjectAddress.Focus();
+                    return;
+                }
+                if (_tTEIs.Count > 0)
+                {
+                    foreach (var item in _tTEIs)
+                    {
+                        if (string.IsNullOrWhiteSpace(item.Name))
+                        {
+                            XtraMessageBox.Show("Наименование технико-экономического показателя не может быть пустым.",
+                                "Информационное сообщение",
+                                MessageBoxButtons.OK,
+                                MessageBoxIcon.Error);
+                            gridViewTEI.Focus();
+                            return;
+                        }
+
+                        if (string.IsNullOrWhiteSpace(item.Measure))
+                        {
+                            XtraMessageBox.Show("Единица измерения технико-экономического показателя не может быть пустой.",
+                                "Информационное сообщение",
+                                MessageBoxButtons.OK,
+                                MessageBoxIcon.Error);
+                            gridViewTEI.Focus();
+                            return;
+                        }
+
+                        if (string.IsNullOrWhiteSpace(item.Value))
+                        {
+                            XtraMessageBox.Show("Значение технико-экономического показателя не может быть пустым.",
+                                "Информационное сообщение",
+                                MessageBoxButtons.OK,
+                                MessageBoxIcon.Error);
+                            gridViewTEI.Focus();
+                            return;
+                        }
+                    }
+                    Conclusion.Object.TEI = _tTEIs.ToArray();
+                }                
+                if (_tObjectParts.Count > 0)
+                {
+                    Conclusion.Object.ObjectPart = _tObjectParts.ToArray();
+                }
 
             }
             catch (Exception ex)
@@ -327,10 +414,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                 XtraMessageBox.Show(ex.Message, "Информационное сообщение", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
-
-          
             
-
             Conclusion.ExpertEstimate = new tExpertEstimate();
             Conclusion.ExpertEstimate.EstimateNorms = memoEstimateNorms.Text;
             Conclusion.EstimatedCost = new tEstimatedCost();
@@ -338,9 +422,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
             //txtEstimatedCompleteCostBefore.Text
             //txtEstimatedCompleteCostPost.Text
 
-            Conclusion.Object = new tObject();
-            Conclusion.Object.Name = memoObjectName.Text;
-            Conclusion.Object.Type = (tObjectType)cmbObjectType.SelectedIndex;
+           
             Conclusion.Object.Item = cmbFunctionsClass.Text;
 
             if (cmbObjectAddress.EditValue is tAddress address)
@@ -551,6 +633,110 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                 if (e.Button.Kind == ButtonPredefines.Delete)
                 {
                     buttonEdit.EditValue = null;
+                }
+            }
+        }
+
+        private void cmbObjectAddress_ButtonClick(object sender, ButtonPressedEventArgs e)
+        {
+            if (sender is ButtonEdit buttonEdit)
+            {
+                if (e.Button.Kind == ButtonPredefines.Ellipsis)
+                {
+                    var form = default(AddressEdit);
+                    if (buttonEdit.EditValue is tAddress address)
+                    {
+                        form = new AddressEdit(address);
+                    }
+                    else
+                    {
+                        form = new AddressEdit();
+                    }
+                    form.ShowDialog();
+
+                    if (form.IsSave)
+                    {
+                        buttonEdit.EditValue = form.Address;
+                        buttonEdit.Refresh();
+                    }
+                }
+            }
+        }
+
+        private void gridViewTEI_PopupMenuShowing(object sender, PopupMenuShowingEventArgs e)
+        {
+            if (sender is GridView gridView)
+            {
+                popupMenuTEI.ShowPopup(new Point(Cursor.Position.X, Cursor.Position.Y));
+            }
+        }
+
+        private void barBtnTEIAdd_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            _tTEIs.Add(new tTEI());
+            gridControlTEI.RefreshDataSource();
+        }
+
+        private void barBtnTEIDel_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            if (gridViewTEI.GetRow(gridViewTEI.FocusedRowHandle) is tTEI obj)
+            {
+                if (XtraMessageBox.Show(
+                    "Вы действительно хотите удалить выделенный объект?",
+                    "Информационное сообщение",
+                    MessageBoxButtons.OKCancel,
+                    MessageBoxIcon.Question) == DialogResult.OK)
+                {
+                    _tTEIs.Remove(obj);
+                    gridControlTEI.RefreshDataSource();
+                }
+            }
+        }
+
+        private void gridViewObjectPart_PopupMenuShowing(object sender, PopupMenuShowingEventArgs e)
+        {
+            if (sender is GridView gridView)
+            {
+                popupMenuObjectPart.ShowPopup(new Point(Cursor.Position.X, Cursor.Position.Y));
+            }
+        }
+
+        private void barBtnObjectPartAdd_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            var form = new ObjPartEdit();
+            form.ShowDialog();
+            if (form.IsSave)
+            {
+                _tObjectParts.Add(form.ObjectPart);
+                gridControlObjectPart.RefreshDataSource();
+            }
+        }
+
+        private void barBtnObjectPartEdit_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            if (gridViewObjectPart.GetRow(gridViewObjectPart.FocusedRowHandle) is tObjectPart obj)
+            {
+                var form = new ObjPartEdit(obj);
+                form.ShowDialog();
+                if (form.IsSave)
+                {
+                    gridControlObjectPart.RefreshDataSource();
+                }
+            }
+        }
+
+        private void barBtnObjectPartDel_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            if (gridViewObjectPart.GetRow(gridViewObjectPart.FocusedRowHandle) is tObjectPart obj)
+            {
+                if (XtraMessageBox.Show(
+                    "Вы действительно хотите удалить выделенный объект?",
+                    "Информационное сообщение",
+                    MessageBoxButtons.OKCancel,
+                    MessageBoxIcon.Question) == DialogResult.OK)
+                {
+                    _tObjectParts.Remove(obj);
+                    gridControlObjectPart.RefreshDataSource();
                 }
             }
         }

@@ -164,6 +164,30 @@ namespace Core.NET.Controllers
                     Name = "Проверка достоверности определения сметной стоимости (подпункт 2 пункт 5 статьи 49 Градостроительного кодекса Российской Федерации)"
                 });
             }
+
+            if (collection.Where(w => w.GeneralizedDictionary == GeneralizedDictionary.ObjectType).Count() == 0)
+            {
+                await _session.SaveAsync(new GeneralizedDictionaryXPO(_session)
+                {
+                    GeneralizedDictionary = GeneralizedDictionary.ObjectType,
+                    Value = "1",
+                    Name = "Объект производственного назначения"
+                });
+
+                await _session.SaveAsync(new GeneralizedDictionaryXPO(_session)
+                {
+                    GeneralizedDictionary = GeneralizedDictionary.ObjectType,
+                    Value = "2",
+                    Name = "Объект непроизводственного назначения"
+                });
+
+                await _session.SaveAsync(new GeneralizedDictionaryXPO(_session)
+                {
+                    GeneralizedDictionary = GeneralizedDictionary.ObjectType,
+                    Value = "3",
+                    Name = "Линейный объект"
+                });
+            }
         }
 
         private static async Task FillingClimateDistrictXPOAsync()
