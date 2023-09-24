@@ -87,6 +87,7 @@
             this.gridView.OptionsView.RowAutoHeight = true;
             this.gridView.OptionsView.ShowGroupPanel = false;
             this.gridView.PopupMenuShowing += new DevExpress.XtraGrid.Views.Grid.PopupMenuShowingEventHandler(this.gridView_PopupMenuShowing);
+            this.gridView.DoubleClick += new System.EventHandler(this.gridView_DoubleClick);
             // 
             // Root
             // 

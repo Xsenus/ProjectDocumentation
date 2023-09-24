@@ -227,5 +227,26 @@ namespace ProjectDocumentation.NET.Forms
                 await UpdateGridDataSourceAsync(nameof(XmlObjXPO.Guid), conclusionXPO.Guid);
             }
         }
+
+        private async void gridView_DoubleClick(object sender, EventArgs e)
+        {
+            if (gridView.GetRow(gridView.FocusedRowHandle) is ConclusionXPO conclusionXPO)
+            {
+                var xml = conclusionXPO.GetObj();
+                var conclusion = ConclusionController.GetConclusionByString(xml);
+                var form = new ConclusionEdit(conclusion);
+                form.SetFileName(conclusionXPO.Name);
+                form.ShowDialog();
+
+                if (form.IsSave)
+                {
+                    conclusionXPO.Name = form.FileName;
+                    conclusionXPO.SetObj(form.Conclusion.GetSerializerConclusion());
+                    await _session.SaveAsync(conclusionXPO);
+                }
+
+                await UpdateGridDataSource(gridView.FocusedRowHandle);
+            }
+        }
     }
 }
