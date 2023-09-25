@@ -29,11 +29,6 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            DevExpress.XtraEditors.Controls.EditorButtonImageOptions editorButtonImageOptions4 = new DevExpress.XtraEditors.Controls.EditorButtonImageOptions();
-            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject13 = new DevExpress.Utils.SerializableAppearanceObject();
-            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject14 = new DevExpress.Utils.SerializableAppearanceObject();
-            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject15 = new DevExpress.Utils.SerializableAppearanceObject();
-            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject16 = new DevExpress.Utils.SerializableAppearanceObject();
             DevExpress.XtraEditors.Controls.EditorButtonImageOptions editorButtonImageOptions1 = new DevExpress.XtraEditors.Controls.EditorButtonImageOptions();
             DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject1 = new DevExpress.Utils.SerializableAppearanceObject();
             DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject2 = new DevExpress.Utils.SerializableAppearanceObject();
@@ -44,6 +39,11 @@
             DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject6 = new DevExpress.Utils.SerializableAppearanceObject();
             DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject7 = new DevExpress.Utils.SerializableAppearanceObject();
             DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject8 = new DevExpress.Utils.SerializableAppearanceObject();
+            DevExpress.XtraEditors.Controls.EditorButtonImageOptions editorButtonImageOptions3 = new DevExpress.XtraEditors.Controls.EditorButtonImageOptions();
+            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject9 = new DevExpress.Utils.SerializableAppearanceObject();
+            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject10 = new DevExpress.Utils.SerializableAppearanceObject();
+            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject11 = new DevExpress.Utils.SerializableAppearanceObject();
+            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject12 = new DevExpress.Utils.SerializableAppearanceObject();
             this.layoutControlObjPart = new DevExpress.XtraLayout.LayoutControl();
             this.memoObjectName = new DevExpress.XtraEditors.MemoEdit();
             this.cmbObjectType = new DevExpress.XtraEditors.ComboBoxEdit();
@@ -64,13 +64,13 @@
             this.emptySpaceItemClose = new DevExpress.XtraLayout.EmptySpaceItem();
             this.layoutControlItem1 = new DevExpress.XtraLayout.LayoutControlItem();
             this.popupMenuTEI = new DevExpress.XtraBars.PopupMenu(this.components);
+            this.barBtnTEIAdd = new DevExpress.XtraBars.BarButtonItem();
+            this.barBtnTEIDel = new DevExpress.XtraBars.BarButtonItem();
             this.barManager = new DevExpress.XtraBars.BarManager(this.components);
             this.barDockControlTop = new DevExpress.XtraBars.BarDockControl();
             this.barDockControlBottom = new DevExpress.XtraBars.BarDockControl();
             this.barDockControlLeft = new DevExpress.XtraBars.BarDockControl();
             this.barDockControlRight = new DevExpress.XtraBars.BarDockControl();
-            this.barBtnTEIAdd = new DevExpress.XtraBars.BarButtonItem();
-            this.barBtnTEIDel = new DevExpress.XtraBars.BarButtonItem();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlObjPart)).BeginInit();
             this.layoutControlObjPart.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.memoObjectName.Properties)).BeginInit();
@@ -105,48 +105,50 @@
             this.layoutControlObjPart.Controls.Add(this.btnSave);
             this.layoutControlObjPart.Dock = System.Windows.Forms.DockStyle.Fill;
             this.layoutControlObjPart.Location = new System.Drawing.Point(0, 0);
+            this.layoutControlObjPart.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.layoutControlObjPart.Name = "layoutControlObjPart";
             this.layoutControlObjPart.Root = this.Root;
-            this.layoutControlObjPart.Size = new System.Drawing.Size(848, 460);
+            this.layoutControlObjPart.Size = new System.Drawing.Size(729, 375);
             this.layoutControlObjPart.TabIndex = 0;
             this.layoutControlObjPart.Text = "layoutControl1";
             // 
             // memoObjectName
             // 
-            this.memoObjectName.Location = new System.Drawing.Point(7, 26);
-            this.memoObjectName.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
+            this.memoObjectName.Location = new System.Drawing.Point(6, 22);
+            this.memoObjectName.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.memoObjectName.Name = "memoObjectName";
             this.memoObjectName.Properties.ScrollBars = System.Windows.Forms.ScrollBars.None;
-            this.memoObjectName.Size = new System.Drawing.Size(834, 70);
+            this.memoObjectName.Size = new System.Drawing.Size(719, 52);
             this.memoObjectName.StyleController = this.layoutControlObjPart;
             this.memoObjectName.TabIndex = 8;
             // 
             // cmbObjectType
             // 
-            this.cmbObjectType.Location = new System.Drawing.Point(7, 121);
-            this.cmbObjectType.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
+            this.cmbObjectType.Location = new System.Drawing.Point(6, 96);
+            this.cmbObjectType.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.cmbObjectType.Name = "cmbObjectType";
             this.cmbObjectType.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo),
-            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Ellipsis, "", -1, true, false, false, editorButtonImageOptions4, new DevExpress.Utils.KeyShortcut(System.Windows.Forms.Keys.None), serializableAppearanceObject13, serializableAppearanceObject14, serializableAppearanceObject15, serializableAppearanceObject16, "", null, null, DevExpress.Utils.ToolTipAnchor.Default),
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Ellipsis, "", -1, true, false, false, editorButtonImageOptions1, new DevExpress.Utils.KeyShortcut(System.Windows.Forms.Keys.None), serializableAppearanceObject1, serializableAppearanceObject2, serializableAppearanceObject3, serializableAppearanceObject4, "", null, null, DevExpress.Utils.ToolTipAnchor.Default),
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Delete)});
             this.cmbObjectType.Properties.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.DisableTextEditor;
-            this.cmbObjectType.Size = new System.Drawing.Size(262, 22);
+            this.cmbObjectType.Size = new System.Drawing.Size(227, 20);
             this.cmbObjectType.StyleController = this.layoutControlObjPart;
             this.cmbObjectType.TabIndex = 6;
             this.cmbObjectType.ButtonPressed += new DevExpress.XtraEditors.Controls.ButtonPressedEventHandler(this.clearEditValue_ButtonPressed);
             // 
             // cmbObjectAddress
             // 
-            this.cmbObjectAddress.Location = new System.Drawing.Point(7, 166);
-            this.cmbObjectAddress.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
+            this.cmbObjectAddress.Location = new System.Drawing.Point(6, 136);
+            this.cmbObjectAddress.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.cmbObjectAddress.Name = "cmbObjectAddress";
             this.cmbObjectAddress.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
-            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo, "", -1, true, false, false, editorButtonImageOptions1, new DevExpress.Utils.KeyShortcut(System.Windows.Forms.Keys.None), serializableAppearanceObject1, serializableAppearanceObject2, serializableAppearanceObject3, serializableAppearanceObject4, "", null, null, DevExpress.Utils.ToolTipAnchor.Default),
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Search),
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo, "", -1, true, false, false, editorButtonImageOptions2, new DevExpress.Utils.KeyShortcut(System.Windows.Forms.Keys.None), serializableAppearanceObject5, serializableAppearanceObject6, serializableAppearanceObject7, serializableAppearanceObject8, "", null, null, DevExpress.Utils.ToolTipAnchor.Default),
             new DevExpress.XtraEditors.Controls.EditorButton(),
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Delete)});
-            this.cmbObjectAddress.Properties.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.DisableTextEditor;
-            this.cmbObjectAddress.Size = new System.Drawing.Size(834, 22);
+            this.cmbObjectAddress.Properties.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.Standard;
+            this.cmbObjectAddress.Size = new System.Drawing.Size(719, 20);
             this.cmbObjectAddress.StyleController = this.layoutControlObjPart;
             this.cmbObjectAddress.TabIndex = 6;
             this.cmbObjectAddress.ButtonClick += new DevExpress.XtraEditors.Controls.ButtonPressedEventHandler(this.cmbObjectAddress_ButtonClick);
@@ -155,26 +157,26 @@
             // cmbFunctionsClass
             // 
             this.cmbFunctionsClass.EditValue = "Сведения отсутствуют.";
-            this.cmbFunctionsClass.Location = new System.Drawing.Point(273, 119);
-            this.cmbFunctionsClass.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
+            this.cmbFunctionsClass.Location = new System.Drawing.Point(237, 94);
+            this.cmbFunctionsClass.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.cmbFunctionsClass.Name = "cmbFunctionsClass";
             this.cmbFunctionsClass.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo),
-            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Ellipsis, "", -1, true, false, false, editorButtonImageOptions2, new DevExpress.Utils.KeyShortcut(System.Windows.Forms.Keys.None), serializableAppearanceObject5, serializableAppearanceObject6, serializableAppearanceObject7, serializableAppearanceObject8, "", null, null, DevExpress.Utils.ToolTipAnchor.Default),
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Ellipsis, "", -1, true, false, false, editorButtonImageOptions3, new DevExpress.Utils.KeyShortcut(System.Windows.Forms.Keys.None), serializableAppearanceObject9, serializableAppearanceObject10, serializableAppearanceObject11, serializableAppearanceObject12, "", null, null, DevExpress.Utils.ToolTipAnchor.Default),
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Delete)});
-            this.cmbFunctionsClass.Size = new System.Drawing.Size(568, 22);
+            this.cmbFunctionsClass.Size = new System.Drawing.Size(488, 20);
             this.cmbFunctionsClass.StyleController = this.layoutControlObjPart;
             this.cmbFunctionsClass.TabIndex = 6;
             this.cmbFunctionsClass.ButtonPressed += new DevExpress.XtraEditors.Controls.ButtonPressedEventHandler(this.clearEditValue_ButtonPressed);
             // 
             // gridControlTEI
             // 
-            this.gridControlTEI.EmbeddedNavigator.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
-            this.gridControlTEI.Location = new System.Drawing.Point(7, 211);
+            this.gridControlTEI.EmbeddedNavigator.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.gridControlTEI.Location = new System.Drawing.Point(6, 176);
             this.gridControlTEI.MainView = this.gridViewTEI;
-            this.gridControlTEI.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
+            this.gridControlTEI.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.gridControlTEI.Name = "gridControlTEI";
-            this.gridControlTEI.Size = new System.Drawing.Size(834, 211);
+            this.gridControlTEI.Size = new System.Drawing.Size(719, 150);
             this.gridControlTEI.TabIndex = 11;
             this.gridControlTEI.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
             this.gridViewTEI});
@@ -183,6 +185,7 @@
             // 
             this.gridViewTEI.Appearance.HeaderPanel.Options.UseTextOptions = true;
             this.gridViewTEI.Appearance.HeaderPanel.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Center;
+            this.gridViewTEI.DetailHeight = 284;
             this.gridViewTEI.GridControl = this.gridControlTEI;
             this.gridViewTEI.Name = "gridViewTEI";
             this.gridViewTEI.OptionsView.ColumnHeaderAutoHeight = DevExpress.Utils.DefaultBoolean.True;
@@ -192,9 +195,10 @@
             // 
             // btnClose
             // 
-            this.btnClose.Location = new System.Drawing.Point(635, 426);
+            this.btnClose.Location = new System.Drawing.Point(547, 330);
+            this.btnClose.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btnClose.Name = "btnClose";
-            this.btnClose.Size = new System.Drawing.Size(206, 27);
+            this.btnClose.Size = new System.Drawing.Size(178, 22);
             this.btnClose.StyleController = this.layoutControlObjPart;
             this.btnClose.TabIndex = 12;
             this.btnClose.Text = "Отменить";
@@ -202,9 +206,10 @@
             // 
             // btnSave
             // 
-            this.btnSave.Location = new System.Drawing.Point(425, 426);
+            this.btnSave.Location = new System.Drawing.Point(366, 330);
+            this.btnSave.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btnSave.Name = "btnSave";
-            this.btnSave.Size = new System.Drawing.Size(206, 27);
+            this.btnSave.Size = new System.Drawing.Size(177, 22);
             this.btnSave.StyleController = this.layoutControlObjPart;
             this.btnSave.TabIndex = 13;
             this.btnSave.Text = "Сохранить";
@@ -225,8 +230,8 @@
             this.emptySpaceItemClose,
             this.layoutControlItem1});
             this.Root.Name = "Root";
-            this.Root.Padding = new DevExpress.XtraLayout.Utils.Padding(5, 5, 5, 5);
-            this.Root.Size = new System.Drawing.Size(848, 460);
+            this.Root.Padding = new DevExpress.XtraLayout.Utils.Padding(4, 4, 4, 4);
+            this.Root.Size = new System.Drawing.Size(731, 358);
             this.Root.TextVisible = false;
             // 
             // layoutControlItemObjectName
@@ -236,23 +241,23 @@
             this.layoutControlItemObjectName.CustomizationFormText = "Наименование объекта капитального строительства *";
             this.layoutControlItemObjectName.Location = new System.Drawing.Point(0, 0);
             this.layoutControlItemObjectName.Name = "layoutControlItemObjectName";
-            this.layoutControlItemObjectName.Size = new System.Drawing.Size(838, 93);
+            this.layoutControlItemObjectName.Size = new System.Drawing.Size(723, 72);
             this.layoutControlItemObjectName.Text = "Наименование объекта капитального строительства *";
             this.layoutControlItemObjectName.TextLocation = DevExpress.Utils.Locations.Top;
-            this.layoutControlItemObjectName.TextSize = new System.Drawing.Size(560, 16);
+            this.layoutControlItemObjectName.TextSize = new System.Drawing.Size(488, 13);
             // 
             // layoutControlItemObjectType
             // 
             this.layoutControlItemObjectType.Control = this.cmbObjectType;
             this.layoutControlItemObjectType.ControlAlignment = System.Drawing.ContentAlignment.TopLeft;
             this.layoutControlItemObjectType.CustomizationFormText = "layoutControlItem3";
-            this.layoutControlItemObjectType.Location = new System.Drawing.Point(0, 93);
+            this.layoutControlItemObjectType.Location = new System.Drawing.Point(0, 72);
             this.layoutControlItemObjectType.Name = "layoutControlItemObjectType";
-            this.layoutControlItemObjectType.Size = new System.Drawing.Size(266, 47);
+            this.layoutControlItemObjectType.Size = new System.Drawing.Size(231, 42);
             this.layoutControlItemObjectType.Text = "Вид объекта капитального строительства *";
             this.layoutControlItemObjectType.TextAlignMode = DevExpress.XtraLayout.TextAlignModeItem.AutoSize;
             this.layoutControlItemObjectType.TextLocation = DevExpress.Utils.Locations.Top;
-            this.layoutControlItemObjectType.TextSize = new System.Drawing.Size(258, 16);
+            this.layoutControlItemObjectType.TextSize = new System.Drawing.Size(227, 13);
             this.layoutControlItemObjectType.TextToControlDistance = 5;
             this.layoutControlItemObjectType.Visibility = DevExpress.XtraLayout.Utils.LayoutVisibility.Never;
             // 
@@ -261,69 +266,69 @@
             this.layoutControlItemObjectAddress.Control = this.cmbObjectAddress;
             this.layoutControlItemObjectAddress.ControlAlignment = System.Drawing.ContentAlignment.TopLeft;
             this.layoutControlItemObjectAddress.CustomizationFormText = "layoutControlItem3";
-            this.layoutControlItemObjectAddress.Location = new System.Drawing.Point(0, 140);
+            this.layoutControlItemObjectAddress.Location = new System.Drawing.Point(0, 114);
             this.layoutControlItemObjectAddress.Name = "layoutControlItemObjectAddress";
-            this.layoutControlItemObjectAddress.Size = new System.Drawing.Size(838, 45);
+            this.layoutControlItemObjectAddress.Size = new System.Drawing.Size(723, 40);
             this.layoutControlItemObjectAddress.Text = "Адрес объекта капитального строительства *";
             this.layoutControlItemObjectAddress.TextLocation = DevExpress.Utils.Locations.Top;
-            this.layoutControlItemObjectAddress.TextSize = new System.Drawing.Size(560, 16);
+            this.layoutControlItemObjectAddress.TextSize = new System.Drawing.Size(488, 13);
             // 
             // layoutControlItemFunctionsClass
             // 
             this.layoutControlItemFunctionsClass.Control = this.cmbFunctionsClass;
             this.layoutControlItemFunctionsClass.ControlAlignment = System.Drawing.ContentAlignment.TopLeft;
             this.layoutControlItemFunctionsClass.CustomizationFormText = "layoutControlItem3";
-            this.layoutControlItemFunctionsClass.Location = new System.Drawing.Point(266, 93);
+            this.layoutControlItemFunctionsClass.Location = new System.Drawing.Point(231, 72);
             this.layoutControlItemFunctionsClass.Name = "layoutControlItemFunctionsClass";
-            this.layoutControlItemFunctionsClass.Size = new System.Drawing.Size(572, 47);
+            this.layoutControlItemFunctionsClass.Size = new System.Drawing.Size(492, 42);
             this.layoutControlItemFunctionsClass.Text = "Функциональное назначение объекта капитального строительства (код по классификато" +
     "ру) *";
             this.layoutControlItemFunctionsClass.TextLocation = DevExpress.Utils.Locations.Top;
-            this.layoutControlItemFunctionsClass.TextSize = new System.Drawing.Size(560, 16);
+            this.layoutControlItemFunctionsClass.TextSize = new System.Drawing.Size(488, 13);
             // 
             // layoutControlItemTEI
             // 
             this.layoutControlItemTEI.Control = this.gridControlTEI;
             this.layoutControlItemTEI.ControlAlignment = System.Drawing.ContentAlignment.TopLeft;
             this.layoutControlItemTEI.CustomizationFormText = "Технико-экономические показатели";
-            this.layoutControlItemTEI.Location = new System.Drawing.Point(0, 185);
+            this.layoutControlItemTEI.Location = new System.Drawing.Point(0, 154);
             this.layoutControlItemTEI.Name = "layoutControlItemTEI";
-            this.layoutControlItemTEI.Size = new System.Drawing.Size(838, 234);
+            this.layoutControlItemTEI.Size = new System.Drawing.Size(723, 170);
             this.layoutControlItemTEI.Text = "Технико-экономические показатели";
             this.layoutControlItemTEI.TextLocation = DevExpress.Utils.Locations.Top;
-            this.layoutControlItemTEI.TextSize = new System.Drawing.Size(560, 16);
+            this.layoutControlItemTEI.TextSize = new System.Drawing.Size(488, 13);
             // 
             // emptySpaceItemSave
             // 
             this.emptySpaceItemSave.AllowHotTrack = false;
-            this.emptySpaceItemSave.Location = new System.Drawing.Point(0, 419);
+            this.emptySpaceItemSave.Location = new System.Drawing.Point(0, 324);
             this.emptySpaceItemSave.Name = "emptySpaceItemSave";
-            this.emptySpaceItemSave.Size = new System.Drawing.Size(209, 31);
+            this.emptySpaceItemSave.Size = new System.Drawing.Size(180, 26);
             this.emptySpaceItemSave.TextSize = new System.Drawing.Size(0, 0);
             // 
             // layoutControlItem2
             // 
             this.layoutControlItem2.Control = this.btnSave;
-            this.layoutControlItem2.Location = new System.Drawing.Point(418, 419);
+            this.layoutControlItem2.Location = new System.Drawing.Point(360, 324);
             this.layoutControlItem2.Name = "layoutControlItem2";
-            this.layoutControlItem2.Size = new System.Drawing.Size(210, 31);
+            this.layoutControlItem2.Size = new System.Drawing.Size(181, 26);
             this.layoutControlItem2.TextSize = new System.Drawing.Size(0, 0);
             this.layoutControlItem2.TextVisible = false;
             // 
             // emptySpaceItemClose
             // 
             this.emptySpaceItemClose.AllowHotTrack = false;
-            this.emptySpaceItemClose.Location = new System.Drawing.Point(209, 419);
+            this.emptySpaceItemClose.Location = new System.Drawing.Point(180, 324);
             this.emptySpaceItemClose.Name = "emptySpaceItemClose";
-            this.emptySpaceItemClose.Size = new System.Drawing.Size(209, 31);
+            this.emptySpaceItemClose.Size = new System.Drawing.Size(180, 26);
             this.emptySpaceItemClose.TextSize = new System.Drawing.Size(0, 0);
             // 
             // layoutControlItem1
             // 
             this.layoutControlItem1.Control = this.btnClose;
-            this.layoutControlItem1.Location = new System.Drawing.Point(628, 419);
+            this.layoutControlItem1.Location = new System.Drawing.Point(541, 324);
             this.layoutControlItem1.Name = "layoutControlItem1";
-            this.layoutControlItem1.Size = new System.Drawing.Size(210, 31);
+            this.layoutControlItem1.Size = new System.Drawing.Size(182, 26);
             this.layoutControlItem1.TextSize = new System.Drawing.Size(0, 0);
             this.layoutControlItem1.TextVisible = false;
             // 
@@ -334,6 +339,20 @@
             new DevExpress.XtraBars.LinkPersistInfo(this.barBtnTEIDel)});
             this.popupMenuTEI.Manager = this.barManager;
             this.popupMenuTEI.Name = "popupMenuTEI";
+            // 
+            // barBtnTEIAdd
+            // 
+            this.barBtnTEIAdd.Caption = "Добавить";
+            this.barBtnTEIAdd.Id = 0;
+            this.barBtnTEIAdd.Name = "barBtnTEIAdd";
+            this.barBtnTEIAdd.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.barBtnTEIAdd_ItemClick);
+            // 
+            // barBtnTEIDel
+            // 
+            this.barBtnTEIDel.Caption = "Удалить";
+            this.barBtnTEIDel.Id = 1;
+            this.barBtnTEIDel.Name = "barBtnTEIDel";
+            this.barBtnTEIDel.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.barBtnTEIDel_ItemClick);
             // 
             // barManager
             // 
@@ -353,15 +372,17 @@
             this.barDockControlTop.Dock = System.Windows.Forms.DockStyle.Top;
             this.barDockControlTop.Location = new System.Drawing.Point(0, 0);
             this.barDockControlTop.Manager = this.barManager;
-            this.barDockControlTop.Size = new System.Drawing.Size(848, 0);
+            this.barDockControlTop.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.barDockControlTop.Size = new System.Drawing.Size(729, 0);
             // 
             // barDockControlBottom
             // 
             this.barDockControlBottom.CausesValidation = false;
             this.barDockControlBottom.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.barDockControlBottom.Location = new System.Drawing.Point(0, 460);
+            this.barDockControlBottom.Location = new System.Drawing.Point(0, 375);
             this.barDockControlBottom.Manager = this.barManager;
-            this.barDockControlBottom.Size = new System.Drawing.Size(848, 0);
+            this.barDockControlBottom.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.barDockControlBottom.Size = new System.Drawing.Size(729, 0);
             // 
             // barDockControlLeft
             // 
@@ -369,41 +390,30 @@
             this.barDockControlLeft.Dock = System.Windows.Forms.DockStyle.Left;
             this.barDockControlLeft.Location = new System.Drawing.Point(0, 0);
             this.barDockControlLeft.Manager = this.barManager;
-            this.barDockControlLeft.Size = new System.Drawing.Size(0, 460);
+            this.barDockControlLeft.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.barDockControlLeft.Size = new System.Drawing.Size(0, 375);
             // 
             // barDockControlRight
             // 
             this.barDockControlRight.CausesValidation = false;
             this.barDockControlRight.Dock = System.Windows.Forms.DockStyle.Right;
-            this.barDockControlRight.Location = new System.Drawing.Point(848, 0);
+            this.barDockControlRight.Location = new System.Drawing.Point(729, 0);
             this.barDockControlRight.Manager = this.barManager;
-            this.barDockControlRight.Size = new System.Drawing.Size(0, 460);
-            // 
-            // barBtnTEIAdd
-            // 
-            this.barBtnTEIAdd.Caption = "Добавить";
-            this.barBtnTEIAdd.Id = 0;
-            this.barBtnTEIAdd.Name = "barBtnTEIAdd";
-            this.barBtnTEIAdd.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.barBtnTEIAdd_ItemClick);
-            // 
-            // barBtnTEIDel
-            // 
-            this.barBtnTEIDel.Caption = "Удалить";
-            this.barBtnTEIDel.Id = 1;
-            this.barBtnTEIDel.Name = "barBtnTEIDel";
-            this.barBtnTEIDel.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.barBtnTEIDel_ItemClick);
+            this.barDockControlRight.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.barDockControlRight.Size = new System.Drawing.Size(0, 375);
             // 
             // ObjPartEdit
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 16F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(848, 460);
+            this.ClientSize = new System.Drawing.Size(729, 375);
             this.Controls.Add(this.layoutControlObjPart);
             this.Controls.Add(this.barDockControlLeft);
             this.Controls.Add(this.barDockControlRight);
             this.Controls.Add(this.barDockControlBottom);
             this.Controls.Add(this.barDockControlTop);
-            this.MinimumSize = new System.Drawing.Size(850, 500);
+            this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.MinimumSize = new System.Drawing.Size(850, 492);
             this.Name = "ObjPartEdit";
             this.Text = "Здания/сооружения в сложном объекте";
             this.Load += new System.EventHandler(this.ObjPartEdit_Load);

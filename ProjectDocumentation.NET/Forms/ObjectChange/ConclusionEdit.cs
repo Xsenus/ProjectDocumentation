@@ -1,14 +1,16 @@
 ﻿using Core.NET.AutoModels;
 using Core.NET.Controllers;
+using Core.NET.DaDataObj;
 using Core.NET.Extensions;
 using Core.NET.Models.XPO;
-using DevExpress.Utils.Extensions;
+using DevExpress.Utils;
 using DevExpress.Xpo;
 using DevExpress.XtraBars;
 using DevExpress.XtraEditors;
 using DevExpress.XtraEditors.Controls;
 using DevExpress.XtraGrid.Columns;
 using DevExpress.XtraGrid.Views.Grid;
+using ProjectDocumentation.NET.Models.ConclusionObj;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -34,6 +36,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
 
         private List<tTEI> _tTEIs;
         private List<tObjectPart> _tObjectParts;
+        private List<tFinance> _tFinances;
 
 
         private List<tExpert> _experts = new List<tExpert>();
@@ -79,9 +82,10 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                 .Where(w => w.GeneralizedDictionary == GeneralizedDictionary.ExaminationType).ToArray());
             #endregion
 
-
+            #region Page II_1
             cmbObjectType.Properties.Items.AddRange(collection
                 .Where(w => w.GeneralizedDictionary == GeneralizedDictionary.ObjectType).ToArray());
+            #endregion
 
         }
 
@@ -131,7 +135,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                 memoExaminationStageNote.Text = Conclusion.ExaminationObject?.ExaminationStageNote;
                 #endregion
 
-
+                #region Page II_1
                 memoObjectName.EditValue = Conclusion.Object?.Name;
                 cmbObjectType.EditValue = cmbObjectType.Properties.Items
                   ?.Cast<GeneralizedDictionaryXPO>()
@@ -164,6 +168,36 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                     gridObjectPartName.Caption = "Наименование объекта";
                     gridObjectPartName.Visible = true;
                 }
+                #endregion
+
+                _tFinances = Conclusion?.Finance?.ToList() ?? new List<tFinance>();
+                //gridControlFinances.DataSource = _tFinances;
+                gridControlFinances.DataSource = FinanceObjController.GetFinanceObj(_tFinances);
+
+                foreach (GridColumn column in gridViewFinances.Columns)
+                {
+                    column.Visible = false;
+                }
+                if (gridViewFinances.Columns[nameof(FinanceObj.FinanceSize)] is GridColumn gridFinanceFinanceSize)
+                {
+                    gridFinanceFinanceSize.Caption = "Размер финансирования (в % от общей суммы)";
+                    gridFinanceFinanceSize.Visible = true;
+
+                    gridFinanceFinanceSize.DisplayFormat.FormatType = FormatType.Numeric;
+                    gridFinanceFinanceSize.DisplayFormat.FormatString = "n5";                    
+                }
+                if (gridViewFinances.Columns[nameof(FinanceObj.BudgetType)] is GridColumn gridFinanceBudgetType)
+                {
+                    gridFinanceBudgetType.Caption = "Уровень бюджета (в случае бюджетного финансирования)";
+                    gridFinanceBudgetType.Visible = true;
+                }
+                if (gridViewFinances.Columns[nameof(FinanceObj.FinanceType)] is GridColumn gridFinanceFinanceType)
+                {
+                    gridFinanceFinanceType.Caption = "Вид источника финансирования";
+                    gridFinanceFinanceType.Visible = true;
+                }
+
+
                 //memoEstimateNorms.EditValue = Conclusion.ExpertEstimate?.EstimateNorms;
                 //txtEstimatedCost.Text = Conclusion.EstimatedCost?.Currency;
                 //txtEstimatedCompleteCostBefore.Text
@@ -257,7 +291,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
             throw new Exception(message ?? "Не заполнен один из параметров.");
         }
 
-        public static GeneralizedDictionaryXPO GetValueGeneralizedDictionary(object sender, string message = default, bool isNullable = false)
+        public static GeneralizedDictionaryXPO GetValueGeneralizedDictionary(object sender, string message = default, bool isNullAble = false)
         {
             if (sender is ButtonEdit buttonEdit)
             {
@@ -274,7 +308,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                 }
             }
 
-            if (isNullable)
+            if (isNullAble)
             {
                 return default;
             }
@@ -287,7 +321,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
             throw new Exception(message ?? "Не заполнен один из параметров.");
         }
 
-        public static T GetEnumByAttributeValue<T>(string value) where T : Enum
+        public static T GetEnumByAttributeValue<T>(string value, bool isNullAble = false) where T : Enum
         {
             foreach (T type in Enum.GetValues(typeof(T)))
             {
@@ -297,10 +331,15 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                 }
             }
 
+            if (isNullAble)
+            {
+                return default;
+            }
+
             throw new Exception();
         }
 
-        public static string GetStringValue(object sender, object control = default, string message = default, bool isNullable = false)
+        public static string GetStringValue(object sender, object control = default, string message = default, bool isNullAble = false)
         {
             var result = sender?.ToString();
             if (!string.IsNullOrWhiteSpace(result))
@@ -308,7 +347,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                 return result;
             }
 
-            if (isNullable)
+            if (isNullAble)
             {
                 return result;
             }
@@ -348,9 +387,10 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                     checkCmbExaminationType,
                     "Заполните поле предмет экпертизы").ToArray();
                 Conclusion.ExaminationObject.Name = GetStringValue(memoName.Text, memoName, "Заполните поле наименование объекта экспертизы");
-                Conclusion.ExaminationObject.ExaminationStageNote = GetStringValue(memoExaminationStageNote.Text, isNullable: true);
+                Conclusion.ExaminationObject.ExaminationStageNote = GetStringValue(memoExaminationStageNote.Text, isNullAble: true);
                 #endregion
 
+                #region Page II_1
                 Conclusion.Object = new tObject();
                 Conclusion.Object.Name = GetStringValue(memoObjectName.Text, memoObjectName, "Заполните поле наименование объекта капитального строительства");
                 Conclusion.Object.Type = GetEnumByAttributeValue<tObjectType>(GetValueGeneralizedDictionary(
@@ -407,6 +447,13 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                 {
                     Conclusion.Object.ObjectPart = _tObjectParts.ToArray();
                 }
+                #endregion
+
+                if (_tFinances.Count > 0)
+                {
+                    Conclusion.Finance = _tFinances.ToArray();
+                }
+
 
             }
             catch (Exception ex)
@@ -427,7 +474,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
 
             if (cmbObjectAddress.EditValue is tAddress address)
             {
-                Conclusion.Object.Address = new tAddress[] {address };
+                Conclusion.Object.Address = new tAddress[] { address };
             }
 
 
@@ -637,7 +684,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
             }
         }
 
-        private void cmbObjectAddress_ButtonClick(object sender, ButtonPressedEventArgs e)
+        private async void cmbObjectAddress_ButtonClick(object sender, ButtonPressedEventArgs e)
         {
             if (sender is ButtonEdit buttonEdit)
             {
@@ -660,7 +707,44 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                         buttonEdit.Refresh();
                     }
                 }
-            }
+                else if (e.Button.Kind == ButtonPredefines.Search)
+                {
+                    var obj = buttonEdit.EditValue?.ToString();
+                    if (!string.IsNullOrWhiteSpace(obj))
+                    {
+                        var addressData = await DaDataObj.GetAddressAsync(obj);
+                        if (addressData != null)
+                        {
+                            var address = new tAddress()
+                            {
+                                Country = addressData.country,
+                                District = addressData.country,
+                                City = addressData.city,
+                                Settlement = addressData.settlement,
+                                Street = addressData.street,
+                                Building = addressData.house,
+                                Room = addressData.flat,
+                                Note = addressData.result,
+                            };
+
+                            try
+                            {
+                                var region = GetEnumByAttributeValue<tRegionsRF>(addressData.region_kladr_id?.Replace("0", ""));
+                                address.Region = region;
+                            }
+                            catch (Exception)
+                            {
+                                XtraMessageBox.Show("Регион не определен, введите вручную",
+                                    "Информационное сообщение",
+                                    MessageBoxButtons.OK,
+                                    MessageBoxIcon.Exclamation);
+                            }
+
+                            buttonEdit.EditValue = address;
+                        }
+                    }
+                }
+            }            
         }
 
         private void gridViewTEI_PopupMenuShowing(object sender, PopupMenuShowingEventArgs e)
@@ -737,6 +821,57 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                 {
                     _tObjectParts.Remove(obj);
                     gridControlObjectPart.RefreshDataSource();
+                }
+            }
+        }
+
+        private void gridViewFinances_PopupMenuShowing(object sender, PopupMenuShowingEventArgs e)
+        {
+            if (sender is GridView gridView)
+            {
+                popupMenuFinance.ShowPopup(new Point(Cursor.Position.X, Cursor.Position.Y));
+            }
+        }
+
+        private void barBtnFinanceAdd_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            var form = new FundingInformationEdit();
+            form.ShowDialog();
+            if (form.IsSave)
+            {
+                _tFinances.Add(form.Finance);
+                gridControlFinances.DataSource = FinanceObjController.GetFinanceObj(_tFinances);
+                gridControlFinances.RefreshDataSource();
+            }
+        }
+
+        private void barBtnFinanceEdit_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            if (gridViewFinances.GetRow(gridViewFinances.FocusedRowHandle) is FinanceObj obj)
+            {
+                var form = new FundingInformationEdit(obj.tFinance); 
+                form.ShowDialog();
+                if (form.IsSave)
+                {
+                    gridControlFinances.DataSource = FinanceObjController.GetFinanceObj(_tFinances);
+                    gridControlFinances.RefreshDataSource();
+                }
+            }
+        }
+
+        private void barBtnFinanceDel_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            if (gridViewFinances.GetRow(gridViewFinances.FocusedRowHandle) is FinanceObj obj)
+            {
+                if (XtraMessageBox.Show(
+                    "Вы действительно хотите удалить выделенный объект?",
+                    "Информационное сообщение",
+                    MessageBoxButtons.OKCancel,
+                    MessageBoxIcon.Question) == DialogResult.OK)
+                {
+                    _tFinances.Remove(obj.tFinance);
+                    gridControlFinances.DataSource = FinanceObjController.GetFinanceObj(_tFinances);
+                    gridControlFinances.RefreshDataSource();
                 }
             }
         }

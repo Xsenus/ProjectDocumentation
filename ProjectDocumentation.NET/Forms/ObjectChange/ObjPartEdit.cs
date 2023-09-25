@@ -1,5 +1,6 @@
 ﻿using Core.NET.AutoModels;
 using Core.NET.Controllers;
+using Core.NET.DaDataObj;
 using Core.NET.Models.XPO;
 using DevExpress.Xpo;
 using DevExpress.XtraBars;
@@ -167,7 +168,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
             }
         }
 
-        private void cmbObjectAddress_ButtonClick(object sender, ButtonPressedEventArgs e)
+        private async void cmbObjectAddress_ButtonClick(object sender, ButtonPressedEventArgs e)
         {
             if (sender is ButtonEdit buttonEdit)
             {
@@ -188,6 +189,43 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                     {
                         buttonEdit.EditValue = form.Address;
                         buttonEdit.Refresh();
+                    }
+                }
+                else if (e.Button.Kind == ButtonPredefines.Search)
+                {
+                    var obj = buttonEdit.EditValue?.ToString();
+                    if (!string.IsNullOrWhiteSpace(obj))
+                    {
+                        var addressData = await DaDataObj.GetAddressAsync(obj);
+                        if (addressData != null)
+                        {
+                            var address = new tAddress()
+                            {
+                                Country = addressData.country,
+                                District = addressData.country,
+                                City = addressData.city,
+                                Settlement = addressData.settlement,
+                                Street = addressData.street,
+                                Building = addressData.house,
+                                Room = addressData.flat,
+                                Note = addressData.result,
+                            };
+
+                            try
+                            {
+                                var region = ConclusionEdit.GetEnumByAttributeValue<tRegionsRF>(addressData.region_kladr_id?.Replace("0", ""));
+                                address.Region = region;
+                            }
+                            catch (Exception)
+                            {
+                                XtraMessageBox.Show("Регион не определен, введите вручную",
+                                    "Информационное сообщение",
+                                    MessageBoxButtons.OK,
+                                    MessageBoxIcon.Exclamation);
+                            }
+
+                            buttonEdit.EditValue = address;
+                        }
                     }
                 }
             }

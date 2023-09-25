@@ -1,7 +1,23 @@
 ﻿using DevExpress.Xpo;
+using System.ComponentModel;
 
 namespace Core.NET.Models.XPO
 {
+    public enum TypeOrganization
+    {
+        /// <summary>
+        /// Юридическое лицо.
+        /// </summary>
+        [Description("Юридическое лицо")]
+        Entity,
+
+        /// <summary>
+        /// Иностранное юридическое лицо.
+        /// </summary>
+        [Description("Иностранное юридическое лицо (филиал, представительство)")]
+        ForeignLegalEntity
+    }
+
     public enum GeneralizedDictionary
     {
         /// <summary>
@@ -37,7 +53,17 @@ namespace Core.NET.Models.XPO
         /// <summary>
         /// Вид объекта капитального строительства.
         /// </summary>
-        ObjectType
+        ObjectType,
+
+        /// <summary>
+        /// Вид источника финансирования.
+        /// </summary>
+        FinanceType,
+
+        /// <summary>
+        /// Вид бюджета.
+        /// </summary>
+        BudgetType
     }
 
     public class GeneralizedDictionaryXPO : BaseObjectXPO

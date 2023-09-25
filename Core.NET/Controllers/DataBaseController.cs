@@ -188,6 +188,68 @@ namespace Core.NET.Controllers
                     Name = "Линейный объект"
                 });
             }
+
+            if (collection.Where(w => w.GeneralizedDictionary == GeneralizedDictionary.FinanceType).Count() == 0)
+            {
+                await _session.SaveAsync(new GeneralizedDictionaryXPO(_session)
+                {
+                    GeneralizedDictionary = GeneralizedDictionary.FinanceType,
+                    Value = "1",
+                    Name = "Бюджетные средства"
+                });
+
+                await _session.SaveAsync(new GeneralizedDictionaryXPO(_session)
+                {
+                    GeneralizedDictionary = GeneralizedDictionary.FinanceType,
+                    Value = "2",
+                    Name = "Средства юридических лиц, перечисленных в части 2 статьи 8.3 Градостроительного кодекса Российской Федерации"
+                });
+
+                await _session.SaveAsync(new GeneralizedDictionaryXPO(_session)
+                {
+                    GeneralizedDictionary = GeneralizedDictionary.FinanceType,
+                    Value = "3",
+                    Name = "Средства, не входящие в перечень, указанный в части 2 статьи 8.3 Градостроительного кодекса Российской Федерации"
+                });
+            }
+
+            if (collection.Where(w => w.GeneralizedDictionary == GeneralizedDictionary.BudgetType).Count() == 0)
+            {
+                await _session.SaveAsync(new GeneralizedDictionaryXPO(_session)
+                {
+                    GeneralizedDictionary = GeneralizedDictionary.BudgetType,
+                    Value = "1",
+                    Name = "Федеральный бюджет"
+                });
+
+                await _session.SaveAsync(new GeneralizedDictionaryXPO(_session)
+                {
+                    GeneralizedDictionary = GeneralizedDictionary.BudgetType,
+                    Value = "2",
+                    Name = "Бюджет субъекта Российской Федерации"
+                });
+
+                await _session.SaveAsync(new GeneralizedDictionaryXPO(_session)
+                {
+                    GeneralizedDictionary = GeneralizedDictionary.BudgetType,
+                    Value = "3",
+                    Name = "Местный бюджет"
+                });
+
+                await _session.SaveAsync(new GeneralizedDictionaryXPO(_session)
+                {
+                    GeneralizedDictionary = GeneralizedDictionary.BudgetType,
+                    Value = "4",
+                    Name = "Бюджет государственного внебюджетного фонда Российской Федерации"
+                });
+
+                await _session.SaveAsync(new GeneralizedDictionaryXPO(_session)
+                {
+                    GeneralizedDictionary = GeneralizedDictionary.BudgetType,
+                    Value = "5",
+                    Name = "Бюджет территориального государственного внебюджетного фонда"
+                });
+            }
         }
 
         private static async Task FillingClimateDistrictXPOAsync()

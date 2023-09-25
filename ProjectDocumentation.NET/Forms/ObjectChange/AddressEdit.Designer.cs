@@ -28,6 +28,11 @@
         /// </summary>
         private void InitializeComponent()
         {
+            DevExpress.XtraEditors.Controls.EditorButtonImageOptions editorButtonImageOptions1 = new DevExpress.XtraEditors.Controls.EditorButtonImageOptions();
+            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject1 = new DevExpress.Utils.SerializableAppearanceObject();
+            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject2 = new DevExpress.Utils.SerializableAppearanceObject();
+            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject3 = new DevExpress.Utils.SerializableAppearanceObject();
+            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject4 = new DevExpress.Utils.SerializableAppearanceObject();
             this.layoutControlExpert = new DevExpress.XtraLayout.LayoutControl();
             this.btnSave = new DevExpress.XtraEditors.SimpleButton();
             this.btnCancel = new DevExpress.XtraEditors.SimpleButton();
@@ -39,6 +44,7 @@
             this.txtBuilding = new DevExpress.XtraEditors.TextEdit();
             this.txtRoom = new DevExpress.XtraEditors.TextEdit();
             this.txtNote = new DevExpress.XtraEditors.TextEdit();
+            this.txtSettlement = new DevExpress.XtraEditors.TextEdit();
             this.Root = new DevExpress.XtraLayout.LayoutControlGroup();
             this.layoutControlItemCountry = new DevExpress.XtraLayout.LayoutControlItem();
             this.layoutControlItemDistrict = new DevExpress.XtraLayout.LayoutControlItem();
@@ -53,7 +59,6 @@
             this.layoutControlItemBuilding = new DevExpress.XtraLayout.LayoutControlItem();
             this.layoutControlItemRoom = new DevExpress.XtraLayout.LayoutControlItem();
             this.layoutControlItemNote = new DevExpress.XtraLayout.LayoutControlItem();
-            this.txtSettlement = new DevExpress.XtraEditors.TextEdit();
             this.layoutControlItemSettlement = new DevExpress.XtraLayout.LayoutControlItem();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlExpert)).BeginInit();
             this.layoutControlExpert.SuspendLayout();
@@ -65,6 +70,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.txtBuilding.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.txtRoom.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.txtNote.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.txtSettlement.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.Root)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemCountry)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemDistrict)).BeginInit();
@@ -79,7 +85,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemBuilding)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemRoom)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemNote)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.txtSettlement.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemSettlement)).BeginInit();
             this.SuspendLayout();
             // 
@@ -98,20 +103,20 @@
             this.layoutControlExpert.Controls.Add(this.txtSettlement);
             this.layoutControlExpert.Dock = System.Windows.Forms.DockStyle.Fill;
             this.layoutControlExpert.Location = new System.Drawing.Point(0, 0);
-            this.layoutControlExpert.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
+            this.layoutControlExpert.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.layoutControlExpert.Name = "layoutControlExpert";
             this.layoutControlExpert.OptionsItemText.TextAlignMode = DevExpress.XtraLayout.TextAlignMode.AutoSize;
             this.layoutControlExpert.Root = this.Root;
-            this.layoutControlExpert.Size = new System.Drawing.Size(800, 311);
+            this.layoutControlExpert.Size = new System.Drawing.Size(548, 268);
             this.layoutControlExpert.TabIndex = 0;
             this.layoutControlExpert.Text = "layoutControlExpert";
             // 
             // btnSave
             // 
-            this.btnSave.Location = new System.Drawing.Point(401, 277);
-            this.btnSave.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
+            this.btnSave.Location = new System.Drawing.Point(276, 240);
+            this.btnSave.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btnSave.Name = "btnSave";
-            this.btnSave.Size = new System.Drawing.Size(194, 27);
+            this.btnSave.Size = new System.Drawing.Size(131, 22);
             this.btnSave.StyleController = this.layoutControlExpert;
             this.btnSave.TabIndex = 4;
             this.btnSave.Text = "Сохранить";
@@ -119,10 +124,10 @@
             // 
             // btnCancel
             // 
-            this.btnCancel.Location = new System.Drawing.Point(599, 277);
-            this.btnCancel.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
+            this.btnCancel.Location = new System.Drawing.Point(411, 240);
+            this.btnCancel.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btnCancel.Name = "btnCancel";
-            this.btnCancel.Size = new System.Drawing.Size(194, 27);
+            this.btnCancel.Size = new System.Drawing.Size(131, 22);
             this.btnCancel.StyleController = this.layoutControlExpert;
             this.btnCancel.TabIndex = 5;
             this.btnCancel.Text = "Отмена";
@@ -130,81 +135,90 @@
             // 
             // txtCountry
             // 
-            this.txtCountry.Location = new System.Drawing.Point(61, 7);
-            this.txtCountry.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
+            this.txtCountry.Location = new System.Drawing.Point(53, 6);
+            this.txtCountry.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.txtCountry.Name = "txtCountry";
-            this.txtCountry.Size = new System.Drawing.Size(732, 22);
+            this.txtCountry.Size = new System.Drawing.Size(489, 20);
             this.txtCountry.StyleController = this.layoutControlExpert;
             this.txtCountry.TabIndex = 6;
             // 
             // txtDistrict
             // 
-            this.txtDistrict.Location = new System.Drawing.Point(54, 59);
-            this.txtDistrict.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
+            this.txtDistrict.Location = new System.Drawing.Point(46, 54);
+            this.txtDistrict.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.txtDistrict.Name = "txtDistrict";
-            this.txtDistrict.Size = new System.Drawing.Size(739, 22);
+            this.txtDistrict.Size = new System.Drawing.Size(496, 20);
             this.txtDistrict.StyleController = this.layoutControlExpert;
             this.txtDistrict.TabIndex = 7;
             // 
             // txtCity
             // 
-            this.txtCity.Location = new System.Drawing.Point(54, 85);
-            this.txtCity.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
+            this.txtCity.Location = new System.Drawing.Point(47, 78);
+            this.txtCity.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.txtCity.Name = "txtCity";
-            this.txtCity.Size = new System.Drawing.Size(739, 22);
+            this.txtCity.Size = new System.Drawing.Size(495, 20);
             this.txtCity.StyleController = this.layoutControlExpert;
             this.txtCity.TabIndex = 8;
             // 
             // cmbRegion
             // 
             this.cmbRegion.EditValue = "";
-            this.cmbRegion.Location = new System.Drawing.Point(218, 33);
-            this.cmbRegion.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
+            this.cmbRegion.Location = new System.Drawing.Point(188, 30);
+            this.cmbRegion.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.cmbRegion.Name = "cmbRegion";
             this.cmbRegion.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo),
-            new DevExpress.XtraEditors.Controls.EditorButton(),
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Ellipsis, "", -1, true, false, false, editorButtonImageOptions1, new DevExpress.Utils.KeyShortcut(System.Windows.Forms.Keys.None), serializableAppearanceObject1, serializableAppearanceObject2, serializableAppearanceObject3, serializableAppearanceObject4, "", null, null, DevExpress.Utils.ToolTipAnchor.Default),
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Delete)});
             this.cmbRegion.Properties.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.DisableTextEditor;
-            this.cmbRegion.Size = new System.Drawing.Size(575, 22);
+            this.cmbRegion.Size = new System.Drawing.Size(354, 20);
             this.cmbRegion.StyleController = this.layoutControlExpert;
             this.cmbRegion.TabIndex = 6;
             // 
             // txtStreet
             // 
-            this.txtStreet.Location = new System.Drawing.Point(54, 137);
-            this.txtStreet.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
+            this.txtStreet.Location = new System.Drawing.Point(47, 126);
+            this.txtStreet.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.txtStreet.Name = "txtStreet";
-            this.txtStreet.Size = new System.Drawing.Size(739, 22);
+            this.txtStreet.Size = new System.Drawing.Size(495, 20);
             this.txtStreet.StyleController = this.layoutControlExpert;
             this.txtStreet.TabIndex = 6;
             // 
             // txtBuilding
             // 
-            this.txtBuilding.Location = new System.Drawing.Point(177, 163);
-            this.txtBuilding.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
+            this.txtBuilding.Location = new System.Drawing.Point(151, 150);
+            this.txtBuilding.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.txtBuilding.Name = "txtBuilding";
-            this.txtBuilding.Size = new System.Drawing.Size(616, 22);
+            this.txtBuilding.Size = new System.Drawing.Size(391, 20);
             this.txtBuilding.StyleController = this.layoutControlExpert;
             this.txtBuilding.TabIndex = 6;
             // 
             // txtRoom
             // 
-            this.txtRoom.Location = new System.Drawing.Point(128, 189);
-            this.txtRoom.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
+            this.txtRoom.Location = new System.Drawing.Point(107, 174);
+            this.txtRoom.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.txtRoom.Name = "txtRoom";
-            this.txtRoom.Size = new System.Drawing.Size(665, 22);
+            this.txtRoom.Size = new System.Drawing.Size(435, 20);
             this.txtRoom.StyleController = this.layoutControlExpert;
             this.txtRoom.TabIndex = 6;
             // 
             // txtNote
             // 
-            this.txtNote.Location = new System.Drawing.Point(246, 215);
-            this.txtNote.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
+            this.txtNote.Location = new System.Drawing.Point(209, 198);
+            this.txtNote.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.txtNote.Name = "txtNote";
-            this.txtNote.Size = new System.Drawing.Size(547, 22);
+            this.txtNote.Size = new System.Drawing.Size(333, 20);
             this.txtNote.StyleController = this.layoutControlExpert;
             this.txtNote.TabIndex = 6;
+            // 
+            // txtSettlement
+            // 
+            this.txtSettlement.Location = new System.Drawing.Point(111, 102);
+            this.txtSettlement.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.txtSettlement.Name = "txtSettlement";
+            this.txtSettlement.Size = new System.Drawing.Size(431, 20);
+            this.txtSettlement.StyleController = this.layoutControlExpert;
+            this.txtSettlement.TabIndex = 9;
             // 
             // Root
             // 
@@ -226,8 +240,8 @@
             this.layoutControlItemNote,
             this.layoutControlItemSettlement});
             this.Root.Name = "Root";
-            this.Root.Padding = new DevExpress.XtraLayout.Utils.Padding(5, 5, 5, 5);
-            this.Root.Size = new System.Drawing.Size(800, 311);
+            this.Root.Padding = new DevExpress.XtraLayout.Utils.Padding(4, 4, 4, 4);
+            this.Root.Size = new System.Drawing.Size(548, 268);
             this.Root.TextVisible = false;
             // 
             // layoutControlItemCountry
@@ -235,68 +249,68 @@
             this.layoutControlItemCountry.Control = this.txtCountry;
             this.layoutControlItemCountry.Location = new System.Drawing.Point(0, 0);
             this.layoutControlItemCountry.Name = "layoutControlItemCountry";
-            this.layoutControlItemCountry.Size = new System.Drawing.Size(790, 26);
+            this.layoutControlItemCountry.Size = new System.Drawing.Size(540, 24);
             this.layoutControlItemCountry.Text = "Страна";
-            this.layoutControlItemCountry.TextSize = new System.Drawing.Size(42, 16);
+            this.layoutControlItemCountry.TextSize = new System.Drawing.Size(37, 13);
             // 
             // layoutControlItemDistrict
             // 
             this.layoutControlItemDistrict.Control = this.txtDistrict;
-            this.layoutControlItemDistrict.Location = new System.Drawing.Point(0, 52);
+            this.layoutControlItemDistrict.Location = new System.Drawing.Point(0, 48);
             this.layoutControlItemDistrict.Name = "layoutControlItemDistrict";
-            this.layoutControlItemDistrict.Size = new System.Drawing.Size(790, 26);
+            this.layoutControlItemDistrict.Size = new System.Drawing.Size(540, 24);
             this.layoutControlItemDistrict.Text = "Район";
-            this.layoutControlItemDistrict.TextSize = new System.Drawing.Size(35, 16);
+            this.layoutControlItemDistrict.TextSize = new System.Drawing.Size(30, 13);
             // 
             // layoutControlItemCity
             // 
             this.layoutControlItemCity.Control = this.txtCity;
-            this.layoutControlItemCity.Location = new System.Drawing.Point(0, 78);
+            this.layoutControlItemCity.Location = new System.Drawing.Point(0, 72);
             this.layoutControlItemCity.Name = "layoutControlItemCity";
-            this.layoutControlItemCity.Size = new System.Drawing.Size(790, 26);
+            this.layoutControlItemCity.Size = new System.Drawing.Size(540, 24);
             this.layoutControlItemCity.Text = "Город";
-            this.layoutControlItemCity.TextSize = new System.Drawing.Size(35, 16);
+            this.layoutControlItemCity.TextSize = new System.Drawing.Size(31, 13);
             // 
             // emptySpaceItem1
             // 
             this.emptySpaceItem1.AllowHotTrack = false;
-            this.emptySpaceItem1.Location = new System.Drawing.Point(0, 270);
+            this.emptySpaceItem1.Location = new System.Drawing.Point(0, 234);
             this.emptySpaceItem1.Name = "emptySpaceItem1";
-            this.emptySpaceItem1.Size = new System.Drawing.Size(197, 31);
+            this.emptySpaceItem1.Size = new System.Drawing.Size(135, 26);
             this.emptySpaceItem1.TextSize = new System.Drawing.Size(0, 0);
             // 
             // layoutControlItem1
             // 
             this.layoutControlItem1.Control = this.btnSave;
-            this.layoutControlItem1.Location = new System.Drawing.Point(394, 270);
+            this.layoutControlItem1.Location = new System.Drawing.Point(270, 234);
             this.layoutControlItem1.Name = "layoutControlItem1";
-            this.layoutControlItem1.Size = new System.Drawing.Size(198, 31);
+            this.layoutControlItem1.Size = new System.Drawing.Size(135, 26);
             this.layoutControlItem1.TextSize = new System.Drawing.Size(0, 0);
             this.layoutControlItem1.TextVisible = false;
             // 
             // layoutControlItem2
             // 
             this.layoutControlItem2.Control = this.btnCancel;
-            this.layoutControlItem2.Location = new System.Drawing.Point(592, 270);
+            this.layoutControlItem2.Location = new System.Drawing.Point(405, 234);
             this.layoutControlItem2.Name = "layoutControlItem2";
-            this.layoutControlItem2.Size = new System.Drawing.Size(198, 31);
+            this.layoutControlItem2.Size = new System.Drawing.Size(135, 26);
             this.layoutControlItem2.TextSize = new System.Drawing.Size(0, 0);
             this.layoutControlItem2.TextVisible = false;
             // 
             // emptySpaceItem2
             // 
             this.emptySpaceItem2.AllowHotTrack = false;
-            this.emptySpaceItem2.Location = new System.Drawing.Point(197, 270);
+            this.emptySpaceItem2.Location = new System.Drawing.Point(135, 234);
             this.emptySpaceItem2.Name = "emptySpaceItem2";
-            this.emptySpaceItem2.Size = new System.Drawing.Size(197, 31);
+            this.emptySpaceItem2.Size = new System.Drawing.Size(135, 26);
             this.emptySpaceItem2.TextSize = new System.Drawing.Size(0, 0);
             // 
             // emptySpaceItem3
             // 
             this.emptySpaceItem3.AllowHotTrack = false;
-            this.emptySpaceItem3.Location = new System.Drawing.Point(0, 234);
+            this.emptySpaceItem3.Location = new System.Drawing.Point(0, 216);
             this.emptySpaceItem3.Name = "emptySpaceItem3";
-            this.emptySpaceItem3.Size = new System.Drawing.Size(790, 36);
+            this.emptySpaceItem3.Size = new System.Drawing.Size(540, 18);
             this.emptySpaceItem3.TextSize = new System.Drawing.Size(0, 0);
             // 
             // layoutControlItemStreet
@@ -304,81 +318,73 @@
             this.layoutControlItemStreet.Control = this.txtStreet;
             this.layoutControlItemStreet.ControlAlignment = System.Drawing.ContentAlignment.TopLeft;
             this.layoutControlItemStreet.CustomizationFormText = "Фамилия *";
-            this.layoutControlItemStreet.Location = new System.Drawing.Point(0, 130);
+            this.layoutControlItemStreet.Location = new System.Drawing.Point(0, 120);
             this.layoutControlItemStreet.Name = "layoutControlItemStreet";
-            this.layoutControlItemStreet.Size = new System.Drawing.Size(790, 26);
+            this.layoutControlItemStreet.Size = new System.Drawing.Size(540, 24);
             this.layoutControlItemStreet.Text = "Улица";
-            this.layoutControlItemStreet.TextSize = new System.Drawing.Size(35, 16);
+            this.layoutControlItemStreet.TextSize = new System.Drawing.Size(31, 13);
             // 
             // layoutControlItemRegion
             // 
             this.layoutControlItemRegion.Control = this.cmbRegion;
             this.layoutControlItemRegion.ControlAlignment = System.Drawing.ContentAlignment.TopLeft;
             this.layoutControlItemRegion.CustomizationFormText = "Результат экспертизы *";
-            this.layoutControlItemRegion.Location = new System.Drawing.Point(0, 26);
+            this.layoutControlItemRegion.Location = new System.Drawing.Point(0, 24);
             this.layoutControlItemRegion.Name = "layoutControlItemRegion";
-            this.layoutControlItemRegion.Size = new System.Drawing.Size(790, 26);
+            this.layoutControlItemRegion.Size = new System.Drawing.Size(540, 24);
             this.layoutControlItemRegion.Text = "Субьект Российской Федерации *";
-            this.layoutControlItemRegion.TextSize = new System.Drawing.Size(199, 16);
+            this.layoutControlItemRegion.TextSize = new System.Drawing.Size(172, 13);
             // 
             // layoutControlItemBuilding
             // 
             this.layoutControlItemBuilding.Control = this.txtBuilding;
             this.layoutControlItemBuilding.ControlAlignment = System.Drawing.ContentAlignment.TopLeft;
             this.layoutControlItemBuilding.CustomizationFormText = "Фамилия *";
-            this.layoutControlItemBuilding.Location = new System.Drawing.Point(0, 156);
+            this.layoutControlItemBuilding.Location = new System.Drawing.Point(0, 144);
             this.layoutControlItemBuilding.Name = "layoutControlItemBuilding";
-            this.layoutControlItemBuilding.Size = new System.Drawing.Size(790, 26);
+            this.layoutControlItemBuilding.Size = new System.Drawing.Size(540, 24);
             this.layoutControlItemBuilding.Text = "Номер здания/сооружения";
-            this.layoutControlItemBuilding.TextSize = new System.Drawing.Size(158, 16);
+            this.layoutControlItemBuilding.TextSize = new System.Drawing.Size(135, 13);
             // 
             // layoutControlItemRoom
             // 
             this.layoutControlItemRoom.Control = this.txtRoom;
             this.layoutControlItemRoom.ControlAlignment = System.Drawing.ContentAlignment.TopLeft;
             this.layoutControlItemRoom.CustomizationFormText = "Фамилия *";
-            this.layoutControlItemRoom.Location = new System.Drawing.Point(0, 182);
+            this.layoutControlItemRoom.Location = new System.Drawing.Point(0, 168);
             this.layoutControlItemRoom.Name = "layoutControlItemRoom";
-            this.layoutControlItemRoom.Size = new System.Drawing.Size(790, 26);
+            this.layoutControlItemRoom.Size = new System.Drawing.Size(540, 24);
             this.layoutControlItemRoom.Text = "Номер помещения";
-            this.layoutControlItemRoom.TextSize = new System.Drawing.Size(109, 16);
+            this.layoutControlItemRoom.TextSize = new System.Drawing.Size(91, 13);
             // 
             // layoutControlItemNote
             // 
             this.layoutControlItemNote.Control = this.txtNote;
             this.layoutControlItemNote.ControlAlignment = System.Drawing.ContentAlignment.TopLeft;
             this.layoutControlItemNote.CustomizationFormText = "Фамилия *";
-            this.layoutControlItemNote.Location = new System.Drawing.Point(0, 208);
+            this.layoutControlItemNote.Location = new System.Drawing.Point(0, 192);
             this.layoutControlItemNote.Name = "layoutControlItemNote";
-            this.layoutControlItemNote.Size = new System.Drawing.Size(790, 26);
+            this.layoutControlItemNote.Size = new System.Drawing.Size(540, 24);
             this.layoutControlItemNote.Text = "Неформализованное описание адреса";
-            this.layoutControlItemNote.TextSize = new System.Drawing.Size(227, 16);
-            // 
-            // txtSettlement
-            // 
-            this.txtSettlement.Location = new System.Drawing.Point(127, 111);
-            this.txtSettlement.Name = "txtSettlement";
-            this.txtSettlement.Size = new System.Drawing.Size(666, 22);
-            this.txtSettlement.StyleController = this.layoutControlExpert;
-            this.txtSettlement.TabIndex = 9;
+            this.layoutControlItemNote.TextSize = new System.Drawing.Size(193, 13);
             // 
             // layoutControlItemSettlement
             // 
             this.layoutControlItemSettlement.Control = this.txtSettlement;
-            this.layoutControlItemSettlement.Location = new System.Drawing.Point(0, 104);
+            this.layoutControlItemSettlement.Location = new System.Drawing.Point(0, 96);
             this.layoutControlItemSettlement.Name = "layoutControlItemSettlement";
-            this.layoutControlItemSettlement.Size = new System.Drawing.Size(790, 26);
+            this.layoutControlItemSettlement.Size = new System.Drawing.Size(540, 24);
             this.layoutControlItemSettlement.Text = "Населенный пункт";
-            this.layoutControlItemSettlement.TextSize = new System.Drawing.Size(108, 16);
+            this.layoutControlItemSettlement.TextSize = new System.Drawing.Size(95, 13);
             // 
             // AddressEdit
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 16F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 311);
+            this.ClientSize = new System.Drawing.Size(548, 268);
             this.Controls.Add(this.layoutControlExpert);
-            this.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
-            this.MinimumSize = new System.Drawing.Size(688, 285);
+            this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.MinimumSize = new System.Drawing.Size(550, 300);
             this.Name = "AddressEdit";
             this.Text = "Адрес";
             this.Load += new System.EventHandler(this.Form_Load);
@@ -392,6 +398,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.txtBuilding.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.txtRoom.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.txtNote.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.txtSettlement.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.Root)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemCountry)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemDistrict)).EndInit();
@@ -406,7 +413,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemBuilding)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemRoom)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemNote)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.txtSettlement.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemSettlement)).EndInit();
             this.ResumeLayout(false);
 
