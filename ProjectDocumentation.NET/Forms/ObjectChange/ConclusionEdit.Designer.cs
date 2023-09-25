@@ -214,6 +214,8 @@
             this.popupMenuTEI = new DevExpress.XtraBars.PopupMenu(this.components);
             this.popupMenuObjectPart = new DevExpress.XtraBars.PopupMenu(this.components);
             this.popupMenuFinance = new DevExpress.XtraBars.PopupMenu(this.components);
+            this.memoFinanceComment = new DevExpress.XtraEditors.MemoEdit();
+            this.layoutControlItemFinanceComment = new DevExpress.XtraLayout.LayoutControlItem();
             ((System.ComponentModel.ISupportInitialize)(this.xtraTabControlBase)).BeginInit();
             this.xtraTabControlBase.SuspendLayout();
             this.xtraTabPage1.SuspendLayout();
@@ -343,6 +345,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.popupMenuTEI)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.popupMenuObjectPart)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.popupMenuFinance)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.memoFinanceComment.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemFinanceComment)).BeginInit();
             this.SuspendLayout();
             // 
             // xtraTabControlBase
@@ -1064,6 +1068,7 @@
             // 
             this.layoutControl2.AllowCustomization = false;
             this.layoutControl2.Controls.Add(this.gridControlFinances);
+            this.layoutControl2.Controls.Add(this.memoFinanceComment);
             this.layoutControl2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.layoutControl2.Location = new System.Drawing.Point(0, 0);
             this.layoutControl2.Name = "layoutControl2";
@@ -1079,7 +1084,7 @@
             this.gridControlFinances.MainView = this.gridViewFinances;
             this.gridControlFinances.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.gridControlFinances.Name = "gridControlFinances";
-            this.gridControlFinances.Size = new System.Drawing.Size(768, 259);
+            this.gridControlFinances.Size = new System.Drawing.Size(768, 200);
             this.gridControlFinances.TabIndex = 11;
             this.gridControlFinances.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
             this.gridViewFinances});
@@ -1102,7 +1107,8 @@
             this.layoutControlGroup2.EnableIndentsWithoutBorders = DevExpress.Utils.DefaultBoolean.True;
             this.layoutControlGroup2.GroupBordersVisible = false;
             this.layoutControlGroup2.Items.AddRange(new DevExpress.XtraLayout.BaseLayoutItem[] {
-            this.layoutControlItem1});
+            this.layoutControlItem1,
+            this.layoutControlItemFinanceComment});
             this.layoutControlGroup2.Name = "layoutControlGroup2";
             this.layoutControlGroup2.Padding = new DevExpress.XtraLayout.Utils.Padding(5, 5, 5, 5);
             this.layoutControlGroup2.Size = new System.Drawing.Size(782, 273);
@@ -1115,7 +1121,7 @@
             this.layoutControlItem1.CustomizationFormText = "Технико-экономические показатели";
             this.layoutControlItem1.Location = new System.Drawing.Point(0, 0);
             this.layoutControlItem1.Name = "layoutControlItem1";
-            this.layoutControlItem1.Size = new System.Drawing.Size(772, 263);
+            this.layoutControlItem1.Size = new System.Drawing.Size(772, 204);
             this.layoutControlItem1.Text = "Сведения";
             this.layoutControlItem1.TextLocation = DevExpress.Utils.Locations.Top;
             this.layoutControlItem1.TextSize = new System.Drawing.Size(0, 0);
@@ -1947,6 +1953,28 @@
             this.popupMenuFinance.Manager = this.barManager;
             this.popupMenuFinance.Name = "popupMenuFinance";
             // 
+            // memoFinanceComment
+            // 
+            this.memoFinanceComment.Location = new System.Drawing.Point(7, 236);
+            this.memoFinanceComment.MaximumSize = new System.Drawing.Size(0, 100);
+            this.memoFinanceComment.MenuManager = this.barManager;
+            this.memoFinanceComment.MinimumSize = new System.Drawing.Size(0, 30);
+            this.memoFinanceComment.Name = "memoFinanceComment";
+            this.memoFinanceComment.Properties.ScrollBars = System.Windows.Forms.ScrollBars.None;
+            this.memoFinanceComment.Size = new System.Drawing.Size(768, 30);
+            this.memoFinanceComment.StyleController = this.layoutControl2;
+            this.memoFinanceComment.TabIndex = 12;
+            // 
+            // layoutControlItemFinanceComment
+            // 
+            this.layoutControlItemFinanceComment.Control = this.memoFinanceComment;
+            this.layoutControlItemFinanceComment.Location = new System.Drawing.Point(0, 204);
+            this.layoutControlItemFinanceComment.Name = "layoutControlItemFinanceComment";
+            this.layoutControlItemFinanceComment.Size = new System.Drawing.Size(772, 59);
+            this.layoutControlItemFinanceComment.Text = "Дополнительные сведения об источнике финансирования";
+            this.layoutControlItemFinanceComment.TextLocation = DevExpress.Utils.Locations.Top;
+            this.layoutControlItemFinanceComment.TextSize = new System.Drawing.Size(298, 13);
+            // 
             // ConclusionEdit
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -2091,6 +2119,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.popupMenuTEI)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.popupMenuObjectPart)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.popupMenuFinance)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.memoFinanceComment.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemFinanceComment)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -2242,5 +2272,7 @@
         private DevExpress.XtraBars.BarButtonItem barBtnFinanceEdit;
         private DevExpress.XtraBars.BarButtonItem barBtnFinanceDel;
         private DevExpress.XtraBars.PopupMenu popupMenuFinance;
+        private DevExpress.XtraEditors.MemoEdit memoFinanceComment;
+        private DevExpress.XtraLayout.LayoutControlItem layoutControlItemFinanceComment;
     }
 }

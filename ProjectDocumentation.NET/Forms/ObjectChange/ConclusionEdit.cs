@@ -170,10 +170,10 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                 }
                 #endregion
 
+                #region Page II_2
                 _tFinances = Conclusion?.Finance?.ToList() ?? new List<tFinance>();
                 //gridControlFinances.DataSource = _tFinances;
                 gridControlFinances.DataSource = FinanceObjController.GetFinanceObj(_tFinances);
-
                 foreach (GridColumn column in gridViewFinances.Columns)
                 {
                     column.Visible = false;
@@ -196,7 +196,8 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                     gridFinanceFinanceType.Caption = "Вид источника финансирования";
                     gridFinanceFinanceType.Visible = true;
                 }
-
+                memoFinanceComment.EditValue = Conclusion.FinanceComment;
+                #endregion
 
                 //memoEstimateNorms.EditValue = Conclusion.ExpertEstimate?.EstimateNorms;
                 //txtEstimatedCost.Text = Conclusion.EstimatedCost?.Currency;
@@ -449,11 +450,13 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                 }
                 #endregion
 
+                #region Page II_2
                 if (_tFinances.Count > 0)
                 {
                     Conclusion.Finance = _tFinances.ToArray();
                 }
-
+                Conclusion.FinanceComment = GetStringValue(memoFinanceComment.EditValue, isNullAble: true);
+                #endregion
 
             }
             catch (Exception ex)
