@@ -269,5 +269,16 @@ namespace ProjectDocumentation.NET.Forms
                 await UpdateGridDataSource(gridView.FocusedRowHandle);
             }
         }
+
+        private void barBtnView_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            if (gridView.GetRow(gridView.FocusedRowHandle) is ConclusionXPO conclusionXPO)
+            {
+                var xml = conclusionXPO.GetObj();
+                var conclusion = ConclusionController.GetConclusionByString(xml);
+                var form = new ViewForm(conclusion);
+                form.ShowDialog();
+            }
+        }
     }
 }

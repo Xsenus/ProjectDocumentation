@@ -40,12 +40,13 @@
             this.barBtnDel = new DevExpress.XtraBars.BarButtonItem();
             this.barBtnLoad = new DevExpress.XtraBars.BarButtonItem();
             this.barBtnFill = new DevExpress.XtraBars.BarButtonItem();
+            this.barBtnBaseSetting = new DevExpress.XtraBars.BarButtonItem();
             this.barManager = new DevExpress.XtraBars.BarManager(this.components);
             this.barDockControlTop = new DevExpress.XtraBars.BarDockControl();
             this.barDockControlBottom = new DevExpress.XtraBars.BarDockControl();
             this.barDockControlLeft = new DevExpress.XtraBars.BarDockControl();
             this.barDockControlRight = new DevExpress.XtraBars.BarDockControl();
-            this.barBtnBaseSetting = new DevExpress.XtraBars.BarButtonItem();
+            this.barBtnView = new DevExpress.XtraBars.BarButtonItem();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControl)).BeginInit();
             this.layoutControl.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.gridControl)).BeginInit();
@@ -113,7 +114,8 @@
             // popupMenu
             // 
             this.popupMenu.LinksPersistInfo.AddRange(new DevExpress.XtraBars.LinkPersistInfo[] {
-            new DevExpress.XtraBars.LinkPersistInfo(this.barBtnAdd),
+            new DevExpress.XtraBars.LinkPersistInfo(this.barBtnView),
+            new DevExpress.XtraBars.LinkPersistInfo(this.barBtnAdd, true),
             new DevExpress.XtraBars.LinkPersistInfo(this.barBtnEdit),
             new DevExpress.XtraBars.LinkPersistInfo(this.barBtnDel),
             new DevExpress.XtraBars.LinkPersistInfo(this.barBtnLoad, true),
@@ -167,6 +169,15 @@
             this.barBtnFill.Name = "barBtnFill";
             this.barBtnFill.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.barBtnFill_ItemClick);
             // 
+            // barBtnBaseSetting
+            // 
+            this.barBtnBaseSetting.Caption = "Базовые параметры";
+            this.barBtnBaseSetting.Id = 5;
+            this.barBtnBaseSetting.ImageOptions.Image = global::ProjectDocumentation.NET.Properties.Resources.converttoparagraphs_16x16;
+            this.barBtnBaseSetting.ImageOptions.LargeImage = global::ProjectDocumentation.NET.Properties.Resources.converttoparagraphs_32x32;
+            this.barBtnBaseSetting.Name = "barBtnBaseSetting";
+            this.barBtnBaseSetting.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.barBtnBaseSetting_ItemClick);
+            // 
             // barManager
             // 
             this.barManager.DockControls.Add(this.barDockControlTop);
@@ -180,8 +191,9 @@
             this.barBtnDel,
             this.barBtnFill,
             this.barBtnLoad,
-            this.barBtnBaseSetting});
-            this.barManager.MaxItemId = 6;
+            this.barBtnBaseSetting,
+            this.barBtnView});
+            this.barManager.MaxItemId = 7;
             // 
             // barDockControlTop
             // 
@@ -215,14 +227,14 @@
             this.barDockControlRight.Manager = this.barManager;
             this.barDockControlRight.Size = new System.Drawing.Size(0, 587);
             // 
-            // barBtnBaseSetting
+            // barBtnView
             // 
-            this.barBtnBaseSetting.Caption = "Базовые параметры";
-            this.barBtnBaseSetting.Id = 5;
-            this.barBtnBaseSetting.ImageOptions.Image = global::ProjectDocumentation.NET.Properties.Resources.converttoparagraphs_16x16;
-            this.barBtnBaseSetting.ImageOptions.LargeImage = global::ProjectDocumentation.NET.Properties.Resources.converttoparagraphs_32x32;
-            this.barBtnBaseSetting.Name = "barBtnBaseSetting";
-            this.barBtnBaseSetting.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.barBtnBaseSetting_ItemClick);
+            this.barBtnView.Caption = "Просмотр";
+            this.barBtnView.Id = 6;
+            this.barBtnView.ImageOptions.Image = global::ProjectDocumentation.NET.Properties.Resources.exporttodoc_16x16;
+            this.barBtnView.ImageOptions.LargeImage = global::ProjectDocumentation.NET.Properties.Resources.exporttodoc_32x32;
+            this.barBtnView.Name = "barBtnView";
+            this.barBtnView.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.barBtnView_ItemClick);
             // 
             // MainForm
             // 
@@ -270,6 +282,7 @@
         private DevExpress.XtraBars.BarDockControl barDockControlLeft;
         private DevExpress.XtraBars.BarDockControl barDockControlRight;
         private DevExpress.XtraBars.BarButtonItem barBtnBaseSetting;
+        private DevExpress.XtraBars.BarButtonItem barBtnView;
     }
 }
 

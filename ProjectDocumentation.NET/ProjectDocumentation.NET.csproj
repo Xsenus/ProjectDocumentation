@@ -153,7 +153,14 @@
     <Compile Include="Forms\ObjectChange\ObjPartEdit.Designer.cs">
       <DependentUpon>ObjPartEdit.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\ViewForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\ViewForm.Designer.cs">
+      <DependentUpon>ViewForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Models\ConclusionObj\FinanceObj.cs" />
+    <Compile Include="Models\ConclusionObj\ProjectDocumentsDeveloperObj.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Forms\FileLoad.resx">
@@ -185,6 +192,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\ObjectChange\ObjPartEdit.resx">
       <DependentUpon>ObjPartEdit.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\ViewForm.resx">
+      <DependentUpon>ViewForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\licenses.licx" />
     <EmbeddedResource Include="Properties\Resources.resx">
@@ -250,6 +260,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\converttoparagraphs_32x32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\exporttodoc_16x16.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\exporttodoc_32x32.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

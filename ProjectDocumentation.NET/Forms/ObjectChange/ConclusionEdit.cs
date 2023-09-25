@@ -37,7 +37,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
         private List<tTEI> _tTEIs = new List<tTEI>();
         private List<tObjectPart> _tObjectParts = new List<tObjectPart>();
         private List<tFinance> _tFinances = new List<tFinance>();
-        private List<tDeclarant> _tDeclarants = new List<tDeclarant>();
+        private List<object> _tProjectDocumentsDeveloper = new List<object>();
 
 
         private List<tExpert> _experts = new List<tExpert>();
@@ -218,8 +218,20 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                 memoClimateConditionsNote.EditValue = Conclusion?.ClimateConditionsNote;
                 #endregion
 
-
-                //_tDeclarants = Conclusion?.Declarant?.ToList() ?? new List<tFinance>();
+                #region Page II_4
+                _tProjectDocumentsDeveloper = Conclusion?.Items?.ToList() ?? new List<object>();
+                //gridControlProjectDocumentsDeveloper.DataSource = _tProjectDocumentsDeveloper;
+                gridControlProjectDocumentsDeveloper.DataSource = ProjectDocumentsDeveloperObjController.GetProjectDocumentsDeveloperObj(_tProjectDocumentsDeveloper);
+                foreach (GridColumn column in gridViewProjectDocumentsDeveloper.Columns)
+                {
+                    column.Visible = false;
+                }
+                if (gridViewProjectDocumentsDeveloper.Columns[nameof(ProjectDocumentsDeveloperObj.Name)] is GridColumn gridProjectDocumentsDeveloperObjName)
+                {
+                    gridProjectDocumentsDeveloperObjName.Caption = "Наименование";
+                    gridProjectDocumentsDeveloperObjName.Visible = true;
+                }
+                #endregion
 
                 //memoEstimateNorms.EditValue = Conclusion.ExpertEstimate?.EstimateNorms;
                 //txtEstimatedCost.Text = Conclusion.EstimatedCost?.Currency;
