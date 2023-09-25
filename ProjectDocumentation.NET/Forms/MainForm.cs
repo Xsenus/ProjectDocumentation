@@ -248,5 +248,26 @@ namespace ProjectDocumentation.NET.Forms
                 await UpdateGridDataSource(gridView.FocusedRowHandle);
             }
         }
+
+        private async void barBtnBaseSetting_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            if (gridView.GetRow(gridView.FocusedRowHandle) is ConclusionXPO conclusionXPO)
+            {
+                var xml = conclusionXPO.GetObj();
+                var conclusion = ConclusionController.GetConclusionByString(xml);
+                var form = new ConclusionBaseSettingEdit(conclusion.ExpertOrganization, conclusion.Approver); 
+                form.ShowDialog();
+
+                if (form.IsSave)
+                {
+                    conclusion.ExpertOrganization = form.Organization;
+                    conclusion.Approver = form.Person;
+                    conclusionXPO.SetObj(conclusion.GetSerializerConclusion());
+                    await _session.SaveAsync(conclusionXPO);
+                }
+
+                await UpdateGridDataSource(gridView.FocusedRowHandle);
+            }
+        }
     }
 }

@@ -105,6 +105,12 @@
     <Compile Include="Forms\MainForm.Designer.cs">
       <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\ObjectChange\ConclusionBaseSettingEdit.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\ObjectChange\ConclusionBaseSettingEdit.Designer.cs">
+      <DependentUpon>ConclusionBaseSettingEdit.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\ObjectChange\ConclusionEdit.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -155,6 +161,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\ObjectChange\ConclusionBaseSettingEdit.resx">
+      <DependentUpon>ConclusionBaseSettingEdit.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\ObjectChange\ConclusionEdit.resx">
       <DependentUpon>ConclusionEdit.cs</DependentUpon>
@@ -235,6 +244,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\drilldownonarguments_pie_32x32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\converttoparagraphs_16x16.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\converttoparagraphs_32x32.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

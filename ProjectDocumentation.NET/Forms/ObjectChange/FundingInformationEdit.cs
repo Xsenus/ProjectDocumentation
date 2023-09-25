@@ -3,7 +3,6 @@ using Core.NET.Controllers;
 using Core.NET.DaDataObj;
 using Core.NET.Extensions;
 using Core.NET.Models.XPO;
-using DevExpress.ClipboardSource.SpreadsheetML;
 using DevExpress.Xpo;
 using DevExpress.XtraEditors;
 using DevExpress.XtraEditors.Controls;
@@ -37,6 +36,12 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
         private async Task FillFormControllersAsync()
         {
             radioGroupTypeOrganization.Properties.Items.AddEnum(typeof(TypeOrganization));
+            var individualEntrepreneur = radioGroupTypeOrganization.Properties.Items?.FirstOrDefault(f => f.Value is TypeOrganization typeOrganization && typeOrganization == TypeOrganization.IndividualEntrepreneur);
+            individualEntrepreneur.Enabled = false;
+            var person = radioGroupTypeOrganization.Properties.Items?.FirstOrDefault(f => f.Value is TypeOrganization typeOrganization && typeOrganization == TypeOrganization.Person);
+            person.Enabled = false;
+            radioGroupTypeOrganization.Properties.Items.Remove(individualEntrepreneur);
+            radioGroupTypeOrganization.Properties.Items.Remove(person);
 
             var collection = await new XPQuery<GeneralizedDictionaryXPO>(_session).ToListAsync();
 
@@ -71,9 +76,6 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
             if (Finance.FinanceOwner?.Item is tForeignOrganization tForeignOrganization)
             {
                 radioGroupTypeOrganization.SelectedIndex = (int)TypeOrganization.ForeignLegalEntity;
-                //var obj = radioGroupTypeOrganization.Properties.Items?.FirstOrDefault(f => f.Value is TypeOrganization typeOrganization && typeOrganization == TypeOrganization.ForeignLegalEntity);
-                //radioGroupTypeOrganization.EditValue = obj;
-
                 txtFOrgFullName.EditValue = tForeignOrganization.OrgFullName;
                 txtFOrgKPP.EditValue = tForeignOrganization.OrgKPP;
                 txtFOrgINN.EditValue = tForeignOrganization.OrgINN;
@@ -83,9 +85,6 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
             else if(Finance.FinanceOwner?.Item is tOrganization tOrganization)
             {
                 radioGroupTypeOrganization.SelectedIndex = (int)TypeOrganization.Entity;
-                //var obj = radioGroupTypeOrganization.Properties.Items?.FirstOrDefault(f => f.Value is TypeOrganization typeOrganization && typeOrganization == TypeOrganization.Entity);
-                //radioGroupTypeOrganization.EditValue = obj;
-
                 btnSearch.EditValue = tOrganization.OrgINN;
                 txtOrgFullName.EditValue = tOrganization.OrgFullName;
                 txtOrgOGRN.EditValue = tOrganization.OrgOGRN;
@@ -126,7 +125,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                             case (int)TypeOrganization.Entity:
                                 var entity = new tOrganization();
                                 entity.OrgFullName = ConclusionEdit.GetStringValue(txtOrgFullName.EditValue, txtOrgFullName, "Заполните наименование организации");
-                                entity.OrgOGRN = ConclusionEdit.GetStringValue(txtOrgFullName.EditValue, txtOrgFullName, "Заполните ОГРН организации");
+                                entity.OrgOGRN = ConclusionEdit.GetStringValue(txtOrgOGRN.EditValue, txtOrgOGRN, "Заполните ОГРН организации");
                                 entity.OrgKPP = ConclusionEdit.GetStringValue(txtOrgKPP.EditValue, txtOrgKPP, "Заполните КПП организации");
                                 entity.OrgINN = ConclusionEdit.GetStringValue(txtOrgINN.EditValue, txtOrgINN, "Заполните ИНН организации");
                                 entity.Email = ConclusionEdit.GetStringValue(txtEmail.EditValue, txtEmail, isNullAble: true);
