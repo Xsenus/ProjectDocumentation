@@ -58,7 +58,6 @@
     <Compile Include="Extensions\Serializer.cs" />
     <Compile Include="Extensions\StringExtension.cs" />
     <Compile Include="Models\XPO\BaseObjectXPO.cs" />
-    <Compile Include="Models\XPO\ClimateDistrictXPO.cs" />
     <Compile Include="Models\XPO\ConclusionXPO.cs" />
     <Compile Include="Models\XPO\DocumentTypeXPO.cs" />
     <Compile Include="Models\XPO\ExaminationFormXPO.cs" />

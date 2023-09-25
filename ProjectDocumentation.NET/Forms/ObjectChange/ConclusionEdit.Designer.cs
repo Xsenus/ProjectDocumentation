@@ -29,6 +29,11 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            DevExpress.XtraEditors.Controls.EditorButtonImageOptions editorButtonImageOptions9 = new DevExpress.XtraEditors.Controls.EditorButtonImageOptions();
+            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject33 = new DevExpress.Utils.SerializableAppearanceObject();
+            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject34 = new DevExpress.Utils.SerializableAppearanceObject();
+            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject35 = new DevExpress.Utils.SerializableAppearanceObject();
+            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject36 = new DevExpress.Utils.SerializableAppearanceObject();
             DevExpress.XtraEditors.Controls.EditorButtonImageOptions editorButtonImageOptions1 = new DevExpress.XtraEditors.Controls.EditorButtonImageOptions();
             DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject1 = new DevExpress.Utils.SerializableAppearanceObject();
             DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject2 = new DevExpress.Utils.SerializableAppearanceObject();
@@ -64,11 +69,6 @@
             DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject26 = new DevExpress.Utils.SerializableAppearanceObject();
             DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject27 = new DevExpress.Utils.SerializableAppearanceObject();
             DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject28 = new DevExpress.Utils.SerializableAppearanceObject();
-            DevExpress.XtraEditors.Controls.EditorButtonImageOptions editorButtonImageOptions8 = new DevExpress.XtraEditors.Controls.EditorButtonImageOptions();
-            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject29 = new DevExpress.Utils.SerializableAppearanceObject();
-            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject30 = new DevExpress.Utils.SerializableAppearanceObject();
-            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject31 = new DevExpress.Utils.SerializableAppearanceObject();
-            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject32 = new DevExpress.Utils.SerializableAppearanceObject();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ConclusionEdit));
             this.xtraTabControlBase = new DevExpress.XtraTab.XtraTabControl();
             this.xtraTabPage1 = new DevExpress.XtraTab.XtraTabPage();
@@ -136,23 +136,25 @@
             this.layoutControl2 = new DevExpress.XtraLayout.LayoutControl();
             this.gridControlFinances = new DevExpress.XtraGrid.GridControl();
             this.gridViewFinances = new DevExpress.XtraGrid.Views.Grid.GridView();
+            this.memoFinanceComment = new DevExpress.XtraEditors.MemoEdit();
             this.layoutControlGroup2 = new DevExpress.XtraLayout.LayoutControlGroup();
             this.layoutControlItem1 = new DevExpress.XtraLayout.LayoutControlItem();
+            this.layoutControlItemFinanceComment = new DevExpress.XtraLayout.LayoutControlItem();
             this.xtraTabPage9 = new DevExpress.XtraTab.XtraTabPage();
             this.layoutControl5 = new DevExpress.XtraLayout.LayoutControl();
             this.checkCmbClimateDistrict = new DevExpress.XtraEditors.CheckedComboBoxEdit();
-            this.checkedComboBoxEdit11 = new DevExpress.XtraEditors.CheckedComboBoxEdit();
-            this.checkedComboBoxEdit12 = new DevExpress.XtraEditors.CheckedComboBoxEdit();
-            this.checkedComboBoxEdit13 = new DevExpress.XtraEditors.CheckedComboBoxEdit();
-            this.checkedComboBoxEdit14 = new DevExpress.XtraEditors.CheckedComboBoxEdit();
-            this.memoEdit1 = new DevExpress.XtraEditors.MemoEdit();
+            this.checkCmbSeismicActivity = new DevExpress.XtraEditors.CheckedComboBoxEdit();
+            this.checkCmbWindDistrict = new DevExpress.XtraEditors.CheckedComboBoxEdit();
+            this.checkCmbGeologicalConditions = new DevExpress.XtraEditors.CheckedComboBoxEdit();
+            this.checkCmbSnowDistrict = new DevExpress.XtraEditors.CheckedComboBoxEdit();
+            this.memoClimateConditionsNote = new DevExpress.XtraEditors.MemoEdit();
             this.layoutControlGroup5 = new DevExpress.XtraLayout.LayoutControlGroup();
             this.layoutControlItemClimateDistrict = new DevExpress.XtraLayout.LayoutControlItem();
-            this.layoutControlItem5 = new DevExpress.XtraLayout.LayoutControlItem();
-            this.layoutControlItem2 = new DevExpress.XtraLayout.LayoutControlItem();
-            this.layoutControlItem3 = new DevExpress.XtraLayout.LayoutControlItem();
-            this.layoutControlItem4 = new DevExpress.XtraLayout.LayoutControlItem();
-            this.layoutControlItem6 = new DevExpress.XtraLayout.LayoutControlItem();
+            this.layoutControlItemSnowDistrict = new DevExpress.XtraLayout.LayoutControlItem();
+            this.layoutControlItemSeismicActivity = new DevExpress.XtraLayout.LayoutControlItem();
+            this.layoutControlItemWindDistrict = new DevExpress.XtraLayout.LayoutControlItem();
+            this.layoutControlItemGeologicalConditions = new DevExpress.XtraLayout.LayoutControlItem();
+            this.layoutControlItemClimateConditionsNote = new DevExpress.XtraLayout.LayoutControlItem();
             this.xtraTabPage10 = new DevExpress.XtraTab.XtraTabPage();
             this.xtraTabPage11 = new DevExpress.XtraTab.XtraTabPage();
             this.xtraTabPage12 = new DevExpress.XtraTab.XtraTabPage();
@@ -214,8 +216,6 @@
             this.popupMenuTEI = new DevExpress.XtraBars.PopupMenu(this.components);
             this.popupMenuObjectPart = new DevExpress.XtraBars.PopupMenu(this.components);
             this.popupMenuFinance = new DevExpress.XtraBars.PopupMenu(this.components);
-            this.memoFinanceComment = new DevExpress.XtraEditors.MemoEdit();
-            this.layoutControlItemFinanceComment = new DevExpress.XtraLayout.LayoutControlItem();
             ((System.ComponentModel.ISupportInitialize)(this.xtraTabControlBase)).BeginInit();
             this.xtraTabControlBase.SuspendLayout();
             this.xtraTabPage1.SuspendLayout();
@@ -267,24 +267,26 @@
             this.layoutControl2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.gridControlFinances)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.gridViewFinances)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.memoFinanceComment.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlGroup2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemFinanceComment)).BeginInit();
             this.xtraTabPage9.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControl5)).BeginInit();
             this.layoutControl5.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.checkCmbClimateDistrict.Properties)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.checkedComboBoxEdit11.Properties)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.checkedComboBoxEdit12.Properties)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.checkedComboBoxEdit13.Properties)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.checkedComboBoxEdit14.Properties)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.memoEdit1.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.checkCmbSeismicActivity.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.checkCmbWindDistrict.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.checkCmbGeologicalConditions.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.checkCmbSnowDistrict.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.memoClimateConditionsNote.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlGroup5)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemClimateDistrict)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem5)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem2)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem3)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem4)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem6)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemSnowDistrict)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemSeismicActivity)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemWindDistrict)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemGeologicalConditions)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemClimateConditionsNote)).BeginInit();
             this.xtraTabPage12.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.gridControlCadastralNumber)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.gridViewCadastralNumber)).BeginInit();
@@ -345,8 +347,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.popupMenuTEI)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.popupMenuObjectPart)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.popupMenuFinance)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.memoFinanceComment.Properties)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemFinanceComment)).BeginInit();
             this.SuspendLayout();
             // 
             // xtraTabControlBase
@@ -589,7 +589,7 @@
             this.cmbExaminationResult.Name = "cmbExaminationResult";
             this.cmbExaminationResult.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo),
-            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Ellipsis, "", -1, true, false, false, editorButtonImageOptions1, new DevExpress.Utils.KeyShortcut(System.Windows.Forms.Keys.None), serializableAppearanceObject1, serializableAppearanceObject2, serializableAppearanceObject3, serializableAppearanceObject4, "", null, null, DevExpress.Utils.ToolTipAnchor.Default),
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Ellipsis, "", -1, true, false, false, editorButtonImageOptions9, new DevExpress.Utils.KeyShortcut(System.Windows.Forms.Keys.None), serializableAppearanceObject33, serializableAppearanceObject34, serializableAppearanceObject35, serializableAppearanceObject36, "", null, null, DevExpress.Utils.ToolTipAnchor.Default),
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Delete)});
             this.cmbExaminationResult.Properties.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.DisableTextEditor;
             this.cmbExaminationResult.Size = new System.Drawing.Size(248, 20);
@@ -605,7 +605,7 @@
             this.cmbExaminationForm.Name = "cmbExaminationForm";
             this.cmbExaminationForm.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo),
-            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Ellipsis, "", -1, true, false, false, editorButtonImageOptions2, new DevExpress.Utils.KeyShortcut(System.Windows.Forms.Keys.None), serializableAppearanceObject5, serializableAppearanceObject6, serializableAppearanceObject7, serializableAppearanceObject8, "", null, null, DevExpress.Utils.ToolTipAnchor.Default),
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Ellipsis, "", -1, true, false, false, editorButtonImageOptions1, new DevExpress.Utils.KeyShortcut(System.Windows.Forms.Keys.None), serializableAppearanceObject1, serializableAppearanceObject2, serializableAppearanceObject3, serializableAppearanceObject4, "", null, null, DevExpress.Utils.ToolTipAnchor.Default),
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Delete)});
             this.cmbExaminationForm.Properties.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.DisableTextEditor;
             this.cmbExaminationForm.Size = new System.Drawing.Size(269, 20);
@@ -621,7 +621,7 @@
             this.cmbExaminationObjectType.Name = "cmbExaminationObjectType";
             this.cmbExaminationObjectType.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo),
-            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Ellipsis, "", -1, true, false, false, editorButtonImageOptions3, new DevExpress.Utils.KeyShortcut(System.Windows.Forms.Keys.None), serializableAppearanceObject9, serializableAppearanceObject10, serializableAppearanceObject11, serializableAppearanceObject12, "", null, null, DevExpress.Utils.ToolTipAnchor.Default),
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Ellipsis, "", -1, true, false, false, editorButtonImageOptions2, new DevExpress.Utils.KeyShortcut(System.Windows.Forms.Keys.None), serializableAppearanceObject5, serializableAppearanceObject6, serializableAppearanceObject7, serializableAppearanceObject8, "", null, null, DevExpress.Utils.ToolTipAnchor.Default),
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Delete)});
             this.cmbExaminationObjectType.Properties.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.DisableTextEditor;
             this.cmbExaminationObjectType.Size = new System.Drawing.Size(236, 20);
@@ -637,7 +637,7 @@
             this.cmbExaminationStage.Name = "cmbExaminationStage";
             this.cmbExaminationStage.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo),
-            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Ellipsis, "", -1, true, false, false, editorButtonImageOptions4, new DevExpress.Utils.KeyShortcut(System.Windows.Forms.Keys.None), serializableAppearanceObject13, serializableAppearanceObject14, serializableAppearanceObject15, serializableAppearanceObject16, "", null, null, DevExpress.Utils.ToolTipAnchor.Default),
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Ellipsis, "", -1, true, false, false, editorButtonImageOptions3, new DevExpress.Utils.KeyShortcut(System.Windows.Forms.Keys.None), serializableAppearanceObject9, serializableAppearanceObject10, serializableAppearanceObject11, serializableAppearanceObject12, "", null, null, DevExpress.Utils.ToolTipAnchor.Default),
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Delete)});
             this.cmbExaminationStage.Properties.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.DisableTextEditor;
             this.cmbExaminationStage.Size = new System.Drawing.Size(282, 20);
@@ -653,7 +653,7 @@
             this.cmbConstructionType.Name = "cmbConstructionType";
             this.cmbConstructionType.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo),
-            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Ellipsis, "", -1, true, false, false, editorButtonImageOptions5, new DevExpress.Utils.KeyShortcut(System.Windows.Forms.Keys.None), serializableAppearanceObject17, serializableAppearanceObject18, serializableAppearanceObject19, serializableAppearanceObject20, "", null, null, DevExpress.Utils.ToolTipAnchor.Default),
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Ellipsis, "", -1, true, false, false, editorButtonImageOptions4, new DevExpress.Utils.KeyShortcut(System.Windows.Forms.Keys.None), serializableAppearanceObject13, serializableAppearanceObject14, serializableAppearanceObject15, serializableAppearanceObject16, "", null, null, DevExpress.Utils.ToolTipAnchor.Default),
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Delete)});
             this.cmbConstructionType.Properties.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.DisableTextEditor;
             this.cmbConstructionType.Size = new System.Drawing.Size(311, 20);
@@ -919,7 +919,7 @@
             this.cmbObjectType.Name = "cmbObjectType";
             this.cmbObjectType.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo),
-            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Ellipsis, "", -1, true, false, false, editorButtonImageOptions6, new DevExpress.Utils.KeyShortcut(System.Windows.Forms.Keys.None), serializableAppearanceObject21, serializableAppearanceObject22, serializableAppearanceObject23, serializableAppearanceObject24, "", null, null, DevExpress.Utils.ToolTipAnchor.Default),
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Ellipsis, "", -1, true, false, false, editorButtonImageOptions5, new DevExpress.Utils.KeyShortcut(System.Windows.Forms.Keys.None), serializableAppearanceObject17, serializableAppearanceObject18, serializableAppearanceObject19, serializableAppearanceObject20, "", null, null, DevExpress.Utils.ToolTipAnchor.Default),
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Delete)});
             this.cmbObjectType.Properties.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.DisableTextEditor;
             this.cmbObjectType.Size = new System.Drawing.Size(278, 20);
@@ -935,7 +935,7 @@
             this.cmbFunctionsClass.Name = "cmbFunctionsClass";
             this.cmbFunctionsClass.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo),
-            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Ellipsis, "", -1, true, false, false, editorButtonImageOptions7, new DevExpress.Utils.KeyShortcut(System.Windows.Forms.Keys.None), serializableAppearanceObject25, serializableAppearanceObject26, serializableAppearanceObject27, serializableAppearanceObject28, "", null, null, DevExpress.Utils.ToolTipAnchor.Default),
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Ellipsis, "", -1, true, false, false, editorButtonImageOptions6, new DevExpress.Utils.KeyShortcut(System.Windows.Forms.Keys.None), serializableAppearanceObject21, serializableAppearanceObject22, serializableAppearanceObject23, serializableAppearanceObject24, "", null, null, DevExpress.Utils.ToolTipAnchor.Default),
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Delete)});
             this.cmbFunctionsClass.Size = new System.Drawing.Size(488, 20);
             this.cmbFunctionsClass.StyleController = this.layoutControl_Page_II_1;
@@ -949,7 +949,7 @@
             this.cmbObjectAddress.Name = "cmbObjectAddress";
             this.cmbObjectAddress.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Search),
-            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo, "", -1, true, false, false, editorButtonImageOptions8, new DevExpress.Utils.KeyShortcut(System.Windows.Forms.Keys.None), serializableAppearanceObject29, serializableAppearanceObject30, serializableAppearanceObject31, serializableAppearanceObject32, "", null, null, DevExpress.Utils.ToolTipAnchor.Default),
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo, "", -1, true, false, false, editorButtonImageOptions7, new DevExpress.Utils.KeyShortcut(System.Windows.Forms.Keys.None), serializableAppearanceObject25, serializableAppearanceObject26, serializableAppearanceObject27, serializableAppearanceObject28, "", null, null, DevExpress.Utils.ToolTipAnchor.Default),
             new DevExpress.XtraEditors.Controls.EditorButton(),
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Delete)});
             this.cmbObjectAddress.Size = new System.Drawing.Size(770, 20);
@@ -1102,6 +1102,18 @@
             this.gridViewFinances.OptionsView.ShowGroupPanel = false;
             this.gridViewFinances.PopupMenuShowing += new DevExpress.XtraGrid.Views.Grid.PopupMenuShowingEventHandler(this.gridViewFinances_PopupMenuShowing);
             // 
+            // memoFinanceComment
+            // 
+            this.memoFinanceComment.Location = new System.Drawing.Point(7, 227);
+            this.memoFinanceComment.MaximumSize = new System.Drawing.Size(0, 100);
+            this.memoFinanceComment.MenuManager = this.barManager;
+            this.memoFinanceComment.MinimumSize = new System.Drawing.Size(0, 30);
+            this.memoFinanceComment.Name = "memoFinanceComment";
+            this.memoFinanceComment.Properties.ScrollBars = System.Windows.Forms.ScrollBars.None;
+            this.memoFinanceComment.Size = new System.Drawing.Size(768, 39);
+            this.memoFinanceComment.StyleController = this.layoutControl2;
+            this.memoFinanceComment.TabIndex = 12;
+            // 
             // layoutControlGroup2
             // 
             this.layoutControlGroup2.EnableIndentsWithoutBorders = DevExpress.Utils.DefaultBoolean.True;
@@ -1127,6 +1139,16 @@
             this.layoutControlItem1.TextSize = new System.Drawing.Size(0, 0);
             this.layoutControlItem1.TextVisible = false;
             // 
+            // layoutControlItemFinanceComment
+            // 
+            this.layoutControlItemFinanceComment.Control = this.memoFinanceComment;
+            this.layoutControlItemFinanceComment.Location = new System.Drawing.Point(0, 204);
+            this.layoutControlItemFinanceComment.Name = "layoutControlItemFinanceComment";
+            this.layoutControlItemFinanceComment.Size = new System.Drawing.Size(772, 59);
+            this.layoutControlItemFinanceComment.Text = "Дополнительные сведения об источнике финансирования";
+            this.layoutControlItemFinanceComment.TextLocation = DevExpress.Utils.Locations.Top;
+            this.layoutControlItemFinanceComment.TextSize = new System.Drawing.Size(298, 13);
+            // 
             // xtraTabPage9
             // 
             this.xtraTabPage9.Controls.Add(this.layoutControl5);
@@ -1138,11 +1160,11 @@
             // 
             this.layoutControl5.AllowCustomization = false;
             this.layoutControl5.Controls.Add(this.checkCmbClimateDistrict);
-            this.layoutControl5.Controls.Add(this.checkedComboBoxEdit11);
-            this.layoutControl5.Controls.Add(this.checkedComboBoxEdit12);
-            this.layoutControl5.Controls.Add(this.checkedComboBoxEdit13);
-            this.layoutControl5.Controls.Add(this.checkedComboBoxEdit14);
-            this.layoutControl5.Controls.Add(this.memoEdit1);
+            this.layoutControl5.Controls.Add(this.checkCmbSeismicActivity);
+            this.layoutControl5.Controls.Add(this.checkCmbWindDistrict);
+            this.layoutControl5.Controls.Add(this.checkCmbGeologicalConditions);
+            this.layoutControl5.Controls.Add(this.checkCmbSnowDistrict);
+            this.layoutControl5.Controls.Add(this.memoClimateConditionsNote);
             this.layoutControl5.Dock = System.Windows.Forms.DockStyle.Fill;
             this.layoutControl5.Location = new System.Drawing.Point(0, 0);
             this.layoutControl5.Name = "layoutControl5";
@@ -1162,59 +1184,65 @@
             this.checkCmbClimateDistrict.Size = new System.Drawing.Size(382, 20);
             this.checkCmbClimateDistrict.StyleController = this.layoutControl5;
             this.checkCmbClimateDistrict.TabIndex = 4;
+            this.checkCmbClimateDistrict.ButtonPressed += new DevExpress.XtraEditors.Controls.ButtonPressedEventHandler(this.clearEditValue_ButtonPressed);
             // 
-            // checkedComboBoxEdit11
+            // checkCmbSeismicActivity
             // 
-            this.checkedComboBoxEdit11.Location = new System.Drawing.Point(393, 23);
-            this.checkedComboBoxEdit11.Name = "checkedComboBoxEdit11";
-            this.checkedComboBoxEdit11.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
+            this.checkCmbSeismicActivity.Location = new System.Drawing.Point(393, 23);
+            this.checkCmbSeismicActivity.Name = "checkCmbSeismicActivity";
+            this.checkCmbSeismicActivity.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo),
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Delete)});
-            this.checkedComboBoxEdit11.Size = new System.Drawing.Size(382, 20);
-            this.checkedComboBoxEdit11.StyleController = this.layoutControl5;
-            this.checkedComboBoxEdit11.TabIndex = 4;
+            this.checkCmbSeismicActivity.Size = new System.Drawing.Size(382, 20);
+            this.checkCmbSeismicActivity.StyleController = this.layoutControl5;
+            this.checkCmbSeismicActivity.TabIndex = 4;
+            this.checkCmbSeismicActivity.ButtonPressed += new DevExpress.XtraEditors.Controls.ButtonPressedEventHandler(this.clearEditValue_ButtonPressed);
             // 
-            // checkedComboBoxEdit12
+            // checkCmbWindDistrict
             // 
-            this.checkedComboBoxEdit12.Location = new System.Drawing.Point(7, 63);
-            this.checkedComboBoxEdit12.Name = "checkedComboBoxEdit12";
-            this.checkedComboBoxEdit12.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
+            this.checkCmbWindDistrict.Location = new System.Drawing.Point(7, 63);
+            this.checkCmbWindDistrict.Name = "checkCmbWindDistrict";
+            this.checkCmbWindDistrict.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo),
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Delete)});
-            this.checkedComboBoxEdit12.Size = new System.Drawing.Size(382, 20);
-            this.checkedComboBoxEdit12.StyleController = this.layoutControl5;
-            this.checkedComboBoxEdit12.TabIndex = 4;
+            this.checkCmbWindDistrict.Size = new System.Drawing.Size(382, 20);
+            this.checkCmbWindDistrict.StyleController = this.layoutControl5;
+            this.checkCmbWindDistrict.TabIndex = 4;
+            this.checkCmbWindDistrict.ButtonPressed += new DevExpress.XtraEditors.Controls.ButtonPressedEventHandler(this.clearEditValue_ButtonPressed);
             // 
-            // checkedComboBoxEdit13
+            // checkCmbGeologicalConditions
             // 
-            this.checkedComboBoxEdit13.Location = new System.Drawing.Point(393, 63);
-            this.checkedComboBoxEdit13.Name = "checkedComboBoxEdit13";
-            this.checkedComboBoxEdit13.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
+            this.checkCmbGeologicalConditions.Location = new System.Drawing.Point(393, 63);
+            this.checkCmbGeologicalConditions.Name = "checkCmbGeologicalConditions";
+            this.checkCmbGeologicalConditions.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo),
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Delete)});
-            this.checkedComboBoxEdit13.Size = new System.Drawing.Size(382, 20);
-            this.checkedComboBoxEdit13.StyleController = this.layoutControl5;
-            this.checkedComboBoxEdit13.TabIndex = 4;
+            this.checkCmbGeologicalConditions.Size = new System.Drawing.Size(382, 20);
+            this.checkCmbGeologicalConditions.StyleController = this.layoutControl5;
+            this.checkCmbGeologicalConditions.TabIndex = 4;
+            this.checkCmbGeologicalConditions.ButtonPressed += new DevExpress.XtraEditors.Controls.ButtonPressedEventHandler(this.clearEditValue_ButtonPressed);
             // 
-            // checkedComboBoxEdit14
+            // checkCmbSnowDistrict
             // 
-            this.checkedComboBoxEdit14.Location = new System.Drawing.Point(7, 103);
-            this.checkedComboBoxEdit14.Name = "checkedComboBoxEdit14";
-            this.checkedComboBoxEdit14.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
+            this.checkCmbSnowDistrict.Location = new System.Drawing.Point(7, 103);
+            this.checkCmbSnowDistrict.Name = "checkCmbSnowDistrict";
+            this.checkCmbSnowDistrict.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo),
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Delete)});
-            this.checkedComboBoxEdit14.Size = new System.Drawing.Size(768, 20);
-            this.checkedComboBoxEdit14.StyleController = this.layoutControl5;
-            this.checkedComboBoxEdit14.TabIndex = 4;
+            this.checkCmbSnowDistrict.Size = new System.Drawing.Size(768, 20);
+            this.checkCmbSnowDistrict.StyleController = this.layoutControl5;
+            this.checkCmbSnowDistrict.TabIndex = 4;
+            this.checkCmbSnowDistrict.ButtonPressed += new DevExpress.XtraEditors.Controls.ButtonPressedEventHandler(this.clearEditValue_ButtonPressed);
             // 
-            // memoEdit1
+            // memoEditClimateConditionsNote
             // 
-            this.memoEdit1.Location = new System.Drawing.Point(190, 127);
-            this.memoEdit1.MenuManager = this.barManager;
-            this.memoEdit1.Name = "memoEdit1";
-            this.memoEdit1.Size = new System.Drawing.Size(585, 139);
-            this.memoEdit1.StyleController = this.layoutControl5;
-            this.memoEdit1.TabIndex = 5;
+            this.memoClimateConditionsNote.Location = new System.Drawing.Point(7, 145);
+            this.memoClimateConditionsNote.MenuManager = this.barManager;
+            this.memoClimateConditionsNote.Name = "memoEditClimateConditionsNote";
+            this.memoClimateConditionsNote.Properties.ScrollBars = System.Windows.Forms.ScrollBars.None;
+            this.memoClimateConditionsNote.Size = new System.Drawing.Size(768, 121);
+            this.memoClimateConditionsNote.StyleController = this.layoutControl5;
+            this.memoClimateConditionsNote.TabIndex = 5;
             // 
             // layoutControlGroup5
             // 
@@ -1222,11 +1250,11 @@
             this.layoutControlGroup5.GroupBordersVisible = false;
             this.layoutControlGroup5.Items.AddRange(new DevExpress.XtraLayout.BaseLayoutItem[] {
             this.layoutControlItemClimateDistrict,
-            this.layoutControlItem5,
-            this.layoutControlItem2,
-            this.layoutControlItem3,
-            this.layoutControlItem4,
-            this.layoutControlItem6});
+            this.layoutControlItemSnowDistrict,
+            this.layoutControlItemSeismicActivity,
+            this.layoutControlItemWindDistrict,
+            this.layoutControlItemGeologicalConditions,
+            this.layoutControlItemClimateConditionsNote});
             this.layoutControlGroup5.Name = "Root";
             this.layoutControlGroup5.Padding = new DevExpress.XtraLayout.Utils.Padding(5, 5, 5, 5);
             this.layoutControlGroup5.Size = new System.Drawing.Size(782, 273);
@@ -1240,63 +1268,67 @@
             this.layoutControlItemClimateDistrict.Size = new System.Drawing.Size(386, 40);
             this.layoutControlItemClimateDistrict.Text = "Климатический район (подрайон)";
             this.layoutControlItemClimateDistrict.TextLocation = DevExpress.Utils.Locations.Top;
-            this.layoutControlItemClimateDistrict.TextSize = new System.Drawing.Size(171, 13);
+            this.layoutControlItemClimateDistrict.TextSize = new System.Drawing.Size(217, 13);
             // 
-            // layoutControlItem5
+            // layoutControlItemSnowDistrict
             // 
-            this.layoutControlItem5.Control = this.checkedComboBoxEdit14;
-            this.layoutControlItem5.ControlAlignment = System.Drawing.ContentAlignment.TopLeft;
-            this.layoutControlItem5.CustomizationFormText = "layoutControlItem1";
-            this.layoutControlItem5.Location = new System.Drawing.Point(0, 80);
-            this.layoutControlItem5.Name = "layoutControlItem5";
-            this.layoutControlItem5.Size = new System.Drawing.Size(772, 40);
-            this.layoutControlItem5.Text = "layoutControlItem1";
-            this.layoutControlItem5.TextLocation = DevExpress.Utils.Locations.Top;
-            this.layoutControlItem5.TextSize = new System.Drawing.Size(171, 13);
+            this.layoutControlItemSnowDistrict.Control = this.checkCmbSnowDistrict;
+            this.layoutControlItemSnowDistrict.ControlAlignment = System.Drawing.ContentAlignment.TopLeft;
+            this.layoutControlItemSnowDistrict.CustomizationFormText = "layoutControlItem1";
+            this.layoutControlItemSnowDistrict.Location = new System.Drawing.Point(0, 80);
+            this.layoutControlItemSnowDistrict.Name = "layoutControlItemSnowDistrict";
+            this.layoutControlItemSnowDistrict.Size = new System.Drawing.Size(772, 40);
+            this.layoutControlItemSnowDistrict.Text = "Снеговой район";
+            this.layoutControlItemSnowDistrict.TextLocation = DevExpress.Utils.Locations.Top;
+            this.layoutControlItemSnowDistrict.TextSize = new System.Drawing.Size(217, 13);
             // 
-            // layoutControlItem2
+            // layoutControlItemSeismicActivity
             // 
-            this.layoutControlItem2.Control = this.checkedComboBoxEdit11;
-            this.layoutControlItem2.ControlAlignment = System.Drawing.ContentAlignment.TopLeft;
-            this.layoutControlItem2.CustomizationFormText = "layoutControlItem1";
-            this.layoutControlItem2.Location = new System.Drawing.Point(386, 0);
-            this.layoutControlItem2.Name = "layoutControlItem2";
-            this.layoutControlItem2.Size = new System.Drawing.Size(386, 40);
-            this.layoutControlItem2.Text = "layoutControlItem1";
-            this.layoutControlItem2.TextLocation = DevExpress.Utils.Locations.Top;
-            this.layoutControlItem2.TextSize = new System.Drawing.Size(171, 13);
+            this.layoutControlItemSeismicActivity.Control = this.checkCmbSeismicActivity;
+            this.layoutControlItemSeismicActivity.ControlAlignment = System.Drawing.ContentAlignment.TopLeft;
+            this.layoutControlItemSeismicActivity.CustomizationFormText = "layoutControlItem1";
+            this.layoutControlItemSeismicActivity.Location = new System.Drawing.Point(386, 0);
+            this.layoutControlItemSeismicActivity.Name = "layoutControlItemSeismicActivity";
+            this.layoutControlItemSeismicActivity.Size = new System.Drawing.Size(386, 40);
+            this.layoutControlItemSeismicActivity.Text = "Интенсивность сейсмических воздействий";
+            this.layoutControlItemSeismicActivity.TextLocation = DevExpress.Utils.Locations.Top;
+            this.layoutControlItemSeismicActivity.TextSize = new System.Drawing.Size(217, 13);
             // 
-            // layoutControlItem3
+            // layoutControlItemWindDistrict
             // 
-            this.layoutControlItem3.Control = this.checkedComboBoxEdit12;
-            this.layoutControlItem3.ControlAlignment = System.Drawing.ContentAlignment.TopLeft;
-            this.layoutControlItem3.CustomizationFormText = "layoutControlItem1";
-            this.layoutControlItem3.Location = new System.Drawing.Point(0, 40);
-            this.layoutControlItem3.Name = "layoutControlItem3";
-            this.layoutControlItem3.Size = new System.Drawing.Size(386, 40);
-            this.layoutControlItem3.Text = "layoutControlItem1";
-            this.layoutControlItem3.TextLocation = DevExpress.Utils.Locations.Top;
-            this.layoutControlItem3.TextSize = new System.Drawing.Size(171, 13);
+            this.layoutControlItemWindDistrict.Control = this.checkCmbWindDistrict;
+            this.layoutControlItemWindDistrict.ControlAlignment = System.Drawing.ContentAlignment.TopLeft;
+            this.layoutControlItemWindDistrict.CustomizationFormText = "layoutControlItem1";
+            this.layoutControlItemWindDistrict.Location = new System.Drawing.Point(0, 40);
+            this.layoutControlItemWindDistrict.Name = "layoutControlItemWindDistrict";
+            this.layoutControlItemWindDistrict.Size = new System.Drawing.Size(386, 40);
+            this.layoutControlItemWindDistrict.Text = "Ветровой район";
+            this.layoutControlItemWindDistrict.TextLocation = DevExpress.Utils.Locations.Top;
+            this.layoutControlItemWindDistrict.TextSize = new System.Drawing.Size(217, 13);
             // 
-            // layoutControlItem4
+            // layoutControlItemGeologicalConditions
             // 
-            this.layoutControlItem4.Control = this.checkedComboBoxEdit13;
-            this.layoutControlItem4.ControlAlignment = System.Drawing.ContentAlignment.TopLeft;
-            this.layoutControlItem4.CustomizationFormText = "layoutControlItem1";
-            this.layoutControlItem4.Location = new System.Drawing.Point(386, 40);
-            this.layoutControlItem4.Name = "layoutControlItem4";
-            this.layoutControlItem4.Size = new System.Drawing.Size(386, 40);
-            this.layoutControlItem4.Text = "layoutControlItem1";
-            this.layoutControlItem4.TextLocation = DevExpress.Utils.Locations.Top;
-            this.layoutControlItem4.TextSize = new System.Drawing.Size(171, 13);
+            this.layoutControlItemGeologicalConditions.Control = this.checkCmbGeologicalConditions;
+            this.layoutControlItemGeologicalConditions.ControlAlignment = System.Drawing.ContentAlignment.TopLeft;
+            this.layoutControlItemGeologicalConditions.CustomizationFormText = "layoutControlItem1";
+            this.layoutControlItemGeologicalConditions.Location = new System.Drawing.Point(386, 40);
+            this.layoutControlItemGeologicalConditions.Name = "layoutControlItemGeologicalConditions";
+            this.layoutControlItemGeologicalConditions.Size = new System.Drawing.Size(386, 40);
+            this.layoutControlItemGeologicalConditions.Text = "Инженерно-геологические условия";
+            this.layoutControlItemGeologicalConditions.TextLocation = DevExpress.Utils.Locations.Top;
+            this.layoutControlItemGeologicalConditions.TextSize = new System.Drawing.Size(217, 13);
             // 
-            // layoutControlItem6
+            // layoutControlItemClimateConditionsNote
             // 
-            this.layoutControlItem6.Control = this.memoEdit1;
-            this.layoutControlItem6.Location = new System.Drawing.Point(0, 120);
-            this.layoutControlItem6.Name = "layoutControlItem6";
-            this.layoutControlItem6.Size = new System.Drawing.Size(772, 143);
-            this.layoutControlItem6.TextSize = new System.Drawing.Size(171, 13);
+            this.layoutControlItemClimateConditionsNote.Control = this.memoClimateConditionsNote;
+            this.layoutControlItemClimateConditionsNote.Location = new System.Drawing.Point(0, 120);
+            this.layoutControlItemClimateConditionsNote.Name = "layoutControlItemClimateConditionsNote";
+            this.layoutControlItemClimateConditionsNote.Size = new System.Drawing.Size(772, 143);
+            this.layoutControlItemClimateConditionsNote.Text = "Дополнительные сведения о природных и техногенных условиях территории *";
+            this.layoutControlItemClimateConditionsNote.TextAlignMode = DevExpress.XtraLayout.TextAlignModeItem.AutoSize;
+            this.layoutControlItemClimateConditionsNote.TextLocation = DevExpress.Utils.Locations.Top;
+            this.layoutControlItemClimateConditionsNote.TextSize = new System.Drawing.Size(409, 13);
+            this.layoutControlItemClimateConditionsNote.TextToControlDistance = 5;
             // 
             // xtraTabPage10
             // 
@@ -1832,6 +1864,7 @@
             this.btnCancel.StyleController = this.layoutControl;
             this.btnCancel.TabIndex = 5;
             this.btnCancel.Text = "Отмена";
+            this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
             // 
             // txtFileName
             // 
@@ -1953,28 +1986,6 @@
             this.popupMenuFinance.Manager = this.barManager;
             this.popupMenuFinance.Name = "popupMenuFinance";
             // 
-            // memoFinanceComment
-            // 
-            this.memoFinanceComment.Location = new System.Drawing.Point(7, 236);
-            this.memoFinanceComment.MaximumSize = new System.Drawing.Size(0, 100);
-            this.memoFinanceComment.MenuManager = this.barManager;
-            this.memoFinanceComment.MinimumSize = new System.Drawing.Size(0, 30);
-            this.memoFinanceComment.Name = "memoFinanceComment";
-            this.memoFinanceComment.Properties.ScrollBars = System.Windows.Forms.ScrollBars.None;
-            this.memoFinanceComment.Size = new System.Drawing.Size(768, 30);
-            this.memoFinanceComment.StyleController = this.layoutControl2;
-            this.memoFinanceComment.TabIndex = 12;
-            // 
-            // layoutControlItemFinanceComment
-            // 
-            this.layoutControlItemFinanceComment.Control = this.memoFinanceComment;
-            this.layoutControlItemFinanceComment.Location = new System.Drawing.Point(0, 204);
-            this.layoutControlItemFinanceComment.Name = "layoutControlItemFinanceComment";
-            this.layoutControlItemFinanceComment.Size = new System.Drawing.Size(772, 59);
-            this.layoutControlItemFinanceComment.Text = "Дополнительные сведения об источнике финансирования";
-            this.layoutControlItemFinanceComment.TextLocation = DevExpress.Utils.Locations.Top;
-            this.layoutControlItemFinanceComment.TextSize = new System.Drawing.Size(298, 13);
-            // 
             // ConclusionEdit
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -2041,24 +2052,26 @@
             this.layoutControl2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.gridControlFinances)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.gridViewFinances)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.memoFinanceComment.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlGroup2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemFinanceComment)).EndInit();
             this.xtraTabPage9.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.layoutControl5)).EndInit();
             this.layoutControl5.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.checkCmbClimateDistrict.Properties)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.checkedComboBoxEdit11.Properties)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.checkedComboBoxEdit12.Properties)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.checkedComboBoxEdit13.Properties)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.checkedComboBoxEdit14.Properties)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.memoEdit1.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.checkCmbSeismicActivity.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.checkCmbWindDistrict.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.checkCmbGeologicalConditions.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.checkCmbSnowDistrict.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.memoClimateConditionsNote.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlGroup5)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemClimateDistrict)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem5)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem2)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem3)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem4)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem6)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemSnowDistrict)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemSeismicActivity)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemWindDistrict)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemGeologicalConditions)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemClimateConditionsNote)).EndInit();
             this.xtraTabPage12.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.gridControlCadastralNumber)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.gridViewCadastralNumber)).EndInit();
@@ -2119,8 +2132,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.popupMenuTEI)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.popupMenuObjectPart)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.popupMenuFinance)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.memoFinanceComment.Properties)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemFinanceComment)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -2233,16 +2244,16 @@
         private DevExpress.XtraLayout.LayoutControlGroup layoutControlGroup5;
         private DevExpress.XtraEditors.CheckedComboBoxEdit checkCmbClimateDistrict;
         private DevExpress.XtraLayout.LayoutControlItem layoutControlItemClimateDistrict;
-        private DevExpress.XtraEditors.CheckedComboBoxEdit checkedComboBoxEdit11;
-        private DevExpress.XtraEditors.CheckedComboBoxEdit checkedComboBoxEdit12;
-        private DevExpress.XtraEditors.CheckedComboBoxEdit checkedComboBoxEdit13;
-        private DevExpress.XtraEditors.CheckedComboBoxEdit checkedComboBoxEdit14;
-        private DevExpress.XtraEditors.MemoEdit memoEdit1;
-        private DevExpress.XtraLayout.LayoutControlItem layoutControlItem5;
-        private DevExpress.XtraLayout.LayoutControlItem layoutControlItem2;
-        private DevExpress.XtraLayout.LayoutControlItem layoutControlItem3;
-        private DevExpress.XtraLayout.LayoutControlItem layoutControlItem4;
-        private DevExpress.XtraLayout.LayoutControlItem layoutControlItem6;
+        private DevExpress.XtraEditors.CheckedComboBoxEdit checkCmbSeismicActivity;
+        private DevExpress.XtraEditors.CheckedComboBoxEdit checkCmbWindDistrict;
+        private DevExpress.XtraEditors.CheckedComboBoxEdit checkCmbGeologicalConditions;
+        private DevExpress.XtraEditors.CheckedComboBoxEdit checkCmbSnowDistrict;
+        private DevExpress.XtraEditors.MemoEdit memoClimateConditionsNote;
+        private DevExpress.XtraLayout.LayoutControlItem layoutControlItemSnowDistrict;
+        private DevExpress.XtraLayout.LayoutControlItem layoutControlItemSeismicActivity;
+        private DevExpress.XtraLayout.LayoutControlItem layoutControlItemWindDistrict;
+        private DevExpress.XtraLayout.LayoutControlItem layoutControlItemGeologicalConditions;
+        private DevExpress.XtraLayout.LayoutControlItem layoutControlItemClimateConditionsNote;
         private DevExpress.XtraEditors.TextEdit txtFileName;
         private DevExpress.XtraLayout.LayoutControlItem layoutControlItemFileName;
         private DevExpress.XtraLayout.EmptySpaceItem emptySpaceItemSave;

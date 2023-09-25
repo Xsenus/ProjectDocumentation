@@ -87,6 +87,18 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                 .Where(w => w.GeneralizedDictionary == GeneralizedDictionary.ObjectType).ToArray());
             #endregion
 
+            #region Page II_3
+            checkCmbClimateDistrict.Properties.Items.AddRange(collection
+                .Where(w => w.GeneralizedDictionary == GeneralizedDictionary.ClimateDistrict).ToArray());
+            checkCmbSeismicActivity.Properties.Items.AddRange(collection
+                .Where(w => w.GeneralizedDictionary == GeneralizedDictionary.SeismicActivity).ToArray());
+            checkCmbWindDistrict.Properties.Items.AddRange(collection
+                .Where(w => w.GeneralizedDictionary == GeneralizedDictionary.WindDistrict).ToArray());
+            checkCmbGeologicalConditions.Properties.Items.AddRange(collection
+                .Where(w => w.GeneralizedDictionary == GeneralizedDictionary.GeologicalConditions).ToArray());
+            checkCmbSnowDistrict.Properties.Items.AddRange(collection
+                .Where(w => w.GeneralizedDictionary == GeneralizedDictionary.SnowDistrict).ToArray());
+            #endregion
         }
 
         private async void ConclusionEdit_Load(object sender, EventArgs e)
@@ -94,9 +106,6 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
             txtFileName.EditValue = FileName;
 
             await FillFormControllersAsync();
-
-            var climateDistrictCollection = await new XPQuery<ClimateDistrictXPO>(SessionController.GetSession()).ToListAsync();
-            checkCmbClimateDistrict.Properties.Items.AddRange(climateDistrictCollection.ToArray());
 
             if (Conclusion is null)
             {
@@ -199,47 +208,44 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                 memoFinanceComment.EditValue = Conclusion.FinanceComment;
                 #endregion
 
+                #region Page II_3
+                SetCheckComboBoxByItems(Conclusion?.ClimateConditions?.ClimateDistrict, checkCmbClimateDistrict);
+                SetCheckComboBoxByItems(Conclusion?.ClimateConditions?.SeismicActivity, checkCmbSeismicActivity);
+                SetCheckComboBoxByItems(Conclusion?.ClimateConditions?.WindDistrict, checkCmbWindDistrict);
+                SetCheckComboBoxByItems(Conclusion?.ClimateConditions?.GeologicalConditions, checkCmbGeologicalConditions);
+                SetCheckComboBoxByItems(Conclusion?.ClimateConditions?.SnowDistrict, checkCmbSnowDistrict);
+                memoClimateConditionsNote.EditValue = Conclusion?.ClimateConditionsNote;
+                #endregion
+
                 //memoEstimateNorms.EditValue = Conclusion.ExpertEstimate?.EstimateNorms;
                 //txtEstimatedCost.Text = Conclusion.EstimatedCost?.Currency;
                 //txtEstimatedCompleteCostBefore.Text
                 //txtEstimatedCompleteCostPost.Text
 
 
-                memoObjectName.EditValue = Conclusion.Object?.Name;
-                cmbObjectType.SelectedIndex = (int?)Conclusion?.Object.Type ?? -1;
-                cmbFunctionsClass.EditValue = Conclusion.Object?.Item;
-                cmbObjectAddress.EditValue = Conclusion.Object?.Address?.FirstOrDefault();
+                //memoObjectName.EditValue = Conclusion.Object?.Name;
+                //cmbObjectType.SelectedIndex = (int?)Conclusion?.Object.Type ?? -1;
+                //cmbFunctionsClass.EditValue = Conclusion.Object?.Item;
+                //cmbObjectAddress.EditValue = Conclusion.Object?.Address?.FirstOrDefault();
 
-                memoEngineeringSurveySummary.EditValue = Conclusion.Summary?.EngineeringSurveySummary;
-                memoEngineeringSurveySummaryDate.EditValue = Conclusion.Summary?.EngineeringSurveySummaryDate;
-                memoProjectDocumentsSummary.EditValue = Conclusion.Summary?.ProjectDocumentsSummary;
-                memoProjectDocumentsSummaryDate.EditValue = Conclusion.Summary?.ProjectDocumentsSummaryDate;
-                memoEstimateNormsAndWorksSummary.EditValue = Conclusion.Summary?.EstimateNormsAndWorksSummary;
-                memoEstimateSummary.EditValue = Conclusion.Summary?.EstimateSummary;
-                memoExaminationSummary.EditValue = Conclusion.Summary?.ExaminationSummary;
+                //memoEngineeringSurveySummary.EditValue = Conclusion.Summary?.EngineeringSurveySummary;
+                //memoEngineeringSurveySummaryDate.EditValue = Conclusion.Summary?.EngineeringSurveySummaryDate;
+                //memoProjectDocumentsSummary.EditValue = Conclusion.Summary?.ProjectDocumentsSummary;
+                //memoProjectDocumentsSummaryDate.EditValue = Conclusion.Summary?.ProjectDocumentsSummaryDate;
+                //memoEstimateNormsAndWorksSummary.EditValue = Conclusion.Summary?.EstimateNormsAndWorksSummary;
+                //memoEstimateSummary.EditValue = Conclusion.Summary?.EstimateSummary;
+                //memoExaminationSummary.EditValue = Conclusion.Summary?.ExaminationSummary;
 
-                if (Conclusion.ClimateConditions != null)
-                {
-                    foreach (var item in Conclusion.ClimateConditions.ClimateDistrict)
-                    {
-                        var checkItem = checkCmbClimateDistrict.Properties.Items
-                            .FirstOrDefault(f => f.Value is ClimateDistrictXPO obj && obj.Value == item.GetEnumXmlAttributeValue()?.ToString());
-                        if (checkItem != null)
-                        {
-                            checkItem.CheckState = CheckState.Checked;
-                        }
-                    }
-                }
 
-                if (Conclusion.Experts != null)
-                {
-                    _experts.AddRange(Conclusion.Experts);
-                }
+                //if (Conclusion.Experts != null)
+                //{
+                //    _experts.AddRange(Conclusion.Experts);
+                //}
 
-                if (Conclusion.CadastralNumber?.Length > 0)
-                {
-                    _cadastralNumbers.AddRange(Conclusion.CadastralNumber?.Select(s => new Wrapper() { Number = s }));
-                }
+                //if (Conclusion.CadastralNumber?.Length > 0)
+                //{
+                //    _cadastralNumbers.AddRange(Conclusion.CadastralNumber?.Select(s => new Wrapper() { Number = s }));
+                //}
             }
 
             gridControlExpert.DataSource = _experts;
@@ -248,6 +254,11 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
 
         public static void SetCheckComboBoxByItems<T>(ICollection<T> collection, CheckedComboBoxEdit comboBoxEdit) where T : Enum
         {
+            if (collection is null)
+            {
+                return;
+            }
+
             foreach (var item in collection)
             {
                 var checkItem = comboBoxEdit.Properties.Items
@@ -458,6 +469,16 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                 Conclusion.FinanceComment = GetStringValue(memoFinanceComment.EditValue, isNullAble: true);
                 #endregion
 
+                #region Page II_3
+                Conclusion.ClimateConditions = new tClimateConditions();
+                Conclusion.ClimateConditions.ClimateDistrict = GetCheckComboBoxItems<tClimateDistrict>(checkCmbClimateDistrict, isNullable: true).ToArray();
+                Conclusion.ClimateConditions.SeismicActivity = GetCheckComboBoxItems<tSeismicActivity>(checkCmbSeismicActivity, isNullable: true).ToArray();
+                Conclusion.ClimateConditions.WindDistrict = GetCheckComboBoxItems<tWindDistrict>(checkCmbWindDistrict, isNullable: true).ToArray();
+                Conclusion.ClimateConditions.GeologicalConditions = GetCheckComboBoxItems<tGeologicalConditions>(checkCmbGeologicalConditions, isNullable: true).ToArray();
+                Conclusion.ClimateConditions.SnowDistrict = GetCheckComboBoxItems<tSnowDistrict>(checkCmbSnowDistrict, isNullable: true).ToArray();
+                Conclusion.ClimateConditionsNote = GetStringValue(memoClimateConditionsNote.EditValue, memoClimateConditionsNote, "Заполните поле дополнительных сведений о природных и техногенных условиях");
+                #endregion
+
             }
             catch (Exception ex)
             {
@@ -465,40 +486,33 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                 return;
             }
             
-            Conclusion.ExpertEstimate = new tExpertEstimate();
-            Conclusion.ExpertEstimate.EstimateNorms = memoEstimateNorms.Text;
-            Conclusion.EstimatedCost = new tEstimatedCost();
-            Conclusion.EstimatedCost.Currency = txtEstimatedCost.Text;
-            //txtEstimatedCompleteCostBefore.Text
-            //txtEstimatedCompleteCostPost.Text
+            //Conclusion.ExpertEstimate = new tExpertEstimate();
+            //Conclusion.ExpertEstimate.EstimateNorms = memoEstimateNorms.Text;
+            //Conclusion.EstimatedCost = new tEstimatedCost();
+            //Conclusion.EstimatedCost.Currency = txtEstimatedCost.Text;
+            ////txtEstimatedCompleteCostBefore.Text
+            ////txtEstimatedCompleteCostPost.Text
 
            
-            Conclusion.Object.Item = cmbFunctionsClass.Text;
+            
+            //Conclusion.Summary = new tSummary();
+            //Conclusion.Summary.EngineeringSurveySummary = memoEngineeringSurveySummary.Text;
+            //Conclusion.Summary.EngineeringSurveySummaryDate = memoEngineeringSurveySummaryDate.Text;
+            //Conclusion.Summary.ProjectDocumentsSummary = memoProjectDocumentsSummary.Text;
+            //Conclusion.Summary.ProjectDocumentsSummaryDate = memoProjectDocumentsSummaryDate.Text;
+            //Conclusion.Summary.EstimateNormsAndWorksSummary = memoEstimateNormsAndWorksSummary.Text;
+            //Conclusion.Summary.EstimateSummary = memoEstimateSummary.Text;
+            //Conclusion.Summary.ExaminationSummary = memoExaminationSummary.Text;
 
-            if (cmbObjectAddress.EditValue is tAddress address)
-            {
-                Conclusion.Object.Address = new tAddress[] { address };
-            }
+            //if (_experts.Count > 0)
+            //{
+            //    Conclusion.Experts = _experts.ToArray();
+            //}
 
-
-            Conclusion.Summary = new tSummary();
-            Conclusion.Summary.EngineeringSurveySummary = memoEngineeringSurveySummary.Text;
-            Conclusion.Summary.EngineeringSurveySummaryDate = memoEngineeringSurveySummaryDate.Text;
-            Conclusion.Summary.ProjectDocumentsSummary = memoProjectDocumentsSummary.Text;
-            Conclusion.Summary.ProjectDocumentsSummaryDate = memoProjectDocumentsSummaryDate.Text;
-            Conclusion.Summary.EstimateNormsAndWorksSummary = memoEstimateNormsAndWorksSummary.Text;
-            Conclusion.Summary.EstimateSummary = memoEstimateSummary.Text;
-            Conclusion.Summary.ExaminationSummary = memoExaminationSummary.Text;
-
-            if (_experts.Count > 0)
-            {
-                Conclusion.Experts = _experts.ToArray();
-            }
-
-            if (_cadastralNumbers.Count() > 0)
-            {
-                Conclusion.CadastralNumber = _cadastralNumbers?.Select(s => s.Number).ToArray();
-            }
+            //if (_cadastralNumbers.Count() > 0)
+            //{
+            //    Conclusion.CadastralNumber = _cadastralNumbers?.Select(s => s.Number).ToArray();
+            //}
 
             IsSave = true;
             Close();
@@ -877,6 +891,11 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                     gridControlFinances.RefreshDataSource();
                 }
             }
+        }
+
+        private void btnCancel_Click(object sender, EventArgs e)
+        {
+            Close();
         }
     }
 }

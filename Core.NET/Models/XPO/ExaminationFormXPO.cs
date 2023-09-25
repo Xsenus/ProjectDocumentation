@@ -63,7 +63,32 @@ namespace Core.NET.Models.XPO
         /// <summary>
         /// Вид бюджета.
         /// </summary>
-        BudgetType
+        BudgetType,
+
+        /// <summary>
+        /// Климатический район (подрайон).
+        /// </summary>
+        ClimateDistrict,
+
+        /// <summary>
+        /// Интенсивность сейсмических воздействий.
+        /// </summary>
+        SeismicActivity,
+
+        /// <summary>
+        /// Ветровой район.
+        /// </summary>
+        WindDistrict,
+
+        /// <summary>
+        /// Инженерно-геологические условия.
+        /// </summary>
+        GeologicalConditions,
+
+        /// <summary>
+        /// Снеговой район.
+        /// </summary>
+        SnowDistrict
     }
 
     public class GeneralizedDictionaryXPO : BaseObjectXPO

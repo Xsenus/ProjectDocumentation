@@ -12,7 +12,6 @@ namespace Core.NET.Controllers
         public static async Task FillingDataBaseAsync()
         {
             await GeneralizedDictionaryXPOAsync();
-            await FillingClimateDistrictXPOAsync();
             await FillingExpertTypesXPOAsync();
             await FillingDocumentTypesXPOAsync();
         }
@@ -250,38 +249,76 @@ namespace Core.NET.Controllers
                     Name = "Бюджет территориального государственного внебюджетного фонда"
                 });
             }
-        }
 
-        private static async Task FillingClimateDistrictXPOAsync()
-        {
-            if (await new XPQuery<ClimateDistrictXPO>(_session).FirstOrDefaultAsync() != null)
+            if (collection.Where(w => w.GeneralizedDictionary == GeneralizedDictionary.ClimateDistrict).Count() == 0)
             {
-                return;
+                await _session.SaveAsync(new GeneralizedDictionaryXPO(_session) { Value = "Сведения не представлены", Name = "Сведения не представлены", GeneralizedDictionary = GeneralizedDictionary.ClimateDistrict });
+                await _session.SaveAsync(new GeneralizedDictionaryXPO(_session) { Value = "I", Name = "климатический район I", GeneralizedDictionary = GeneralizedDictionary.ClimateDistrict });
+                await _session.SaveAsync(new GeneralizedDictionaryXPO(_session) { Value = "IА", Name = "климатический подрайон IА", GeneralizedDictionary = GeneralizedDictionary.ClimateDistrict });
+                await _session.SaveAsync(new GeneralizedDictionaryXPO(_session) { Value = "IБ", Name = "климатический подрайон IБ", GeneralizedDictionary = GeneralizedDictionary.ClimateDistrict });
+                await _session.SaveAsync(new GeneralizedDictionaryXPO(_session) { Value = "IВ", Name = "климатический подрайон IВ", GeneralizedDictionary = GeneralizedDictionary.ClimateDistrict });
+                await _session.SaveAsync(new GeneralizedDictionaryXPO(_session) { Value = "IГ", Name = "климатический подрайон IГ", GeneralizedDictionary = GeneralizedDictionary.ClimateDistrict });
+                await _session.SaveAsync(new GeneralizedDictionaryXPO(_session) { Value = "IД", Name = "климатический подрайон IД", GeneralizedDictionary = GeneralizedDictionary.ClimateDistrict });
+                await _session.SaveAsync(new GeneralizedDictionaryXPO(_session) { Value = "II", Name = "климатический район II", GeneralizedDictionary = GeneralizedDictionary.ClimateDistrict });
+                await _session.SaveAsync(new GeneralizedDictionaryXPO(_session) { Value = "IIА", Name = "климатический подрайон IIА", GeneralizedDictionary = GeneralizedDictionary.ClimateDistrict });
+                await _session.SaveAsync(new GeneralizedDictionaryXPO(_session) { Value = "IIБ", Name = "климатический подрайон IIБ", GeneralizedDictionary = GeneralizedDictionary.ClimateDistrict });
+                await _session.SaveAsync(new GeneralizedDictionaryXPO(_session) { Value = "IIВ", Name = "климатический подрайон IIВ", GeneralizedDictionary = GeneralizedDictionary.ClimateDistrict });
+                await _session.SaveAsync(new GeneralizedDictionaryXPO(_session) { Value = "IIГ", Name = "климатический подрайон IIГ", GeneralizedDictionary = GeneralizedDictionary.ClimateDistrict });
+                await _session.SaveAsync(new GeneralizedDictionaryXPO(_session) { Value = "III", Name = "климатический район III", GeneralizedDictionary = GeneralizedDictionary.ClimateDistrict });
+                await _session.SaveAsync(new GeneralizedDictionaryXPO(_session) { Value = "IIIА", Name = "климатический подрайон IIIА", GeneralizedDictionary = GeneralizedDictionary.ClimateDistrict });
+                await _session.SaveAsync(new GeneralizedDictionaryXPO(_session) { Value = "IIIБ", Name = "климатический подрайон IIIБ", GeneralizedDictionary = GeneralizedDictionary.ClimateDistrict });
+                await _session.SaveAsync(new GeneralizedDictionaryXPO(_session) { Value = "IIIВ", Name = "климатический подрайон IIIВ", GeneralizedDictionary = GeneralizedDictionary.ClimateDistrict });
+                await _session.SaveAsync(new GeneralizedDictionaryXPO(_session) { Value = "IV", Name = "климатический район IV", GeneralizedDictionary = GeneralizedDictionary.ClimateDistrict });
+                await _session.SaveAsync(new GeneralizedDictionaryXPO(_session) { Value = "IVА", Name = "климатический подрайон IVА", GeneralizedDictionary = GeneralizedDictionary.ClimateDistrict });
+                await _session.SaveAsync(new GeneralizedDictionaryXPO(_session) { Value = "IVБ", Name = "климатический подрайон IVБ", GeneralizedDictionary = GeneralizedDictionary.ClimateDistrict });
+                await _session.SaveAsync(new GeneralizedDictionaryXPO(_session) { Value = "IVВ", Name = "климатический подрайон IVВ", GeneralizedDictionary = GeneralizedDictionary.ClimateDistrict });
+                await _session.SaveAsync(new GeneralizedDictionaryXPO(_session) { Value = "IVГ", Name = "климатический подрайон IVГ", GeneralizedDictionary = GeneralizedDictionary.ClimateDistrict });
             }
 
-            await _session.SaveAsync(new ClimateDistrictXPO(_session) { Value = "Сведения не представлены", Name = "Сведения не представлены" });
-            await _session.SaveAsync(new ClimateDistrictXPO(_session) { Value = "I", Name = "климатический район I" });
-            await _session.SaveAsync(new ClimateDistrictXPO(_session) { Value = "IА", Name = "климатический подрайон IА" });
-            await _session.SaveAsync(new ClimateDistrictXPO(_session) { Value = "IБ", Name = "климатический подрайон IБ" });
-            await _session.SaveAsync(new ClimateDistrictXPO(_session) { Value = "IВ", Name = "климатический подрайон IВ" });
-            await _session.SaveAsync(new ClimateDistrictXPO(_session) { Value = "IГ", Name = "климатический подрайон IГ" });
-            await _session.SaveAsync(new ClimateDistrictXPO(_session) { Value = "IД", Name = "климатический подрайон IД" });
-            await _session.SaveAsync(new ClimateDistrictXPO(_session) { Value = "II", Name = "климатический район II" });
-            await _session.SaveAsync(new ClimateDistrictXPO(_session) { Value = "IIА", Name = "климатический подрайон IIА" });
-            await _session.SaveAsync(new ClimateDistrictXPO(_session) { Value = "IIБ", Name = "климатический подрайон IIБ" });
-            await _session.SaveAsync(new ClimateDistrictXPO(_session) { Value = "IIВ", Name = "климатический подрайон IIВ" });
-            await _session.SaveAsync(new ClimateDistrictXPO(_session) { Value = "IIГ", Name = "климатический подрайон IIГ" });
-            await _session.SaveAsync(new ClimateDistrictXPO(_session) { Value = "III", Name = "климатический район III" });
-            await _session.SaveAsync(new ClimateDistrictXPO(_session) { Value = "IIIА", Name = "климатический подрайон IIIА" });
-            await _session.SaveAsync(new ClimateDistrictXPO(_session) { Value = "IIIБ", Name = "климатический подрайон IIIБ" });
-            await _session.SaveAsync(new ClimateDistrictXPO(_session) { Value = "IIIВ", Name = "климатический подрайон IIIВ" });
-            await _session.SaveAsync(new ClimateDistrictXPO(_session) { Value = "IV", Name = "климатический район IV" });
-            await _session.SaveAsync(new ClimateDistrictXPO(_session) { Value = "IVА", Name = "климатический подрайон IVА" });
-            await _session.SaveAsync(new ClimateDistrictXPO(_session) { Value = "IVБ", Name = "климатический подрайон IVБ" });
-            await _session.SaveAsync(new ClimateDistrictXPO(_session) { Value = "IVВ", Name = "климатический подрайон IVВ" });
-            await _session.SaveAsync(new ClimateDistrictXPO(_session) { Value = "IVГ", Name = "климатический подрайон IVГ" });
-        }
+            if (collection.Where(w => w.GeneralizedDictionary == GeneralizedDictionary.SeismicActivity).Count() == 0)
+            {
+                await _session.SaveAsync(new GeneralizedDictionaryXPO(_session) { Value = "Сведения не представлены", Name = "Сведения не представлены", GeneralizedDictionary = GeneralizedDictionary.SeismicActivity });
+                await _session.SaveAsync(new GeneralizedDictionaryXPO(_session) { Value = "5", Name = "5 и менее баллов", GeneralizedDictionary = GeneralizedDictionary.SeismicActivity });
+                await _session.SaveAsync(new GeneralizedDictionaryXPO(_session) { Value = "6", Name = "6", GeneralizedDictionary = GeneralizedDictionary.SeismicActivity });
+                await _session.SaveAsync(new GeneralizedDictionaryXPO(_session) { Value = "7", Name = "7", GeneralizedDictionary = GeneralizedDictionary.SeismicActivity });
+                await _session.SaveAsync(new GeneralizedDictionaryXPO(_session) { Value = "8", Name = "8", GeneralizedDictionary = GeneralizedDictionary.SeismicActivity });
+                await _session.SaveAsync(new GeneralizedDictionaryXPO(_session) { Value = "9", Name = "9", GeneralizedDictionary = GeneralizedDictionary.SeismicActivity });
+                await _session.SaveAsync(new GeneralizedDictionaryXPO(_session) { Value = "10", Name = "Более 9 баллов", GeneralizedDictionary = GeneralizedDictionary.SeismicActivity });
+            }
 
+            if (collection.Where(w => w.GeneralizedDictionary == GeneralizedDictionary.WindDistrict).Count() == 0)
+            {
+                await _session.SaveAsync(new GeneralizedDictionaryXPO(_session) { Value = "Iа", Name = "Ветровой район Iа", GeneralizedDictionary = GeneralizedDictionary.WindDistrict });
+                await _session.SaveAsync(new GeneralizedDictionaryXPO(_session) { Value = "I", Name = "Ветровой район I", GeneralizedDictionary = GeneralizedDictionary.WindDistrict });
+                await _session.SaveAsync(new GeneralizedDictionaryXPO(_session) { Value = "II", Name = "Ветровой район II", GeneralizedDictionary = GeneralizedDictionary.WindDistrict });
+                await _session.SaveAsync(new GeneralizedDictionaryXPO(_session) { Value = "III", Name = "Ветровой район III", GeneralizedDictionary = GeneralizedDictionary.WindDistrict });
+                await _session.SaveAsync(new GeneralizedDictionaryXPO(_session) { Value = "IV", Name = "Ветровой район IV", GeneralizedDictionary = GeneralizedDictionary.WindDistrict });
+                await _session.SaveAsync(new GeneralizedDictionaryXPO(_session) { Value = "V", Name = "Ветровой район V", GeneralizedDictionary = GeneralizedDictionary.WindDistrict });
+                await _session.SaveAsync(new GeneralizedDictionaryXPO(_session) { Value = "VI", Name = "Ветровой район VI", GeneralizedDictionary = GeneralizedDictionary.WindDistrict });
+                await _session.SaveAsync(new GeneralizedDictionaryXPO(_session) { Value = "VII", Name = "Ветровой район VII", GeneralizedDictionary = GeneralizedDictionary.WindDistrict });
+            }
+
+            if (collection.Where(w => w.GeneralizedDictionary == GeneralizedDictionary.GeologicalConditions).Count() == 0)
+            {
+                await _session.SaveAsync(new GeneralizedDictionaryXPO(_session) { Value = "I", Name = "I (простые)", GeneralizedDictionary = GeneralizedDictionary.GeologicalConditions });
+                await _session.SaveAsync(new GeneralizedDictionaryXPO(_session) { Value = "II", Name = "II (средней сложности)", GeneralizedDictionary = GeneralizedDictionary.GeologicalConditions });
+                await _session.SaveAsync(new GeneralizedDictionaryXPO(_session) { Value = "III", Name = "III (сложные)", GeneralizedDictionary = GeneralizedDictionary.GeologicalConditions });
+            }
+
+            if (collection.Where(w => w.GeneralizedDictionary == GeneralizedDictionary.SnowDistrict).Count() == 0)
+            {
+                await _session.SaveAsync(new GeneralizedDictionaryXPO(_session) { Value = "Сведения не представлены", Name = "Сведения не представлены", GeneralizedDictionary = GeneralizedDictionary.SnowDistrict });
+                await _session.SaveAsync(new GeneralizedDictionaryXPO(_session) { Value = "I", Name = "Снеговой район I", GeneralizedDictionary = GeneralizedDictionary.SnowDistrict });
+                await _session.SaveAsync(new GeneralizedDictionaryXPO(_session) { Value = "II", Name = "Снеговой район II", GeneralizedDictionary = GeneralizedDictionary.SnowDistrict });
+                await _session.SaveAsync(new GeneralizedDictionaryXPO(_session) { Value = "III", Name = "Снеговой район III", GeneralizedDictionary = GeneralizedDictionary.SnowDistrict });
+                await _session.SaveAsync(new GeneralizedDictionaryXPO(_session) { Value = "IV", Name = "Снеговой район IV", GeneralizedDictionary = GeneralizedDictionary.SnowDistrict });
+                await _session.SaveAsync(new GeneralizedDictionaryXPO(_session) { Value = "V", Name = "Снеговой район V", GeneralizedDictionary = GeneralizedDictionary.SnowDistrict });
+                await _session.SaveAsync(new GeneralizedDictionaryXPO(_session) { Value = "VI", Name = "Снеговой район VI", GeneralizedDictionary = GeneralizedDictionary.SnowDistrict });
+                await _session.SaveAsync(new GeneralizedDictionaryXPO(_session) { Value = "VII", Name = "Снеговой район VII", GeneralizedDictionary = GeneralizedDictionary.SnowDistrict });
+                await _session.SaveAsync(new GeneralizedDictionaryXPO(_session) { Value = "VIII", Name = "Снеговой район VIII", GeneralizedDictionary = GeneralizedDictionary.SnowDistrict });
+            }
+
+        }
 
         private static async Task FillingDocumentTypesXPOAsync()
         {
