@@ -31,15 +31,6 @@
             this.layoutControlObjPart = new DevExpress.XtraLayout.LayoutControl();
             this.btnClose = new DevExpress.XtraEditors.SimpleButton();
             this.btnSave = new DevExpress.XtraEditors.SimpleButton();
-            this.Root = new DevExpress.XtraLayout.LayoutControlGroup();
-            this.emptySpaceItemSave = new DevExpress.XtraLayout.EmptySpaceItem();
-            this.layoutControlItemSave = new DevExpress.XtraLayout.LayoutControlItem();
-            this.emptySpaceItemClose = new DevExpress.XtraLayout.EmptySpaceItem();
-            this.layoutControlItemClose = new DevExpress.XtraLayout.LayoutControlItem();
-            this.emptySpaceItemFooter = new DevExpress.XtraLayout.EmptySpaceItem();
-            this.layoutControlGroupEntity = new DevExpress.XtraLayout.LayoutControlGroup();
-            this.layoutControlGroupForeignLegalEntity = new DevExpress.XtraLayout.LayoutControlGroup();
-            this.layoutControlGroupIndividualEntrepreneur = new DevExpress.XtraLayout.LayoutControlGroup();
             this.radioGroupTypeOrganization = new DevExpress.XtraEditors.RadioGroup();
             this.txtOrgFullName = new DevExpress.XtraEditors.TextEdit();
             this.txtOrgOGRN = new DevExpress.XtraEditors.TextEdit();
@@ -61,19 +52,19 @@
             this.btnPostAddress = new DevExpress.XtraEditors.ButtonEdit();
             this.txtEmailIp = new DevExpress.XtraEditors.TextEdit();
             this.checkGeneral = new DevExpress.XtraEditors.CheckEdit();
-            this.layoutControlItemTypeOrg = new DevExpress.XtraLayout.LayoutControlItem();
-            this.layoutControlItemSearch = new DevExpress.XtraLayout.LayoutControlItem();
-            this.layoutControlItemOrgFullName = new DevExpress.XtraLayout.LayoutControlItem();
-            this.layoutControlItemOrgOGRN = new DevExpress.XtraLayout.LayoutControlItem();
-            this.layoutControlItemOrgKPP = new DevExpress.XtraLayout.LayoutControlItem();
-            this.layoutControlItemOrgINN = new DevExpress.XtraLayout.LayoutControlItem();
-            this.layoutControlItemAddress = new DevExpress.XtraLayout.LayoutControlItem();
-            this.layoutControlItemEmail = new DevExpress.XtraLayout.LayoutControlItem();
+            this.Root = new DevExpress.XtraLayout.LayoutControlGroup();
+            this.emptySpaceItemSave = new DevExpress.XtraLayout.EmptySpaceItem();
+            this.layoutControlItemSave = new DevExpress.XtraLayout.LayoutControlItem();
+            this.emptySpaceItemClose = new DevExpress.XtraLayout.EmptySpaceItem();
+            this.layoutControlItemClose = new DevExpress.XtraLayout.LayoutControlItem();
+            this.emptySpaceItemFooter = new DevExpress.XtraLayout.EmptySpaceItem();
+            this.layoutControlGroupForeignLegalEntity = new DevExpress.XtraLayout.LayoutControlGroup();
             this.layoutControlItemFOrgFullName = new DevExpress.XtraLayout.LayoutControlItem();
             this.layoutControlItemFOrgKPP = new DevExpress.XtraLayout.LayoutControlItem();
             this.layoutControlItemFAddress = new DevExpress.XtraLayout.LayoutControlItem();
             this.layoutControlItemFOrgINN = new DevExpress.XtraLayout.LayoutControlItem();
             this.layoutControlItemFEmail = new DevExpress.XtraLayout.LayoutControlItem();
+            this.layoutControlGroupIndividualEntrepreneur = new DevExpress.XtraLayout.LayoutControlGroup();
             this.layoutControlItemSearchIp = new DevExpress.XtraLayout.LayoutControlItem();
             this.layoutControlItemFamilyName = new DevExpress.XtraLayout.LayoutControlItem();
             this.layoutControlItemFirstName = new DevExpress.XtraLayout.LayoutControlItem();
@@ -82,17 +73,17 @@
             this.layoutControlItemPostAddress = new DevExpress.XtraLayout.LayoutControlItem();
             this.layoutControlItemEmailIp = new DevExpress.XtraLayout.LayoutControlItem();
             this.layoutControlItemGeneral = new DevExpress.XtraLayout.LayoutControlItem();
+            this.layoutControlGroupEntity = new DevExpress.XtraLayout.LayoutControlGroup();
+            this.layoutControlItemSearch = new DevExpress.XtraLayout.LayoutControlItem();
+            this.layoutControlItemOrgFullName = new DevExpress.XtraLayout.LayoutControlItem();
+            this.layoutControlItemOrgOGRN = new DevExpress.XtraLayout.LayoutControlItem();
+            this.layoutControlItemOrgKPP = new DevExpress.XtraLayout.LayoutControlItem();
+            this.layoutControlItemOrgINN = new DevExpress.XtraLayout.LayoutControlItem();
+            this.layoutControlItemAddress = new DevExpress.XtraLayout.LayoutControlItem();
+            this.layoutControlItemEmail = new DevExpress.XtraLayout.LayoutControlItem();
+            this.layoutControlItemTypeOrg = new DevExpress.XtraLayout.LayoutControlItem();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlObjPart)).BeginInit();
             this.layoutControlObjPart.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.Root)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.emptySpaceItemSave)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemSave)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.emptySpaceItemClose)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemClose)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.emptySpaceItemFooter)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.layoutControlGroupEntity)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.layoutControlGroupForeignLegalEntity)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.layoutControlGroupIndividualEntrepreneur)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.radioGroupTypeOrganization.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.txtOrgFullName.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.txtOrgOGRN.Properties)).BeginInit();
@@ -114,19 +105,19 @@
             ((System.ComponentModel.ISupportInitialize)(this.btnPostAddress.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.txtEmailIp.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.checkGeneral.Properties)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemTypeOrg)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemSearch)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemOrgFullName)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemOrgOGRN)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemOrgKPP)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemOrgINN)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemAddress)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemEmail)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.Root)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.emptySpaceItemSave)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemSave)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.emptySpaceItemClose)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemClose)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.emptySpaceItemFooter)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutControlGroupForeignLegalEntity)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemFOrgFullName)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemFOrgKPP)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemFAddress)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemFOrgINN)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemFEmail)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutControlGroupIndividualEntrepreneur)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemSearchIp)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemFamilyName)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemFirstName)).BeginInit();
@@ -135,6 +126,15 @@
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemPostAddress)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemEmailIp)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemGeneral)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutControlGroupEntity)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemSearch)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemOrgFullName)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemOrgOGRN)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemOrgKPP)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemOrgINN)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemAddress)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemEmail)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemTypeOrg)).BeginInit();
             this.SuspendLayout();
             // 
             // layoutControlObjPart
@@ -174,7 +174,7 @@
             // 
             // btnClose
             // 
-            this.btnClose.Location = new System.Drawing.Point(585, 660);
+            this.btnClose.Location = new System.Drawing.Point(585, 540);
             this.btnClose.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btnClose.Name = "btnClose";
             this.btnClose.Size = new System.Drawing.Size(190, 22);
@@ -185,7 +185,7 @@
             // 
             // btnSave
             // 
-            this.btnSave.Location = new System.Drawing.Point(392, 660);
+            this.btnSave.Location = new System.Drawing.Point(392, 540);
             this.btnSave.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btnSave.Name = "btnSave";
             this.btnSave.Size = new System.Drawing.Size(189, 22);
@@ -193,6 +193,203 @@
             this.btnSave.TabIndex = 13;
             this.btnSave.Text = "Сохранить";
             this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
+            // 
+            // radioGroupTypeOrganization
+            // 
+            this.radioGroupTypeOrganization.Location = new System.Drawing.Point(6, -90);
+            this.radioGroupTypeOrganization.MaximumSize = new System.Drawing.Size(0, 50);
+            this.radioGroupTypeOrganization.MinimumSize = new System.Drawing.Size(0, 50);
+            this.radioGroupTypeOrganization.Name = "radioGroupTypeOrganization";
+            this.radioGroupTypeOrganization.Properties.Columns = 2;
+            this.radioGroupTypeOrganization.Size = new System.Drawing.Size(769, 50);
+            this.radioGroupTypeOrganization.StyleController = this.layoutControlObjPart;
+            this.radioGroupTypeOrganization.TabIndex = 15;
+            this.radioGroupTypeOrganization.SelectedIndexChanged += new System.EventHandler(this.radioGroupTypeOrganization_SelectedIndexChanged);
+            // 
+            // txtOrgFullName
+            // 
+            this.txtOrgFullName.Location = new System.Drawing.Point(14, 28);
+            this.txtOrgFullName.Name = "txtOrgFullName";
+            this.txtOrgFullName.Size = new System.Drawing.Size(753, 20);
+            this.txtOrgFullName.StyleController = this.layoutControlObjPart;
+            this.txtOrgFullName.TabIndex = 16;
+            // 
+            // txtOrgOGRN
+            // 
+            this.txtOrgOGRN.Location = new System.Drawing.Point(14, 68);
+            this.txtOrgOGRN.Name = "txtOrgOGRN";
+            this.txtOrgOGRN.Size = new System.Drawing.Size(374, 20);
+            this.txtOrgOGRN.StyleController = this.layoutControlObjPart;
+            this.txtOrgOGRN.TabIndex = 16;
+            // 
+            // txtOrgKPP
+            // 
+            this.txtOrgKPP.Location = new System.Drawing.Point(392, 68);
+            this.txtOrgKPP.Name = "txtOrgKPP";
+            this.txtOrgKPP.Size = new System.Drawing.Size(375, 20);
+            this.txtOrgKPP.StyleController = this.layoutControlObjPart;
+            this.txtOrgKPP.TabIndex = 16;
+            // 
+            // txtOrgINN
+            // 
+            this.txtOrgINN.Location = new System.Drawing.Point(14, 108);
+            this.txtOrgINN.Name = "txtOrgINN";
+            this.txtOrgINN.Size = new System.Drawing.Size(374, 20);
+            this.txtOrgINN.StyleController = this.layoutControlObjPart;
+            this.txtOrgINN.TabIndex = 16;
+            // 
+            // txtEmail
+            // 
+            this.txtEmail.Location = new System.Drawing.Point(392, 108);
+            this.txtEmail.Name = "txtEmail";
+            this.txtEmail.Size = new System.Drawing.Size(375, 20);
+            this.txtEmail.StyleController = this.layoutControlObjPart;
+            this.txtEmail.TabIndex = 16;
+            // 
+            // btnSearch
+            // 
+            this.btnSearch.Location = new System.Drawing.Point(14, -12);
+            this.btnSearch.Name = "btnSearch";
+            this.btnSearch.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Search)});
+            this.btnSearch.Size = new System.Drawing.Size(753, 20);
+            this.btnSearch.StyleController = this.layoutControlObjPart;
+            this.btnSearch.TabIndex = 17;
+            this.btnSearch.ButtonPressed += new DevExpress.XtraEditors.Controls.ButtonPressedEventHandler(this.btnSearch_ButtonPressed);
+            // 
+            // btnAddress
+            // 
+            this.btnAddress.Location = new System.Drawing.Point(14, 148);
+            this.btnAddress.Name = "btnAddress";
+            this.btnAddress.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Search),
+            new DevExpress.XtraEditors.Controls.EditorButton(),
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Delete)});
+            this.btnAddress.Size = new System.Drawing.Size(753, 20);
+            this.btnAddress.StyleController = this.layoutControlObjPart;
+            this.btnAddress.TabIndex = 16;
+            this.btnAddress.ButtonClick += new DevExpress.XtraEditors.Controls.ButtonPressedEventHandler(this.btnAddress_ButtonClick);
+            this.btnAddress.ButtonPressed += new DevExpress.XtraEditors.Controls.ButtonPressedEventHandler(this.clearEditValue_ButtonPressed);
+            // 
+            // txtFOrgFullName
+            // 
+            this.txtFOrgFullName.Location = new System.Drawing.Point(13, 203);
+            this.txtFOrgFullName.Name = "txtFOrgFullName";
+            this.txtFOrgFullName.Size = new System.Drawing.Size(755, 20);
+            this.txtFOrgFullName.StyleController = this.layoutControlObjPart;
+            this.txtFOrgFullName.TabIndex = 16;
+            // 
+            // txtFOrgKPP
+            // 
+            this.txtFOrgKPP.Location = new System.Drawing.Point(392, 243);
+            this.txtFOrgKPP.Name = "txtFOrgKPP";
+            this.txtFOrgKPP.Size = new System.Drawing.Size(376, 20);
+            this.txtFOrgKPP.StyleController = this.layoutControlObjPart;
+            this.txtFOrgKPP.TabIndex = 16;
+            // 
+            // txtFOrgINN
+            // 
+            this.txtFOrgINN.Location = new System.Drawing.Point(13, 243);
+            this.txtFOrgINN.Name = "txtFOrgINN";
+            this.txtFOrgINN.Size = new System.Drawing.Size(375, 20);
+            this.txtFOrgINN.StyleController = this.layoutControlObjPart;
+            this.txtFOrgINN.TabIndex = 16;
+            // 
+            // btnFAddress
+            // 
+            this.btnFAddress.Location = new System.Drawing.Point(13, 283);
+            this.btnFAddress.Name = "btnFAddress";
+            this.btnFAddress.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Search),
+            new DevExpress.XtraEditors.Controls.EditorButton(),
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Delete)});
+            this.btnFAddress.Size = new System.Drawing.Size(375, 20);
+            this.btnFAddress.StyleController = this.layoutControlObjPart;
+            this.btnFAddress.TabIndex = 16;
+            this.btnFAddress.ButtonClick += new DevExpress.XtraEditors.Controls.ButtonPressedEventHandler(this.btnAddress_ButtonClick);
+            this.btnFAddress.ButtonPressed += new DevExpress.XtraEditors.Controls.ButtonPressedEventHandler(this.clearEditValue_ButtonPressed);
+            // 
+            // txtFEmail
+            // 
+            this.txtFEmail.Location = new System.Drawing.Point(392, 283);
+            this.txtFEmail.Name = "txtFEmail";
+            this.txtFEmail.Size = new System.Drawing.Size(376, 20);
+            this.txtFEmail.StyleController = this.layoutControlObjPart;
+            this.txtFEmail.TabIndex = 16;
+            // 
+            // btnSearchIp
+            // 
+            this.btnSearchIp.Location = new System.Drawing.Point(14, 338);
+            this.btnSearchIp.Name = "btnSearchIp";
+            this.btnSearchIp.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Search)});
+            this.btnSearchIp.Size = new System.Drawing.Size(753, 20);
+            this.btnSearchIp.StyleController = this.layoutControlObjPart;
+            this.btnSearchIp.TabIndex = 17;
+            this.btnSearchIp.ButtonPressed += new DevExpress.XtraEditors.Controls.ButtonPressedEventHandler(this.btnSearchIp_ButtonPressed);
+            // 
+            // txtFamilyName
+            // 
+            this.txtFamilyName.Location = new System.Drawing.Point(14, 378);
+            this.txtFamilyName.Name = "txtFamilyName";
+            this.txtFamilyName.Size = new System.Drawing.Size(753, 20);
+            this.txtFamilyName.StyleController = this.layoutControlObjPart;
+            this.txtFamilyName.TabIndex = 16;
+            // 
+            // txtFirstName
+            // 
+            this.txtFirstName.Location = new System.Drawing.Point(14, 418);
+            this.txtFirstName.Name = "txtFirstName";
+            this.txtFirstName.Size = new System.Drawing.Size(374, 20);
+            this.txtFirstName.StyleController = this.layoutControlObjPart;
+            this.txtFirstName.TabIndex = 16;
+            // 
+            // txtSecondName
+            // 
+            this.txtSecondName.Location = new System.Drawing.Point(392, 418);
+            this.txtSecondName.Name = "txtSecondName";
+            this.txtSecondName.Size = new System.Drawing.Size(375, 20);
+            this.txtSecondName.StyleController = this.layoutControlObjPart;
+            this.txtSecondName.TabIndex = 16;
+            // 
+            // txtOGRNIP
+            // 
+            this.txtOGRNIP.Location = new System.Drawing.Point(14, 458);
+            this.txtOGRNIP.Name = "txtOGRNIP";
+            this.txtOGRNIP.Size = new System.Drawing.Size(374, 20);
+            this.txtOGRNIP.StyleController = this.layoutControlObjPart;
+            this.txtOGRNIP.TabIndex = 16;
+            // 
+            // btnPostAddress
+            // 
+            this.btnPostAddress.Location = new System.Drawing.Point(14, 498);
+            this.btnPostAddress.Name = "btnPostAddress";
+            this.btnPostAddress.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Search),
+            new DevExpress.XtraEditors.Controls.EditorButton(),
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Delete)});
+            this.btnPostAddress.Size = new System.Drawing.Size(753, 20);
+            this.btnPostAddress.StyleController = this.layoutControlObjPart;
+            this.btnPostAddress.TabIndex = 16;
+            this.btnPostAddress.ButtonClick += new DevExpress.XtraEditors.Controls.ButtonPressedEventHandler(this.btnPostAddress_ButtonClick);
+            this.btnPostAddress.ButtonPressed += new DevExpress.XtraEditors.Controls.ButtonPressedEventHandler(this.clearEditValue_ButtonPressed);
+            // 
+            // txtEmailIp
+            // 
+            this.txtEmailIp.Location = new System.Drawing.Point(392, 458);
+            this.txtEmailIp.Name = "txtEmailIp";
+            this.txtEmailIp.Size = new System.Drawing.Size(375, 20);
+            this.txtEmailIp.StyleController = this.layoutControlObjPart;
+            this.txtEmailIp.TabIndex = 16;
+            // 
+            // checkGeneral
+            // 
+            this.checkGeneral.Location = new System.Drawing.Point(6, -114);
+            this.checkGeneral.Name = "checkGeneral";
+            this.checkGeneral.Properties.Caption = "Генеральная проектная организация";
+            this.checkGeneral.Size = new System.Drawing.Size(769, 20);
+            this.checkGeneral.StyleController = this.layoutControlObjPart;
+            this.checkGeneral.TabIndex = 18;
             // 
             // Root
             // 
@@ -256,22 +453,6 @@
             this.emptySpaceItemFooter.Size = new System.Drawing.Size(773, 10);
             this.emptySpaceItemFooter.TextSize = new System.Drawing.Size(0, 0);
             // 
-            // layoutControlGroupEntity
-            // 
-            this.layoutControlGroupEntity.Items.AddRange(new DevExpress.XtraLayout.BaseLayoutItem[] {
-            this.layoutControlItemSearch,
-            this.layoutControlItemOrgFullName,
-            this.layoutControlItemOrgOGRN,
-            this.layoutControlItemOrgKPP,
-            this.layoutControlItemOrgINN,
-            this.layoutControlItemAddress,
-            this.layoutControlItemEmail});
-            this.layoutControlGroupEntity.Location = new System.Drawing.Point(0, 78);
-            this.layoutControlGroupEntity.Name = "layoutControlGroupEntity";
-            this.layoutControlGroupEntity.Padding = new DevExpress.XtraLayout.Utils.Padding(5, 5, 5, 5);
-            this.layoutControlGroupEntity.Size = new System.Drawing.Size(773, 216);
-            this.layoutControlGroupEntity.TextVisible = false;
-            // 
             // layoutControlGroupForeignLegalEntity
             // 
             this.layoutControlGroupForeignLegalEntity.CustomizationFormText = "layoutControlGroupEntity";
@@ -288,6 +469,66 @@
             this.layoutControlGroupForeignLegalEntity.Size = new System.Drawing.Size(773, 134);
             this.layoutControlGroupForeignLegalEntity.Text = "layoutControlGroupEntity";
             this.layoutControlGroupForeignLegalEntity.TextVisible = false;
+            // 
+            // layoutControlItemFOrgFullName
+            // 
+            this.layoutControlItemFOrgFullName.Control = this.txtFOrgFullName;
+            this.layoutControlItemFOrgFullName.ControlAlignment = System.Drawing.ContentAlignment.TopLeft;
+            this.layoutControlItemFOrgFullName.CustomizationFormText = "Полное наименование юридического лица *";
+            this.layoutControlItemFOrgFullName.Location = new System.Drawing.Point(0, 0);
+            this.layoutControlItemFOrgFullName.Name = "layoutControlItemFOrgFullName";
+            this.layoutControlItemFOrgFullName.Size = new System.Drawing.Size(759, 40);
+            this.layoutControlItemFOrgFullName.Text = "Полное наименование юридического лица *";
+            this.layoutControlItemFOrgFullName.TextLocation = DevExpress.Utils.Locations.Top;
+            this.layoutControlItemFOrgFullName.TextSize = new System.Drawing.Size(247, 13);
+            // 
+            // layoutControlItemFOrgKPP
+            // 
+            this.layoutControlItemFOrgKPP.Control = this.txtFOrgKPP;
+            this.layoutControlItemFOrgKPP.ControlAlignment = System.Drawing.ContentAlignment.TopLeft;
+            this.layoutControlItemFOrgKPP.CustomizationFormText = "Полное наименование юридического лица";
+            this.layoutControlItemFOrgKPP.Location = new System.Drawing.Point(379, 40);
+            this.layoutControlItemFOrgKPP.Name = "layoutControlItemFOrgKPP";
+            this.layoutControlItemFOrgKPP.Size = new System.Drawing.Size(380, 40);
+            this.layoutControlItemFOrgKPP.Text = "КПП *";
+            this.layoutControlItemFOrgKPP.TextLocation = DevExpress.Utils.Locations.Top;
+            this.layoutControlItemFOrgKPP.TextSize = new System.Drawing.Size(247, 13);
+            // 
+            // layoutControlItemFAddress
+            // 
+            this.layoutControlItemFAddress.Control = this.btnFAddress;
+            this.layoutControlItemFAddress.ControlAlignment = System.Drawing.ContentAlignment.TopLeft;
+            this.layoutControlItemFAddress.CustomizationFormText = "Полное наименование юридического лица";
+            this.layoutControlItemFAddress.Location = new System.Drawing.Point(0, 80);
+            this.layoutControlItemFAddress.Name = "layoutControlItemFAddress";
+            this.layoutControlItemFAddress.Size = new System.Drawing.Size(379, 40);
+            this.layoutControlItemFAddress.Text = "Адрес (местонахождение) юридического лица *";
+            this.layoutControlItemFAddress.TextLocation = DevExpress.Utils.Locations.Top;
+            this.layoutControlItemFAddress.TextSize = new System.Drawing.Size(247, 13);
+            // 
+            // layoutControlItemFOrgINN
+            // 
+            this.layoutControlItemFOrgINN.Control = this.txtFOrgINN;
+            this.layoutControlItemFOrgINN.ControlAlignment = System.Drawing.ContentAlignment.TopLeft;
+            this.layoutControlItemFOrgINN.CustomizationFormText = "Полное наименование юридического лица";
+            this.layoutControlItemFOrgINN.Location = new System.Drawing.Point(0, 40);
+            this.layoutControlItemFOrgINN.Name = "layoutControlItemFOrgINN";
+            this.layoutControlItemFOrgINN.Size = new System.Drawing.Size(379, 40);
+            this.layoutControlItemFOrgINN.Text = "ИНН *";
+            this.layoutControlItemFOrgINN.TextLocation = DevExpress.Utils.Locations.Top;
+            this.layoutControlItemFOrgINN.TextSize = new System.Drawing.Size(247, 13);
+            // 
+            // layoutControlItemFEmail
+            // 
+            this.layoutControlItemFEmail.Control = this.txtFEmail;
+            this.layoutControlItemFEmail.ControlAlignment = System.Drawing.ContentAlignment.TopLeft;
+            this.layoutControlItemFEmail.CustomizationFormText = "Полное наименование юридического лица";
+            this.layoutControlItemFEmail.Location = new System.Drawing.Point(379, 80);
+            this.layoutControlItemFEmail.Name = "layoutControlItemFEmail";
+            this.layoutControlItemFEmail.Size = new System.Drawing.Size(380, 40);
+            this.layoutControlItemFEmail.Text = "Адрес электронной почты";
+            this.layoutControlItemFEmail.TextLocation = DevExpress.Utils.Locations.Top;
+            this.layoutControlItemFEmail.TextSize = new System.Drawing.Size(247, 13);
             // 
             // layoutControlGroupIndividualEntrepreneur
             // 
@@ -308,211 +549,114 @@
             this.layoutControlGroupIndividualEntrepreneur.Text = "layoutControlGroupEntity";
             this.layoutControlGroupIndividualEntrepreneur.TextVisible = false;
             // 
-            // radioGroupTypeOrganization
+            // layoutControlItemSearchIp
             // 
-            this.radioGroupTypeOrganization.Location = new System.Drawing.Point(6, 30);
-            this.radioGroupTypeOrganization.MaximumSize = new System.Drawing.Size(0, 50);
-            this.radioGroupTypeOrganization.MinimumSize = new System.Drawing.Size(0, 50);
-            this.radioGroupTypeOrganization.Name = "radioGroupTypeOrganization";
-            this.radioGroupTypeOrganization.Properties.Columns = 2;
-            this.radioGroupTypeOrganization.Size = new System.Drawing.Size(769, 50);
-            this.radioGroupTypeOrganization.StyleController = this.layoutControlObjPart;
-            this.radioGroupTypeOrganization.TabIndex = 15;
-            this.radioGroupTypeOrganization.SelectedIndexChanged += new System.EventHandler(this.radioGroupTypeOrganization_SelectedIndexChanged);
+            this.layoutControlItemSearchIp.Control = this.btnSearchIp;
+            this.layoutControlItemSearchIp.ControlAlignment = System.Drawing.ContentAlignment.TopLeft;
+            this.layoutControlItemSearchIp.CustomizationFormText = "ИНН или ОГРН";
+            this.layoutControlItemSearchIp.Location = new System.Drawing.Point(0, 0);
+            this.layoutControlItemSearchIp.Name = "layoutControlItemSearchIp";
+            this.layoutControlItemSearchIp.Size = new System.Drawing.Size(757, 40);
+            this.layoutControlItemSearchIp.Text = "ИНН или ОГРН";
+            this.layoutControlItemSearchIp.TextLocation = DevExpress.Utils.Locations.Top;
+            this.layoutControlItemSearchIp.TextSize = new System.Drawing.Size(247, 13);
             // 
-            // txtOrgFullName
+            // layoutControlItemFamilyName
             // 
-            this.txtOrgFullName.Location = new System.Drawing.Point(14, 148);
-            this.txtOrgFullName.Name = "txtOrgFullName";
-            this.txtOrgFullName.Size = new System.Drawing.Size(753, 20);
-            this.txtOrgFullName.StyleController = this.layoutControlObjPart;
-            this.txtOrgFullName.TabIndex = 16;
+            this.layoutControlItemFamilyName.Control = this.txtFamilyName;
+            this.layoutControlItemFamilyName.ControlAlignment = System.Drawing.ContentAlignment.TopLeft;
+            this.layoutControlItemFamilyName.CustomizationFormText = "Полное наименование юридического лица *";
+            this.layoutControlItemFamilyName.Location = new System.Drawing.Point(0, 40);
+            this.layoutControlItemFamilyName.Name = "layoutControlItemFamilyName";
+            this.layoutControlItemFamilyName.Size = new System.Drawing.Size(757, 40);
+            this.layoutControlItemFamilyName.Text = "Фамилия *";
+            this.layoutControlItemFamilyName.TextLocation = DevExpress.Utils.Locations.Top;
+            this.layoutControlItemFamilyName.TextSize = new System.Drawing.Size(247, 13);
             // 
-            // txtOrgOGRN
+            // layoutControlItemFirstName
             // 
-            this.txtOrgOGRN.Location = new System.Drawing.Point(14, 188);
-            this.txtOrgOGRN.Name = "txtOrgOGRN";
-            this.txtOrgOGRN.Size = new System.Drawing.Size(374, 20);
-            this.txtOrgOGRN.StyleController = this.layoutControlObjPart;
-            this.txtOrgOGRN.TabIndex = 16;
+            this.layoutControlItemFirstName.Control = this.txtFirstName;
+            this.layoutControlItemFirstName.ControlAlignment = System.Drawing.ContentAlignment.TopLeft;
+            this.layoutControlItemFirstName.CustomizationFormText = "Полное наименование юридического лица";
+            this.layoutControlItemFirstName.Location = new System.Drawing.Point(0, 80);
+            this.layoutControlItemFirstName.Name = "layoutControlItemFirstName";
+            this.layoutControlItemFirstName.Size = new System.Drawing.Size(378, 40);
+            this.layoutControlItemFirstName.Text = "Имя *";
+            this.layoutControlItemFirstName.TextLocation = DevExpress.Utils.Locations.Top;
+            this.layoutControlItemFirstName.TextSize = new System.Drawing.Size(247, 13);
             // 
-            // txtOrgKPP
+            // layoutControlItemSecondName
             // 
-            this.txtOrgKPP.Location = new System.Drawing.Point(392, 188);
-            this.txtOrgKPP.Name = "txtOrgKPP";
-            this.txtOrgKPP.Size = new System.Drawing.Size(375, 20);
-            this.txtOrgKPP.StyleController = this.layoutControlObjPart;
-            this.txtOrgKPP.TabIndex = 16;
+            this.layoutControlItemSecondName.Control = this.txtSecondName;
+            this.layoutControlItemSecondName.ControlAlignment = System.Drawing.ContentAlignment.TopLeft;
+            this.layoutControlItemSecondName.CustomizationFormText = "Полное наименование юридического лица";
+            this.layoutControlItemSecondName.Location = new System.Drawing.Point(378, 80);
+            this.layoutControlItemSecondName.Name = "layoutControlItemSecondName";
+            this.layoutControlItemSecondName.Size = new System.Drawing.Size(379, 40);
+            this.layoutControlItemSecondName.Text = "Отчество *";
+            this.layoutControlItemSecondName.TextLocation = DevExpress.Utils.Locations.Top;
+            this.layoutControlItemSecondName.TextSize = new System.Drawing.Size(247, 13);
             // 
-            // txtOrgINN
+            // layoutControlItemOGRNIP
             // 
-            this.txtOrgINN.Location = new System.Drawing.Point(14, 228);
-            this.txtOrgINN.Name = "txtOrgINN";
-            this.txtOrgINN.Size = new System.Drawing.Size(374, 20);
-            this.txtOrgINN.StyleController = this.layoutControlObjPart;
-            this.txtOrgINN.TabIndex = 16;
+            this.layoutControlItemOGRNIP.Control = this.txtOGRNIP;
+            this.layoutControlItemOGRNIP.ControlAlignment = System.Drawing.ContentAlignment.TopLeft;
+            this.layoutControlItemOGRNIP.CustomizationFormText = "Полное наименование юридического лица";
+            this.layoutControlItemOGRNIP.Location = new System.Drawing.Point(0, 120);
+            this.layoutControlItemOGRNIP.Name = "layoutControlItemOGRNIP";
+            this.layoutControlItemOGRNIP.Size = new System.Drawing.Size(378, 40);
+            this.layoutControlItemOGRNIP.Text = "ОГРНИП *";
+            this.layoutControlItemOGRNIP.TextLocation = DevExpress.Utils.Locations.Top;
+            this.layoutControlItemOGRNIP.TextSize = new System.Drawing.Size(247, 13);
             // 
-            // txtEmail
+            // layoutControlItemPostAddress
             // 
-            this.txtEmail.Location = new System.Drawing.Point(392, 228);
-            this.txtEmail.Name = "txtEmail";
-            this.txtEmail.Size = new System.Drawing.Size(375, 20);
-            this.txtEmail.StyleController = this.layoutControlObjPart;
-            this.txtEmail.TabIndex = 16;
+            this.layoutControlItemPostAddress.Control = this.btnPostAddress;
+            this.layoutControlItemPostAddress.ControlAlignment = System.Drawing.ContentAlignment.TopLeft;
+            this.layoutControlItemPostAddress.CustomizationFormText = "Полное наименование юридического лица";
+            this.layoutControlItemPostAddress.Location = new System.Drawing.Point(0, 160);
+            this.layoutControlItemPostAddress.Name = "layoutControlItemPostAddress";
+            this.layoutControlItemPostAddress.Size = new System.Drawing.Size(757, 40);
+            this.layoutControlItemPostAddress.Text = "Почтоый адрес *";
+            this.layoutControlItemPostAddress.TextLocation = DevExpress.Utils.Locations.Top;
+            this.layoutControlItemPostAddress.TextSize = new System.Drawing.Size(247, 13);
             // 
-            // btnSearch
+            // layoutControlItemEmailIp
             // 
-            this.btnSearch.Location = new System.Drawing.Point(14, 108);
-            this.btnSearch.Name = "btnSearch";
-            this.btnSearch.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
-            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Search)});
-            this.btnSearch.Size = new System.Drawing.Size(753, 20);
-            this.btnSearch.StyleController = this.layoutControlObjPart;
-            this.btnSearch.TabIndex = 17;
-            this.btnSearch.ButtonPressed += new DevExpress.XtraEditors.Controls.ButtonPressedEventHandler(this.btnSearch_ButtonPressed);
+            this.layoutControlItemEmailIp.Control = this.txtEmailIp;
+            this.layoutControlItemEmailIp.ControlAlignment = System.Drawing.ContentAlignment.TopLeft;
+            this.layoutControlItemEmailIp.CustomizationFormText = "Полное наименование юридического лица";
+            this.layoutControlItemEmailIp.Location = new System.Drawing.Point(378, 120);
+            this.layoutControlItemEmailIp.Name = "layoutControlItemEmailIp";
+            this.layoutControlItemEmailIp.Size = new System.Drawing.Size(379, 40);
+            this.layoutControlItemEmailIp.Text = "Адрес электронной почты юридического лица";
+            this.layoutControlItemEmailIp.TextLocation = DevExpress.Utils.Locations.Top;
+            this.layoutControlItemEmailIp.TextSize = new System.Drawing.Size(247, 13);
             // 
-            // btnAddress
+            // layoutControlItemGeneral
             // 
-            this.btnAddress.Location = new System.Drawing.Point(14, 268);
-            this.btnAddress.Name = "btnAddress";
-            this.btnAddress.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
-            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Search),
-            new DevExpress.XtraEditors.Controls.EditorButton(),
-            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Delete)});
-            this.btnAddress.Size = new System.Drawing.Size(753, 20);
-            this.btnAddress.StyleController = this.layoutControlObjPart;
-            this.btnAddress.TabIndex = 16;
-            this.btnAddress.ButtonClick += new DevExpress.XtraEditors.Controls.ButtonPressedEventHandler(this.btnAddress_ButtonClick);
-            this.btnAddress.ButtonPressed += new DevExpress.XtraEditors.Controls.ButtonPressedEventHandler(this.clearEditValue_ButtonPressed);
+            this.layoutControlItemGeneral.Control = this.checkGeneral;
+            this.layoutControlItemGeneral.Location = new System.Drawing.Point(0, 0);
+            this.layoutControlItemGeneral.Name = "layoutControlItemGeneral";
+            this.layoutControlItemGeneral.Size = new System.Drawing.Size(773, 24);
+            this.layoutControlItemGeneral.TextSize = new System.Drawing.Size(0, 0);
+            this.layoutControlItemGeneral.TextVisible = false;
             // 
-            // txtFOrgFullName
+            // layoutControlGroupEntity
             // 
-            this.txtFOrgFullName.Location = new System.Drawing.Point(13, 323);
-            this.txtFOrgFullName.Name = "txtFOrgFullName";
-            this.txtFOrgFullName.Size = new System.Drawing.Size(755, 20);
-            this.txtFOrgFullName.StyleController = this.layoutControlObjPart;
-            this.txtFOrgFullName.TabIndex = 16;
-            // 
-            // txtFOrgKPP
-            // 
-            this.txtFOrgKPP.Location = new System.Drawing.Point(392, 363);
-            this.txtFOrgKPP.Name = "txtFOrgKPP";
-            this.txtFOrgKPP.Size = new System.Drawing.Size(376, 20);
-            this.txtFOrgKPP.StyleController = this.layoutControlObjPart;
-            this.txtFOrgKPP.TabIndex = 16;
-            // 
-            // txtFOrgINN
-            // 
-            this.txtFOrgINN.Location = new System.Drawing.Point(13, 363);
-            this.txtFOrgINN.Name = "txtFOrgINN";
-            this.txtFOrgINN.Size = new System.Drawing.Size(375, 20);
-            this.txtFOrgINN.StyleController = this.layoutControlObjPart;
-            this.txtFOrgINN.TabIndex = 16;
-            // 
-            // btnFAddress
-            // 
-            this.btnFAddress.Location = new System.Drawing.Point(13, 403);
-            this.btnFAddress.Name = "btnFAddress";
-            this.btnFAddress.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
-            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Search),
-            new DevExpress.XtraEditors.Controls.EditorButton(),
-            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Delete)});
-            this.btnFAddress.Size = new System.Drawing.Size(375, 20);
-            this.btnFAddress.StyleController = this.layoutControlObjPart;
-            this.btnFAddress.TabIndex = 16;
-            this.btnFAddress.ButtonClick += new DevExpress.XtraEditors.Controls.ButtonPressedEventHandler(this.btnAddress_ButtonClick);
-            this.btnFAddress.ButtonPressed += new DevExpress.XtraEditors.Controls.ButtonPressedEventHandler(this.clearEditValue_ButtonPressed);
-            // 
-            // txtFEmail
-            // 
-            this.txtFEmail.Location = new System.Drawing.Point(392, 403);
-            this.txtFEmail.Name = "txtFEmail";
-            this.txtFEmail.Size = new System.Drawing.Size(376, 20);
-            this.txtFEmail.StyleController = this.layoutControlObjPart;
-            this.txtFEmail.TabIndex = 16;
-            // 
-            // btnSearchIp
-            // 
-            this.btnSearchIp.Location = new System.Drawing.Point(14, 458);
-            this.btnSearchIp.Name = "btnSearchIp";
-            this.btnSearchIp.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
-            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Search)});
-            this.btnSearchIp.Size = new System.Drawing.Size(753, 20);
-            this.btnSearchIp.StyleController = this.layoutControlObjPart;
-            this.btnSearchIp.TabIndex = 17;
-            this.btnSearchIp.ButtonPressed += new DevExpress.XtraEditors.Controls.ButtonPressedEventHandler(this.btnSearchIp_ButtonPressed);
-            // 
-            // txtFamilyName
-            // 
-            this.txtFamilyName.Location = new System.Drawing.Point(14, 498);
-            this.txtFamilyName.Name = "txtFamilyName";
-            this.txtFamilyName.Size = new System.Drawing.Size(753, 20);
-            this.txtFamilyName.StyleController = this.layoutControlObjPart;
-            this.txtFamilyName.TabIndex = 16;
-            // 
-            // txtFirstName
-            // 
-            this.txtFirstName.Location = new System.Drawing.Point(14, 538);
-            this.txtFirstName.Name = "txtFirstName";
-            this.txtFirstName.Size = new System.Drawing.Size(374, 20);
-            this.txtFirstName.StyleController = this.layoutControlObjPart;
-            this.txtFirstName.TabIndex = 16;
-            // 
-            // txtSecondName
-            // 
-            this.txtSecondName.Location = new System.Drawing.Point(392, 538);
-            this.txtSecondName.Name = "txtSecondName";
-            this.txtSecondName.Size = new System.Drawing.Size(375, 20);
-            this.txtSecondName.StyleController = this.layoutControlObjPart;
-            this.txtSecondName.TabIndex = 16;
-            // 
-            // txtOGRNIP
-            // 
-            this.txtOGRNIP.Location = new System.Drawing.Point(14, 578);
-            this.txtOGRNIP.Name = "txtOGRNIP";
-            this.txtOGRNIP.Size = new System.Drawing.Size(374, 20);
-            this.txtOGRNIP.StyleController = this.layoutControlObjPart;
-            this.txtOGRNIP.TabIndex = 16;
-            // 
-            // btnPostAddress
-            // 
-            this.btnPostAddress.Location = new System.Drawing.Point(14, 618);
-            this.btnPostAddress.Name = "btnPostAddress";
-            this.btnPostAddress.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
-            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Search),
-            new DevExpress.XtraEditors.Controls.EditorButton(),
-            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Delete)});
-            this.btnPostAddress.Size = new System.Drawing.Size(753, 20);
-            this.btnPostAddress.StyleController = this.layoutControlObjPart;
-            this.btnPostAddress.TabIndex = 16;
-            this.btnPostAddress.ButtonClick += new DevExpress.XtraEditors.Controls.ButtonPressedEventHandler(this.btnPostAddress_ButtonClick);
-            this.btnPostAddress.ButtonPressed += new DevExpress.XtraEditors.Controls.ButtonPressedEventHandler(this.clearEditValue_ButtonPressed);
-            // 
-            // txtEmailIp
-            // 
-            this.txtEmailIp.Location = new System.Drawing.Point(392, 578);
-            this.txtEmailIp.Name = "txtEmailIp";
-            this.txtEmailIp.Size = new System.Drawing.Size(375, 20);
-            this.txtEmailIp.StyleController = this.layoutControlObjPart;
-            this.txtEmailIp.TabIndex = 16;
-            // 
-            // checkGeneral
-            // 
-            this.checkGeneral.Location = new System.Drawing.Point(6, 6);
-            this.checkGeneral.Name = "checkGeneral";
-            this.checkGeneral.Properties.Caption = "Генеральная проектная организация";
-            this.checkGeneral.Size = new System.Drawing.Size(769, 20);
-            this.checkGeneral.StyleController = this.layoutControlObjPart;
-            this.checkGeneral.TabIndex = 18;
-            // 
-            // layoutControlItemTypeOrg
-            // 
-            this.layoutControlItemTypeOrg.Control = this.radioGroupTypeOrganization;
-            this.layoutControlItemTypeOrg.Location = new System.Drawing.Point(0, 24);
-            this.layoutControlItemTypeOrg.Name = "layoutControlItemTypeOrg";
-            this.layoutControlItemTypeOrg.Size = new System.Drawing.Size(773, 54);
-            this.layoutControlItemTypeOrg.TextSize = new System.Drawing.Size(0, 0);
-            this.layoutControlItemTypeOrg.TextVisible = false;
+            this.layoutControlGroupEntity.Items.AddRange(new DevExpress.XtraLayout.BaseLayoutItem[] {
+            this.layoutControlItemSearch,
+            this.layoutControlItemOrgFullName,
+            this.layoutControlItemOrgOGRN,
+            this.layoutControlItemOrgKPP,
+            this.layoutControlItemOrgINN,
+            this.layoutControlItemAddress,
+            this.layoutControlItemEmail});
+            this.layoutControlGroupEntity.Location = new System.Drawing.Point(0, 78);
+            this.layoutControlGroupEntity.Name = "layoutControlGroupEntity";
+            this.layoutControlGroupEntity.Padding = new DevExpress.XtraLayout.Utils.Padding(5, 5, 5, 5);
+            this.layoutControlGroupEntity.Size = new System.Drawing.Size(773, 216);
+            this.layoutControlGroupEntity.TextVisible = false;
             // 
             // layoutControlItemSearch
             // 
@@ -594,158 +738,14 @@
             this.layoutControlItemEmail.TextLocation = DevExpress.Utils.Locations.Top;
             this.layoutControlItemEmail.TextSize = new System.Drawing.Size(247, 13);
             // 
-            // layoutControlItemFOrgFullName
+            // layoutControlItemTypeOrg
             // 
-            this.layoutControlItemFOrgFullName.Control = this.txtFOrgFullName;
-            this.layoutControlItemFOrgFullName.ControlAlignment = System.Drawing.ContentAlignment.TopLeft;
-            this.layoutControlItemFOrgFullName.CustomizationFormText = "Полное наименование юридического лица *";
-            this.layoutControlItemFOrgFullName.Location = new System.Drawing.Point(0, 0);
-            this.layoutControlItemFOrgFullName.Name = "layoutControlItemFOrgFullName";
-            this.layoutControlItemFOrgFullName.Size = new System.Drawing.Size(759, 40);
-            this.layoutControlItemFOrgFullName.Text = "Полное наименование юридического лица *";
-            this.layoutControlItemFOrgFullName.TextLocation = DevExpress.Utils.Locations.Top;
-            this.layoutControlItemFOrgFullName.TextSize = new System.Drawing.Size(247, 13);
-            // 
-            // layoutControlItemFOrgKPP
-            // 
-            this.layoutControlItemFOrgKPP.Control = this.txtFOrgKPP;
-            this.layoutControlItemFOrgKPP.ControlAlignment = System.Drawing.ContentAlignment.TopLeft;
-            this.layoutControlItemFOrgKPP.CustomizationFormText = "Полное наименование юридического лица";
-            this.layoutControlItemFOrgKPP.Location = new System.Drawing.Point(379, 40);
-            this.layoutControlItemFOrgKPP.Name = "layoutControlItemFOrgKPP";
-            this.layoutControlItemFOrgKPP.Size = new System.Drawing.Size(380, 40);
-            this.layoutControlItemFOrgKPP.Text = "КПП *";
-            this.layoutControlItemFOrgKPP.TextLocation = DevExpress.Utils.Locations.Top;
-            this.layoutControlItemFOrgKPP.TextSize = new System.Drawing.Size(247, 13);
-            // 
-            // layoutControlItemFAddress
-            // 
-            this.layoutControlItemFAddress.Control = this.btnFAddress;
-            this.layoutControlItemFAddress.ControlAlignment = System.Drawing.ContentAlignment.TopLeft;
-            this.layoutControlItemFAddress.CustomizationFormText = "Полное наименование юридического лица";
-            this.layoutControlItemFAddress.Location = new System.Drawing.Point(0, 80);
-            this.layoutControlItemFAddress.Name = "layoutControlItemFAddress";
-            this.layoutControlItemFAddress.Size = new System.Drawing.Size(379, 40);
-            this.layoutControlItemFAddress.Text = "Адрес (местонахождение) юридического лица *";
-            this.layoutControlItemFAddress.TextLocation = DevExpress.Utils.Locations.Top;
-            this.layoutControlItemFAddress.TextSize = new System.Drawing.Size(247, 13);
-            // 
-            // layoutControlItemFOrgINN
-            // 
-            this.layoutControlItemFOrgINN.Control = this.txtFOrgINN;
-            this.layoutControlItemFOrgINN.ControlAlignment = System.Drawing.ContentAlignment.TopLeft;
-            this.layoutControlItemFOrgINN.CustomizationFormText = "Полное наименование юридического лица";
-            this.layoutControlItemFOrgINN.Location = new System.Drawing.Point(0, 40);
-            this.layoutControlItemFOrgINN.Name = "layoutControlItemFOrgINN";
-            this.layoutControlItemFOrgINN.Size = new System.Drawing.Size(379, 40);
-            this.layoutControlItemFOrgINN.Text = "ИНН *";
-            this.layoutControlItemFOrgINN.TextLocation = DevExpress.Utils.Locations.Top;
-            this.layoutControlItemFOrgINN.TextSize = new System.Drawing.Size(247, 13);
-            // 
-            // layoutControlItemFEmail
-            // 
-            this.layoutControlItemFEmail.Control = this.txtFEmail;
-            this.layoutControlItemFEmail.ControlAlignment = System.Drawing.ContentAlignment.TopLeft;
-            this.layoutControlItemFEmail.CustomizationFormText = "Полное наименование юридического лица";
-            this.layoutControlItemFEmail.Location = new System.Drawing.Point(379, 80);
-            this.layoutControlItemFEmail.Name = "layoutControlItemFEmail";
-            this.layoutControlItemFEmail.Size = new System.Drawing.Size(380, 40);
-            this.layoutControlItemFEmail.Text = "Адрес электронной почты";
-            this.layoutControlItemFEmail.TextLocation = DevExpress.Utils.Locations.Top;
-            this.layoutControlItemFEmail.TextSize = new System.Drawing.Size(247, 13);
-            // 
-            // layoutControlItemSearchIp
-            // 
-            this.layoutControlItemSearchIp.Control = this.btnSearchIp;
-            this.layoutControlItemSearchIp.ControlAlignment = System.Drawing.ContentAlignment.TopLeft;
-            this.layoutControlItemSearchIp.CustomizationFormText = "ИНН или ОГРН";
-            this.layoutControlItemSearchIp.Location = new System.Drawing.Point(0, 0);
-            this.layoutControlItemSearchIp.Name = "layoutControlItemSearchIp";
-            this.layoutControlItemSearchIp.Size = new System.Drawing.Size(757, 40);
-            this.layoutControlItemSearchIp.Text = "ИНН или ОГРН";
-            this.layoutControlItemSearchIp.TextLocation = DevExpress.Utils.Locations.Top;
-            this.layoutControlItemSearchIp.TextSize = new System.Drawing.Size(247, 13);
-            // 
-            // layoutControlItemFamilyName
-            // 
-            this.layoutControlItemFamilyName.Control = this.txtFamilyName;
-            this.layoutControlItemFamilyName.ControlAlignment = System.Drawing.ContentAlignment.TopLeft;
-            this.layoutControlItemFamilyName.CustomizationFormText = "Полное наименование юридического лица *";
-            this.layoutControlItemFamilyName.Location = new System.Drawing.Point(0, 40);
-            this.layoutControlItemFamilyName.Name = "layoutControlItemFamilyName";
-            this.layoutControlItemFamilyName.Size = new System.Drawing.Size(757, 40);
-            this.layoutControlItemFamilyName.Text = "Фамилия *";
-            this.layoutControlItemFamilyName.TextLocation = DevExpress.Utils.Locations.Top;
-            this.layoutControlItemFamilyName.TextSize = new System.Drawing.Size(247, 13);
-            // 
-            // layoutControlItemFirstName
-            // 
-            this.layoutControlItemFirstName.Control = this.txtFirstName;
-            this.layoutControlItemFirstName.ControlAlignment = System.Drawing.ContentAlignment.TopLeft;
-            this.layoutControlItemFirstName.CustomizationFormText = "Полное наименование юридического лица";
-            this.layoutControlItemFirstName.Location = new System.Drawing.Point(0, 80);
-            this.layoutControlItemFirstName.Name = "layoutControlItemFirstName";
-            this.layoutControlItemFirstName.Size = new System.Drawing.Size(378, 40);
-            this.layoutControlItemFirstName.Text = "Имя *";
-            this.layoutControlItemFirstName.TextLocation = DevExpress.Utils.Locations.Top;
-            this.layoutControlItemFirstName.TextSize = new System.Drawing.Size(247, 13);
-            // 
-            // layoutControlItemSecondName
-            // 
-            this.layoutControlItemSecondName.Control = this.txtSecondName;
-            this.layoutControlItemSecondName.ControlAlignment = System.Drawing.ContentAlignment.TopLeft;
-            this.layoutControlItemSecondName.CustomizationFormText = "Полное наименование юридического лица";
-            this.layoutControlItemSecondName.Location = new System.Drawing.Point(378, 80);
-            this.layoutControlItemSecondName.Name = "layoutControlItemSecondName";
-            this.layoutControlItemSecondName.Size = new System.Drawing.Size(379, 40);
-            this.layoutControlItemSecondName.Text = "Отчество *";
-            this.layoutControlItemSecondName.TextLocation = DevExpress.Utils.Locations.Top;
-            this.layoutControlItemSecondName.TextSize = new System.Drawing.Size(247, 13);
-            // 
-            // layoutControlItemOGRNIP
-            // 
-            this.layoutControlItemOGRNIP.Control = this.txtOGRNIP;
-            this.layoutControlItemOGRNIP.ControlAlignment = System.Drawing.ContentAlignment.TopLeft;
-            this.layoutControlItemOGRNIP.CustomizationFormText = "Полное наименование юридического лица";
-            this.layoutControlItemOGRNIP.Location = new System.Drawing.Point(0, 120);
-            this.layoutControlItemOGRNIP.Name = "layoutControlItemOGRNIP";
-            this.layoutControlItemOGRNIP.Size = new System.Drawing.Size(378, 40);
-            this.layoutControlItemOGRNIP.Text = "ОГРНИП *";
-            this.layoutControlItemOGRNIP.TextLocation = DevExpress.Utils.Locations.Top;
-            this.layoutControlItemOGRNIP.TextSize = new System.Drawing.Size(247, 13);
-            // 
-            // layoutControlItemPostAddress
-            // 
-            this.layoutControlItemPostAddress.Control = this.btnPostAddress;
-            this.layoutControlItemPostAddress.ControlAlignment = System.Drawing.ContentAlignment.TopLeft;
-            this.layoutControlItemPostAddress.CustomizationFormText = "Полное наименование юридического лица";
-            this.layoutControlItemPostAddress.Location = new System.Drawing.Point(0, 160);
-            this.layoutControlItemPostAddress.Name = "layoutControlItemPostAddress";
-            this.layoutControlItemPostAddress.Size = new System.Drawing.Size(757, 40);
-            this.layoutControlItemPostAddress.Text = "Адрес (местонахождение) юридического лица *";
-            this.layoutControlItemPostAddress.TextLocation = DevExpress.Utils.Locations.Top;
-            this.layoutControlItemPostAddress.TextSize = new System.Drawing.Size(247, 13);
-            // 
-            // layoutControlItemEmailIp
-            // 
-            this.layoutControlItemEmailIp.Control = this.txtEmailIp;
-            this.layoutControlItemEmailIp.ControlAlignment = System.Drawing.ContentAlignment.TopLeft;
-            this.layoutControlItemEmailIp.CustomizationFormText = "Полное наименование юридического лица";
-            this.layoutControlItemEmailIp.Location = new System.Drawing.Point(378, 120);
-            this.layoutControlItemEmailIp.Name = "layoutControlItemEmailIp";
-            this.layoutControlItemEmailIp.Size = new System.Drawing.Size(379, 40);
-            this.layoutControlItemEmailIp.Text = "Адрес электронной почты юридического лица";
-            this.layoutControlItemEmailIp.TextLocation = DevExpress.Utils.Locations.Top;
-            this.layoutControlItemEmailIp.TextSize = new System.Drawing.Size(247, 13);
-            // 
-            // layoutControlItemGeneral
-            // 
-            this.layoutControlItemGeneral.Control = this.checkGeneral;
-            this.layoutControlItemGeneral.Location = new System.Drawing.Point(0, 0);
-            this.layoutControlItemGeneral.Name = "layoutControlItemGeneral";
-            this.layoutControlItemGeneral.Size = new System.Drawing.Size(773, 24);
-            this.layoutControlItemGeneral.TextSize = new System.Drawing.Size(0, 0);
-            this.layoutControlItemGeneral.TextVisible = false;
+            this.layoutControlItemTypeOrg.Control = this.radioGroupTypeOrganization;
+            this.layoutControlItemTypeOrg.Location = new System.Drawing.Point(0, 24);
+            this.layoutControlItemTypeOrg.Name = "layoutControlItemTypeOrg";
+            this.layoutControlItemTypeOrg.Size = new System.Drawing.Size(773, 54);
+            this.layoutControlItemTypeOrg.TextSize = new System.Drawing.Size(0, 0);
+            this.layoutControlItemTypeOrg.TextVisible = false;
             // 
             // DesignerEdit
             // 
@@ -760,15 +760,6 @@
             this.Load += new System.EventHandler(this.ObjPartEdit_Load);
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlObjPart)).EndInit();
             this.layoutControlObjPart.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.Root)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.emptySpaceItemSave)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemSave)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.emptySpaceItemClose)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemClose)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.emptySpaceItemFooter)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.layoutControlGroupEntity)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.layoutControlGroupForeignLegalEntity)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.layoutControlGroupIndividualEntrepreneur)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.radioGroupTypeOrganization.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.txtOrgFullName.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.txtOrgOGRN.Properties)).EndInit();
@@ -790,19 +781,19 @@
             ((System.ComponentModel.ISupportInitialize)(this.btnPostAddress.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.txtEmailIp.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.checkGeneral.Properties)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemTypeOrg)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemSearch)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemOrgFullName)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemOrgOGRN)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemOrgKPP)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemOrgINN)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemAddress)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemEmail)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.Root)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.emptySpaceItemSave)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemSave)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.emptySpaceItemClose)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemClose)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.emptySpaceItemFooter)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutControlGroupForeignLegalEntity)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemFOrgFullName)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemFOrgKPP)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemFAddress)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemFOrgINN)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemFEmail)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutControlGroupIndividualEntrepreneur)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemSearchIp)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemFamilyName)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemFirstName)).EndInit();
@@ -811,6 +802,15 @@
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemPostAddress)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemEmailIp)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemGeneral)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutControlGroupEntity)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemSearch)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemOrgFullName)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemOrgOGRN)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemOrgKPP)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemOrgINN)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemAddress)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemEmail)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemTypeOrg)).EndInit();
             this.ResumeLayout(false);
 
         }
