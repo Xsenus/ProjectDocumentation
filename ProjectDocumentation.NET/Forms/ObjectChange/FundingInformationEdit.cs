@@ -26,7 +26,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
             InitializeComponent();
         }
 
-        public FundingInformationEdit(tFinance obj) : this() 
+        public FundingInformationEdit(tFinance obj) : this()
         {
             Finance = obj;
         }
@@ -80,7 +80,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                 txtFEmail.EditValue = tForeignOrganization.Email;
                 btnFAddress.EditValue = tForeignOrganization.Address;
             }
-            else if(Finance.FinanceOwner?.Item is tOrganization tOrganization)
+            else if (Finance.FinanceOwner?.Item is tOrganization tOrganization)
             {
                 radioGroupTypeOrganization.SelectedIndex = (int)TypeOrganization.Entity;
                 btnSearch.EditValue = tOrganization.OrgINN;
@@ -299,7 +299,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
 
                                 try
                                 {
-                                    var region = ConclusionEdit.GetEnumByAttributeValue<tRegionsRF>(addressData.region_kladr_id?.Replace("0", ""));
+                                    var region = ConclusionEdit.GetEnumByAttributeValue<tRegionsRF>(addressData.region_kladr_id?.Replace("0", string.Empty));
                                     address.Region = region;
                                 }
                                 catch (Exception)
@@ -311,7 +311,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                                 }
 
                                 btnAddress.EditValue = address;
-                            }                            
+                            }
                         }
                     }
                     else
@@ -371,7 +371,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
 
                             try
                             {
-                                var region = ConclusionEdit.GetEnumByAttributeValue<tRegionsRF>(addressData.region_kladr_id?.Replace("0", ""));
+                                var region = ConclusionEdit.GetEnumByAttributeValue<tRegionsRF>(addressData.region_kladr_id?.Replace("0", string.Empty));
                                 address.Region = region;
                             }
                             catch (Exception)

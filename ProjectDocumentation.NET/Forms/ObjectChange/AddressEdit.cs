@@ -60,7 +60,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                 txtBuilding.EditValue = Address.Building;
                 txtRoom.EditValue = Address.Room;
                 txtNote.EditValue = Address.Note;
-            }            
+            }
         }
 
         private void btnSave_Click(object sender, EventArgs e)
@@ -85,7 +85,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                     ex.Message,
                     "Информационное сообщение",
                     MessageBoxButtons.OK,
-                    MessageBoxIcon.Error); 
+                    MessageBoxIcon.Error);
                 return;
             }
 

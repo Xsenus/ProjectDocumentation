@@ -713,7 +713,7 @@ namespace Core.NET.AutoModels
             else
             {
                 result = Note;
-            }            
+            }
 
             return result ?? "Не задан";
         }

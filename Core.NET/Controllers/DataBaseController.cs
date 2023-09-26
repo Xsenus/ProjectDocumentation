@@ -7,7 +7,7 @@ namespace Core.NET.Controllers
 {
     public static class DataBaseController
     {
-        private static Session _session  => SessionController.GetSession();
+        private static Session _session => SessionController.GetSession();
 
         public static async Task FillingDataBaseAsync()
         {
@@ -39,17 +39,17 @@ namespace Core.NET.Controllers
 
             if (collection.Where(w => w.GeneralizedDictionary == GeneralizedDictionary.ExaminationForm).Count() == 0)
             {
-                await _session.SaveAsync(new GeneralizedDictionaryXPO(_session) 
+                await _session.SaveAsync(new GeneralizedDictionaryXPO(_session)
                 {
                     GeneralizedDictionary = GeneralizedDictionary.ExaminationForm,
-                    Value = "1", 
-                    Name = "Государственная" 
+                    Value = "1",
+                    Name = "Государственная"
                 });
 
-                await _session.SaveAsync(new GeneralizedDictionaryXPO(_session) 
+                await _session.SaveAsync(new GeneralizedDictionaryXPO(_session)
                 {
                     GeneralizedDictionary = GeneralizedDictionary.ExaminationForm,
-                    Value = "2", 
+                    Value = "2",
                     Name = "Негосударственная"
                 });
             }
@@ -130,8 +130,8 @@ namespace Core.NET.Controllers
                     GeneralizedDictionary = GeneralizedDictionary.ConstructionType,
                     Value = "4",
                     Name = "Снос"
-                }); 
-                
+                });
+
                 await _session.SaveAsync(new GeneralizedDictionaryXPO(_session)
                 {
                     GeneralizedDictionary = GeneralizedDictionary.ConstructionType,

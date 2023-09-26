@@ -25,7 +25,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
             InitializeComponent();
         }
 
-        public DesignerEdit(tDesigner obj) : this() 
+        public DesignerEdit(tDesigner obj) : this()
         {
             Designer = obj;
         }
@@ -45,7 +45,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
             person.Enabled = false;
             radioGroupTypeOrganization.Properties.Items.Remove(person);
 
-            var collection = await new XPQuery<GeneralizedDictionaryXPO>(_session).ToListAsync();            
+            var collection = await new XPQuery<GeneralizedDictionaryXPO>(_session).ToListAsync();
         }
 
         private async void ObjPartEdit_Load(object sender, EventArgs e)
@@ -75,7 +75,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                 txtFEmail.EditValue = tForeignOrganization.Email;
                 btnFAddress.EditValue = tForeignOrganization.Address;
             }
-            else if(Designer?.Item is tOrganization tOrganization)
+            else if (Designer?.Item is tOrganization tOrganization)
             {
                 radioGroupTypeOrganization.SelectedIndex = (int)TypeOrganization.Entity;
                 btnSearch.EditValue = tOrganization.OrgINN;
@@ -292,7 +292,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
 
                                 try
                                 {
-                                    var region = ConclusionEdit.GetEnumByAttributeValue<tRegionsRF>(addressData.region_kladr_id?.Replace("0", ""));
+                                    var region = ConclusionEdit.GetEnumByAttributeValue<tRegionsRF>(addressData.region_kladr_id?.Replace("0", string.Empty));
                                     address.Region = region;
                                 }
                                 catch (Exception)
@@ -304,7 +304,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                                 }
 
                                 btnAddress.EditValue = address;
-                            }                            
+                            }
                         }
                     }
                     else
@@ -364,7 +364,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
 
                             try
                             {
-                                var region = ConclusionEdit.GetEnumByAttributeValue<tRegionsRF>(addressData.region_kladr_id?.Replace("0", ""));
+                                var region = ConclusionEdit.GetEnumByAttributeValue<tRegionsRF>(addressData.region_kladr_id?.Replace("0", string.Empty));
                                 address.Region = region;
                             }
                             catch (Exception)
@@ -427,7 +427,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
 
                             try
                             {
-                                var region = ConclusionEdit.GetEnumByAttributeValue<tRegionsRF>(addressData.region_kladr_id?.Replace("0", ""));
+                                var region = ConclusionEdit.GetEnumByAttributeValue<tRegionsRF>(addressData.region_kladr_id?.Replace("0", string.Empty));
                                 postAddress.Region = region;
                             }
                             catch (Exception)
@@ -486,7 +486,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
 
                                 try
                                 {
-                                    var region = ConclusionEdit.GetEnumByAttributeValue<tRegionsRF>(addressData.region_kladr_id?.Replace("0", ""));
+                                    var region = ConclusionEdit.GetEnumByAttributeValue<tRegionsRF>(addressData.region_kladr_id?.Replace("0", string.Empty));
                                     postAddress.Region = region;
                                 }
                                 catch (Exception)

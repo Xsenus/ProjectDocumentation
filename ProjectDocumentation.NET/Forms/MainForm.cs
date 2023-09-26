@@ -259,7 +259,7 @@ namespace ProjectDocumentation.NET.Forms
             {
                 var xml = conclusionXPO.GetObj();
                 var conclusion = ConclusionController.GetConclusionByString(xml);
-                var form = new ConclusionBaseSettingEdit(conclusion.ExpertOrganization, conclusion.Approver); 
+                var form = new ConclusionBaseSettingEdit(conclusion.ExpertOrganization, conclusion.Approver);
                 form.ShowDialog();
 
                 if (form.IsSave)

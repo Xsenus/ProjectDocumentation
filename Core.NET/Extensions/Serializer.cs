@@ -1,7 +1,6 @@
 ﻿using System.IO;
 using System.Text;
 using System.Xml.Serialization;
-using static DevExpress.Xpo.Helpers.AssociatedCollectionCriteriaHelper;
 
 namespace Core.NET.Extensions
 {

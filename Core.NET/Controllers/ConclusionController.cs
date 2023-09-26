@@ -35,7 +35,7 @@ namespace Core.NET.Controllers
         private static Guid? GetGuidByFile(string path)
         {
             var fileInfo = new FileInfo(path);
-            var splits = fileInfo.Name.Replace(fileInfo.Extension, "").Split('_');
+            var splits = fileInfo.Name.Replace(fileInfo.Extension, string.Empty).Split('_');
             foreach (var item in splits)
             {
                 if (Guid.TryParse(item, out Guid result))

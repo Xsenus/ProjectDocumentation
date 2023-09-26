@@ -195,7 +195,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                     gridFinanceFinanceSize.Visible = true;
 
                     gridFinanceFinanceSize.DisplayFormat.FormatType = FormatType.Numeric;
-                    gridFinanceFinanceSize.DisplayFormat.FormatString = "n5";                    
+                    gridFinanceFinanceSize.DisplayFormat.FormatString = "n5";
                 }
                 if (gridViewFinances.Columns[nameof(FinanceObj.BudgetType)] is GridColumn gridFinanceBudgetType)
                 {
@@ -344,7 +344,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
             {
                 control.Focus();
             }
-            
+
             throw new Exception(message ?? "Не заполнен один из параметров.");
         }
 
@@ -469,7 +469,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                         }
                     }
                     Conclusion.Object.TEI = _tTEIs.ToArray();
-                }                
+                }
                 if (_tObjectParts.Count > 0)
                 {
                     Conclusion.Object.ObjectPart = _tObjectParts.ToArray();
@@ -672,7 +672,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                 {
                     comboBoxEdit.EditValue = null;
                 }
-            }            
+            }
         }
 
         private void barBtnCadastralNumberAdd_ItemClick(object sender, ItemClickEventArgs e)
@@ -772,7 +772,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
 
                             try
                             {
-                                var region = GetEnumByAttributeValue<tRegionsRF>(addressData.region_kladr_id?.Replace("0", ""));
+                                var region = GetEnumByAttributeValue<tRegionsRF>(addressData.region_kladr_id?.Replace("0", string.Empty));
                                 address.Region = region;
                             }
                             catch (Exception)
@@ -787,7 +787,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                         }
                     }
                 }
-            }            
+            }
         }
 
         private void gridViewTEI_PopupMenuShowing(object sender, PopupMenuShowingEventArgs e)
@@ -892,7 +892,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
         {
             if (gridViewFinances.GetRow(gridViewFinances.FocusedRowHandle) is FinanceObj obj)
             {
-                var form = new FundingInformationEdit(obj.tFinance); 
+                var form = new FundingInformationEdit(obj.tFinance);
                 form.ShowDialog();
                 if (form.IsSave)
                 {
@@ -973,7 +973,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                         _tDesigners.Remove(tDesigner);
                         gridControlDesigners.DataSource = PersonObjController.GetPersonObj(_tDesigners?.Select(s => s.Item)?.ToArray());
                         gridControlDesigners.RefreshDataSource();
-                    }                    
+                    }
                 }
             }
         }

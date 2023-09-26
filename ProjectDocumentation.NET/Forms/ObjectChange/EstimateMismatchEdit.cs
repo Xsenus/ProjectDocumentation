@@ -1,6 +1,5 @@
 ﻿using Core.NET.AutoModels;
 using Core.NET.Controllers;
-using Core.NET.Extensions;
 using Core.NET.Models.XPO;
 using DevExpress.Xpo;
 using DevExpress.XtraEditors;
@@ -44,7 +43,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
 
                 //var expertTypeValue = EstimateMismatch.ExpertType.GetEnumXmlAttributeValue();
                 //cmbExpertType.EditValue = collection.FirstOrDefault(f => f.Value == expertTypeValue?.ToString());
-            }            
+            }
         }
 
         private void btnSave_Click(object sender, EventArgs e)

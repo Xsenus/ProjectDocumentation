@@ -41,10 +41,10 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                 txtExpertCertificate.EditValue = Expert.ExpertCertificate;
                 dateExpertCertificateBeginDate.EditValue = Expert.ExpertCertificateBeginDate;
                 dateExpertCertificateEndDate.EditValue = Expert.ExpertCertificateEndDate;
-                
+
                 var expertTypeValue = Expert.ExpertType.GetEnumXmlAttributeValue();
                 cmbExpertType.EditValue = collection.FirstOrDefault(f => f.Value == expertTypeValue?.ToString());
-            }            
+            }
         }
 
         private void btnSave_Click(object sender, EventArgs e)

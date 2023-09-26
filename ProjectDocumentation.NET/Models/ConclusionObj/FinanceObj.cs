@@ -11,7 +11,7 @@ namespace ProjectDocumentation.NET.Models.ConclusionObj
     {
         public static IEnumerable<FinanceObj> GetFinanceObj(ICollection<tFinance> collection)
         {
-            foreach (var obj in collection) 
+            foreach (var obj in collection)
             {
                 var result = new FinanceObj(obj);
                 result.SetEnumObj();
@@ -57,7 +57,7 @@ namespace ProjectDocumentation.NET.Models.ConclusionObj
                 }
 
                 FinanceSize = tFinance.FinanceSize.ToString("n5");
-            }            
+            }
         }
 
         public override string ToString()
