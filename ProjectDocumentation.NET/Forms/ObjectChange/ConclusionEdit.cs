@@ -6,10 +6,12 @@ using Core.NET.Models.XPO;
 using DevExpress.Utils;
 using DevExpress.Xpo;
 using DevExpress.XtraBars;
+using DevExpress.XtraBars.Customization;
 using DevExpress.XtraEditors;
 using DevExpress.XtraEditors.Controls;
 using DevExpress.XtraGrid.Columns;
 using DevExpress.XtraGrid.Views.Grid;
+using DevExpress.XtraLayout.Utils;
 using ProjectDocumentation.NET.Models.ConclusionObj;
 using System;
 using System.Collections.Generic;
@@ -100,6 +102,10 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                 .Where(w => w.GeneralizedDictionary == GeneralizedDictionary.GeologicalConditions).ToArray());
             checkCmbSnowDistrict.Properties.Items.AddRange(collection
                 .Where(w => w.GeneralizedDictionary == GeneralizedDictionary.SnowDistrict).ToArray());
+            #endregion
+
+            #region Page II_5
+            radioGroupConclusionNumber.Properties.Items.AddEnum(typeof(ItemChoiceType));
             #endregion
         }
 
@@ -230,6 +236,31 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                 {
                     gridPersonObjName.Caption = "Наименование";
                     gridPersonObjName.Visible = true;
+                }
+                #endregion
+
+                #region Page II_5
+                var eEPDUse = Conclusion.EEPDUse?.FirstOrDefault();
+                if (eEPDUse != null)
+                {
+                    var number = eEPDUse.EEPDNumber;
+                    if (number != null)
+                    {
+                        checkEEPDUse.EditValue = true;
+                        switch (number.ItemElementName)
+                        {
+                            case ItemChoiceType.EGRZ:
+                                radioGroupConclusionNumber.SelectedIndex = (int)ItemChoiceType.EGRZ;
+                                break;
+
+                            case ItemChoiceType.noEGRZ:
+                                radioGroupConclusionNumber.SelectedIndex = (int)ItemChoiceType.noEGRZ;
+                                break;
+                        }
+                        txtEEPDNumber.EditValue = number.Item;
+                        dateEEPDDate.EditValue = eEPDUse.EEPDDate;
+                        memoEEPDNote.EditValue = eEPDUse.EEPDNote;
+                    }
                 }
                 #endregion
 
@@ -499,6 +530,46 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                 {
                     Conclusion.Designer = _tDesigners.ToArray();
                 }
+                #endregion
+
+                #region Page II_5
+
+                //var eEPDUse = Conclusion.EEPDUse?.FirstOrDefault();
+                //if (eEPDUse != null)
+                //{
+                //    var number = eEPDUse.EEPDNumber;
+                //    if (number != null)
+                //    {
+                //        checkEEPDUse.EditValue = true;
+                //        switch (number.ItemElementName)
+                //        {
+                //            case ItemChoiceType.EGRZ:
+                //                radioGroupConclusionNumber.SelectedIndex = (int)ItemChoiceType.EGRZ;
+                //                break;
+
+                //            case ItemChoiceType.noEGRZ:
+                //                radioGroupConclusionNumber.SelectedIndex = (int)ItemChoiceType.noEGRZ;
+                //                break;
+                //        }
+                //        txtEEPDNumber.EditValue = number.Item;
+                //        dateEEPDDate.EditValue = eEPDUse.EEPDDate;
+                //        memoEEPDNote.EditValue = eEPDUse.EEPDNote;
+                //    }
+                //}
+
+                if (checkEEPDUse.Checked)
+                {
+                    var eEPDUse = new tEEPDUse();
+                    eEPDUse.EEPDDate = dateEEPDDate.DateTime.Date;
+                    eEPDUse.EEPDNote = GetStringValue(memoEEPDNote.EditValue, memoEEPDNote, "Заполните поле сведения о разделах представленной на экспертизу проектной документации");
+                    eEPDUse.EEPDNumber = new tConclusionNumber();
+                    var number = new tConclusionNumber();
+                    number.ItemElementName = (ItemChoiceType)radioGroupConclusionNumber.SelectedIndex;
+                    number.Item = GetStringValue(txtEEPDNumber.EditValue, txtEEPDNumber, "Заполните поле номер заключения экспертизы *"); ;
+                    eEPDUse.EEPDNumber = number;
+                    Conclusion.EEPDUse = new tEEPDUse[] { eEPDUse };
+                }
+
                 #endregion
 
             }
@@ -974,6 +1045,48 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                         gridControlDesigners.DataSource = PersonObjController.GetPersonObj(_tDesigners?.Select(s => s.Item)?.ToArray());
                         gridControlDesigners.RefreshDataSource();
                     }
+                }
+            }
+        }
+
+        private void checkEEPDUse_CheckedChanged(object sender, EventArgs e)
+        {
+            if (sender is CheckEdit checkEdit)
+            {
+                if (checkEdit.Checked)
+                {
+                    radioGroupConclusionNumber.SelectedIndex = 0;
+                    layoutControlItemEEPDType.Visibility = LayoutVisibility.Always;
+                    layoutControlItemEEPDNumber.Visibility = LayoutVisibility.Always;
+                    layoutControlItemEEPDDate.Visibility = LayoutVisibility.Always;
+                    layoutControlItemEEPDNote.Visibility = LayoutVisibility.Always;
+                }
+                else
+                {
+                    radioGroupConclusionNumber.SelectedIndex = -1;
+                    layoutControlItemEEPDType.Visibility = LayoutVisibility.Never;
+                    layoutControlItemEEPDNumber.Visibility = LayoutVisibility.Never;
+                    layoutControlItemEEPDDate.Visibility = LayoutVisibility.Never;
+                    layoutControlItemEEPDNote.Visibility = LayoutVisibility.Never;
+                }
+            }
+        }
+
+        private void radioGroupConclusionNumber_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (sender is RadioGroup radioGroup)
+            {
+                switch (radioGroup.SelectedIndex)
+                {
+                    case (int)ItemChoiceType.EGRZ:
+                        txtEEPDNumber.Properties.MaskSettings.Set("MaskManagerType", typeof(DevExpress.Data.Mask.RegularMaskManager));
+                        txtEEPDNumber.Properties.MaskSettings.Set("MaskManagerSignature", "ignoreMaskBlank=True");
+                        txtEEPDNumber.Properties.MaskSettings.Set("mask", "[0-9]{2}-[1-2]{1}-[1-2]{1}-[1-3]{1}-[0-9]{6}-[0-9]{4}");
+                        break;
+                    case (int)ItemChoiceType.noEGRZ:
+                        txtEEPDNumber.Properties.ResetMaskSettings();
+                        txtEEPDNumber.Properties.Mask.MaskType = DevExpress.XtraEditors.Mask.MaskType.None;
+                        break;
                 }
             }
         }

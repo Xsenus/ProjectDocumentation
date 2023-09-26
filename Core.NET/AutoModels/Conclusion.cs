@@ -1,4 +1,5 @@
 ﻿using Core.NET.Extensions;
+using System.ComponentModel;
 
 namespace Core.NET.AutoModels
 {
@@ -2702,11 +2703,10 @@ namespace Core.NET.AutoModels
     [System.Xml.Serialization.XmlTypeAttribute(IncludeInSchema = false)]
     public enum ItemChoiceType
     {
-
-        /// <remarks/>
+        [Description("В формате ЕГРЗ")]
         EGRZ,
 
-        /// <remarks/>
+        [Description("В произвольном формате")]
         noEGRZ,
     }
 
