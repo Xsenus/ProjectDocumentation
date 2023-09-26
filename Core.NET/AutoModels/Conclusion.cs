@@ -696,7 +696,36 @@ namespace Core.NET.AutoModels
 
         public override string ToString()
         {
-            return $"{Country} {Region.GetEnumXmlAttributeValue()} {City} {Street}";
+            var result = default(string);
+
+            if (string.IsNullOrWhiteSpace(Note))
+            {
+                result += CheckObjValue(Country);
+                result += CheckObjValue(Region.GetEnumXmlAttributeValue()?.ToString());
+                result += CheckObjValue(District);
+                result += CheckObjValue(City);
+                result += CheckObjValue(Settlement);
+                result += CheckObjValue(Street);
+                result += CheckObjValue(Building);
+                result += CheckObjValue(Room);
+                result = result?.Replace("  ", " ")?.Trim();
+            }
+            else
+            {
+                result = Note;
+            }            
+
+            return result ?? "Не задан";
+        }
+
+        private string CheckObjValue(string obj)
+        {
+            if (!string.IsNullOrWhiteSpace(obj))
+            {
+                return $"{obj} ";
+            }
+
+            return default;
         }
     }
 
@@ -3096,6 +3125,42 @@ namespace Core.NET.AutoModels
             {
                 this.noteField = value;
             }
+        }
+
+
+        public override string ToString()
+        {
+            var result = default(string);
+
+            if (string.IsNullOrWhiteSpace(Note))
+            {
+                result += CheckObjValue(PostIndex);
+                result += CheckObjValue(Country);
+                result += CheckObjValue(Region.GetEnumXmlAttributeValue()?.ToString());
+                result += CheckObjValue(District);
+                result += CheckObjValue(City);
+                result += CheckObjValue(Settlement);
+                result += CheckObjValue(Street);
+                result += CheckObjValue(Building);
+                result += CheckObjValue(Room);
+                result = result?.Replace("  ", " ")?.Trim();
+            }
+            else
+            {
+                result = Note;
+            }
+
+            return result ?? "Не задан";
+        }
+
+        private string CheckObjValue(string obj)
+        {
+            if (!string.IsNullOrWhiteSpace(Country))
+            {
+                return $"{obj} ";
+            }
+
+            return default;
         }
     }
 

@@ -105,6 +105,12 @@
     <Compile Include="Forms\MainForm.Designer.cs">
       <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\ObjectChange\PostAddressEdit.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\ObjectChange\PostAddressEdit.Designer.cs">
+      <DependentUpon>PostAddressEdit.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\ObjectChange\ConclusionBaseSettingEdit.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -116,12 +122,6 @@
     </Compile>
     <Compile Include="Forms\ObjectChange\ConclusionEdit.Designer.cs">
       <DependentUpon>ConclusionEdit.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\ObjectChange\ConclusionEdit1.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\ObjectChange\ConclusionEdit1.Designer.cs">
-      <DependentUpon>ConclusionEdit1.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\ObjectChange\EstimateMismatchEdit.cs">
       <SubType>Form</SubType>
@@ -140,6 +140,12 @@
     </Compile>
     <Compile Include="Forms\ObjectChange\ExpretEdit.Designer.cs">
       <DependentUpon>ExpretEdit.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\ObjectChange\DesignerEdit.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\ObjectChange\DesignerEdit.Designer.cs">
+      <DependentUpon>DesignerEdit.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\ObjectChange\FundingInformationEdit.cs">
       <SubType>Form</SubType>
@@ -160,7 +166,7 @@
       <DependentUpon>ViewForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Models\ConclusionObj\FinanceObj.cs" />
-    <Compile Include="Models\ConclusionObj\ProjectDocumentsDeveloperObj.cs" />
+    <Compile Include="Models\ConclusionObj\PersonObj.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Forms\FileLoad.resx">
@@ -169,14 +175,14 @@
     <EmbeddedResource Include="Forms\MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Forms\ObjectChange\PostAddressEdit.resx">
+      <DependentUpon>PostAddressEdit.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\ObjectChange\ConclusionBaseSettingEdit.resx">
       <DependentUpon>ConclusionBaseSettingEdit.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\ObjectChange\ConclusionEdit.resx">
       <DependentUpon>ConclusionEdit.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\ObjectChange\ConclusionEdit1.resx">
-      <DependentUpon>ConclusionEdit1.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\ObjectChange\EstimateMismatchEdit.resx">
       <DependentUpon>EstimateMismatchEdit.cs</DependentUpon>
@@ -186,6 +192,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\ObjectChange\ExpretEdit.resx">
       <DependentUpon>ExpretEdit.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\ObjectChange\DesignerEdit.resx">
+      <DependentUpon>DesignerEdit.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\ObjectChange\FundingInformationEdit.resx">
       <DependentUpon>FundingInformationEdit.cs</DependentUpon>

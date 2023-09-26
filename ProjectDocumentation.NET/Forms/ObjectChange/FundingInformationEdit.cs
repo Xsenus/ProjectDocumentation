@@ -8,7 +8,6 @@ using DevExpress.XtraEditors;
 using DevExpress.XtraEditors.Controls;
 using DevExpress.XtraLayout.Utils;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -17,7 +16,6 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
 {
     public partial class FundingInformationEdit : XtraForm
     {
-        private List<tTEI> _tTEIs;
         private Session _session => SessionController.GetSession();
 
         public bool IsSave { get; private set; }
@@ -290,7 +288,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                                 var address = new tAddress()
                                 {
                                     Country = addressData.country,
-                                    District = addressData.country,
+                                    District = addressData.city_district,
                                     City = addressData.city,
                                     Settlement = addressData.settlement,
                                     Street = addressData.street,
@@ -362,7 +360,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                             var address = new tAddress()
                             {
                                 Country = addressData.country,
-                                District = addressData.country,
+                                District = addressData.city_district,
                                 City = addressData.city,
                                 Settlement = addressData.settlement,
                                 Street = addressData.street,

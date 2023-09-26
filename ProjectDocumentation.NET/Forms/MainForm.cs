@@ -30,12 +30,16 @@ namespace ProjectDocumentation.NET.Forms
             {
                 if (gridView.GetRow(gridView.FocusedRowHandle) is XmlObjXPO)
                 {
+                    barBtnView.Enabled = true;
+                    barBtnBaseSetting.Enabled = true;
                     barBtnEdit.Enabled = true;
                     barBtnDel.Enabled = true;
                     barBtnFill.Enabled = true;
                 }
                 else
                 {
+                    barBtnView.Enabled = false;
+                    barBtnBaseSetting.Enabled = false;
                     barBtnEdit.Enabled = false;
                     barBtnDel.Enabled = false;
                     barBtnFill.Enabled = false;

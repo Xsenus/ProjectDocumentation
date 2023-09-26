@@ -133,7 +133,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                                 var address = new tAddress()
                                 {
                                     Country = addressData.country,
-                                    District = addressData.country,
+                                    District = addressData.city_district,
                                     City = addressData.city,
                                     Settlement = addressData.settlement,
                                     Street = addressData.street,
@@ -209,7 +209,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                             var address = new tAddress()
                             {
                                 Country = addressData.country,
-                                District = addressData.country,
+                                District = addressData.city_district,
                                 City = addressData.city,
                                 Settlement = addressData.settlement,
                                 Street = addressData.street,

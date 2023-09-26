@@ -37,6 +37,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
         private List<tTEI> _tTEIs = new List<tTEI>();
         private List<tObjectPart> _tObjectParts = new List<tObjectPart>();
         private List<tFinance> _tFinances = new List<tFinance>();
+        private List<tDesigner> _tDesigners = new List<tDesigner>();
         private List<object> _tProjectDocumentsDeveloper = new List<object>();
 
 
@@ -219,49 +220,47 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                 #endregion
 
                 #region Page II_4
-                _tProjectDocumentsDeveloper = Conclusion?.Items?.ToList() ?? new List<object>();
-                //gridControlProjectDocumentsDeveloper.DataSource = _tProjectDocumentsDeveloper;
-                gridControlProjectDocumentsDeveloper.DataSource = ProjectDocumentsDeveloperObjController.GetProjectDocumentsDeveloperObj(_tProjectDocumentsDeveloper);
-                foreach (GridColumn column in gridViewProjectDocumentsDeveloper.Columns)
+                _tDesigners = Conclusion.Designer?.ToList() ?? new List<tDesigner>();
+                gridControlDesigners.DataSource = PersonObjController.GetPersonObjByDesigner(_tDesigners)?.ToArray();
+                foreach (GridColumn column in gridViewDesigners.Columns)
                 {
                     column.Visible = false;
                 }
-                if (gridViewProjectDocumentsDeveloper.Columns[nameof(ProjectDocumentsDeveloperObj.Name)] is GridColumn gridProjectDocumentsDeveloperObjName)
+                if (gridViewDesigners.Columns[nameof(PersonObj.Name)] is GridColumn gridPersonObjName)
                 {
-                    gridProjectDocumentsDeveloperObjName.Caption = "Наименование";
-                    gridProjectDocumentsDeveloperObjName.Visible = true;
+                    gridPersonObjName.Caption = "Наименование";
+                    gridPersonObjName.Visible = true;
                 }
                 #endregion
 
-                //memoEstimateNorms.EditValue = Conclusion.ExpertEstimate?.EstimateNorms;
-                //txtEstimatedCost.Text = Conclusion.EstimatedCost?.Currency;
+                memoEstimateNorms.EditValue = Conclusion.ExpertEstimate?.EstimateNorms;
+                txtEstimatedCost.Text = Conclusion.EstimatedCost?.Currency;
                 //txtEstimatedCompleteCostBefore.Text
                 //txtEstimatedCompleteCostPost.Text
 
 
-                //memoObjectName.EditValue = Conclusion.Object?.Name;
-                //cmbObjectType.SelectedIndex = (int?)Conclusion?.Object.Type ?? -1;
-                //cmbFunctionsClass.EditValue = Conclusion.Object?.Item;
-                //cmbObjectAddress.EditValue = Conclusion.Object?.Address?.FirstOrDefault();
+                memoObjectName.EditValue = Conclusion.Object?.Name;
+                cmbObjectType.SelectedIndex = (int?)Conclusion?.Object.Type ?? -1;
+                cmbFunctionsClass.EditValue = Conclusion.Object?.Item;
+                cmbObjectAddress.EditValue = Conclusion.Object?.Address?.FirstOrDefault();
 
-                //memoEngineeringSurveySummary.EditValue = Conclusion.Summary?.EngineeringSurveySummary;
-                //memoEngineeringSurveySummaryDate.EditValue = Conclusion.Summary?.EngineeringSurveySummaryDate;
-                //memoProjectDocumentsSummary.EditValue = Conclusion.Summary?.ProjectDocumentsSummary;
-                //memoProjectDocumentsSummaryDate.EditValue = Conclusion.Summary?.ProjectDocumentsSummaryDate;
-                //memoEstimateNormsAndWorksSummary.EditValue = Conclusion.Summary?.EstimateNormsAndWorksSummary;
-                //memoEstimateSummary.EditValue = Conclusion.Summary?.EstimateSummary;
-                //memoExaminationSummary.EditValue = Conclusion.Summary?.ExaminationSummary;
+                memoEngineeringSurveySummary.EditValue = Conclusion.Summary?.EngineeringSurveySummary;
+                memoEngineeringSurveySummaryDate.EditValue = Conclusion.Summary?.EngineeringSurveySummaryDate;
+                memoProjectDocumentsSummary.EditValue = Conclusion.Summary?.ProjectDocumentsSummary;
+                memoProjectDocumentsSummaryDate.EditValue = Conclusion.Summary?.ProjectDocumentsSummaryDate;
+                memoEstimateNormsAndWorksSummary.EditValue = Conclusion.Summary?.EstimateNormsAndWorksSummary;
+                memoEstimateSummary.EditValue = Conclusion.Summary?.EstimateSummary;
+                memoExaminationSummary.EditValue = Conclusion.Summary?.ExaminationSummary;
 
+                if (Conclusion.Experts != null)
+                {
+                    _experts.AddRange(Conclusion.Experts);
+                }
 
-                //if (Conclusion.Experts != null)
-                //{
-                //    _experts.AddRange(Conclusion.Experts);
-                //}
-
-                //if (Conclusion.CadastralNumber?.Length > 0)
-                //{
-                //    _cadastralNumbers.AddRange(Conclusion.CadastralNumber?.Select(s => new Wrapper() { Number = s }));
-                //}
+                if (Conclusion.CadastralNumber?.Length > 0)
+                {
+                    _cadastralNumbers.AddRange(Conclusion.CadastralNumber?.Select(s => new Wrapper() { Number = s }));
+                }
             }
 
             gridControlExpert.DataSource = _experts;
@@ -495,40 +494,51 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                 Conclusion.ClimateConditionsNote = GetStringValue(memoClimateConditionsNote.EditValue, memoClimateConditionsNote, "Заполните поле дополнительных сведений о природных и техногенных условиях");
                 #endregion
 
+                #region Page II_4
+                if (_tDesigners.Count > 0)
+                {
+                    Conclusion.Designer = _tDesigners.ToArray();
+                }
+                #endregion
+
             }
             catch (Exception ex)
             {
-                XtraMessageBox.Show(ex.Message, "Информационное сообщение", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                XtraMessageBox.Show(
+                    ex.Message,
+                    "Информационное сообщение",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
                 return;
             }
-            
-            //Conclusion.ExpertEstimate = new tExpertEstimate();
-            //Conclusion.ExpertEstimate.EstimateNorms = memoEstimateNorms.Text;
-            //Conclusion.EstimatedCost = new tEstimatedCost();
-            //Conclusion.EstimatedCost.Currency = txtEstimatedCost.Text;
-            ////txtEstimatedCompleteCostBefore.Text
-            ////txtEstimatedCompleteCostPost.Text
 
-           
-            
-            //Conclusion.Summary = new tSummary();
-            //Conclusion.Summary.EngineeringSurveySummary = memoEngineeringSurveySummary.Text;
-            //Conclusion.Summary.EngineeringSurveySummaryDate = memoEngineeringSurveySummaryDate.Text;
-            //Conclusion.Summary.ProjectDocumentsSummary = memoProjectDocumentsSummary.Text;
-            //Conclusion.Summary.ProjectDocumentsSummaryDate = memoProjectDocumentsSummaryDate.Text;
-            //Conclusion.Summary.EstimateNormsAndWorksSummary = memoEstimateNormsAndWorksSummary.Text;
-            //Conclusion.Summary.EstimateSummary = memoEstimateSummary.Text;
-            //Conclusion.Summary.ExaminationSummary = memoExaminationSummary.Text;
+            Conclusion.ExpertEstimate = new tExpertEstimate();
+            Conclusion.ExpertEstimate.EstimateNorms = memoEstimateNorms.Text;
+            Conclusion.EstimatedCost = new tEstimatedCost();
+            Conclusion.EstimatedCost.Currency = txtEstimatedCost.Text;
+            //txtEstimatedCompleteCostBefore.Text
+            //txtEstimatedCompleteCostPost.Text
 
-            //if (_experts.Count > 0)
-            //{
-            //    Conclusion.Experts = _experts.ToArray();
-            //}
 
-            //if (_cadastralNumbers.Count() > 0)
-            //{
-            //    Conclusion.CadastralNumber = _cadastralNumbers?.Select(s => s.Number).ToArray();
-            //}
+
+            Conclusion.Summary = new tSummary();
+            Conclusion.Summary.EngineeringSurveySummary = memoEngineeringSurveySummary.Text;
+            Conclusion.Summary.EngineeringSurveySummaryDate = memoEngineeringSurveySummaryDate.Text;
+            Conclusion.Summary.ProjectDocumentsSummary = memoProjectDocumentsSummary.Text;
+            Conclusion.Summary.ProjectDocumentsSummaryDate = memoProjectDocumentsSummaryDate.Text;
+            Conclusion.Summary.EstimateNormsAndWorksSummary = memoEstimateNormsAndWorksSummary.Text;
+            Conclusion.Summary.EstimateSummary = memoEstimateSummary.Text;
+            Conclusion.Summary.ExaminationSummary = memoExaminationSummary.Text;
+
+            if (_experts.Count > 0)
+            {
+                Conclusion.Experts = _experts.ToArray();
+            }
+
+            if (_cadastralNumbers.Count() > 0)
+            {
+                Conclusion.CadastralNumber = _cadastralNumbers?.Select(s => s.Number).ToArray();
+            }
 
             IsSave = true;
             Close();
@@ -751,7 +761,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                             var address = new tAddress()
                             {
                                 Country = addressData.country,
-                                District = addressData.country,
+                                District = addressData.area,
                                 City = addressData.city,
                                 Settlement = addressData.settlement,
                                 Street = addressData.street,
@@ -912,6 +922,60 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
         private void btnCancel_Click(object sender, EventArgs e)
         {
             Close();
+        }
+
+        private void gridViewDesigners_PopupMenuShowing(object sender, PopupMenuShowingEventArgs e)
+        {
+            if (sender is GridView gridView)
+            {
+                popupMenuDesigners.ShowPopup(new Point(Cursor.Position.X, Cursor.Position.Y));
+            }
+        }
+
+        private void barBtnDesignersAdd_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            var form = new DesignerEdit();
+            form.ShowDialog();
+            if (form.IsSave)
+            {
+                _tDesigners.Add(form.Designer);
+                gridControlDesigners.DataSource = PersonObjController.GetPersonObjByDesigner(_tDesigners)?.ToArray();
+                gridControlDesigners.RefreshDataSource();
+            }
+        }
+
+        private void barBtnDesignersEdit_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            if (gridViewDesigners.GetRow(gridViewDesigners.FocusedRowHandle) is PersonObj obj)
+            {
+                var form = new DesignerEdit(obj.BaseObj);
+                form.ShowDialog();
+                if (form.IsSave)
+                {
+                    gridControlDesigners.DataSource = PersonObjController.GetPersonObjByDesigner(_tDesigners)?.ToArray();
+                    gridControlDesigners.RefreshDataSource();
+                }
+            }
+        }
+
+        private void barBtnDesignersDel_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            if (gridViewDesigners.GetRow(gridViewDesigners.FocusedRowHandle) is PersonObj obj)
+            {
+                if (XtraMessageBox.Show(
+                    "Вы действительно хотите удалить выделенный объект?",
+                    "Информационное сообщение",
+                    MessageBoxButtons.OKCancel,
+                    MessageBoxIcon.Question) == DialogResult.OK)
+                {
+                    if (obj.BaseObj is tDesigner tDesigner)
+                    {
+                        _tDesigners.Remove(tDesigner);
+                        gridControlDesigners.DataSource = PersonObjController.GetPersonObj(_tDesigners?.Select(s => s.Item)?.ToArray());
+                        gridControlDesigners.RefreshDataSource();
+                    }                    
+                }
+            }
         }
     }
 }

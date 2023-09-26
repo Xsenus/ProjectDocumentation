@@ -70,6 +70,11 @@
         /// <summary>
         /// Снеговой район.
         /// </summary>
-        SnowDistrict
+        SnowDistrict,
+
+        /// <summary>
+        /// Коды субъектов Российской Федерации.
+        /// </summary>
+        Region
     }
 }
