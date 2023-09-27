@@ -15,6 +15,7 @@ using DevExpress.XtraLayout.Utils;
 using ProjectDocumentation.NET.Models.ConclusionObj;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Drawing;
 using System.Linq;
 using System.Threading.Tasks;
@@ -26,8 +27,9 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
     {
         private Session _session => SessionController.GetSession();
 
-        private class Wrapper
+        private class CadastralNumber
         {
+            [RegExEditMask(@"\d+:\d+:\d+:\d+", AllowBlankInput = true, ShowPlaceholders = false)]
             public string Number { get; set; }
         }
 
@@ -40,12 +42,13 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
         private List<tObjectPart> _tObjectParts = new List<tObjectPart>();
         private List<tFinance> _tFinances = new List<tFinance>();
         private List<tDesigner> _tDesigners = new List<tDesigner>();
+        private List<CadastralNumber> _cadastralNumbers = new List<CadastralNumber>();
+
         private List<object> _tProjectDocumentsDeveloper = new List<object>();
 
 
         private List<tExpert> _experts = new List<tExpert>();
         private List<tMismatch> _mismatch = new List<tMismatch>();
-        private List<Wrapper> _cadastralNumbers = new List<Wrapper>();
 
         public ConclusionEdit()
         {
@@ -264,6 +267,23 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                 }
                 #endregion
 
+                #region Page II_6
+                if (Conclusion.CadastralNumber?.Length > 0)
+                {
+                    _cadastralNumbers.AddRange(Conclusion.CadastralNumber?.Select(s => new CadastralNumber() { Number = s }));
+                }
+                else
+                {
+                    _cadastralNumbers = new List<CadastralNumber>();
+                }
+                gridControlCadastralNumber.DataSource = _cadastralNumbers; 
+                if (gridViewCadastralNumber.Columns[nameof(CadastralNumber.Number)] is GridColumn gridCadastralNumber)
+                {
+                    gridCadastralNumber.Caption = "Кадастровый номер";
+                    gridCadastralNumber.Visible = true;
+                }
+                #endregion
+
                 memoEstimateNorms.EditValue = Conclusion.ExpertEstimate?.EstimateNorms;
                 txtEstimatedCost.Text = Conclusion.EstimatedCost?.Currency;
                 //txtEstimatedCompleteCostBefore.Text
@@ -287,15 +307,9 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                 {
                     _experts.AddRange(Conclusion.Experts);
                 }
-
-                if (Conclusion.CadastralNumber?.Length > 0)
-                {
-                    _cadastralNumbers.AddRange(Conclusion.CadastralNumber?.Select(s => new Wrapper() { Number = s }));
-                }
             }
 
             gridControlExpert.DataSource = _experts;
-            gridControlCadastralNumber.DataSource = _cadastralNumbers;
         }
 
         public static void SetCheckComboBoxByItems<T>(ICollection<T> collection, CheckedComboBoxEdit comboBoxEdit) where T : Enum
@@ -572,6 +586,31 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
 
                 #endregion
 
+                #region Page II_6
+                if (_cadastralNumbers?.Count() > 0)
+                {
+                    var cadastralNumbers = new List<string>();
+                    foreach (var obj in _cadastralNumbers)
+                    {
+                        if (string.IsNullOrWhiteSpace(obj.Number))
+                        {
+                            gridControlCadastralNumber.Focus();
+                            XtraMessageBox.Show(
+                                "Кадастровый номер не может быть пустым.",
+                                "Информационное сообщение",
+                                MessageBoxButtons.OK,
+                                MessageBoxIcon.Error);
+                            return;
+                        }
+                        else
+                        {
+                            cadastralNumbers.Add(obj.Number);
+                        }
+                    }
+                    Conclusion.CadastralNumber = cadastralNumbers.ToArray();
+                }
+                #endregion
+
             }
             catch (Exception ex)
             {
@@ -604,11 +643,6 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
             if (_experts.Count > 0)
             {
                 Conclusion.Experts = _experts.ToArray();
-            }
-
-            if (_cadastralNumbers.Count() > 0)
-            {
-                Conclusion.CadastralNumber = _cadastralNumbers?.Select(s => s.Number).ToArray();
             }
 
             IsSave = true;
@@ -748,13 +782,13 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
 
         private void barBtnCadastralNumberAdd_ItemClick(object sender, ItemClickEventArgs e)
         {
-            _cadastralNumbers.Add(new Wrapper());
+            _cadastralNumbers.Add(new CadastralNumber());
             gridControlCadastralNumber.RefreshDataSource();
         }
 
         private void barBtnCadastralNumberDel_ItemClick(object sender, ItemClickEventArgs e)
         {
-            if (gridViewCadastralNumber.GetRow(gridViewExpert.FocusedRowHandle) is Wrapper obj)
+            if (gridViewCadastralNumber.GetRow(gridViewExpert.FocusedRowHandle) is CadastralNumber obj)
             {
                 if (XtraMessageBox.Show(
                     "Вы действительно хотите удалить выделенный объект?",
