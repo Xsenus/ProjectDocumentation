@@ -24,6 +24,26 @@ namespace ProjectDocumentation.NET.Models.ConclusionObj
                 yield return result;
             }
         }
+
+        public static IEnumerable<PersonObj> GetPersonObjByDeclarant(ICollection<tDeclarant> collection)
+        {
+            foreach (var obj in collection)
+            {
+                var result = new PersonObj(obj);
+                result.SetObjByDeclarant();
+                yield return result;
+            }
+        }
+
+        public static IEnumerable<PersonObj> GetPersonObjByTechnicalCustomer(ICollection<tTechnicalCustomer> collection)
+        {
+            foreach (var obj in collection)
+            {
+                var result = new PersonObj(obj);
+                result.SetObjByTechnicalCustomer();
+                yield return result;
+            }
+        }
     }
 
     public class PersonObj
@@ -54,6 +74,58 @@ namespace ProjectDocumentation.NET.Models.ConclusionObj
                 else if (Obj is tOrganization tOrganization)
                 {
                     Name = tOrganization.OrgFullName;
+                }
+            }
+        }
+
+        public void SetObjByDeclarant()
+        {
+            if (Obj is tDeclarant declarant)
+            {
+                BaseObj = declarant;
+                Obj = declarant.Item;
+
+                if (Obj is tForeignOrganization tForeignOrganization)
+                {
+                    Name = tForeignOrganization.OrgFullName;
+                }
+                else if (Obj is tIP ip)
+                {
+                    Name = $"ИП {ip.FamilyName} {ip.FirstName} {ip.SecondName}";
+                }
+                else if (Obj is tOrganization tOrganization)
+                {
+                    Name = tOrganization.OrgFullName;
+                }
+                else if (Obj is tPerson person)
+                {
+                    Name = $"ФЛ {person.FamilyName} {person.FirstName} {person.SecondName}";
+                }
+            }
+        }
+
+        public void SetObjByTechnicalCustomer()
+        {
+            if (Obj is tTechnicalCustomer tTechnicalCustomer)
+            {
+                BaseObj = tTechnicalCustomer;
+                Obj = tTechnicalCustomer.Item;
+
+                if (Obj is tForeignOrganization tForeignOrganization)
+                {
+                    Name = tForeignOrganization.OrgFullName;
+                }
+                else if (Obj is tIP ip)
+                {
+                    Name = $"ИП {ip.FamilyName} {ip.FirstName} {ip.SecondName}";
+                }
+                else if (Obj is tOrganization tOrganization)
+                {
+                    Name = tOrganization.OrgFullName;
+                }
+                else if (Obj is tPerson person)
+                {
+                    Name = $"ФЛ {person.FamilyName} {person.FirstName} {person.SecondName}";
                 }
             }
         }

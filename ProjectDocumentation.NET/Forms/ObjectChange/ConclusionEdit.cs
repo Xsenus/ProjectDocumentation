@@ -4,9 +4,9 @@ using Core.NET.DaDataObj;
 using Core.NET.Extensions;
 using Core.NET.Models.XPO;
 using DevExpress.Utils;
+using DevExpress.Utils.Extensions;
 using DevExpress.Xpo;
 using DevExpress.XtraBars;
-using DevExpress.XtraBars.Customization;
 using DevExpress.XtraEditors;
 using DevExpress.XtraEditors.Controls;
 using DevExpress.XtraGrid.Columns;
@@ -43,8 +43,8 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
         private List<tFinance> _tFinances = new List<tFinance>();
         private List<tDesigner> _tDesigners = new List<tDesigner>();
         private List<CadastralNumber> _cadastralNumbers = new List<CadastralNumber>();
-
-        private List<object> _tProjectDocumentsDeveloper = new List<object>();
+        private List<tDeclarant> _tProjectDocumentsDevelopers = new List<tDeclarant>();
+        private List<tTechnicalCustomer> _tProjectDocumentsTechnicalCustomer = new List<tTechnicalCustomer>();
 
 
         private List<tExpert> _experts = new List<tExpert>();
@@ -281,6 +281,44 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                 {
                     gridCadastralNumber.Caption = "Кадастровый номер";
                     gridCadastralNumber.Visible = true;
+                }
+                #endregion
+
+                #region Page II_7
+                var projectDocumentsObjs = Conclusion.Items;
+                if (projectDocumentsObjs != null)
+                {
+                    foreach (var item in projectDocumentsObjs)
+                    {
+                        if (item is tDeclarant tDeclarant)
+                        {
+                            _tProjectDocumentsDevelopers.Add(tDeclarant);
+                        }
+                        else if (item is tTechnicalCustomer tTechnicalCustomer)
+                        {
+                            _tProjectDocumentsTechnicalCustomer.Add(tTechnicalCustomer);
+                        }
+                    }
+                }
+                gridControlProjectDocumentsDeveloper.DataSource = PersonObjController.GetPersonObjByDeclarant(_tProjectDocumentsDevelopers).ToArray();
+                foreach (GridColumn column in gridViewProjectDocumentsDeveloper.Columns)
+                {
+                    column.Visible = false;
+                }
+                if (gridViewProjectDocumentsDeveloper.Columns[nameof(PersonObj.Name)] is GridColumn gridProjectDocumentsDevelopersName)
+                {
+                    gridProjectDocumentsDevelopersName.Caption = "Наименование";
+                    gridProjectDocumentsDevelopersName.Visible = true;
+                }
+                gridControlProjectDocumentsTechnicalCustomer.DataSource = PersonObjController.GetPersonObjByTechnicalCustomer(_tProjectDocumentsTechnicalCustomer).ToArray();
+                foreach (GridColumn column in gridViewProjectDocumentsTechnicalCustomer.Columns)
+                {
+                    column.Visible = false;
+                }
+                if (gridViewProjectDocumentsTechnicalCustomer.Columns[nameof(PersonObj.Name)] is GridColumn gridProjectDocumentsTechnicalCustomerName)
+                {
+                    gridProjectDocumentsTechnicalCustomerName.Caption = "Наименование";
+                    gridProjectDocumentsTechnicalCustomerName.Visible = true;
                 }
                 #endregion
 
@@ -608,6 +646,22 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                         }
                     }
                     Conclusion.CadastralNumber = cadastralNumbers.ToArray();
+                }
+                #endregion
+
+                #region Page II_7
+                var listObj = new List<object>();
+                if (_tProjectDocumentsDevelopers?.Count() > 0)
+                {
+                    listObj.AddRange(_tProjectDocumentsDevelopers);
+                }
+                if (_tProjectDocumentsTechnicalCustomer?.Count() > 0)
+                {
+                    listObj.AddRange(_tProjectDocumentsTechnicalCustomer);
+                }
+                if (listObj.Count > 0)
+                {
+                    Conclusion.Items = listObj.ToArray();
                 }
                 #endregion
 
@@ -1121,6 +1175,114 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                         txtEEPDNumber.Properties.ResetMaskSettings();
                         txtEEPDNumber.Properties.Mask.MaskType = DevExpress.XtraEditors.Mask.MaskType.None;
                         break;
+                }
+            }
+        }
+
+        private void gridViewProjectDocumentsDeveloper_PopupMenuShowing(object sender, PopupMenuShowingEventArgs e)
+        {
+            if (sender is GridView gridView)
+            {
+                popupMenuProjectDocumentsDeveloper.ShowPopup(new Point(Cursor.Position.X, Cursor.Position.Y));
+            }
+        }
+
+        private void barBtnProjectDocumentsDeveloperAdd_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            var form = new DeclarantEdit();
+            form.ShowDialog();
+            if (form.IsSave)
+            {
+                _tProjectDocumentsDevelopers.Add(form.Declarant);
+                gridControlProjectDocumentsDeveloper.DataSource = PersonObjController.GetPersonObjByDeclarant(_tProjectDocumentsDevelopers).ToArray();
+                gridControlProjectDocumentsDeveloper.RefreshDataSource();
+            }
+        }
+
+        private void barBtnProjectDocumentsDeveloperEdit_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            if (gridViewProjectDocumentsDeveloper.GetRow(gridViewProjectDocumentsDeveloper.FocusedRowHandle) is PersonObj obj)
+            {
+                var form = new DeclarantEdit(obj.BaseObj);
+                form.ShowDialog();
+                if (form.IsSave)
+                {
+                    gridControlProjectDocumentsDeveloper.DataSource = PersonObjController.GetPersonObjByDeclarant(_tProjectDocumentsDevelopers).ToArray();
+                    gridControlProjectDocumentsDeveloper.RefreshDataSource();
+                }
+            }
+        }
+
+        private void barBtnProjectDocumentsDeveloperDel_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            if (gridViewProjectDocumentsDeveloper.GetRow(gridViewProjectDocumentsDeveloper.FocusedRowHandle) is PersonObj obj)
+            {
+                if (XtraMessageBox.Show(
+                    "Вы действительно хотите удалить выделенный объект?",
+                    "Информационное сообщение",
+                    MessageBoxButtons.OKCancel,
+                    MessageBoxIcon.Question) == DialogResult.OK)
+                {
+                    if (obj.BaseObj is tDeclarant tDesigner)
+                    {
+                        _tProjectDocumentsDevelopers.Remove(tDesigner);
+                        gridControlProjectDocumentsDeveloper.DataSource = PersonObjController.GetPersonObjByDeclarant(_tProjectDocumentsDevelopers).ToArray();
+                        gridControlProjectDocumentsDeveloper.RefreshDataSource();
+                    }
+                }
+            }
+        }
+
+        private void gridViewProjectDocumentsTechnicalCustomer_PopupMenuShowing(object sender, PopupMenuShowingEventArgs e)
+        {
+            if (sender is GridView gridView)
+            {
+                popupMenuProjectDocumentsTechnicalCustomer.ShowPopup(new Point(Cursor.Position.X, Cursor.Position.Y));
+            }            
+        }
+
+        private void barBtnProjectDocumentsTechnicalCustomerAdd_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            var form = new TechnicalCustomerEdit();
+            form.ShowDialog();
+            if (form.IsSave)
+            {
+                _tProjectDocumentsTechnicalCustomer.Add(form.TechnicalCustomer);
+                gridControlProjectDocumentsTechnicalCustomer.DataSource = PersonObjController.GetPersonObjByTechnicalCustomer(_tProjectDocumentsTechnicalCustomer).ToArray();
+                gridControlProjectDocumentsTechnicalCustomer.RefreshDataSource();
+            }
+        }
+
+        private void barBtnProjectDocumentsTechnicalCustomerEdit_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            if (gridViewProjectDocumentsTechnicalCustomer.GetRow(gridViewProjectDocumentsTechnicalCustomer.FocusedRowHandle) is PersonObj obj)
+            {
+                var form = new TechnicalCustomerEdit(obj.BaseObj);
+                form.ShowDialog();
+                if (form.IsSave)
+                {
+                    gridControlProjectDocumentsTechnicalCustomer.DataSource = PersonObjController.GetPersonObjByTechnicalCustomer(_tProjectDocumentsTechnicalCustomer).ToArray();
+                    gridControlProjectDocumentsTechnicalCustomer.RefreshDataSource();
+                }
+            }
+        }
+
+        private void barBtnProjectDocumentsTechnicalCustomerDel_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            if (gridViewProjectDocumentsTechnicalCustomer.GetRow(gridViewProjectDocumentsTechnicalCustomer.FocusedRowHandle) is PersonObj obj)
+            {
+                if (XtraMessageBox.Show(
+                    "Вы действительно хотите удалить выделенный объект?",
+                    "Информационное сообщение",
+                    MessageBoxButtons.OKCancel,
+                    MessageBoxIcon.Question) == DialogResult.OK)
+                {
+                    if (obj.BaseObj is tTechnicalCustomer tTechnicalCustomer)
+                    {
+                        _tProjectDocumentsTechnicalCustomer.Remove(tTechnicalCustomer);
+                        gridControlProjectDocumentsTechnicalCustomer.DataSource = PersonObjController.GetPersonObjByTechnicalCustomer(_tProjectDocumentsTechnicalCustomer).ToArray();
+                        gridControlProjectDocumentsTechnicalCustomer.RefreshDataSource();
+                    }
                 }
             }
         }

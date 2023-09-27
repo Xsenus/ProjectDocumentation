@@ -153,4 +153,10 @@
   <metadata name="popupMenuDesigners.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>1157, 17</value>
   </metadata>
+  <metadata name="popupMenuProjectDocumentsDeveloper.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>1328, 17</value>
+  </metadata>
+  <metadata name="popupMenuProjectDocumentsTechnicalCustomer.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>1659, 17</value>
+  </metadata>
 </root>

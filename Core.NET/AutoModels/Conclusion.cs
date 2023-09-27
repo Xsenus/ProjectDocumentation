@@ -3985,7 +3985,6 @@ namespace Core.NET.AutoModels
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     public partial class tTechnicalCustomer
     {
-
         private object itemField;
 
         /// <remarks/>
