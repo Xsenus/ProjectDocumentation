@@ -61,7 +61,6 @@
     <Compile Include="Models\XPO\ConclusionXPO.cs" />
     <Compile Include="Models\XPO\DocumentTypeXPO.cs" />
     <Compile Include="Models\XPO\GeneralizedDictionaryXPO.cs" />
-    <Compile Include="Models\XPO\ExpertTypeXPO.cs" />
     <Compile Include="Models\XPO\ExplanatoryNoteXPO.cs" />
     <Compile Include="Models\XPO\GeneralizedDictionary.cs" />
     <Compile Include="Models\XPO\TypeOrganization.cs" />

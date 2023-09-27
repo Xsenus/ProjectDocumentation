@@ -25,8 +25,8 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
 
         private async void ExpretEdit_Load(object sender, EventArgs e)
         {
-            var collection = await new XPQuery<ExpertTypeXPO>(SessionController.GetSession()).ToListAsync();
-            cmbExpertType.Properties.Items.AddRange(collection);
+            //var collection = await new XPQuery<ExpertTypeXPO>(SessionController.GetSession()).ToListAsync();
+            //cmbExpertType.Properties.Items.AddRange(collection);
 
             if (EstimateMismatch is null)
             {

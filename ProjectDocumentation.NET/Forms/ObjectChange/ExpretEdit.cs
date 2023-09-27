@@ -2,15 +2,18 @@
 using Core.NET.Controllers;
 using Core.NET.Extensions;
 using Core.NET.Models.XPO;
+using DevExpress.Export;
 using DevExpress.Xpo;
 using DevExpress.XtraEditors;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace ProjectDocumentation.NET.Forms.ObjectChange
 {
     public partial class ExpretEdit : XtraForm
-    {
+    {        private Session _session => SessionController.GetSession();
         public bool IsSave { get; private set; }
         public tExpert Expert { get; private set; }
 
@@ -23,11 +26,17 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
         {
             Expert = expert;
         }
+        private async Task FillFormControllersAsync()
+        {
+            var collection = await new XPQuery<GeneralizedDictionaryXPO>(_session).ToListAsync();
+
+            cmbExpertType.Properties.Items.AddRange(collection
+                .Where(w => w.GeneralizedDictionary == GeneralizedDictionary.ExpertType).ToList());
+        }
 
         private async void ExpretEdit_Load(object sender, EventArgs e)
         {
-            var collection = await new XPQuery<ExpertTypeXPO>(SessionController.GetSession()).ToListAsync();
-            cmbExpertType.Properties.Items.AddRange(collection);
+            await FillFormControllersAsync();
 
             if (Expert is null)
             {
@@ -38,34 +47,62 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                 txtFamilyName.EditValue = Expert.FamilyName;
                 txtFirstName.EditValue = Expert.FirstName;
                 txtSecondName.EditValue = Expert.SecondName;
+                cmbExpertType.EditValue = cmbExpertType.Properties.Items
+                    ?.Cast<GeneralizedDictionaryXPO>()
+                    ?.Where(w => w.GeneralizedDictionary == GeneralizedDictionary.ExpertType)
+                    ?.FirstOrDefault(f => f.Value == Expert.ExpertType.GetEnumXmlAttributeValue()?.ToString());
                 txtExpertCertificate.EditValue = Expert.ExpertCertificate;
                 dateExpertCertificateBeginDate.EditValue = Expert.ExpertCertificateBeginDate;
                 dateExpertCertificateEndDate.EditValue = Expert.ExpertCertificateEndDate;
-
-                var expertTypeValue = Expert.ExpertType.GetEnumXmlAttributeValue();
-                cmbExpertType.EditValue = collection.FirstOrDefault(f => f.Value == expertTypeValue?.ToString());
             }
         }
 
         private void btnSave_Click(object sender, EventArgs e)
         {
-            Expert.FamilyName = txtFamilyName.Text;
-            Expert.FirstName = txtFirstName.Text;
-            Expert.SecondName = txtSecondName.Text;
-            Expert.ExpertCertificate = txtExpertCertificate.Text;
-            Expert.ExpertCertificateBeginDate = dateExpertCertificateBeginDate.DateTime;
-            Expert.ExpertCertificateEndDate = dateExpertCertificateEndDate.DateTime;
-
-            if (cmbExpertType.EditValue is ExpertTypeXPO expertTypeXPO)
+            try
             {
-                foreach (tExpertType type in Enum.GetValues(typeof(tExpertType)))
+                Expert.FamilyName = ConclusionEdit.GetStringValue(txtFamilyName.EditValue, txtFamilyName, "Заполните поле фамилию");
+                Expert.FirstName = ConclusionEdit.GetStringValue(txtFirstName.EditValue, txtFirstName, "Заполните поле имя");
+                Expert.SecondName = ConclusionEdit.GetStringValue(txtSecondName.EditValue, txtSecondName, isNullAble: true);
+                Expert.ExpertType = ConclusionEdit.GetEnumByAttributeValue<tExpertType>(ConclusionEdit.GetValueGeneralizedDictionary(
+                        cmbExpertType,
+                        message: "Заполните поле направление деятельности эксперта").Value);
+                Expert.ExpertCertificate = ConclusionEdit.GetStringValue(txtExpertCertificate.EditValue, txtExpertCertificate, "Заполните номер сертификата");
+                if (dateExpertCertificateBeginDate.EditValue is null)
                 {
-                    if (type.GetEnumXmlAttributeValue()?.ToString()?.Equals(expertTypeXPO.Value) is true)
-                    {
-                        Expert.ExpertType = type;
-                        break;
-                    }
+                    dateExpertCertificateBeginDate.Focus();
+                    XtraMessageBox.Show("Заполните поле дата выдачи",
+                        "Информационное сообщение",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Error);
+                    return;
                 }
+                else
+                {
+                    Expert.ExpertCertificateBeginDate = dateExpertCertificateBeginDate.DateTime.Date;
+                }
+                if (dateExpertCertificateEndDate.EditValue is null)
+                {
+                    dateExpertCertificateEndDate.Focus();
+                    XtraMessageBox.Show("Заполните поле дата окончания деятельности",
+                        "Информационное сообщение",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Error);
+                    return;
+                }
+                else
+                {
+                    Expert.ExpertCertificateEndDate = dateExpertCertificateEndDate.DateTime.Date;
+                }
+            }
+            catch (Exception ex)
+            {
+                XtraMessageBox.Show(
+                    ex.Message,
+                    "Информационное сообщение",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
+                return;
             }
 
             IsSave = true;

@@ -31,12 +31,6 @@
             this.layoutControlExpert = new DevExpress.XtraLayout.LayoutControl();
             this.btnSave = new DevExpress.XtraEditors.SimpleButton();
             this.btnCancel = new DevExpress.XtraEditors.SimpleButton();
-            this.Root = new DevExpress.XtraLayout.LayoutControlGroup();
-            this.emptySpaceItem1 = new DevExpress.XtraLayout.EmptySpaceItem();
-            this.layoutControlItem1 = new DevExpress.XtraLayout.LayoutControlItem();
-            this.layoutControlItem2 = new DevExpress.XtraLayout.LayoutControlItem();
-            this.emptySpaceItem2 = new DevExpress.XtraLayout.EmptySpaceItem();
-            this.emptySpaceItem3 = new DevExpress.XtraLayout.EmptySpaceItem();
             this.txtFamilyName = new DevExpress.XtraEditors.TextEdit();
             this.txtFirstName = new DevExpress.XtraEditors.TextEdit();
             this.txtSecondName = new DevExpress.XtraEditors.TextEdit();
@@ -44,21 +38,21 @@
             this.txtExpertCertificate = new DevExpress.XtraEditors.TextEdit();
             this.dateExpertCertificateBeginDate = new DevExpress.XtraEditors.DateEdit();
             this.dateExpertCertificateEndDate = new DevExpress.XtraEditors.DateEdit();
+            this.Root = new DevExpress.XtraLayout.LayoutControlGroup();
             this.layoutControlItemFamilyName = new DevExpress.XtraLayout.LayoutControlItem();
             this.layoutControlItemFirstName = new DevExpress.XtraLayout.LayoutControlItem();
             this.layoutControlItemSecondName = new DevExpress.XtraLayout.LayoutControlItem();
+            this.emptySpaceItem1 = new DevExpress.XtraLayout.EmptySpaceItem();
+            this.layoutControlItem1 = new DevExpress.XtraLayout.LayoutControlItem();
+            this.layoutControlItem2 = new DevExpress.XtraLayout.LayoutControlItem();
+            this.emptySpaceItem2 = new DevExpress.XtraLayout.EmptySpaceItem();
             this.layoutControlItemExpertType = new DevExpress.XtraLayout.LayoutControlItem();
+            this.emptySpaceItem3 = new DevExpress.XtraLayout.EmptySpaceItem();
             this.layoutControlItemExpertCertificate = new DevExpress.XtraLayout.LayoutControlItem();
             this.layoutControlItemExpertCertificateBeginDate = new DevExpress.XtraLayout.LayoutControlItem();
             this.layoutControlItemExpertCertificateEndDate = new DevExpress.XtraLayout.LayoutControlItem();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlExpert)).BeginInit();
             this.layoutControlExpert.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.Root)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.emptySpaceItem1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem2)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.emptySpaceItem2)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.emptySpaceItem3)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.txtFamilyName.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.txtFirstName.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.txtSecondName.Properties)).BeginInit();
@@ -68,10 +62,16 @@
             ((System.ComponentModel.ISupportInitialize)(this.dateExpertCertificateBeginDate.Properties.CalendarTimeProperties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dateExpertCertificateEndDate.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dateExpertCertificateEndDate.Properties.CalendarTimeProperties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.Root)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemFamilyName)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemFirstName)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemSecondName)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.emptySpaceItem1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem2)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.emptySpaceItem2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemExpertType)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.emptySpaceItem3)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemExpertCertificate)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemExpertCertificateBeginDate)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemExpertCertificateEndDate)).BeginInit();
@@ -120,6 +120,85 @@
             this.btnCancel.Text = "Отмена";
             this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
             // 
+            // txtFamilyName
+            // 
+            this.txtFamilyName.Location = new System.Drawing.Point(84, 7);
+            this.txtFamilyName.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
+            this.txtFamilyName.Name = "txtFamilyName";
+            this.txtFamilyName.Size = new System.Drawing.Size(709, 22);
+            this.txtFamilyName.StyleController = this.layoutControlExpert;
+            this.txtFamilyName.TabIndex = 6;
+            // 
+            // txtFirstName
+            // 
+            this.txtFirstName.Location = new System.Drawing.Point(54, 33);
+            this.txtFirstName.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
+            this.txtFirstName.Name = "txtFirstName";
+            this.txtFirstName.Size = new System.Drawing.Size(739, 22);
+            this.txtFirstName.StyleController = this.layoutControlExpert;
+            this.txtFirstName.TabIndex = 7;
+            // 
+            // txtSecondName
+            // 
+            this.txtSecondName.Location = new System.Drawing.Point(86, 59);
+            this.txtSecondName.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
+            this.txtSecondName.Name = "txtSecondName";
+            this.txtSecondName.Size = new System.Drawing.Size(707, 22);
+            this.txtSecondName.StyleController = this.layoutControlExpert;
+            this.txtSecondName.TabIndex = 8;
+            // 
+            // cmbExpertType
+            // 
+            this.cmbExpertType.EditValue = "";
+            this.cmbExpertType.Location = new System.Drawing.Point(250, 85);
+            this.cmbExpertType.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
+            this.cmbExpertType.Name = "cmbExpertType";
+            this.cmbExpertType.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo),
+            new DevExpress.XtraEditors.Controls.EditorButton(),
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Delete)});
+            this.cmbExpertType.Properties.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.DisableTextEditor;
+            this.cmbExpertType.Size = new System.Drawing.Size(543, 22);
+            this.cmbExpertType.StyleController = this.layoutControlExpert;
+            this.cmbExpertType.TabIndex = 6;
+            // 
+            // txtExpertCertificate
+            // 
+            this.txtExpertCertificate.Location = new System.Drawing.Point(252, 111);
+            this.txtExpertCertificate.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
+            this.txtExpertCertificate.Name = "txtExpertCertificate";
+            this.txtExpertCertificate.Size = new System.Drawing.Size(541, 22);
+            this.txtExpertCertificate.StyleController = this.layoutControlExpert;
+            this.txtExpertCertificate.TabIndex = 6;
+            // 
+            // dateExpertCertificateBeginDate
+            // 
+            this.dateExpertCertificateBeginDate.EditValue = null;
+            this.dateExpertCertificateBeginDate.Location = new System.Drawing.Point(108, 137);
+            this.dateExpertCertificateBeginDate.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
+            this.dateExpertCertificateBeginDate.Name = "dateExpertCertificateBeginDate";
+            this.dateExpertCertificateBeginDate.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
+            this.dateExpertCertificateBeginDate.Properties.CalendarTimeProperties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
+            this.dateExpertCertificateBeginDate.Size = new System.Drawing.Size(685, 22);
+            this.dateExpertCertificateBeginDate.StyleController = this.layoutControlExpert;
+            this.dateExpertCertificateBeginDate.TabIndex = 9;
+            // 
+            // dateExpertCertificateEndDate
+            // 
+            this.dateExpertCertificateEndDate.EditValue = null;
+            this.dateExpertCertificateEndDate.Location = new System.Drawing.Point(211, 163);
+            this.dateExpertCertificateEndDate.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
+            this.dateExpertCertificateEndDate.Name = "dateExpertCertificateEndDate";
+            this.dateExpertCertificateEndDate.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
+            this.dateExpertCertificateEndDate.Properties.CalendarTimeProperties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
+            this.dateExpertCertificateEndDate.Size = new System.Drawing.Size(582, 22);
+            this.dateExpertCertificateEndDate.StyleController = this.layoutControlExpert;
+            this.dateExpertCertificateEndDate.TabIndex = 10;
+            // 
             // Root
             // 
             this.Root.EnableIndentsWithoutBorders = DevExpress.Utils.DefaultBoolean.True;
@@ -141,6 +220,33 @@
             this.Root.Padding = new DevExpress.XtraLayout.Utils.Padding(5, 5, 5, 5);
             this.Root.Size = new System.Drawing.Size(800, 311);
             this.Root.TextVisible = false;
+            // 
+            // layoutControlItemFamilyName
+            // 
+            this.layoutControlItemFamilyName.Control = this.txtFamilyName;
+            this.layoutControlItemFamilyName.Location = new System.Drawing.Point(0, 0);
+            this.layoutControlItemFamilyName.Name = "layoutControlItemFamilyName";
+            this.layoutControlItemFamilyName.Size = new System.Drawing.Size(790, 26);
+            this.layoutControlItemFamilyName.Text = "Фамилия *";
+            this.layoutControlItemFamilyName.TextSize = new System.Drawing.Size(65, 16);
+            // 
+            // layoutControlItemFirstName
+            // 
+            this.layoutControlItemFirstName.Control = this.txtFirstName;
+            this.layoutControlItemFirstName.Location = new System.Drawing.Point(0, 26);
+            this.layoutControlItemFirstName.Name = "layoutControlItemFirstName";
+            this.layoutControlItemFirstName.Size = new System.Drawing.Size(790, 26);
+            this.layoutControlItemFirstName.Text = "Имя *";
+            this.layoutControlItemFirstName.TextSize = new System.Drawing.Size(35, 16);
+            // 
+            // layoutControlItemSecondName
+            // 
+            this.layoutControlItemSecondName.Control = this.txtSecondName;
+            this.layoutControlItemSecondName.Location = new System.Drawing.Point(0, 52);
+            this.layoutControlItemSecondName.Name = "layoutControlItemSecondName";
+            this.layoutControlItemSecondName.Size = new System.Drawing.Size(790, 26);
+            this.layoutControlItemSecondName.Text = "Отчество *";
+            this.layoutControlItemSecondName.TextSize = new System.Drawing.Size(67, 16);
             // 
             // emptySpaceItem1
             // 
@@ -176,120 +282,6 @@
             this.emptySpaceItem2.Size = new System.Drawing.Size(197, 31);
             this.emptySpaceItem2.TextSize = new System.Drawing.Size(0, 0);
             // 
-            // emptySpaceItem3
-            // 
-            this.emptySpaceItem3.AllowHotTrack = false;
-            this.emptySpaceItem3.Location = new System.Drawing.Point(0, 182);
-            this.emptySpaceItem3.Name = "emptySpaceItem3";
-            this.emptySpaceItem3.Size = new System.Drawing.Size(790, 88);
-            this.emptySpaceItem3.TextSize = new System.Drawing.Size(0, 0);
-            // 
-            // txtFamilyName
-            // 
-            this.txtFamilyName.Location = new System.Drawing.Point(86, 7);
-            this.txtFamilyName.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
-            this.txtFamilyName.Name = "txtFamilyName";
-            this.txtFamilyName.Size = new System.Drawing.Size(707, 22);
-            this.txtFamilyName.StyleController = this.layoutControlExpert;
-            this.txtFamilyName.TabIndex = 6;
-            // 
-            // txtFirstName
-            // 
-            this.txtFirstName.Location = new System.Drawing.Point(56, 33);
-            this.txtFirstName.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
-            this.txtFirstName.Name = "txtFirstName";
-            this.txtFirstName.Size = new System.Drawing.Size(737, 22);
-            this.txtFirstName.StyleController = this.layoutControlExpert;
-            this.txtFirstName.TabIndex = 7;
-            // 
-            // txtSecondName
-            // 
-            this.txtSecondName.Location = new System.Drawing.Point(88, 59);
-            this.txtSecondName.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
-            this.txtSecondName.Name = "txtSecondName";
-            this.txtSecondName.Size = new System.Drawing.Size(705, 22);
-            this.txtSecondName.StyleController = this.layoutControlExpert;
-            this.txtSecondName.TabIndex = 8;
-            // 
-            // cmbExpertType
-            // 
-            this.cmbExpertType.EditValue = "";
-            this.cmbExpertType.Location = new System.Drawing.Point(252, 85);
-            this.cmbExpertType.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
-            this.cmbExpertType.Name = "cmbExpertType";
-            this.cmbExpertType.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
-            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo),
-            new DevExpress.XtraEditors.Controls.EditorButton(),
-            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Delete)});
-            this.cmbExpertType.Properties.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.DisableTextEditor;
-            this.cmbExpertType.Size = new System.Drawing.Size(541, 22);
-            this.cmbExpertType.StyleController = this.layoutControlExpert;
-            this.cmbExpertType.TabIndex = 6;
-            // 
-            // txtExpertCertificate
-            // 
-            this.txtExpertCertificate.Location = new System.Drawing.Point(254, 111);
-            this.txtExpertCertificate.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
-            this.txtExpertCertificate.Name = "txtExpertCertificate";
-            this.txtExpertCertificate.Size = new System.Drawing.Size(539, 22);
-            this.txtExpertCertificate.StyleController = this.layoutControlExpert;
-            this.txtExpertCertificate.TabIndex = 6;
-            // 
-            // dateExpertCertificateBeginDate
-            // 
-            this.dateExpertCertificateBeginDate.EditValue = null;
-            this.dateExpertCertificateBeginDate.Location = new System.Drawing.Point(110, 137);
-            this.dateExpertCertificateBeginDate.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
-            this.dateExpertCertificateBeginDate.Name = "dateExpertCertificateBeginDate";
-            this.dateExpertCertificateBeginDate.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
-            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
-            this.dateExpertCertificateBeginDate.Properties.CalendarTimeProperties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
-            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
-            this.dateExpertCertificateBeginDate.Size = new System.Drawing.Size(683, 22);
-            this.dateExpertCertificateBeginDate.StyleController = this.layoutControlExpert;
-            this.dateExpertCertificateBeginDate.TabIndex = 9;
-            // 
-            // dateExpertCertificateEndDate
-            // 
-            this.dateExpertCertificateEndDate.EditValue = null;
-            this.dateExpertCertificateEndDate.Location = new System.Drawing.Point(213, 163);
-            this.dateExpertCertificateEndDate.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
-            this.dateExpertCertificateEndDate.Name = "dateExpertCertificateEndDate";
-            this.dateExpertCertificateEndDate.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
-            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
-            this.dateExpertCertificateEndDate.Properties.CalendarTimeProperties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
-            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
-            this.dateExpertCertificateEndDate.Size = new System.Drawing.Size(580, 22);
-            this.dateExpertCertificateEndDate.StyleController = this.layoutControlExpert;
-            this.dateExpertCertificateEndDate.TabIndex = 10;
-            // 
-            // layoutControlItemFamilyName
-            // 
-            this.layoutControlItemFamilyName.Control = this.txtFamilyName;
-            this.layoutControlItemFamilyName.Location = new System.Drawing.Point(0, 0);
-            this.layoutControlItemFamilyName.Name = "layoutControlItemFamilyName";
-            this.layoutControlItemFamilyName.Size = new System.Drawing.Size(790, 26);
-            this.layoutControlItemFamilyName.Text = "Фамилия *";
-            this.layoutControlItemFamilyName.TextSize = new System.Drawing.Size(65, 16);
-            // 
-            // layoutControlItemFirstName
-            // 
-            this.layoutControlItemFirstName.Control = this.txtFirstName;
-            this.layoutControlItemFirstName.Location = new System.Drawing.Point(0, 26);
-            this.layoutControlItemFirstName.Name = "layoutControlItemFirstName";
-            this.layoutControlItemFirstName.Size = new System.Drawing.Size(790, 26);
-            this.layoutControlItemFirstName.Text = "Имя *";
-            this.layoutControlItemFirstName.TextSize = new System.Drawing.Size(35, 16);
-            // 
-            // layoutControlItemSecondName
-            // 
-            this.layoutControlItemSecondName.Control = this.txtSecondName;
-            this.layoutControlItemSecondName.Location = new System.Drawing.Point(0, 52);
-            this.layoutControlItemSecondName.Name = "layoutControlItemSecondName";
-            this.layoutControlItemSecondName.Size = new System.Drawing.Size(790, 26);
-            this.layoutControlItemSecondName.Text = "Отчество *";
-            this.layoutControlItemSecondName.TextSize = new System.Drawing.Size(67, 16);
-            // 
             // layoutControlItemExpertType
             // 
             this.layoutControlItemExpertType.Control = this.cmbExpertType;
@@ -300,6 +292,14 @@
             this.layoutControlItemExpertType.Size = new System.Drawing.Size(790, 26);
             this.layoutControlItemExpertType.Text = "Направление деятельности эксперта *";
             this.layoutControlItemExpertType.TextSize = new System.Drawing.Size(231, 16);
+            // 
+            // emptySpaceItem3
+            // 
+            this.emptySpaceItem3.AllowHotTrack = false;
+            this.emptySpaceItem3.Location = new System.Drawing.Point(0, 182);
+            this.emptySpaceItem3.Name = "emptySpaceItem3";
+            this.emptySpaceItem3.Size = new System.Drawing.Size(790, 88);
+            this.emptySpaceItem3.TextSize = new System.Drawing.Size(0, 0);
             // 
             // layoutControlItemExpertCertificate
             // 
@@ -343,12 +343,6 @@
             this.Load += new System.EventHandler(this.ExpretEdit_Load);
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlExpert)).EndInit();
             this.layoutControlExpert.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.Root)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.emptySpaceItem1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem2)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.emptySpaceItem2)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.emptySpaceItem3)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.txtFamilyName.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.txtFirstName.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.txtSecondName.Properties)).EndInit();
@@ -358,10 +352,16 @@
             ((System.ComponentModel.ISupportInitialize)(this.dateExpertCertificateBeginDate.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dateExpertCertificateEndDate.Properties.CalendarTimeProperties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dateExpertCertificateEndDate.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.Root)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemFamilyName)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemFirstName)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemSecondName)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.emptySpaceItem1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem2)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.emptySpaceItem2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemExpertType)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.emptySpaceItem3)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemExpertCertificate)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemExpertCertificateBeginDate)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemExpertCertificateEndDate)).EndInit();

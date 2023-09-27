@@ -47,8 +47,9 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
         private List<tTechnicalCustomer> _tProjectDocumentsTechnicalCustomer = new List<tTechnicalCustomer>();
 
 
-        private List<tExpert> _experts = new List<tExpert>();
         private List<tMismatch> _mismatch = new List<tMismatch>();
+
+        private List<tExpert> _experts = new List<tExpert>();
 
         public ConclusionEdit()
         {
@@ -341,13 +342,44 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                 memoEstimateSummary.EditValue = Conclusion.Summary?.EstimateSummary;
                 memoExaminationSummary.EditValue = Conclusion.Summary?.ExaminationSummary;
 
-                if (Conclusion.Experts != null)
+                #region Page VI
+                _experts = Conclusion.Experts?.ToList() ?? new List<tExpert>();
+                gridControlExpert.DataSource = _experts;
+                if (gridViewExpert.Columns[nameof(tExpert.FamilyName)] is GridColumn gridColumntExpertFamilyName)
                 {
-                    _experts.AddRange(Conclusion.Experts);
+                    gridColumntExpertFamilyName.Caption = "Фамилия";
                 }
+                if (gridViewExpert.Columns[nameof(tExpert.FirstName)] is GridColumn gridColumntExpertFirstName)
+                {
+                    gridColumntExpertFirstName.Caption = "Имя";
+                }
+                if (gridViewExpert.Columns[nameof(tExpert.SecondName)] is GridColumn gridColumntExpertSecondName)
+                {
+                    gridColumntExpertSecondName.Caption = "Отчество";
+                }
+                if (gridViewExpert.Columns[nameof(tExpert.ExpertType)] is GridColumn gridColumntExpertExpertType)
+                {
+                    gridColumntExpertExpertType.Visible = false;
+                }
+                if (gridViewExpert.Columns[nameof(tExpert.ExpertTypeString)] is GridColumn gridColumntExpertExpertTypeString)
+                {
+                    gridColumntExpertExpertTypeString.Caption = "Направление деятельности";
+                }
+                if (gridViewExpert.Columns[nameof(tExpert.ExpertCertificate)] is GridColumn gridColumntExpertExpertCertificate)
+                {
+                    gridColumntExpertExpertCertificate.Caption = "Номер аттестата";
+                }
+                if (gridViewExpert.Columns[nameof(tExpert.ExpertCertificateBeginDate)] is GridColumn gridColumntExpertExpertCertificateBeginDate)
+                {
+                    gridColumntExpertExpertCertificateBeginDate.Caption = "Дата выдачи";
+                }
+                if (gridViewExpert.Columns[nameof(tExpert.ExpertCertificateEndDate)] is GridColumn gridColumntExpertExpertCertificateEndDate)
+                {
+                    gridColumntExpertExpertCertificateEndDate.Caption = "Дата окончания";
+                }
+                #endregion
             }
 
-            gridControlExpert.DataSource = _experts;
         }
 
         public static void SetCheckComboBoxByItems<T>(ICollection<T> collection, CheckedComboBoxEdit comboBoxEdit) where T : Enum
@@ -665,6 +697,13 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                 }
                 #endregion
 
+                #region Page VI
+                if (_experts.Count > 0)
+                {
+                    Conclusion.Experts = _experts.ToArray();
+                }
+                #endregion
+
             }
             catch (Exception ex)
             {
@@ -692,12 +731,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
             Conclusion.Summary.ProjectDocumentsSummaryDate = memoProjectDocumentsSummaryDate.Text;
             Conclusion.Summary.EstimateNormsAndWorksSummary = memoEstimateNormsAndWorksSummary.Text;
             Conclusion.Summary.EstimateSummary = memoEstimateSummary.Text;
-            Conclusion.Summary.ExaminationSummary = memoExaminationSummary.Text;
-
-            if (_experts.Count > 0)
-            {
-                Conclusion.Experts = _experts.ToArray();
-            }
+            Conclusion.Summary.ExaminationSummary = memoExaminationSummary.Text;            
 
             IsSave = true;
             Close();
