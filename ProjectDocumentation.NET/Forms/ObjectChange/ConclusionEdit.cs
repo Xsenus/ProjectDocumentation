@@ -4,7 +4,6 @@ using Core.NET.DaDataObj;
 using Core.NET.Extensions;
 using Core.NET.Models.XPO;
 using DevExpress.Utils;
-using DevExpress.Utils.Extensions;
 using DevExpress.Xpo;
 using DevExpress.XtraBars;
 using DevExpress.XtraEditors;
@@ -323,26 +322,29 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                 }
                 #endregion
 
-                memoEstimateNorms.EditValue = Conclusion.ExpertEstimate?.EstimateNorms;
-                txtEstimatedCost.Text = Conclusion.EstimatedCost?.Currency;
-                //txtEstimatedCompleteCostBefore.Text
-                //txtEstimatedCompleteCostPost.Text
+                //memoEstimateNorms.EditValue = Conclusion.ExpertEstimate?.EstimateNorms;
+                //txtEstimatedCost.Text = Conclusion.EstimatedCost?.Currency;
+                ////txtEstimatedCompleteCostBefore.Text
+                ////txtEstimatedCompleteCostPost.Text
 
 
-                memoObjectName.EditValue = Conclusion.Object?.Name;
-                cmbObjectType.SelectedIndex = (int?)Conclusion?.Object.Type ?? -1;
-                cmbFunctionsClass.EditValue = Conclusion.Object?.Item;
-                cmbObjectAddress.EditValue = Conclusion.Object?.Address?.FirstOrDefault();
+                //memoObjectName.EditValue = Conclusion.Object?.Name;
+                //cmbObjectType.SelectedIndex = (int?)Conclusion?.Object.Type ?? -1;
+                //cmbFunctionsClass.EditValue = Conclusion.Object?.Item;
+                //cmbObjectAddress.EditValue = Conclusion.Object?.Address?.FirstOrDefault();
 
-                memoEngineeringSurveySummary.EditValue = Conclusion.Summary?.EngineeringSurveySummary;
-                memoEngineeringSurveySummaryDate.EditValue = Conclusion.Summary?.EngineeringSurveySummaryDate;
-                memoProjectDocumentsSummary.EditValue = Conclusion.Summary?.ProjectDocumentsSummary;
-                memoProjectDocumentsSummaryDate.EditValue = Conclusion.Summary?.ProjectDocumentsSummaryDate;
-                memoEstimateNormsAndWorksSummary.EditValue = Conclusion.Summary?.EstimateNormsAndWorksSummary;
-                memoEstimateSummary.EditValue = Conclusion.Summary?.EstimateSummary;
-                memoExaminationSummary.EditValue = Conclusion.Summary?.ExaminationSummary;
+                //memoEngineeringSurveySummary.EditValue = Conclusion.Summary?.EngineeringSurveySummary;
+                //memoEngineeringSurveySummaryDate.EditValue = Conclusion.Summary?.EngineeringSurveySummaryDate;
+                //memoProjectDocumentsSummary.EditValue = Conclusion.Summary?.ProjectDocumentsSummary;
+                //memoProjectDocumentsSummaryDate.EditValue = Conclusion.Summary?.ProjectDocumentsSummaryDate;
+                //memoEstimateNormsAndWorksSummary.EditValue = Conclusion.Summary?.EstimateNormsAndWorksSummary;
+                //memoEstimateSummary.EditValue = Conclusion.Summary?.EstimateSummary;
 
                 #region Page VI
+                memoExaminationSummary.EditValue = Conclusion.Summary?.ExaminationSummary;
+                #endregion
+
+                #region Page VII
                 _experts = Conclusion.Experts?.ToList() ?? new List<tExpert>();
                 gridControlExpert.DataSource = _experts;
                 if (gridViewExpert.Columns[nameof(tExpert.FamilyName)] is GridColumn gridColumntExpertFamilyName)
@@ -698,6 +700,14 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                 #endregion
 
                 #region Page VI
+                if (Conclusion.Summary is null)
+                {
+                    Conclusion.Summary = new tSummary();                    
+                }
+                Conclusion.Summary.ExaminationSummary = GetStringValue(memoExaminationSummary.EditValue, memoExaminationSummary, "Заполните поле общие выводы (итоговые выводы по результатам проведенной экспертизы)");
+                #endregion
+
+                #region Page VII
                 if (_experts.Count > 0)
                 {
                     Conclusion.Experts = _experts.ToArray();
@@ -715,23 +725,22 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                 return;
             }
 
-            Conclusion.ExpertEstimate = new tExpertEstimate();
-            Conclusion.ExpertEstimate.EstimateNorms = memoEstimateNorms.Text;
-            Conclusion.EstimatedCost = new tEstimatedCost();
-            Conclusion.EstimatedCost.Currency = txtEstimatedCost.Text;
-            //txtEstimatedCompleteCostBefore.Text
-            //txtEstimatedCompleteCostPost.Text
+            //Conclusion.ExpertEstimate = new tExpertEstimate();
+            //Conclusion.ExpertEstimate.EstimateNorms = memoEstimateNorms.Text;
+            //Conclusion.EstimatedCost = new tEstimatedCost();
+            //Conclusion.EstimatedCost.Currency = txtEstimatedCost.Text;
+            ////txtEstimatedCompleteCostBefore.Text
+            ////txtEstimatedCompleteCostPost.Text
 
 
 
-            Conclusion.Summary = new tSummary();
-            Conclusion.Summary.EngineeringSurveySummary = memoEngineeringSurveySummary.Text;
-            Conclusion.Summary.EngineeringSurveySummaryDate = memoEngineeringSurveySummaryDate.Text;
-            Conclusion.Summary.ProjectDocumentsSummary = memoProjectDocumentsSummary.Text;
-            Conclusion.Summary.ProjectDocumentsSummaryDate = memoProjectDocumentsSummaryDate.Text;
-            Conclusion.Summary.EstimateNormsAndWorksSummary = memoEstimateNormsAndWorksSummary.Text;
-            Conclusion.Summary.EstimateSummary = memoEstimateSummary.Text;
-            Conclusion.Summary.ExaminationSummary = memoExaminationSummary.Text;            
+            //Conclusion.Summary = new tSummary();
+            //Conclusion.Summary.EngineeringSurveySummary = memoEngineeringSurveySummary.Text;
+            //Conclusion.Summary.EngineeringSurveySummaryDate = memoEngineeringSurveySummaryDate.Text;
+            //Conclusion.Summary.ProjectDocumentsSummary = memoProjectDocumentsSummary.Text;
+            //Conclusion.Summary.ProjectDocumentsSummaryDate = memoProjectDocumentsSummaryDate.Text;
+            //Conclusion.Summary.EstimateNormsAndWorksSummary = memoEstimateNormsAndWorksSummary.Text;
+            //Conclusion.Summary.EstimateSummary = memoEstimateSummary.Text;       
 
             IsSave = true;
             Close();
