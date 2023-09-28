@@ -80,6 +80,11 @@
         /// <summary>
         /// Направление деятельности эксперта.
         /// </summary>
-        ExpertType
+        ExpertType,
+
+        /// <summary>
+        /// Виды инженерных изысканий.
+        /// </summary>
+        EngineeringSurveyType
     }
 }

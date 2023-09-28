@@ -110,6 +110,11 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
             #region Page II_5
             radioGroupConclusionNumber.Properties.Items.AddEnum(typeof(ItemChoiceType));
             #endregion
+
+            #region Page V
+            checkCmbEngineeringSurveyType.Properties.Items.AddRange(collection
+                .Where(w => w.GeneralizedDictionary == GeneralizedDictionary.EngineeringSurveyType).ToArray());
+            #endregion
         }
 
         private async void ConclusionEdit_Load(object sender, EventArgs e)
@@ -322,23 +327,15 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                 }
                 #endregion
 
-                //memoEstimateNorms.EditValue = Conclusion.ExpertEstimate?.EstimateNorms;
-                //txtEstimatedCost.Text = Conclusion.EstimatedCost?.Currency;
-                ////txtEstimatedCompleteCostBefore.Text
-                ////txtEstimatedCompleteCostPost.Text
-
-
-                //memoObjectName.EditValue = Conclusion.Object?.Name;
-                //cmbObjectType.SelectedIndex = (int?)Conclusion?.Object.Type ?? -1;
-                //cmbFunctionsClass.EditValue = Conclusion.Object?.Item;
-                //cmbObjectAddress.EditValue = Conclusion.Object?.Address?.FirstOrDefault();
-
-                //memoEngineeringSurveySummary.EditValue = Conclusion.Summary?.EngineeringSurveySummary;
-                //memoEngineeringSurveySummaryDate.EditValue = Conclusion.Summary?.EngineeringSurveySummaryDate;
-                //memoProjectDocumentsSummary.EditValue = Conclusion.Summary?.ProjectDocumentsSummary;
-                //memoProjectDocumentsSummaryDate.EditValue = Conclusion.Summary?.ProjectDocumentsSummaryDate;
-                //memoEstimateNormsAndWorksSummary.EditValue = Conclusion.Summary?.EstimateNormsAndWorksSummary;
-                //memoEstimateSummary.EditValue = Conclusion.Summary?.EstimateSummary;
+                #region Page V
+                memoEngineeringSurveySummary.EditValue = Conclusion.Summary?.EngineeringSurveySummary;
+                memoEngineeringSurveySummaryDate.EditValue = Conclusion.Summary?.EngineeringSurveySummaryDate;
+                SetCheckComboBoxByItems(Conclusion.Summary?.EngineeringSurveyType, checkCmbEngineeringSurveyType);
+                memoProjectDocumentsSummary.EditValue = Conclusion.Summary?.ProjectDocumentsSummary;
+                memoProjectDocumentsSummaryDate.EditValue = Conclusion.Summary?.ProjectDocumentsSummaryDate;
+                memoEstimateNormsAndWorksSummary.EditValue = Conclusion.Summary?.EstimateNormsAndWorksSummary;
+                memoEstimateSummary.EditValue = Conclusion.Summary?.EstimateSummary;
+                #endregion
 
                 #region Page VI
                 memoExaminationSummary.EditValue = Conclusion.Summary?.ExaminationSummary;
@@ -381,7 +378,6 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                 }
                 #endregion
             }
-
         }
 
         public static void SetCheckComboBoxByItems<T>(ICollection<T> collection, CheckedComboBoxEdit comboBoxEdit) where T : Enum
@@ -397,6 +393,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                     .FirstOrDefault(f => f.Value is GeneralizedDictionaryXPO obj && obj.Value == item.GetEnumXmlAttributeValue()?.ToString());
                 if (checkItem != null)
                 {
+                    checkItem.CheckState = CheckState.Checked;
                     checkItem.CheckState = CheckState.Checked;
                 }
             }
@@ -699,6 +696,20 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                 }
                 #endregion
 
+                #region Page V
+                if (Conclusion.Summary is null)
+                {
+                    Conclusion.Summary = new tSummary();
+                }
+                Conclusion.Summary.EngineeringSurveySummary = GetStringValue(memoEngineeringSurveySummary.EditValue, memoEngineeringSurveySummary, "Заполните поле вывод о соответствии результатов инженерных изысканий требованиям технических регламентов");
+                Conclusion.Summary.EngineeringSurveySummaryDate = GetStringValue(memoEngineeringSurveySummaryDate.EditValue, memoEngineeringSurveySummaryDate, "Заполните поле сведения о дате, по состоянию на которую действовали требования, примененные в соответствии с частью 5.2 статьи 49 Градостроительного кодекса Российской Федерации (в части экспертизы результатов инженерных изысканий)");
+                Conclusion.Summary.EngineeringSurveyType = GetCheckComboBoxItems<tEngineeringSurveyType>(checkCmbEngineeringSurveyType, "Заполните поле вид инженерных изысканий, на соответствие которым проводилась экспертиза проектной документации").ToArray();
+                Conclusion.Summary.ProjectDocumentsSummary = GetStringValue(memoProjectDocumentsSummary.EditValue, memoProjectDocumentsSummary, "Заполните поле вывод о соответствии технической части проектной документации результатам инженерных изысканий, заданию застройщика или технического заказчика на проектирование и требованиям технических регламентов");
+                Conclusion.Summary.ProjectDocumentsSummaryDate = GetStringValue(memoProjectDocumentsSummaryDate.EditValue, memoProjectDocumentsSummaryDate, "Заполните поле сведения о дате, по состоянию на которую действовали требования, примененные в соответствии с частью 5.2 статьи 49 Градостроительного кодекса Российской Федерации (в части экспертизы проектной документации)");
+                Conclusion.Summary.EstimateNormsAndWorksSummary = GetStringValue(memoEstimateNormsAndWorksSummary.EditValue, memoEstimateNormsAndWorksSummary, "Заполните поле вывод о соответствии расчетов, содержащихся в сметной документации, утвержденным сметным нормативам, сведения о которых включены в федеральный реестр сметных нормативов, физическим объемам работ, конструктивным, организационно-технологическим и другим решениям, предусмотренным проектной документацией или Выводы о соответствии (несоответствии) расчетов, содержащихся в сметной документации, физическим объемам работ, включенным в ведомость объемов работ, акт, утвержденный застройщиком или техническим заказчиком и содержащий перечень дефектов оснований, строительных конструкций, систем инженерно-технического обеспечения и сетей инженерно-технического обеспечения с указанием качественных и количественных характеристик таких дефектов, при проведении проверки достоверности определения сметной стоимости капитального ремонта");
+                Conclusion.Summary.EstimateSummary = GetStringValue(memoEstimateSummary.EditValue, memoEstimateSummary, "Заполните поле вывод о достоверности или недостоверности определения сметной стоимости строительства, реконструкции, капитального ремонта, сноса объекта капитального строительства, работ по сохранению объектов культурного наследия (памятников истории и культуры) народов Российской Федерации");
+                #endregion
+
                 #region Page VI
                 if (Conclusion.Summary is null)
                 {
@@ -723,24 +734,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Error);
                 return;
-            }
-
-            //Conclusion.ExpertEstimate = new tExpertEstimate();
-            //Conclusion.ExpertEstimate.EstimateNorms = memoEstimateNorms.Text;
-            //Conclusion.EstimatedCost = new tEstimatedCost();
-            //Conclusion.EstimatedCost.Currency = txtEstimatedCost.Text;
-            ////txtEstimatedCompleteCostBefore.Text
-            ////txtEstimatedCompleteCostPost.Text
-
-
-
-            //Conclusion.Summary = new tSummary();
-            //Conclusion.Summary.EngineeringSurveySummary = memoEngineeringSurveySummary.Text;
-            //Conclusion.Summary.EngineeringSurveySummaryDate = memoEngineeringSurveySummaryDate.Text;
-            //Conclusion.Summary.ProjectDocumentsSummary = memoProjectDocumentsSummary.Text;
-            //Conclusion.Summary.ProjectDocumentsSummaryDate = memoProjectDocumentsSummaryDate.Text;
-            //Conclusion.Summary.EstimateNormsAndWorksSummary = memoEstimateNormsAndWorksSummary.Text;
-            //Conclusion.Summary.EstimateSummary = memoEstimateSummary.Text;       
+            }            
 
             IsSave = true;
             Close();

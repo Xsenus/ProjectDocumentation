@@ -597,6 +597,21 @@ namespace Core.NET.Controllers
                 await _session.SaveAsync(new GeneralizedDictionaryXPO(_session) { Value = "955.42.", Name = "42. Охрана объектов культурного наследия", GeneralizedDictionary = GeneralizedDictionary.ExpertType });
                 await _session.SaveAsync(new GeneralizedDictionaryXPO(_session) { Value = "955.43.", Name = "43. Объекты социально-культурного назначения", GeneralizedDictionary = GeneralizedDictionary.ExpertType });
             }
+
+            if (collection.Where(w => w.GeneralizedDictionary == GeneralizedDictionary.EngineeringSurveyType).Count() == 0)
+            {
+                await _session.SaveAsync(new GeneralizedDictionaryXPO(_session) { Value = "1", Name = "Инженерно-геодезические изыскания", GeneralizedDictionary = GeneralizedDictionary.EngineeringSurveyType });
+                await _session.SaveAsync(new GeneralizedDictionaryXPO(_session) { Value = "2", Name = "Инженерно-геологические изыскания", GeneralizedDictionary = GeneralizedDictionary.EngineeringSurveyType });
+                await _session.SaveAsync(new GeneralizedDictionaryXPO(_session) { Value = "3", Name = "Инженерно-гидрометеорологические изыскания", GeneralizedDictionary = GeneralizedDictionary.EngineeringSurveyType });
+                await _session.SaveAsync(new GeneralizedDictionaryXPO(_session) { Value = "4", Name = "Инженерно-экологические изыскания", GeneralizedDictionary = GeneralizedDictionary.EngineeringSurveyType });
+                await _session.SaveAsync(new GeneralizedDictionaryXPO(_session) { Value = "5", Name = "Инженерно-геотехнические изыскания", GeneralizedDictionary = GeneralizedDictionary.EngineeringSurveyType });
+                await _session.SaveAsync(new GeneralizedDictionaryXPO(_session) { Value = "6", Name = "Геотехнические исследования", GeneralizedDictionary = GeneralizedDictionary.EngineeringSurveyType });
+                await _session.SaveAsync(new GeneralizedDictionaryXPO(_session) { Value = "7", Name = "Обследования состояния грунтов оснований зданий и сооружений (их строительных конструкций)", GeneralizedDictionary = GeneralizedDictionary.EngineeringSurveyType });
+                await _session.SaveAsync(new GeneralizedDictionaryXPO(_session) { Value = "8", Name = "Поиск и разведка подземных вод для целей водоснабжения", GeneralizedDictionary = GeneralizedDictionary.EngineeringSurveyType });
+                await _session.SaveAsync(new GeneralizedDictionaryXPO(_session) { Value = "9", Name = "Локальный мониторинг компонентов окружающей среды", GeneralizedDictionary = GeneralizedDictionary.EngineeringSurveyType });
+                await _session.SaveAsync(new GeneralizedDictionaryXPO(_session) { Value = "10", Name = "Разведка грунтовых строительных материалов", GeneralizedDictionary = GeneralizedDictionary.EngineeringSurveyType });
+                await _session.SaveAsync(new GeneralizedDictionaryXPO(_session) { Value = "11", Name = "Локальные обследования загрязнения грунтов и грунтовых вод", GeneralizedDictionary = GeneralizedDictionary.EngineeringSurveyType });
+            }
         }
 
         private static async Task FillingDocumentTypesXPOAsync()
