@@ -120,6 +120,9 @@
   <metadata name="barManager.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>17, 17</value>
   </metadata>
+  <data name="layoutControlGroup14.Text" xml:space="preserve">
+    <value>Сведения о раннее выданных заключениях экспертизы в отношении объекта капитального строительства, проектная документация и (или) результаты инженерных изысканий по которому представлены для проведения экспертизы</value>
+  </data>
   <data name="layoutControlItemEngineeringSurveySummaryDate.Text" xml:space="preserve">
     <value>Сведения о дате, по состоянию на которую действовали требования, примененные в соответствии с частью 5.2 статьи 49 Градостроительного кодекса Российской Федерации (в части экспертизы результатов инжененрных изысканий)</value>
   </data>
@@ -158,5 +161,8 @@
   </metadata>
   <metadata name="popupMenuProjectDocumentsTechnicalCustomer.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>1659, 17</value>
+  </metadata>
+  <metadata name="popupMenuPreviousConclusions.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>17, 35</value>
   </metadata>
 </root>

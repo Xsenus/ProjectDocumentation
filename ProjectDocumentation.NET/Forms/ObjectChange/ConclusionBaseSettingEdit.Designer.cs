@@ -31,6 +31,14 @@
             this.layoutControl = new DevExpress.XtraLayout.LayoutControl();
             this.btnCancel = new DevExpress.XtraEditors.SimpleButton();
             this.btnSave = new DevExpress.XtraEditors.SimpleButton();
+            this.Root = new DevExpress.XtraLayout.LayoutControlGroup();
+            this.emptySpaceItemSave = new DevExpress.XtraLayout.EmptySpaceItem();
+            this.layoutControlItemSave = new DevExpress.XtraLayout.LayoutControlItem();
+            this.layoutControlItemCancel = new DevExpress.XtraLayout.LayoutControlItem();
+            this.emptySpaceItemCancel = new DevExpress.XtraLayout.EmptySpaceItem();
+            this.layoutControlGroupEntity = new DevExpress.XtraLayout.LayoutControlGroup();
+            this.layoutControlGroupWorkPerson = new DevExpress.XtraLayout.LayoutControlGroup();
+            this.emptySpaceItemFooter = new DevExpress.XtraLayout.EmptySpaceItem();
             this.btnSearch = new DevExpress.XtraEditors.ButtonEdit();
             this.txtOrgFullName = new DevExpress.XtraEditors.TextEdit();
             this.txtOrgOGRN = new DevExpress.XtraEditors.TextEdit();
@@ -42,12 +50,6 @@
             this.txtFirstName = new DevExpress.XtraEditors.TextEdit();
             this.txtSecondName = new DevExpress.XtraEditors.TextEdit();
             this.txtPosition = new DevExpress.XtraEditors.TextEdit();
-            this.Root = new DevExpress.XtraLayout.LayoutControlGroup();
-            this.emptySpaceItemSave = new DevExpress.XtraLayout.EmptySpaceItem();
-            this.layoutControlItemSave = new DevExpress.XtraLayout.LayoutControlItem();
-            this.layoutControlItemCancel = new DevExpress.XtraLayout.LayoutControlItem();
-            this.emptySpaceItemCancel = new DevExpress.XtraLayout.EmptySpaceItem();
-            this.layoutControlGroupEntity = new DevExpress.XtraLayout.LayoutControlGroup();
             this.layoutControlItemSearch = new DevExpress.XtraLayout.LayoutControlItem();
             this.layoutControlItemOrgFullName = new DevExpress.XtraLayout.LayoutControlItem();
             this.layoutControlItemOrgOGRN = new DevExpress.XtraLayout.LayoutControlItem();
@@ -55,14 +57,20 @@
             this.layoutControlItemOrgINN = new DevExpress.XtraLayout.LayoutControlItem();
             this.layoutControlItemAddress = new DevExpress.XtraLayout.LayoutControlItem();
             this.layoutControlItemEmail = new DevExpress.XtraLayout.LayoutControlItem();
-            this.layoutControlGroupWorkPerson = new DevExpress.XtraLayout.LayoutControlGroup();
             this.layoutControlItemFamilyName = new DevExpress.XtraLayout.LayoutControlItem();
             this.layoutControlItemSecondName = new DevExpress.XtraLayout.LayoutControlItem();
             this.layoutControlItemFirstName = new DevExpress.XtraLayout.LayoutControlItem();
             this.layoutControlItemPosition = new DevExpress.XtraLayout.LayoutControlItem();
-            this.emptySpaceItemFooter = new DevExpress.XtraLayout.EmptySpaceItem();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControl)).BeginInit();
             this.layoutControl.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.Root)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.emptySpaceItemSave)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemSave)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemCancel)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.emptySpaceItemCancel)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutControlGroupEntity)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutControlGroupWorkPerson)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.emptySpaceItemFooter)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.btnSearch.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.txtOrgFullName.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.txtOrgOGRN.Properties)).BeginInit();
@@ -74,12 +82,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.txtFirstName.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.txtSecondName.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.txtPosition.Properties)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.Root)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.emptySpaceItemSave)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemSave)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemCancel)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.emptySpaceItemCancel)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.layoutControlGroupEntity)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemSearch)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemOrgFullName)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemOrgOGRN)).BeginInit();
@@ -87,12 +89,10 @@
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemOrgINN)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemAddress)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemEmail)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.layoutControlGroupWorkPerson)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemFamilyName)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemSecondName)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemFirstName)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemPosition)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.emptySpaceItemFooter)).BeginInit();
             this.SuspendLayout();
             // 
             // layoutControl
@@ -138,6 +138,98 @@
             this.btnSave.TabIndex = 5;
             this.btnSave.Text = "Сохранить";
             this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
+            // 
+            // Root
+            // 
+            this.Root.EnableIndentsWithoutBorders = DevExpress.Utils.DefaultBoolean.True;
+            this.Root.GroupBordersVisible = false;
+            this.Root.Items.AddRange(new DevExpress.XtraLayout.BaseLayoutItem[] {
+            this.emptySpaceItemSave,
+            this.layoutControlItemSave,
+            this.layoutControlItemCancel,
+            this.emptySpaceItemCancel,
+            this.layoutControlGroupEntity,
+            this.layoutControlGroupWorkPerson,
+            this.emptySpaceItemFooter});
+            this.Root.Name = "Root";
+            this.Root.Padding = new DevExpress.XtraLayout.Utils.Padding(5, 5, 5, 5);
+            this.Root.Size = new System.Drawing.Size(829, 588);
+            this.Root.TextVisible = false;
+            // 
+            // emptySpaceItemSave
+            // 
+            this.emptySpaceItemSave.AllowHotTrack = false;
+            this.emptySpaceItemSave.Location = new System.Drawing.Point(0, 547);
+            this.emptySpaceItemSave.Name = "emptySpaceItemSave";
+            this.emptySpaceItemSave.Size = new System.Drawing.Size(204, 31);
+            this.emptySpaceItemSave.TextSize = new System.Drawing.Size(0, 0);
+            // 
+            // layoutControlItemSave
+            // 
+            this.layoutControlItemSave.Control = this.btnSave;
+            this.layoutControlItemSave.Location = new System.Drawing.Point(409, 547);
+            this.layoutControlItemSave.Name = "layoutControlItemSave";
+            this.layoutControlItemSave.Size = new System.Drawing.Size(204, 31);
+            this.layoutControlItemSave.TextSize = new System.Drawing.Size(0, 0);
+            this.layoutControlItemSave.TextVisible = false;
+            // 
+            // layoutControlItemCancel
+            // 
+            this.layoutControlItemCancel.Control = this.btnCancel;
+            this.layoutControlItemCancel.Location = new System.Drawing.Point(613, 547);
+            this.layoutControlItemCancel.Name = "layoutControlItemCancel";
+            this.layoutControlItemCancel.Size = new System.Drawing.Size(206, 31);
+            this.layoutControlItemCancel.TextSize = new System.Drawing.Size(0, 0);
+            this.layoutControlItemCancel.TextVisible = false;
+            // 
+            // emptySpaceItemCancel
+            // 
+            this.emptySpaceItemCancel.AllowHotTrack = false;
+            this.emptySpaceItemCancel.Location = new System.Drawing.Point(204, 547);
+            this.emptySpaceItemCancel.Name = "emptySpaceItemCancel";
+            this.emptySpaceItemCancel.Size = new System.Drawing.Size(205, 31);
+            this.emptySpaceItemCancel.TextSize = new System.Drawing.Size(0, 0);
+            // 
+            // layoutControlGroupEntity
+            // 
+            this.layoutControlGroupEntity.CustomizationFormText = "layoutControlGroupEntity";
+            this.layoutControlGroupEntity.Items.AddRange(new DevExpress.XtraLayout.BaseLayoutItem[] {
+            this.layoutControlItemSearch,
+            this.layoutControlItemOrgFullName,
+            this.layoutControlItemOrgOGRN,
+            this.layoutControlItemOrgKPP,
+            this.layoutControlItemOrgINN,
+            this.layoutControlItemAddress,
+            this.layoutControlItemEmail});
+            this.layoutControlGroupEntity.Location = new System.Drawing.Point(0, 0);
+            this.layoutControlGroupEntity.Name = "layoutControlGroupEntity";
+            this.layoutControlGroupEntity.OptionsItemText.TextToControlDistance = 3;
+            this.layoutControlGroupEntity.Padding = new DevExpress.XtraLayout.Utils.Padding(6, 6, 6, 6);
+            this.layoutControlGroupEntity.Size = new System.Drawing.Size(819, 269);
+            this.layoutControlGroupEntity.Text = "Сведения об организации по проведению экспертизы";
+            // 
+            // layoutControlGroupWorkPerson
+            // 
+            this.layoutControlGroupWorkPerson.CustomizationFormText = "layoutControlGroupEntity";
+            this.layoutControlGroupWorkPerson.Items.AddRange(new DevExpress.XtraLayout.BaseLayoutItem[] {
+            this.layoutControlItemFamilyName,
+            this.layoutControlItemSecondName,
+            this.layoutControlItemFirstName,
+            this.layoutControlItemPosition});
+            this.layoutControlGroupWorkPerson.Location = new System.Drawing.Point(0, 269);
+            this.layoutControlGroupWorkPerson.Name = "layoutControlGroupWorkPerson";
+            this.layoutControlGroupWorkPerson.OptionsItemText.TextToControlDistance = 3;
+            this.layoutControlGroupWorkPerson.Padding = new DevExpress.XtraLayout.Utils.Padding(6, 6, 6, 6);
+            this.layoutControlGroupWorkPerson.Size = new System.Drawing.Size(819, 224);
+            this.layoutControlGroupWorkPerson.Text = "Сведения о лице, утвердившем заключение";
+            // 
+            // emptySpaceItemFooter
+            // 
+            this.emptySpaceItemFooter.AllowHotTrack = false;
+            this.emptySpaceItemFooter.Location = new System.Drawing.Point(0, 493);
+            this.emptySpaceItemFooter.Name = "emptySpaceItemFooter";
+            this.emptySpaceItemFooter.Size = new System.Drawing.Size(819, 54);
+            this.emptySpaceItemFooter.TextSize = new System.Drawing.Size(0, 0);
             // 
             // btnSearch
             // 
@@ -246,75 +338,6 @@
             this.txtPosition.StyleController = this.layoutControl;
             this.txtPosition.TabIndex = 16;
             // 
-            // Root
-            // 
-            this.Root.EnableIndentsWithoutBorders = DevExpress.Utils.DefaultBoolean.True;
-            this.Root.GroupBordersVisible = false;
-            this.Root.Items.AddRange(new DevExpress.XtraLayout.BaseLayoutItem[] {
-            this.emptySpaceItemSave,
-            this.layoutControlItemSave,
-            this.layoutControlItemCancel,
-            this.emptySpaceItemCancel,
-            this.layoutControlGroupEntity,
-            this.layoutControlGroupWorkPerson,
-            this.emptySpaceItemFooter});
-            this.Root.Name = "Root";
-            this.Root.Padding = new DevExpress.XtraLayout.Utils.Padding(5, 5, 5, 5);
-            this.Root.Size = new System.Drawing.Size(829, 588);
-            this.Root.TextVisible = false;
-            // 
-            // emptySpaceItemSave
-            // 
-            this.emptySpaceItemSave.AllowHotTrack = false;
-            this.emptySpaceItemSave.Location = new System.Drawing.Point(0, 547);
-            this.emptySpaceItemSave.Name = "emptySpaceItemSave";
-            this.emptySpaceItemSave.Size = new System.Drawing.Size(204, 31);
-            this.emptySpaceItemSave.TextSize = new System.Drawing.Size(0, 0);
-            // 
-            // layoutControlItemSave
-            // 
-            this.layoutControlItemSave.Control = this.btnSave;
-            this.layoutControlItemSave.Location = new System.Drawing.Point(409, 547);
-            this.layoutControlItemSave.Name = "layoutControlItemSave";
-            this.layoutControlItemSave.Size = new System.Drawing.Size(204, 31);
-            this.layoutControlItemSave.TextSize = new System.Drawing.Size(0, 0);
-            this.layoutControlItemSave.TextVisible = false;
-            // 
-            // layoutControlItemCancel
-            // 
-            this.layoutControlItemCancel.Control = this.btnCancel;
-            this.layoutControlItemCancel.Location = new System.Drawing.Point(613, 547);
-            this.layoutControlItemCancel.Name = "layoutControlItemCancel";
-            this.layoutControlItemCancel.Size = new System.Drawing.Size(206, 31);
-            this.layoutControlItemCancel.TextSize = new System.Drawing.Size(0, 0);
-            this.layoutControlItemCancel.TextVisible = false;
-            // 
-            // emptySpaceItemCancel
-            // 
-            this.emptySpaceItemCancel.AllowHotTrack = false;
-            this.emptySpaceItemCancel.Location = new System.Drawing.Point(204, 547);
-            this.emptySpaceItemCancel.Name = "emptySpaceItemCancel";
-            this.emptySpaceItemCancel.Size = new System.Drawing.Size(205, 31);
-            this.emptySpaceItemCancel.TextSize = new System.Drawing.Size(0, 0);
-            // 
-            // layoutControlGroupEntity
-            // 
-            this.layoutControlGroupEntity.CustomizationFormText = "layoutControlGroupEntity";
-            this.layoutControlGroupEntity.Items.AddRange(new DevExpress.XtraLayout.BaseLayoutItem[] {
-            this.layoutControlItemSearch,
-            this.layoutControlItemOrgFullName,
-            this.layoutControlItemOrgOGRN,
-            this.layoutControlItemOrgKPP,
-            this.layoutControlItemOrgINN,
-            this.layoutControlItemAddress,
-            this.layoutControlItemEmail});
-            this.layoutControlGroupEntity.Location = new System.Drawing.Point(0, 0);
-            this.layoutControlGroupEntity.Name = "layoutControlGroupEntity";
-            this.layoutControlGroupEntity.OptionsItemText.TextToControlDistance = 3;
-            this.layoutControlGroupEntity.Padding = new DevExpress.XtraLayout.Utils.Padding(6, 6, 6, 6);
-            this.layoutControlGroupEntity.Size = new System.Drawing.Size(819, 269);
-            this.layoutControlGroupEntity.Text = "Сведения об организации по проведению экспертизы";
-            // 
             // layoutControlItemSearch
             // 
             this.layoutControlItemSearch.Control = this.btnSearch;
@@ -399,21 +422,6 @@
             this.layoutControlItemEmail.TextLocation = DevExpress.Utils.Locations.Top;
             this.layoutControlItemEmail.TextSize = new System.Drawing.Size(286, 16);
             // 
-            // layoutControlGroupWorkPerson
-            // 
-            this.layoutControlGroupWorkPerson.CustomizationFormText = "layoutControlGroupEntity";
-            this.layoutControlGroupWorkPerson.Items.AddRange(new DevExpress.XtraLayout.BaseLayoutItem[] {
-            this.layoutControlItemFamilyName,
-            this.layoutControlItemSecondName,
-            this.layoutControlItemFirstName,
-            this.layoutControlItemPosition});
-            this.layoutControlGroupWorkPerson.Location = new System.Drawing.Point(0, 269);
-            this.layoutControlGroupWorkPerson.Name = "layoutControlGroupWorkPerson";
-            this.layoutControlGroupWorkPerson.OptionsItemText.TextToControlDistance = 3;
-            this.layoutControlGroupWorkPerson.Padding = new DevExpress.XtraLayout.Utils.Padding(6, 6, 6, 6);
-            this.layoutControlGroupWorkPerson.Size = new System.Drawing.Size(819, 224);
-            this.layoutControlGroupWorkPerson.Text = "Сведения о лице, утвердившем заключение";
-            // 
             // layoutControlItemFamilyName
             // 
             this.layoutControlItemFamilyName.Control = this.txtFamilyName;
@@ -462,14 +470,6 @@
             this.layoutControlItemPosition.TextLocation = DevExpress.Utils.Locations.Top;
             this.layoutControlItemPosition.TextSize = new System.Drawing.Size(286, 16);
             // 
-            // emptySpaceItemFooter
-            // 
-            this.emptySpaceItemFooter.AllowHotTrack = false;
-            this.emptySpaceItemFooter.Location = new System.Drawing.Point(0, 493);
-            this.emptySpaceItemFooter.Name = "emptySpaceItemFooter";
-            this.emptySpaceItemFooter.Size = new System.Drawing.Size(819, 54);
-            this.emptySpaceItemFooter.TextSize = new System.Drawing.Size(0, 0);
-            // 
             // ConclusionBaseSettingEdit
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 16F);
@@ -481,6 +481,14 @@
             this.Load += new System.EventHandler(this.ConclusionBaseSettingEdit_Load);
             ((System.ComponentModel.ISupportInitialize)(this.layoutControl)).EndInit();
             this.layoutControl.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.Root)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.emptySpaceItemSave)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemSave)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemCancel)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.emptySpaceItemCancel)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutControlGroupEntity)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutControlGroupWorkPerson)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.emptySpaceItemFooter)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.btnSearch.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.txtOrgFullName.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.txtOrgOGRN.Properties)).EndInit();
@@ -492,12 +500,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.txtFirstName.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.txtSecondName.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.txtPosition.Properties)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.Root)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.emptySpaceItemSave)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemSave)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemCancel)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.emptySpaceItemCancel)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.layoutControlGroupEntity)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemSearch)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemOrgFullName)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemOrgOGRN)).EndInit();
@@ -505,12 +507,10 @@
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemOrgINN)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemAddress)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemEmail)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.layoutControlGroupWorkPerson)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemFamilyName)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemSecondName)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemFirstName)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemPosition)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.emptySpaceItemFooter)).EndInit();
             this.ResumeLayout(false);
 
         }

@@ -36,7 +36,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
         public bool IsSave { get; private set; }
         public Conclusion Conclusion { get; private set; }
 
-
+        private List<tPreviousConclusion> _tPreviousConclusions = new List<tPreviousConclusion>();
         private List<tTEI> _tTEIs = new List<tTEI>();
         private List<tObjectPart> _tObjectParts = new List<tObjectPart>();
         private List<tFinance> _tFinances = new List<tFinance>();
@@ -176,6 +176,20 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
 
                 #region Page I_3
                 btnDeclarant.EditValue = Conclusion?.Declarant;
+                #endregion
+
+                #region Page I_6
+                _tPreviousConclusions = Conclusion?.PreviousConclusions?.ToList() ?? new List<tPreviousConclusion>();
+                gridControlPreviousConclusions.DataSource = _tPreviousConclusions; 
+                foreach (GridColumn column in gridViewPreviousConclusions.Columns)
+                {
+                    column.Visible = false;
+                }
+                if (gridViewPreviousConclusions.Columns[nameof(tPreviousConclusion.Name)] is GridColumn gridPreviousConclusionName)
+                {
+                    gridPreviousConclusionName.Caption = "Наименование объекта экспертизы";
+                    gridPreviousConclusionName.Visible = true;
+                }
                 #endregion
 
                 #region Page II_1
@@ -590,6 +604,13 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                     XtraMessageBox.Show("Укажите сведения о заявителе.", "Информационное сообщение", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     btnDeclarant.Focus();
                     return;
+                }
+                #endregion
+
+                #region Page 1_6
+                if (_tPreviousConclusions.Count > 0)
+                {
+                    Conclusion.PreviousConclusions = _tPreviousConclusions.ToArray();
                 }
                 #endregion
 
@@ -1549,6 +1570,54 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                     {
                         buttonEdit.EditValue = form.Declarant;
                     }
+                }
+            }
+        }
+
+        private void gridViewPreviousConclusions_PopupMenuShowing(object sender, PopupMenuShowingEventArgs e)
+        {
+            if (sender is GridView gridView)
+            {
+                popupMenuPreviousConclusions.ShowPopup(new Point(Cursor.Position.X, Cursor.Position.Y));
+            }
+        }
+
+        private void barBtnPreviousConclusionsAdd_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            var form = new PreviousConclusionEdit();
+            form.ShowDialog(); 
+            if (form.IsSave)
+            {
+                _tPreviousConclusions.Add(form.PreviousConclusion);
+                gridControlPreviousConclusions.RefreshDataSource();
+            }
+        }
+
+        private void barBtnPreviousConclusionsEdit_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            if (gridViewPreviousConclusions.GetRow(gridViewPreviousConclusions.FocusedRowHandle) is tPreviousConclusion obj)
+            {
+                var form = new PreviousConclusionEdit(obj);
+                form.ShowDialog();
+                if (form.IsSave)
+                {
+                    gridControlPreviousConclusions.RefreshDataSource();
+                }
+            }
+        }
+
+        private void barBtnPreviousConclusionsDel_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            if (gridViewPreviousConclusions.GetRow(gridViewPreviousConclusions.FocusedRowHandle) is tPreviousConclusion obj)
+            {
+                if (XtraMessageBox.Show(
+                    "Вы действительно хотите удалить выделенный объект?",
+                    "Информационное сообщение",
+                    MessageBoxButtons.OKCancel,
+                    MessageBoxIcon.Question) == DialogResult.OK)
+                {
+                    _tPreviousConclusions.Remove(obj);
+                    gridControlPreviousConclusions.RefreshDataSource();
                 }
             }
         }

@@ -105,6 +105,12 @@
     <Compile Include="Forms\MainForm.Designer.cs">
       <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\ObjectChange\PreviousConclusionEdit.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\ObjectChange\PreviousConclusionEdit.Designer.cs">
+      <DependentUpon>PreviousConclusionEdit.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\ObjectChange\TechnicalCustomerEdit.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -186,6 +192,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\ObjectChange\PreviousConclusionEdit.resx">
+      <DependentUpon>PreviousConclusionEdit.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\ObjectChange\TechnicalCustomerEdit.resx">
       <DependentUpon>TechnicalCustomerEdit.cs</DependentUpon>
