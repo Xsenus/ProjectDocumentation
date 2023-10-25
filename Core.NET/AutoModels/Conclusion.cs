@@ -2470,52 +2470,12 @@ namespace Core.NET.AutoModels
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     public partial class tExpertProjectDocuments
     {
-
-        private string dangerSolutionsField;
-
-        private tProjectDocumentsMismatches mismatchesField;
-
-        private tExpertType expertTypeField;
-
-        /// <remarks/>
-        public string DangerSolutions
-        {
-            get
-            {
-                return this.dangerSolutionsField;
-            }
-            set
-            {
-                this.dangerSolutionsField = value;
-            }
-        }
-
-        /// <remarks/>
-        public tProjectDocumentsMismatches Mismatches
-        {
-            get
-            {
-                return this.mismatchesField;
-            }
-            set
-            {
-                this.mismatchesField = value;
-            }
-        }
-
-        /// <remarks/>
         [System.Xml.Serialization.XmlAttributeAttribute()]
-        public tExpertType ExpertType
-        {
-            get
-            {
-                return this.expertTypeField;
-            }
-            set
-            {
-                this.expertTypeField = value;
-            }
-        }
+        public tExpertType ExpertType { get; set; }
+        public string ProjectDocumentsReview { get; set; }
+        public string ProjectDocumentsChanges { get; set; }
+        public string DangerSolutions { get; set; }
+        public tProjectDocumentsMismatches Mismatches { get; set; }
     }
 
     /// <remarks/>

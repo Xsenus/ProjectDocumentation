@@ -53,6 +53,7 @@
     <Compile Include="Controllers\FileController.cs" />
     <Compile Include="Controllers\SessionController.cs" />
     <Compile Include="DaDataObj\DaDataObj.cs" />
+    <Compile Include="Extensions\ObjectExtension.cs" />
     <Compile Include="Extensions\ByteExtension.cs" />
     <Compile Include="Extensions\EnumExtension.cs" />
     <Compile Include="Extensions\Serializer.cs" />

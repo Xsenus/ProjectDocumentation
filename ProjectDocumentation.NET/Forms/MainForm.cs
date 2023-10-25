@@ -191,7 +191,12 @@ namespace ProjectDocumentation.NET.Forms
                         {
                             var folderPath = fbd.SelectedPath;
                             var outFullPath = Path.Combine(folderPath, xmlFileName);
-                            File.WriteAllText(outFullPath, xmlObjXPO.GetObj());
+
+                            var result = xmlObjXPO.GetObj();
+                            result = result.Replace("xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\"", $"xsi:noNamespaceSchemaLocation=\"{fileName}.xsd\"");
+                            result += "<?xml-stylesheet type=\"text/xsl\" href=\"conclusion.xsl\" ?>";
+
+                            File.WriteAllText(outFullPath, result);
 
                             XtraMessageBox.Show(
                                 $"Файл успешно сформирован и сохранен по следующем пути:{Environment.NewLine}" +
@@ -225,6 +230,8 @@ namespace ProjectDocumentation.NET.Forms
                 {
                     Name = form.FileName
                 };
+
+                form.Conclusion.ConclusionGUID = conclusionXPO.Guid?.ToString();
                 conclusionXPO.SetObj(form.Conclusion.GetSerializerConclusion());
                 await _session.SaveAsync(conclusionXPO);
 

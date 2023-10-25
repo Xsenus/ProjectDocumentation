@@ -44,7 +44,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
         private List<CadastralNumber> _cadastralNumbers = new List<CadastralNumber>();
         private List<tDeclarant> _tProjectDocumentsDevelopers = new List<tDeclarant>();
         private List<tTechnicalCustomer> _tProjectDocumentsTechnicalCustomer = new List<tTechnicalCustomer>();
-
+        private List<tExpertProjectDocuments> _tExpertProjectDocuments = new List<tExpertProjectDocuments>();
 
         private List<tMismatch> _mismatch = new List<tMismatch>();
 
@@ -158,6 +158,20 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                 SetCheckComboBoxByItems(Conclusion?.ExaminationObject?.ExaminationType, checkCmbExaminationType);
                 memoName.Text = Conclusion.ExaminationObject?.Name;
                 memoExaminationStageNote.Text = Conclusion.ExaminationObject?.ExaminationStageNote;
+                #endregion
+
+                #region Page I_2
+                btnSearch.EditValue = Conclusion?.ExpertOrganization?.OrgINN;
+                txtOrgFullName.EditValue = Conclusion?.ExpertOrganization?.OrgFullName;
+                txtOrgOGRN.EditValue = Conclusion?.ExpertOrganization?.OrgOGRN;
+                txtOrgKPP.EditValue = Conclusion?.ExpertOrganization?.OrgKPP;
+                txtOrgINN.EditValue = Conclusion?.ExpertOrganization?.OrgINN;
+                txtEmail.EditValue = Conclusion?.ExpertOrganization?.Email;
+                btnAddress.EditValue = Conclusion?.ExpertOrganization?.Address;
+                txtFamilyName.EditValue = Conclusion?.Approver?.FamilyName;
+                txtFirstName.EditValue = Conclusion?.Approver?.FirstName;
+                txtSecondName.EditValue = Conclusion?.Approver?.SecondName;
+                txtPosition.EditValue = Conclusion?.Approver?.Position;
                 #endregion
 
                 #region Page II_1
@@ -325,6 +339,11 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                     gridProjectDocumentsTechnicalCustomerName.Caption = "Наименование";
                     gridProjectDocumentsTechnicalCustomerName.Visible = true;
                 }
+                #endregion
+
+                #region Page III
+                _tExpertProjectDocuments = Conclusion.ExpertProjectDocuments?.ToList() ?? new List<tExpertProjectDocuments>();
+                gridControlExpertProjectDocuments.DataSource = _tExpertProjectDocuments;
                 #endregion
 
                 #region Page V
@@ -504,7 +523,6 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
         private void btnSave_Click(object sender, EventArgs e)
         {
             FileName = txtFileName.Text;
-
             try
             {
                 #region Page I
@@ -529,6 +547,34 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                     "Заполните поле предмет экпертизы").ToArray();
                 Conclusion.ExaminationObject.Name = GetStringValue(memoName.Text, memoName, "Заполните поле наименование объекта экспертизы");
                 Conclusion.ExaminationObject.ExaminationStageNote = GetStringValue(memoExaminationStageNote.Text, isNullAble: true);
+                #endregion
+
+
+                #region Page I_2
+                Conclusion.ExpertOrganization = new tOrganization();
+                Conclusion.ExpertOrganization.OrgFullName = GetStringValue(txtOrgFullName.EditValue, txtOrgFullName, "Заполните наименование организации");
+                Conclusion.ExpertOrganization.OrgOGRN = GetStringValue(txtOrgOGRN.EditValue, txtOrgOGRN, "Заполните ОГРН организации");
+                Conclusion.ExpertOrganization.OrgKPP = GetStringValue(txtOrgKPP.EditValue, txtOrgKPP, "Заполните КПП организации");
+                Conclusion.ExpertOrganization.OrgINN = GetStringValue(txtOrgINN.EditValue, txtOrgINN, "Заполните ИНН организации");
+                Conclusion.ExpertOrganization.Email = GetStringValue(txtEmail.EditValue, txtEmail, isNullAble: true);
+                if (btnAddress.EditValue is tAddress address)
+                {
+                    Conclusion.ExpertOrganization.Address = address;
+                }
+                else
+                {
+                    btnAddress.Focus();
+                    XtraMessageBox.Show("Заполните адрес организации",
+                        "Информационное сообщение",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Error);
+                    return;
+                }
+                Conclusion.Approver = new tWorkPerson();
+                Conclusion.Approver.FamilyName = GetStringValue(txtFamilyName.EditValue, txtFamilyName, "Заполните фамилию подписанта");
+                Conclusion.Approver.FirstName = GetStringValue(txtFirstName.EditValue, txtFirstName, "Заполните имя подписанта");
+                Conclusion.Approver.SecondName = GetStringValue(txtSecondName.EditValue, txtSecondName, "Заполните отчество подписанта");
+                Conclusion.Approver.Position = GetStringValue(txtPosition.EditValue, txtPosition, "Заполните должность подписанта");
                 #endregion
 
                 #region Page II_1
@@ -701,13 +747,13 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                 {
                     Conclusion.Summary = new tSummary();
                 }
-                Conclusion.Summary.EngineeringSurveySummary = GetStringValue(memoEngineeringSurveySummary.EditValue, memoEngineeringSurveySummary, "Заполните поле вывод о соответствии результатов инженерных изысканий требованиям технических регламентов");
+                Conclusion.Summary.EngineeringSurveySummary = GetStringValue(memoEngineeringSurveySummary.EditValue, memoEngineeringSurveySummary, "Заполните поле вывод о соответствии результатов инженерных изысканий требованиям технических регламентов", isNullAble: true);
                 Conclusion.Summary.EngineeringSurveySummaryDate = GetStringValue(memoEngineeringSurveySummaryDate.EditValue, memoEngineeringSurveySummaryDate, "Заполните поле сведения о дате, по состоянию на которую действовали требования, примененные в соответствии с частью 5.2 статьи 49 Градостроительного кодекса Российской Федерации (в части экспертизы результатов инженерных изысканий)");
                 Conclusion.Summary.EngineeringSurveyType = GetCheckComboBoxItems<tEngineeringSurveyType>(checkCmbEngineeringSurveyType, "Заполните поле вид инженерных изысканий, на соответствие которым проводилась экспертиза проектной документации").ToArray();
                 Conclusion.Summary.ProjectDocumentsSummary = GetStringValue(memoProjectDocumentsSummary.EditValue, memoProjectDocumentsSummary, "Заполните поле вывод о соответствии технической части проектной документации результатам инженерных изысканий, заданию застройщика или технического заказчика на проектирование и требованиям технических регламентов");
                 Conclusion.Summary.ProjectDocumentsSummaryDate = GetStringValue(memoProjectDocumentsSummaryDate.EditValue, memoProjectDocumentsSummaryDate, "Заполните поле сведения о дате, по состоянию на которую действовали требования, примененные в соответствии с частью 5.2 статьи 49 Градостроительного кодекса Российской Федерации (в части экспертизы проектной документации)");
-                Conclusion.Summary.EstimateNormsAndWorksSummary = GetStringValue(memoEstimateNormsAndWorksSummary.EditValue, memoEstimateNormsAndWorksSummary, "Заполните поле вывод о соответствии расчетов, содержащихся в сметной документации, утвержденным сметным нормативам, сведения о которых включены в федеральный реестр сметных нормативов, физическим объемам работ, конструктивным, организационно-технологическим и другим решениям, предусмотренным проектной документацией или Выводы о соответствии (несоответствии) расчетов, содержащихся в сметной документации, физическим объемам работ, включенным в ведомость объемов работ, акт, утвержденный застройщиком или техническим заказчиком и содержащий перечень дефектов оснований, строительных конструкций, систем инженерно-технического обеспечения и сетей инженерно-технического обеспечения с указанием качественных и количественных характеристик таких дефектов, при проведении проверки достоверности определения сметной стоимости капитального ремонта");
-                Conclusion.Summary.EstimateSummary = GetStringValue(memoEstimateSummary.EditValue, memoEstimateSummary, "Заполните поле вывод о достоверности или недостоверности определения сметной стоимости строительства, реконструкции, капитального ремонта, сноса объекта капитального строительства, работ по сохранению объектов культурного наследия (памятников истории и культуры) народов Российской Федерации");
+                Conclusion.Summary.EstimateNormsAndWorksSummary = GetStringValue(memoEstimateNormsAndWorksSummary.EditValue, memoEstimateNormsAndWorksSummary, "Заполните поле вывод о соответствии расчетов, содержащихся в сметной документации, утвержденным сметным нормативам, сведения о которых включены в федеральный реестр сметных нормативов, физическим объемам работ, конструктивным, организационно-технологическим и другим решениям, предусмотренным проектной документацией или Выводы о соответствии (несоответствии) расчетов, содержащихся в сметной документации, физическим объемам работ, включенным в ведомость объемов работ, акт, утвержденный застройщиком или техническим заказчиком и содержащий перечень дефектов оснований, строительных конструкций, систем инженерно-технического обеспечения и сетей инженерно-технического обеспечения с указанием качественных и количественных характеристик таких дефектов, при проведении проверки достоверности определения сметной стоимости капитального ремонта", isNullAble: true);
+                Conclusion.Summary.EstimateSummary = GetStringValue(memoEstimateSummary.EditValue, memoEstimateSummary, "Заполните поле вывод о достоверности или недостоверности определения сметной стоимости строительства, реконструкции, капитального ремонта, сноса объекта капитального строительства, работ по сохранению объектов культурного наследия (памятников истории и культуры) народов Российской Федерации", isNullAble: true);
                 #endregion
 
                 #region Page VI
@@ -1319,6 +1365,145 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                         _tProjectDocumentsTechnicalCustomer.Remove(tTechnicalCustomer);
                         gridControlProjectDocumentsTechnicalCustomer.DataSource = PersonObjController.GetPersonObjByTechnicalCustomer(_tProjectDocumentsTechnicalCustomer).ToArray();
                         gridControlProjectDocumentsTechnicalCustomer.RefreshDataSource();
+                    }
+                }
+            }
+        }
+
+        private async void btnSearch_ButtonPressed(object sender, ButtonPressedEventArgs e)
+        {
+            if (sender is ButtonEdit buttonEdit)
+            {
+                if (e.Button.Kind == ButtonPredefines.Search)
+                {
+                    var obj = buttonEdit.EditValue?.ToString();
+
+                    if (!string.IsNullOrWhiteSpace(obj))
+                    {
+                        var party = await DaDataObj.GetPartyAsync(obj);
+                        var data = party?.suggestions?.FirstOrDefault()?.data;
+                        if (data != null)
+                        {
+                            txtOrgFullName.EditValue = data.name?.full_with_opf ?? data.name.ToString();
+                            txtOrgOGRN.EditValue = data.ogrn;
+                            txtOrgKPP.EditValue = data.kpp;
+                            txtOrgINN.EditValue = data.inn;
+
+                            var splitsSplitsName = data.management?.name?.Split();
+                            if (splitsSplitsName.Length >= 3)
+                            {
+                                txtFamilyName.EditValue = splitsSplitsName[0];
+                                txtFirstName.EditValue = splitsSplitsName[1];
+                                txtSecondName.EditValue = splitsSplitsName[2];
+                            }
+                            txtPosition.EditValue = data.management?.post;
+
+                            var addressData = data.address?.data;
+                            if (addressData != null)
+                            {
+                                var address = new tAddress()
+                                {
+                                    Country = addressData.country,
+                                    District = addressData.city_district,
+                                    City = addressData.city,
+                                    Settlement = addressData.settlement,
+                                    Street = addressData.street,
+                                    Building = addressData.house,
+                                    Room = addressData.flat,
+                                    Note = addressData.result ?? data.address?.unrestricted_value,
+                                };
+
+                                try
+                                {
+                                    var region = ConclusionEdit.GetEnumByAttributeValue<tRegionsRF>(addressData.region_kladr_id?.Replace("0", string.Empty));
+                                    address.Region = region;
+                                }
+                                catch (Exception)
+                                {
+                                    XtraMessageBox.Show("Регион не определен, введите вручную",
+                                        "Информационное сообщение",
+                                        MessageBoxButtons.OK,
+                                        MessageBoxIcon.Exclamation);
+                                }
+
+                                btnAddress.EditValue = address;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        btnSearch.Focus();
+                        XtraMessageBox.Show("Введите ИНН или ОГРН организации",
+                            "Информационное сообщение",
+                            MessageBoxButtons.OK,
+                            MessageBoxIcon.Exclamation);
+                        return;
+                    }
+                }
+            }
+        }
+
+        private async void btnAddress_ButtonPressed(object sender, ButtonPressedEventArgs e)
+        {
+            if (sender is ButtonEdit buttonEdit)
+            {
+                if (e.Button.Kind == ButtonPredefines.Delete)
+                {
+                    buttonEdit.EditValue = null;
+                }
+                else if (e.Button.Kind == ButtonPredefines.Ellipsis)
+                {
+                    var form = default(AddressEdit);
+                    if (buttonEdit.EditValue is tAddress address)
+                    {
+                        form = new AddressEdit(address);
+                    }
+                    else
+                    {
+                        form = new AddressEdit();
+                    }
+
+                    form.ShowDialog();
+                    if (form.IsSave)
+                    {
+                        buttonEdit.EditValue = form.Address;
+                    }
+                }
+                else if (e.Button.Kind == ButtonPredefines.Search)
+                {
+                    var obj = buttonEdit.EditValue?.ToString();
+                    if (!string.IsNullOrWhiteSpace(obj))
+                    {
+                        var addressData = await DaDataObj.GetAddressAsync(obj);
+                        if (addressData != null)
+                        {
+                            var address = new tAddress()
+                            {
+                                Country = addressData.country,
+                                District = addressData.city_district,
+                                City = addressData.city,
+                                Settlement = addressData.settlement,
+                                Street = addressData.street,
+                                Building = addressData.house,
+                                Room = addressData.flat,
+                                Note = addressData.result,
+                            };
+
+                            try
+                            {
+                                var region = ConclusionEdit.GetEnumByAttributeValue<tRegionsRF>(addressData.region_kladr_id?.Replace("0", string.Empty));
+                                address.Region = region;
+                            }
+                            catch (Exception)
+                            {
+                                XtraMessageBox.Show("Регион не определен, введите вручную",
+                                    "Информационное сообщение",
+                                    MessageBoxButtons.OK,
+                                    MessageBoxIcon.Exclamation);
+                            }
+
+                            buttonEdit.EditValue = address;
+                        }
                     }
                 }
             }

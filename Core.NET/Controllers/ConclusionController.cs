@@ -23,10 +23,16 @@ namespace Core.NET.Controllers
             {
                 Name = name
             };
-            if (fileGuid != null)
+
+            if (Guid.TryParse(conclusion.ConclusionGUID, out Guid resultGuid))
+            {
+                xpoObj.SetGuid(resultGuid);
+            }
+            else if (fileGuid != null)
             {
                 xpoObj.SetGuid(fileGuid.Value);
             }
+
             xpoObj.SetObj(conclusion.SerializeObject());
             await SessionController.GetSession().SaveAsync(xpoObj);
             return xpoObj;
