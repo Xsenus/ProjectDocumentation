@@ -174,6 +174,10 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                 txtPosition.EditValue = Conclusion?.Approver?.Position;
                 #endregion
 
+                #region Page I_3
+                btnDeclarant.EditValue = Conclusion?.Declarant;
+                #endregion
+
                 #region Page II_1
                 memoObjectName.EditValue = Conclusion.Object?.Name;
                 cmbObjectType.EditValue = cmbObjectType.Properties.Items
@@ -549,7 +553,6 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                 Conclusion.ExaminationObject.ExaminationStageNote = GetStringValue(memoExaminationStageNote.Text, isNullAble: true);
                 #endregion
 
-
                 #region Page I_2
                 Conclusion.ExpertOrganization = new tOrganization();
                 Conclusion.ExpertOrganization.OrgFullName = GetStringValue(txtOrgFullName.EditValue, txtOrgFullName, "Заполните наименование организации");
@@ -575,6 +578,19 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                 Conclusion.Approver.FirstName = GetStringValue(txtFirstName.EditValue, txtFirstName, "Заполните имя подписанта");
                 Conclusion.Approver.SecondName = GetStringValue(txtSecondName.EditValue, txtSecondName, "Заполните отчество подписанта");
                 Conclusion.Approver.Position = GetStringValue(txtPosition.EditValue, txtPosition, "Заполните должность подписанта");
+                #endregion
+
+                #region Page I_3
+                if (btnDeclarant.EditValue is tDeclarant tDeclarant)
+                {
+                    Conclusion.Declarant = tDeclarant;
+                }
+                else
+                {
+                    XtraMessageBox.Show("Укажите сведения о заявителе.", "Информационное сообщение", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    btnDeclarant.Focus();
+                    return;
+                }
                 #endregion
 
                 #region Page II_1
@@ -1504,6 +1520,34 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
 
                             buttonEdit.EditValue = address;
                         }
+                    }
+                }
+            }
+        }
+
+        private void btnDeclarant_ButtonPressed(object sender, ButtonPressedEventArgs e)
+        {
+            if (sender is ButtonEdit buttonEdit)
+            {
+                if (e.Button.Kind == ButtonPredefines.Delete)
+                {
+                    buttonEdit.EditValue = null;
+                }
+                else if (e.Button.Kind == ButtonPredefines.Ellipsis)
+                {
+                    var form = default(DeclarantEdit);
+                    if (buttonEdit.EditValue is tDeclarant tDeclarant)
+                    {
+                        form = new DeclarantEdit(tDeclarant);
+                    }
+                    else
+                    {
+                        form = new DeclarantEdit();
+                    }
+                    form.ShowDialog();
+                    if (form.IsSave)
+                    {
+                        buttonEdit.EditValue = form.Declarant;
                     }
                 }
             }

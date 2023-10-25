@@ -543,6 +543,11 @@ namespace Core.NET.AutoModels
                 this.emailField = value;
             }
         }
+
+        public override string ToString()
+        {
+            return OrgINN ?? base.ToString();
+        }
     }
 
     /// <remarks/>
@@ -2815,6 +2820,11 @@ namespace Core.NET.AutoModels
                 this.emailField = value;
             }
         }
+
+        public override string ToString()
+        {
+            return OrgINN ?? base.ToString();
+        }
     }
 
     /// <remarks/>
@@ -2918,6 +2928,11 @@ namespace Core.NET.AutoModels
             {
                 this.emailField = value;
             }
+        }
+
+        public override string ToString()
+        {
+            return OGRNIP ?? base.ToString();
         }
     }
 
@@ -4682,6 +4697,11 @@ namespace Core.NET.AutoModels
                 this.emailField = value;
             }
         }
+
+        public override string ToString()
+        {
+            return SNILS ?? base.ToString();
+        }
     }
 
     /// <remarks/>
@@ -4709,6 +4729,11 @@ namespace Core.NET.AutoModels
             {
                 this.itemField = value;
             }
+        }
+
+        public override string ToString()
+        {
+            return Item?.ToString() ?? base.ToString();
         }
     }
 
