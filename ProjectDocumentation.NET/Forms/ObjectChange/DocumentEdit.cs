@@ -125,16 +125,13 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                 if (dateDocDate.EditValue is DateTime date)
                 {
                     Document.DocDate = date;
+                    Document.DocDateSpecified = true;
                 }
-                //else
-                //{
-                //    dateDocDate.Focus();
-                //    XtraMessageBox.Show("Заполните поле дата документа деятельности.",
-                //        "Информационное сообщение",
-                //        MessageBoxButtons.OK,
-                //        MessageBoxIcon.Error);
-                //    return;
-                //}
+                else
+                {
+                    Document.DocDate = default;
+                    Document.DocDateSpecified = false;
+                }
 
                 if (_tDeclarants.Count > 0)
                 {
