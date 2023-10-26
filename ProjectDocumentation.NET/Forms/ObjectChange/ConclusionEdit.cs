@@ -565,7 +565,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
             throw new Exception();
         }
 
-        public static string GetStringValue(object sender, object control = default, string message = default, bool isNullAble = false)
+        public static string GetStringValue(object sender, object control = default, string message = default, bool isNullAble = false, object objPage = null)
         {
             var result = sender?.ToString();
             if (!string.IsNullOrWhiteSpace(result))
@@ -610,7 +610,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                    message: "Заполните поле вид работ").Value);
                 Conclusion.ExaminationObject.ExaminationType = GetCheckComboBoxItems<tExaminationType>(
                     checkCmbExaminationType,
-                    "Заполните поле предмет экпертизы").ToArray();
+                    "Заполните поле предмет экспертизы").ToArray();
                 Conclusion.ExaminationObject.Name = GetStringValue(memoName.Text, memoName, "Заполните поле наименование объекта экспертизы");
                 Conclusion.ExaminationObject.ExaminationStageNote = GetStringValue(memoExaminationStageNote.Text, isNullAble: true);
                 #endregion

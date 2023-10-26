@@ -1247,7 +1247,7 @@
             this.tabbedControlGroup1.MultiLine = DevExpress.Utils.DefaultBoolean.True;
             this.tabbedControlGroup1.Name = "tabbedControlGroup1";
             this.tabbedControlGroup1.Padding = new DevExpress.XtraLayout.Utils.Padding(4, 4, 4, 4);
-            this.tabbedControlGroup1.SelectedTabPage = this.layoutControlGroup13;
+            this.tabbedControlGroup1.SelectedTabPage = this.layoutControlGroup9;
             this.tabbedControlGroup1.Size = new System.Drawing.Size(776, 530);
             this.tabbedControlGroup1.TabPages.AddRange(new DevExpress.XtraLayout.BaseLayoutItem[] {
             this.layoutControlGroup9,
