@@ -55,13 +55,13 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
             {
                 Document = new tDocument();
             }
-            
+
             cmbDocType.EditValue = cmbDocType.Properties.Items
                     ?.Cast<GeneralizedDictionaryXPO>()
                     ?.Where(w => w.GeneralizedDictionary == GeneralizedDictionary.DocumentType)
                     ?.FirstOrDefault(f => f.Value == Document?.DocType.GetEnumXmlAttributeValue().ToString());
             txtDocName.EditValue = Document.DocName;
-            txtDocNumber.EditValue = Document.DocNumber;            
+            txtDocNumber.EditValue = Document.DocNumber;
             if (Document.DocDate != DateTime.MinValue)
             {
                 dateDocDate.EditValue = Document.DocDate;
@@ -185,7 +185,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                 if (e.Button.Kind == ButtonPredefines.Delete)
                 {
                     buttonEdit.EditValue = null;
-                }                
+                }
             }
         }
 
@@ -220,7 +220,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                     var fileObj = new tFile()
                     {
                         FileName = fileInfo.Name,
-                        FileFormat = fileInfo.Extension?.Replace(".", ""),
+                        FileFormat = fileInfo.Extension?.Replace(".", string.Empty),
                         FileChecksum = GetCheckSum(fileInfo)?.ToLower()
                     };
 
@@ -228,7 +228,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                 }
 
                 gridControlItems.RefreshDataSource();
-            }            
+            }
         }
 
         private string GetCheckSum(FileInfo fileInfo)
@@ -239,7 +239,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                 return computeHash.ValueString;
             }
             catch (Exception) { }
-            return default;            
+            return default;
         }
 
         private void barBtnItemsDel_ItemClick(object sender, ItemClickEventArgs e)

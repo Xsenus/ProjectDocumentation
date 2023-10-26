@@ -39,19 +39,9 @@
             DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject7 = new DevExpress.Utils.SerializableAppearanceObject();
             DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject8 = new DevExpress.Utils.SerializableAppearanceObject();
             this.layoutControlObjPart = new DevExpress.XtraLayout.LayoutControl();
+            this.cmbFinanceType = new DevExpress.XtraEditors.ComboBoxEdit();
             this.btnClose = new DevExpress.XtraEditors.SimpleButton();
             this.btnSave = new DevExpress.XtraEditors.SimpleButton();
-            this.Root = new DevExpress.XtraLayout.LayoutControlGroup();
-            this.emptySpaceItemSave = new DevExpress.XtraLayout.EmptySpaceItem();
-            this.layoutControlItemSave = new DevExpress.XtraLayout.LayoutControlItem();
-            this.emptySpaceItemClose = new DevExpress.XtraLayout.EmptySpaceItem();
-            this.layoutControlItemClose = new DevExpress.XtraLayout.LayoutControlItem();
-            this.emptySpaceItemFooter = new DevExpress.XtraLayout.EmptySpaceItem();
-            this.tabbedControlGroup = new DevExpress.XtraLayout.TabbedControlGroup();
-            this.layoutControlGroup = new DevExpress.XtraLayout.LayoutControlGroup();
-            this.layoutControlGroupEntity = new DevExpress.XtraLayout.LayoutControlGroup();
-            this.layoutControlGroupForeignLegalEntity = new DevExpress.XtraLayout.LayoutControlGroup();
-            this.cmbFinanceType = new DevExpress.XtraEditors.ComboBoxEdit();
             this.cmbBudgetType = new DevExpress.XtraEditors.ComboBoxEdit();
             this.spinFinanceSize = new DevExpress.XtraEditors.SpinEdit();
             this.radioGroupTypeOrganization = new DevExpress.XtraEditors.RadioGroup();
@@ -67,10 +57,19 @@
             this.txtFOrgINN = new DevExpress.XtraEditors.TextEdit();
             this.btnFAddress = new DevExpress.XtraEditors.ButtonEdit();
             this.txtFEmail = new DevExpress.XtraEditors.TextEdit();
+            this.Root = new DevExpress.XtraLayout.LayoutControlGroup();
             this.layoutControlItemFinanceType = new DevExpress.XtraLayout.LayoutControlItem();
+            this.emptySpaceItemSave = new DevExpress.XtraLayout.EmptySpaceItem();
+            this.layoutControlItemSave = new DevExpress.XtraLayout.LayoutControlItem();
+            this.emptySpaceItemClose = new DevExpress.XtraLayout.EmptySpaceItem();
+            this.layoutControlItemClose = new DevExpress.XtraLayout.LayoutControlItem();
             this.layoutControlItemBudgetType = new DevExpress.XtraLayout.LayoutControlItem();
             this.layoutControlItemFinanceSize = new DevExpress.XtraLayout.LayoutControlItem();
+            this.emptySpaceItemFooter = new DevExpress.XtraLayout.EmptySpaceItem();
+            this.tabbedControlGroup = new DevExpress.XtraLayout.TabbedControlGroup();
+            this.layoutControlGroup = new DevExpress.XtraLayout.LayoutControlGroup();
             this.layoutControlItemTypeOrg = new DevExpress.XtraLayout.LayoutControlItem();
+            this.layoutControlGroupEntity = new DevExpress.XtraLayout.LayoutControlGroup();
             this.layoutControlItemSearch = new DevExpress.XtraLayout.LayoutControlItem();
             this.layoutControlItemOrgFullName = new DevExpress.XtraLayout.LayoutControlItem();
             this.layoutControlItemOrgOGRN = new DevExpress.XtraLayout.LayoutControlItem();
@@ -78,6 +77,7 @@
             this.layoutControlItemOrgINN = new DevExpress.XtraLayout.LayoutControlItem();
             this.layoutControlItemAddress = new DevExpress.XtraLayout.LayoutControlItem();
             this.layoutControlItemEmail = new DevExpress.XtraLayout.LayoutControlItem();
+            this.layoutControlGroupForeignLegalEntity = new DevExpress.XtraLayout.LayoutControlGroup();
             this.layoutControlItemFOrgFullName = new DevExpress.XtraLayout.LayoutControlItem();
             this.layoutControlItemFOrgKPP = new DevExpress.XtraLayout.LayoutControlItem();
             this.layoutControlItemFAddress = new DevExpress.XtraLayout.LayoutControlItem();
@@ -85,16 +85,6 @@
             this.layoutControlItemFEmail = new DevExpress.XtraLayout.LayoutControlItem();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlObjPart)).BeginInit();
             this.layoutControlObjPart.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.Root)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.emptySpaceItemSave)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemSave)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.emptySpaceItemClose)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemClose)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.emptySpaceItemFooter)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.tabbedControlGroup)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.layoutControlGroup)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.layoutControlGroupEntity)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.layoutControlGroupForeignLegalEntity)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.cmbFinanceType.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.cmbBudgetType.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.spinFinanceSize.Properties)).BeginInit();
@@ -111,10 +101,19 @@
             ((System.ComponentModel.ISupportInitialize)(this.txtFOrgINN.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.btnFAddress.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.txtFEmail.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.Root)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemFinanceType)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.emptySpaceItemSave)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemSave)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.emptySpaceItemClose)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemClose)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemBudgetType)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemFinanceSize)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.emptySpaceItemFooter)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.tabbedControlGroup)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutControlGroup)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemTypeOrg)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutControlGroupEntity)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemSearch)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemOrgFullName)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemOrgOGRN)).BeginInit();
@@ -122,6 +121,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemOrgINN)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemAddress)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemEmail)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutControlGroupForeignLegalEntity)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemFOrgFullName)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemFOrgKPP)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemFAddress)).BeginInit();
@@ -159,6 +159,22 @@
             this.layoutControlObjPart.TabIndex = 0;
             this.layoutControlObjPart.Text = "layoutControl1";
             // 
+            // cmbFinanceType
+            // 
+            this.cmbFinanceType.Location = new System.Drawing.Point(6, 24);
+            this.cmbFinanceType.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.cmbFinanceType.Name = "cmbFinanceType";
+            this.cmbFinanceType.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo),
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Ellipsis, "", -1, true, false, false, editorButtonImageOptions1, new DevExpress.Utils.KeyShortcut(System.Windows.Forms.Keys.None), serializableAppearanceObject1, serializableAppearanceObject2, serializableAppearanceObject3, serializableAppearanceObject4, "", null, null, DevExpress.Utils.ToolTipAnchor.Default),
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Delete)});
+            this.cmbFinanceType.Properties.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.DisableTextEditor;
+            this.cmbFinanceType.Size = new System.Drawing.Size(769, 20);
+            this.cmbFinanceType.StyleController = this.layoutControlObjPart;
+            this.cmbFinanceType.TabIndex = 6;
+            this.cmbFinanceType.SelectedValueChanged += new System.EventHandler(this.cmbFinanceType_SelectedValueChanged);
+            this.cmbFinanceType.ButtonPressed += new DevExpress.XtraEditors.Controls.ButtonPressedEventHandler(this.clearEditValue_ButtonPressed);
+            // 
             // btnClose
             // 
             this.btnClose.Location = new System.Drawing.Point(585, 567);
@@ -181,138 +197,6 @@
             this.btnSave.Text = "Сохранить";
             this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
             // 
-            // Root
-            // 
-            this.Root.EnableIndentsWithoutBorders = DevExpress.Utils.DefaultBoolean.True;
-            this.Root.GroupBordersVisible = false;
-            this.Root.Items.AddRange(new DevExpress.XtraLayout.BaseLayoutItem[] {
-            this.layoutControlItemFinanceType,
-            this.emptySpaceItemSave,
-            this.layoutControlItemSave,
-            this.emptySpaceItemClose,
-            this.layoutControlItemClose,
-            this.layoutControlItemBudgetType,
-            this.layoutControlItemFinanceSize,
-            this.emptySpaceItemFooter,
-            this.tabbedControlGroup});
-            this.Root.Name = "Root";
-            this.Root.Padding = new DevExpress.XtraLayout.Utils.Padding(4, 4, 4, 4);
-            this.Root.Size = new System.Drawing.Size(781, 595);
-            this.Root.TextVisible = false;
-            // 
-            // emptySpaceItemSave
-            // 
-            this.emptySpaceItemSave.AllowHotTrack = false;
-            this.emptySpaceItemSave.Location = new System.Drawing.Point(0, 561);
-            this.emptySpaceItemSave.Name = "emptySpaceItemSave";
-            this.emptySpaceItemSave.Size = new System.Drawing.Size(193, 26);
-            this.emptySpaceItemSave.TextSize = new System.Drawing.Size(0, 0);
-            // 
-            // layoutControlItemSave
-            // 
-            this.layoutControlItemSave.Control = this.btnSave;
-            this.layoutControlItemSave.Location = new System.Drawing.Point(386, 561);
-            this.layoutControlItemSave.Name = "layoutControlItemSave";
-            this.layoutControlItemSave.Size = new System.Drawing.Size(193, 26);
-            this.layoutControlItemSave.TextSize = new System.Drawing.Size(0, 0);
-            this.layoutControlItemSave.TextVisible = false;
-            // 
-            // emptySpaceItemClose
-            // 
-            this.emptySpaceItemClose.AllowHotTrack = false;
-            this.emptySpaceItemClose.Location = new System.Drawing.Point(193, 561);
-            this.emptySpaceItemClose.Name = "emptySpaceItemClose";
-            this.emptySpaceItemClose.Size = new System.Drawing.Size(193, 26);
-            this.emptySpaceItemClose.TextSize = new System.Drawing.Size(0, 0);
-            // 
-            // layoutControlItemClose
-            // 
-            this.layoutControlItemClose.Control = this.btnClose;
-            this.layoutControlItemClose.Location = new System.Drawing.Point(579, 561);
-            this.layoutControlItemClose.Name = "layoutControlItemClose";
-            this.layoutControlItemClose.Size = new System.Drawing.Size(194, 26);
-            this.layoutControlItemClose.TextSize = new System.Drawing.Size(0, 0);
-            this.layoutControlItemClose.TextVisible = false;
-            // 
-            // emptySpaceItemFooter
-            // 
-            this.emptySpaceItemFooter.AllowHotTrack = false;
-            this.emptySpaceItemFooter.Location = new System.Drawing.Point(0, 551);
-            this.emptySpaceItemFooter.Name = "emptySpaceItemFooter";
-            this.emptySpaceItemFooter.Size = new System.Drawing.Size(773, 10);
-            this.emptySpaceItemFooter.TextSize = new System.Drawing.Size(0, 0);
-            // 
-            // tabbedControlGroup
-            // 
-            this.tabbedControlGroup.Location = new System.Drawing.Point(0, 84);
-            this.tabbedControlGroup.Name = "tabbedControlGroup";
-            this.tabbedControlGroup.Padding = new DevExpress.XtraLayout.Utils.Padding(5, 5, 5, 5);
-            this.tabbedControlGroup.SelectedTabPage = this.layoutControlGroup;
-            this.tabbedControlGroup.Size = new System.Drawing.Size(773, 443);
-            this.tabbedControlGroup.TabPages.AddRange(new DevExpress.XtraLayout.BaseLayoutItem[] {
-            this.layoutControlGroup});
-            // 
-            // layoutControlGroup
-            // 
-            this.layoutControlGroup.Items.AddRange(new DevExpress.XtraLayout.BaseLayoutItem[] {
-            this.layoutControlItemTypeOrg,
-            this.layoutControlGroupEntity,
-            this.layoutControlGroupForeignLegalEntity});
-            this.layoutControlGroup.Location = new System.Drawing.Point(0, 0);
-            this.layoutControlGroup.Name = "layoutControlGroup";
-            this.layoutControlGroup.Size = new System.Drawing.Size(757, 404);
-            this.layoutControlGroup.Text = "Поиск юридического лица, за счет которого планируется осуществлять финансирование" +
-    "";
-            // 
-            // layoutControlGroupEntity
-            // 
-            this.layoutControlGroupEntity.Items.AddRange(new DevExpress.XtraLayout.BaseLayoutItem[] {
-            this.layoutControlItemSearch,
-            this.layoutControlItemOrgFullName,
-            this.layoutControlItemOrgOGRN,
-            this.layoutControlItemOrgKPP,
-            this.layoutControlItemOrgINN,
-            this.layoutControlItemAddress,
-            this.layoutControlItemEmail});
-            this.layoutControlGroupEntity.Location = new System.Drawing.Point(0, 54);
-            this.layoutControlGroupEntity.Name = "layoutControlGroupEntity";
-            this.layoutControlGroupEntity.Padding = new DevExpress.XtraLayout.Utils.Padding(5, 5, 5, 5);
-            this.layoutControlGroupEntity.Size = new System.Drawing.Size(757, 216);
-            this.layoutControlGroupEntity.TextVisible = false;
-            // 
-            // layoutControlGroupForeignLegalEntity
-            // 
-            this.layoutControlGroupForeignLegalEntity.CustomizationFormText = "layoutControlGroupEntity";
-            this.layoutControlGroupForeignLegalEntity.Items.AddRange(new DevExpress.XtraLayout.BaseLayoutItem[] {
-            this.layoutControlItemFOrgFullName,
-            this.layoutControlItemFOrgKPP,
-            this.layoutControlItemFAddress,
-            this.layoutControlItemFOrgINN,
-            this.layoutControlItemFEmail});
-            this.layoutControlGroupForeignLegalEntity.Location = new System.Drawing.Point(0, 270);
-            this.layoutControlGroupForeignLegalEntity.Name = "layoutControlGroupForeignLegalEntity";
-            this.layoutControlGroupForeignLegalEntity.OptionsItemText.TextToControlDistance = 3;
-            this.layoutControlGroupForeignLegalEntity.Padding = new DevExpress.XtraLayout.Utils.Padding(4, 4, 4, 4);
-            this.layoutControlGroupForeignLegalEntity.Size = new System.Drawing.Size(757, 134);
-            this.layoutControlGroupForeignLegalEntity.Text = "layoutControlGroupEntity";
-            this.layoutControlGroupForeignLegalEntity.TextVisible = false;
-            // 
-            // cmbFinanceType
-            // 
-            this.cmbFinanceType.Location = new System.Drawing.Point(6, 24);
-            this.cmbFinanceType.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.cmbFinanceType.Name = "cmbFinanceType";
-            this.cmbFinanceType.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
-            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo),
-            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Ellipsis, "", -1, true, false, false, editorButtonImageOptions1, new DevExpress.Utils.KeyShortcut(System.Windows.Forms.Keys.None), serializableAppearanceObject1, serializableAppearanceObject2, serializableAppearanceObject3, serializableAppearanceObject4, "", null, null, DevExpress.Utils.ToolTipAnchor.Default),
-            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Delete)});
-            this.cmbFinanceType.Properties.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.DisableTextEditor;
-            this.cmbFinanceType.Size = new System.Drawing.Size(769, 20);
-            this.cmbFinanceType.StyleController = this.layoutControlObjPart;
-            this.cmbFinanceType.TabIndex = 6;
-            this.cmbFinanceType.SelectedValueChanged += new System.EventHandler(this.cmbFinanceType_SelectedValueChanged);
-            this.cmbFinanceType.ButtonPressed += new DevExpress.XtraEditors.Controls.ButtonPressedEventHandler(this.clearEditValue_ButtonPressed);
-            // 
             // cmbBudgetType
             // 
             this.cmbBudgetType.Location = new System.Drawing.Point(6, 66);
@@ -334,7 +218,7 @@
             0,
             0,
             0});
-            this.spinFinanceSize.Location = new System.Drawing.Point(263, 533);
+            this.spinFinanceSize.Location = new System.Drawing.Point(265, 533);
             this.spinFinanceSize.Name = "spinFinanceSize";
             this.spinFinanceSize.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
@@ -343,7 +227,7 @@
             this.spinFinanceSize.Properties.EditFormat.FormatString = "n5";
             this.spinFinanceSize.Properties.EditFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
             this.spinFinanceSize.Properties.MaskSettings.Set("mask", "");
-            this.spinFinanceSize.Size = new System.Drawing.Size(512, 20);
+            this.spinFinanceSize.Size = new System.Drawing.Size(510, 20);
             this.spinFinanceSize.StyleController = this.layoutControlObjPart;
             this.spinFinanceSize.TabIndex = 14;
             // 
@@ -470,6 +354,25 @@
             this.txtFEmail.StyleController = this.layoutControlObjPart;
             this.txtFEmail.TabIndex = 16;
             // 
+            // Root
+            // 
+            this.Root.EnableIndentsWithoutBorders = DevExpress.Utils.DefaultBoolean.True;
+            this.Root.GroupBordersVisible = false;
+            this.Root.Items.AddRange(new DevExpress.XtraLayout.BaseLayoutItem[] {
+            this.layoutControlItemFinanceType,
+            this.emptySpaceItemSave,
+            this.layoutControlItemSave,
+            this.emptySpaceItemClose,
+            this.layoutControlItemClose,
+            this.layoutControlItemBudgetType,
+            this.layoutControlItemFinanceSize,
+            this.emptySpaceItemFooter,
+            this.tabbedControlGroup});
+            this.Root.Name = "Root";
+            this.Root.Padding = new DevExpress.XtraLayout.Utils.Padding(4, 4, 4, 4);
+            this.Root.Size = new System.Drawing.Size(781, 595);
+            this.Root.TextVisible = false;
+            // 
             // layoutControlItemFinanceType
             // 
             this.layoutControlItemFinanceType.Control = this.cmbFinanceType;
@@ -483,6 +386,40 @@
             this.layoutControlItemFinanceType.TextLocation = DevExpress.Utils.Locations.Top;
             this.layoutControlItemFinanceType.TextSize = new System.Drawing.Size(172, 13);
             this.layoutControlItemFinanceType.TextToControlDistance = 5;
+            // 
+            // emptySpaceItemSave
+            // 
+            this.emptySpaceItemSave.AllowHotTrack = false;
+            this.emptySpaceItemSave.Location = new System.Drawing.Point(0, 561);
+            this.emptySpaceItemSave.Name = "emptySpaceItemSave";
+            this.emptySpaceItemSave.Size = new System.Drawing.Size(193, 26);
+            this.emptySpaceItemSave.TextSize = new System.Drawing.Size(0, 0);
+            // 
+            // layoutControlItemSave
+            // 
+            this.layoutControlItemSave.Control = this.btnSave;
+            this.layoutControlItemSave.Location = new System.Drawing.Point(386, 561);
+            this.layoutControlItemSave.Name = "layoutControlItemSave";
+            this.layoutControlItemSave.Size = new System.Drawing.Size(193, 26);
+            this.layoutControlItemSave.TextSize = new System.Drawing.Size(0, 0);
+            this.layoutControlItemSave.TextVisible = false;
+            // 
+            // emptySpaceItemClose
+            // 
+            this.emptySpaceItemClose.AllowHotTrack = false;
+            this.emptySpaceItemClose.Location = new System.Drawing.Point(193, 561);
+            this.emptySpaceItemClose.Name = "emptySpaceItemClose";
+            this.emptySpaceItemClose.Size = new System.Drawing.Size(193, 26);
+            this.emptySpaceItemClose.TextSize = new System.Drawing.Size(0, 0);
+            // 
+            // layoutControlItemClose
+            // 
+            this.layoutControlItemClose.Control = this.btnClose;
+            this.layoutControlItemClose.Location = new System.Drawing.Point(579, 561);
+            this.layoutControlItemClose.Name = "layoutControlItemClose";
+            this.layoutControlItemClose.Size = new System.Drawing.Size(194, 26);
+            this.layoutControlItemClose.TextSize = new System.Drawing.Size(0, 0);
+            this.layoutControlItemClose.TextVisible = false;
             // 
             // layoutControlItemBudgetType
             // 
@@ -508,6 +445,36 @@
             this.layoutControlItemFinanceSize.Text = "Размер финансирования (в % от общей суммы)";
             this.layoutControlItemFinanceSize.TextSize = new System.Drawing.Size(247, 13);
             // 
+            // emptySpaceItemFooter
+            // 
+            this.emptySpaceItemFooter.AllowHotTrack = false;
+            this.emptySpaceItemFooter.Location = new System.Drawing.Point(0, 551);
+            this.emptySpaceItemFooter.Name = "emptySpaceItemFooter";
+            this.emptySpaceItemFooter.Size = new System.Drawing.Size(773, 10);
+            this.emptySpaceItemFooter.TextSize = new System.Drawing.Size(0, 0);
+            // 
+            // tabbedControlGroup
+            // 
+            this.tabbedControlGroup.Location = new System.Drawing.Point(0, 84);
+            this.tabbedControlGroup.Name = "tabbedControlGroup";
+            this.tabbedControlGroup.Padding = new DevExpress.XtraLayout.Utils.Padding(5, 5, 5, 5);
+            this.tabbedControlGroup.SelectedTabPage = this.layoutControlGroup;
+            this.tabbedControlGroup.Size = new System.Drawing.Size(773, 443);
+            this.tabbedControlGroup.TabPages.AddRange(new DevExpress.XtraLayout.BaseLayoutItem[] {
+            this.layoutControlGroup});
+            // 
+            // layoutControlGroup
+            // 
+            this.layoutControlGroup.Items.AddRange(new DevExpress.XtraLayout.BaseLayoutItem[] {
+            this.layoutControlItemTypeOrg,
+            this.layoutControlGroupEntity,
+            this.layoutControlGroupForeignLegalEntity});
+            this.layoutControlGroup.Location = new System.Drawing.Point(0, 0);
+            this.layoutControlGroup.Name = "layoutControlGroup";
+            this.layoutControlGroup.Size = new System.Drawing.Size(757, 404);
+            this.layoutControlGroup.Text = "Поиск юридического лица, за счет которого планируется осуществлять финансирование" +
+    "";
+            // 
             // layoutControlItemTypeOrg
             // 
             this.layoutControlItemTypeOrg.Control = this.radioGroupTypeOrganization;
@@ -516,6 +483,22 @@
             this.layoutControlItemTypeOrg.Size = new System.Drawing.Size(757, 54);
             this.layoutControlItemTypeOrg.TextSize = new System.Drawing.Size(0, 0);
             this.layoutControlItemTypeOrg.TextVisible = false;
+            // 
+            // layoutControlGroupEntity
+            // 
+            this.layoutControlGroupEntity.Items.AddRange(new DevExpress.XtraLayout.BaseLayoutItem[] {
+            this.layoutControlItemSearch,
+            this.layoutControlItemOrgFullName,
+            this.layoutControlItemOrgOGRN,
+            this.layoutControlItemOrgKPP,
+            this.layoutControlItemOrgINN,
+            this.layoutControlItemAddress,
+            this.layoutControlItemEmail});
+            this.layoutControlGroupEntity.Location = new System.Drawing.Point(0, 54);
+            this.layoutControlGroupEntity.Name = "layoutControlGroupEntity";
+            this.layoutControlGroupEntity.Padding = new DevExpress.XtraLayout.Utils.Padding(5, 5, 5, 5);
+            this.layoutControlGroupEntity.Size = new System.Drawing.Size(757, 216);
+            this.layoutControlGroupEntity.TextVisible = false;
             // 
             // layoutControlItemSearch
             // 
@@ -597,6 +580,23 @@
             this.layoutControlItemEmail.TextLocation = DevExpress.Utils.Locations.Top;
             this.layoutControlItemEmail.TextSize = new System.Drawing.Size(247, 13);
             // 
+            // layoutControlGroupForeignLegalEntity
+            // 
+            this.layoutControlGroupForeignLegalEntity.CustomizationFormText = "layoutControlGroupEntity";
+            this.layoutControlGroupForeignLegalEntity.Items.AddRange(new DevExpress.XtraLayout.BaseLayoutItem[] {
+            this.layoutControlItemFOrgFullName,
+            this.layoutControlItemFOrgKPP,
+            this.layoutControlItemFAddress,
+            this.layoutControlItemFOrgINN,
+            this.layoutControlItemFEmail});
+            this.layoutControlGroupForeignLegalEntity.Location = new System.Drawing.Point(0, 270);
+            this.layoutControlGroupForeignLegalEntity.Name = "layoutControlGroupForeignLegalEntity";
+            this.layoutControlGroupForeignLegalEntity.OptionsItemText.TextToControlDistance = 3;
+            this.layoutControlGroupForeignLegalEntity.Padding = new DevExpress.XtraLayout.Utils.Padding(4, 4, 4, 4);
+            this.layoutControlGroupForeignLegalEntity.Size = new System.Drawing.Size(757, 134);
+            this.layoutControlGroupForeignLegalEntity.Text = "layoutControlGroupEntity";
+            this.layoutControlGroupForeignLegalEntity.TextVisible = false;
+            // 
             // layoutControlItemFOrgFullName
             // 
             this.layoutControlItemFOrgFullName.Control = this.txtFOrgFullName;
@@ -663,6 +663,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(798, 568);
             this.Controls.Add(this.layoutControlObjPart);
+            this.IconOptions.Image = global::ProjectDocumentation.NET.Properties.Resources.icon;
             this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.MinimumSize = new System.Drawing.Size(750, 450);
             this.Name = "FundingInformationEdit";
@@ -670,16 +671,6 @@
             this.Load += new System.EventHandler(this.ObjPartEdit_Load);
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlObjPart)).EndInit();
             this.layoutControlObjPart.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.Root)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.emptySpaceItemSave)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemSave)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.emptySpaceItemClose)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemClose)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.emptySpaceItemFooter)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.tabbedControlGroup)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.layoutControlGroup)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.layoutControlGroupEntity)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.layoutControlGroupForeignLegalEntity)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.cmbFinanceType.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.cmbBudgetType.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.spinFinanceSize.Properties)).EndInit();
@@ -696,10 +687,19 @@
             ((System.ComponentModel.ISupportInitialize)(this.txtFOrgINN.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.btnFAddress.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.txtFEmail.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.Root)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemFinanceType)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.emptySpaceItemSave)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemSave)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.emptySpaceItemClose)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemClose)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemBudgetType)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemFinanceSize)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.emptySpaceItemFooter)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.tabbedControlGroup)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutControlGroup)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemTypeOrg)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutControlGroupEntity)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemSearch)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemOrgFullName)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemOrgOGRN)).EndInit();
@@ -707,6 +707,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemOrgINN)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemAddress)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemEmail)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutControlGroupForeignLegalEntity)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemFOrgFullName)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemFOrgKPP)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemFAddress)).EndInit();

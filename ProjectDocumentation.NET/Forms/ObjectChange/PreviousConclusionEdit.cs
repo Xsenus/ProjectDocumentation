@@ -151,7 +151,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                 if (e.Button.Kind == ButtonPredefines.Delete)
                 {
                     buttonEdit.EditValue = null;
-                }                
+                }
             }
         }
     }

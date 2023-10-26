@@ -1,7 +1,4 @@
 ﻿using Core.NET.AutoModels;
-using Core.NET.Controllers;
-using Core.NET.Models.XPO;
-using DevExpress.Xpo;
 using DevExpress.XtraEditors;
 using System;
 using System.Linq;

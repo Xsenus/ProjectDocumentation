@@ -49,7 +49,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
             {
                 ExpertProjectDocuments = new tExpertProjectDocuments();
             }
-            
+
             cmbExpertType.EditValue = cmbExpertType.Properties.Items
                     ?.Cast<GeneralizedDictionaryXPO>()
                     ?.Where(w => w.GeneralizedDictionary == GeneralizedDictionary.ExpertType)
@@ -62,11 +62,11 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
         private void btnSave_Click(object sender, EventArgs e)
         {
             try
-            {                
+            {
                 ExpertProjectDocuments.ExpertType = ConclusionEdit.GetEnumByAttributeValue<tExpertType>(ConclusionEdit.GetValueGeneralizedDictionary(
                     cmbExpertType,
                     message: "Заполните поле направление деятельности в области экспертизы проектной документации.").Value);
-                
+
                 ExpertProjectDocuments.ProjectDocumentsReview = ConclusionEdit.GetStringValue(richEditControlProjectDocumentsReview.Text, richEditControlProjectDocumentsReview, "Заполните поле описание основных решений (мероприятий), принятых в проектной документации.", isNullAble: true);
                 ExpertProjectDocuments.ProjectDocumentsChanges = ConclusionEdit.GetStringValue(richEditControlProjectDocumentsChanges.Text, richEditControlProjectDocumentsChanges, "Заполните поле сведения об оперативных изменениях.", isNullAble: true);
             }
@@ -92,7 +92,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                 if (e.Button.Kind == ButtonPredefines.Delete)
                 {
                     buttonEdit.EditValue = null;
-                }                
+                }
             }
         }
     }

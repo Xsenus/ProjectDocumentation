@@ -53,7 +53,7 @@ namespace Core.NET.Extensions
                     result += GetValue(property, "OGRNIP", "ОГРНИП");
                     result += GetValue(property, "PostAddress", "Адрес");
                 }
-                
+
                 result += GetValue(property, "Email", "E-mail");
             }
 

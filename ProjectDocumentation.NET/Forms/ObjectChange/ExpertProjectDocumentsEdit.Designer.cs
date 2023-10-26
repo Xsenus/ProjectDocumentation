@@ -35,8 +35,10 @@
             DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject4 = new DevExpress.Utils.SerializableAppearanceObject();
             this.btnSave = new DevExpress.XtraEditors.SimpleButton();
             this.layoutControlObjPart = new DevExpress.XtraLayout.LayoutControl();
+            this.richEditControlProjectDocumentsReview = new DevExpress.XtraRichEdit.RichEditControl();
             this.btnClose = new DevExpress.XtraEditors.SimpleButton();
             this.cmbExpertType = new DevExpress.XtraEditors.ComboBoxEdit();
+            this.richEditControlProjectDocumentsChanges = new DevExpress.XtraRichEdit.RichEditControl();
             this.Root = new DevExpress.XtraLayout.LayoutControlGroup();
             this.emptySpaceItemSave = new DevExpress.XtraLayout.EmptySpaceItem();
             this.layoutControlItem2 = new DevExpress.XtraLayout.LayoutControlItem();
@@ -44,9 +46,7 @@
             this.layoutControlItem1 = new DevExpress.XtraLayout.LayoutControlItem();
             this.layoutControlItemExaminationResult = new DevExpress.XtraLayout.LayoutControlItem();
             this.splitterItem = new DevExpress.XtraLayout.SplitterItem();
-            this.richEditControlProjectDocumentsReview = new DevExpress.XtraRichEdit.RichEditControl();
             this.layoutControlItemProjectDocumentsReview = new DevExpress.XtraLayout.LayoutControlItem();
-            this.richEditControlProjectDocumentsChanges = new DevExpress.XtraRichEdit.RichEditControl();
             this.layoutControlItemProjectDocumentsChanges = new DevExpress.XtraLayout.LayoutControlItem();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlObjPart)).BeginInit();
             this.layoutControlObjPart.SuspendLayout();
@@ -90,6 +90,14 @@
             this.layoutControlObjPart.TabIndex = 0;
             this.layoutControlObjPart.Text = "layoutControl1";
             // 
+            // richEditControlProjectDocumentsReview
+            // 
+            this.richEditControlProjectDocumentsReview.Location = new System.Drawing.Point(6, 62);
+            this.richEditControlProjectDocumentsReview.Name = "richEditControlProjectDocumentsReview";
+            this.richEditControlProjectDocumentsReview.Size = new System.Drawing.Size(786, 211);
+            this.richEditControlProjectDocumentsReview.TabIndex = 14;
+            this.richEditControlProjectDocumentsReview.Text = "richEditControl1";
+            // 
             // btnClose
             // 
             this.btnClose.Location = new System.Drawing.Point(598, 540);
@@ -116,6 +124,14 @@
             this.cmbExpertType.StyleController = this.layoutControlObjPart;
             this.cmbExpertType.TabIndex = 6;
             this.cmbExpertType.ButtonPressed += new DevExpress.XtraEditors.Controls.ButtonPressedEventHandler(this.buttonEdit_ButtonPressed);
+            // 
+            // richEditControlProjectDocumentsChanges
+            // 
+            this.richEditControlProjectDocumentsChanges.Location = new System.Drawing.Point(6, 303);
+            this.richEditControlProjectDocumentsChanges.Name = "richEditControlProjectDocumentsChanges";
+            this.richEditControlProjectDocumentsChanges.Size = new System.Drawing.Size(786, 233);
+            this.richEditControlProjectDocumentsChanges.TabIndex = 14;
+            this.richEditControlProjectDocumentsChanges.Text = "richEditControl1";
             // 
             // Root
             // 
@@ -188,14 +204,6 @@
             this.splitterItem.Name = "splitterItem";
             this.splitterItem.Size = new System.Drawing.Size(790, 10);
             // 
-            // richEditControlProjectDocumentsReview
-            // 
-            this.richEditControlProjectDocumentsReview.Location = new System.Drawing.Point(6, 62);
-            this.richEditControlProjectDocumentsReview.Name = "richEditControlProjectDocumentsReview";
-            this.richEditControlProjectDocumentsReview.Size = new System.Drawing.Size(786, 211);
-            this.richEditControlProjectDocumentsReview.TabIndex = 14;
-            this.richEditControlProjectDocumentsReview.Text = "richEditControl1";
-            // 
             // layoutControlItemProjectDocumentsReview
             // 
             this.layoutControlItemProjectDocumentsReview.Control = this.richEditControlProjectDocumentsReview;
@@ -205,14 +213,6 @@
             this.layoutControlItemProjectDocumentsReview.Text = "Описание основных решений (мероприятий), принятых в проектной документации";
             this.layoutControlItemProjectDocumentsReview.TextLocation = DevExpress.Utils.Locations.Top;
             this.layoutControlItemProjectDocumentsReview.TextSize = new System.Drawing.Size(769, 13);
-            // 
-            // richEditControlProjectDocumentsChanges
-            // 
-            this.richEditControlProjectDocumentsChanges.Location = new System.Drawing.Point(6, 303);
-            this.richEditControlProjectDocumentsChanges.Name = "richEditControlProjectDocumentsChanges";
-            this.richEditControlProjectDocumentsChanges.Size = new System.Drawing.Size(786, 233);
-            this.richEditControlProjectDocumentsChanges.TabIndex = 14;
-            this.richEditControlProjectDocumentsChanges.Text = "richEditControl1";
             // 
             // layoutControlItemProjectDocumentsChanges
             // 
@@ -233,6 +233,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(798, 568);
             this.Controls.Add(this.layoutControlObjPart);
+            this.IconOptions.Image = global::ProjectDocumentation.NET.Properties.Resources.icon;
             this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.MinimumSize = new System.Drawing.Size(800, 350);
             this.Name = "ExpertProjectDocumentsEdit";

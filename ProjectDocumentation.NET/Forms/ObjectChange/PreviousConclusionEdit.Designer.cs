@@ -41,17 +41,17 @@
             this.layoutControlObjPart = new DevExpress.XtraLayout.LayoutControl();
             this.btnClose = new DevExpress.XtraEditors.SimpleButton();
             this.btnSave = new DevExpress.XtraEditors.SimpleButton();
-            this.Root = new DevExpress.XtraLayout.LayoutControlGroup();
-            this.emptySpaceItemSave = new DevExpress.XtraLayout.EmptySpaceItem();
-            this.layoutControlItem2 = new DevExpress.XtraLayout.LayoutControlItem();
-            this.emptySpaceItemClose = new DevExpress.XtraLayout.EmptySpaceItem();
-            this.layoutControlItem1 = new DevExpress.XtraLayout.LayoutControlItem();
             this.txtEEPDNumber = new DevExpress.XtraEditors.TextEdit();
             this.dateEEPDDate = new DevExpress.XtraEditors.DateEdit();
             this.radioGroupConclusionNumber = new DevExpress.XtraEditors.RadioGroup();
             this.cmbExaminationResult = new DevExpress.XtraEditors.ComboBoxEdit();
             this.cmbExaminationObjectType = new DevExpress.XtraEditors.ComboBoxEdit();
             this.memoName = new DevExpress.XtraEditors.MemoEdit();
+            this.Root = new DevExpress.XtraLayout.LayoutControlGroup();
+            this.emptySpaceItemSave = new DevExpress.XtraLayout.EmptySpaceItem();
+            this.layoutControlItem2 = new DevExpress.XtraLayout.LayoutControlItem();
+            this.emptySpaceItemClose = new DevExpress.XtraLayout.EmptySpaceItem();
+            this.layoutControlItem1 = new DevExpress.XtraLayout.LayoutControlItem();
             this.layoutControlItemEEPDNumber = new DevExpress.XtraLayout.LayoutControlItem();
             this.layoutControlItemEEPDDate = new DevExpress.XtraLayout.LayoutControlItem();
             this.layoutControlItemEEPDType = new DevExpress.XtraLayout.LayoutControlItem();
@@ -60,11 +60,6 @@
             this.layoutControlItemName = new DevExpress.XtraLayout.LayoutControlItem();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlObjPart)).BeginInit();
             this.layoutControlObjPart.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.Root)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.emptySpaceItemSave)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem2)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.emptySpaceItemClose)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.txtEEPDNumber.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dateEEPDDate.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dateEEPDDate.Properties.CalendarTimeProperties)).BeginInit();
@@ -72,6 +67,11 @@
             ((System.ComponentModel.ISupportInitialize)(this.cmbExaminationResult.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.cmbExaminationObjectType.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.memoName.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.Root)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.emptySpaceItemSave)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem2)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.emptySpaceItemClose)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemEEPDNumber)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemEEPDDate)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemEEPDType)).BeginInit();
@@ -121,60 +121,6 @@
             this.btnSave.TabIndex = 13;
             this.btnSave.Text = "Сохранить";
             this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
-            // 
-            // Root
-            // 
-            this.Root.EnableIndentsWithoutBorders = DevExpress.Utils.DefaultBoolean.True;
-            this.Root.GroupBordersVisible = false;
-            this.Root.Items.AddRange(new DevExpress.XtraLayout.BaseLayoutItem[] {
-            this.emptySpaceItemSave,
-            this.layoutControlItem2,
-            this.emptySpaceItemClose,
-            this.layoutControlItem1,
-            this.layoutControlItemEEPDNumber,
-            this.layoutControlItemEEPDDate,
-            this.layoutControlItemEEPDType,
-            this.layoutControlItemExaminationResult,
-            this.layoutControlItemExaminationObjectType,
-            this.layoutControlItemName});
-            this.Root.Name = "Root";
-            this.Root.Padding = new DevExpress.XtraLayout.Utils.Padding(4, 4, 4, 4);
-            this.Root.Size = new System.Drawing.Size(648, 318);
-            this.Root.TextVisible = false;
-            // 
-            // emptySpaceItemSave
-            // 
-            this.emptySpaceItemSave.AllowHotTrack = false;
-            this.emptySpaceItemSave.Location = new System.Drawing.Point(0, 284);
-            this.emptySpaceItemSave.Name = "emptySpaceItemSave";
-            this.emptySpaceItemSave.Size = new System.Drawing.Size(160, 26);
-            this.emptySpaceItemSave.TextSize = new System.Drawing.Size(0, 0);
-            // 
-            // layoutControlItem2
-            // 
-            this.layoutControlItem2.Control = this.btnSave;
-            this.layoutControlItem2.Location = new System.Drawing.Point(320, 284);
-            this.layoutControlItem2.Name = "layoutControlItem2";
-            this.layoutControlItem2.Size = new System.Drawing.Size(159, 26);
-            this.layoutControlItem2.TextSize = new System.Drawing.Size(0, 0);
-            this.layoutControlItem2.TextVisible = false;
-            // 
-            // emptySpaceItemClose
-            // 
-            this.emptySpaceItemClose.AllowHotTrack = false;
-            this.emptySpaceItemClose.Location = new System.Drawing.Point(160, 284);
-            this.emptySpaceItemClose.Name = "emptySpaceItemClose";
-            this.emptySpaceItemClose.Size = new System.Drawing.Size(160, 26);
-            this.emptySpaceItemClose.TextSize = new System.Drawing.Size(0, 0);
-            // 
-            // layoutControlItem1
-            // 
-            this.layoutControlItem1.Control = this.btnClose;
-            this.layoutControlItem1.Location = new System.Drawing.Point(479, 284);
-            this.layoutControlItem1.Name = "layoutControlItem1";
-            this.layoutControlItem1.Size = new System.Drawing.Size(161, 26);
-            this.layoutControlItem1.TextSize = new System.Drawing.Size(0, 0);
-            this.layoutControlItem1.TextVisible = false;
             // 
             // txtEEPDNumber
             // 
@@ -263,6 +209,60 @@
             this.memoName.StyleController = this.layoutControlObjPart;
             this.memoName.TabIndex = 7;
             // 
+            // Root
+            // 
+            this.Root.EnableIndentsWithoutBorders = DevExpress.Utils.DefaultBoolean.True;
+            this.Root.GroupBordersVisible = false;
+            this.Root.Items.AddRange(new DevExpress.XtraLayout.BaseLayoutItem[] {
+            this.emptySpaceItemSave,
+            this.layoutControlItem2,
+            this.emptySpaceItemClose,
+            this.layoutControlItem1,
+            this.layoutControlItemEEPDNumber,
+            this.layoutControlItemEEPDDate,
+            this.layoutControlItemEEPDType,
+            this.layoutControlItemExaminationResult,
+            this.layoutControlItemExaminationObjectType,
+            this.layoutControlItemName});
+            this.Root.Name = "Root";
+            this.Root.Padding = new DevExpress.XtraLayout.Utils.Padding(4, 4, 4, 4);
+            this.Root.Size = new System.Drawing.Size(648, 318);
+            this.Root.TextVisible = false;
+            // 
+            // emptySpaceItemSave
+            // 
+            this.emptySpaceItemSave.AllowHotTrack = false;
+            this.emptySpaceItemSave.Location = new System.Drawing.Point(0, 284);
+            this.emptySpaceItemSave.Name = "emptySpaceItemSave";
+            this.emptySpaceItemSave.Size = new System.Drawing.Size(160, 26);
+            this.emptySpaceItemSave.TextSize = new System.Drawing.Size(0, 0);
+            // 
+            // layoutControlItem2
+            // 
+            this.layoutControlItem2.Control = this.btnSave;
+            this.layoutControlItem2.Location = new System.Drawing.Point(320, 284);
+            this.layoutControlItem2.Name = "layoutControlItem2";
+            this.layoutControlItem2.Size = new System.Drawing.Size(159, 26);
+            this.layoutControlItem2.TextSize = new System.Drawing.Size(0, 0);
+            this.layoutControlItem2.TextVisible = false;
+            // 
+            // emptySpaceItemClose
+            // 
+            this.emptySpaceItemClose.AllowHotTrack = false;
+            this.emptySpaceItemClose.Location = new System.Drawing.Point(160, 284);
+            this.emptySpaceItemClose.Name = "emptySpaceItemClose";
+            this.emptySpaceItemClose.Size = new System.Drawing.Size(160, 26);
+            this.emptySpaceItemClose.TextSize = new System.Drawing.Size(0, 0);
+            // 
+            // layoutControlItem1
+            // 
+            this.layoutControlItem1.Control = this.btnClose;
+            this.layoutControlItem1.Location = new System.Drawing.Point(479, 284);
+            this.layoutControlItem1.Name = "layoutControlItem1";
+            this.layoutControlItem1.Size = new System.Drawing.Size(161, 26);
+            this.layoutControlItem1.TextSize = new System.Drawing.Size(0, 0);
+            this.layoutControlItem1.TextVisible = false;
+            // 
             // layoutControlItemEEPDNumber
             // 
             this.layoutControlItemEEPDNumber.Control = this.txtEEPDNumber;
@@ -338,6 +338,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(648, 318);
             this.Controls.Add(this.layoutControlObjPart);
+            this.IconOptions.Image = global::ProjectDocumentation.NET.Properties.Resources.icon;
             this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.MinimumSize = new System.Drawing.Size(650, 350);
             this.Name = "PreviousConclusionEdit";
@@ -345,11 +346,6 @@
             this.Load += new System.EventHandler(this.ObjPartEdit_Load);
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlObjPart)).EndInit();
             this.layoutControlObjPart.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.Root)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.emptySpaceItemSave)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem2)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.emptySpaceItemClose)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.txtEEPDNumber.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dateEEPDDate.Properties.CalendarTimeProperties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dateEEPDDate.Properties)).EndInit();
@@ -357,6 +353,11 @@
             ((System.ComponentModel.ISupportInitialize)(this.cmbExaminationResult.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.cmbExaminationObjectType.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.memoName.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.Root)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.emptySpaceItemSave)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem2)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.emptySpaceItemClose)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemEEPDNumber)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemEEPDDate)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemEEPDType)).EndInit();

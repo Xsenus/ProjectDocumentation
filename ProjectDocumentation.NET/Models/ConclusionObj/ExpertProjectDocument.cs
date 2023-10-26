@@ -40,7 +40,7 @@ namespace ProjectDocumentation.NET.Models.ConclusionObj
                 var expertType = await new XPQuery<GeneralizedDictionaryXPO>(session)?
                 .FirstOrDefaultAsync(f => f.GeneralizedDictionary == GeneralizedDictionary.ExpertType
                     && f.Value == ExpertProjectDocuments.ExpertType.GetEnumXmlAttributeValue().ToString());
-                ExpertType = expertType?.Name;;
+                ExpertType = expertType?.Name; ;
             }
         }
 

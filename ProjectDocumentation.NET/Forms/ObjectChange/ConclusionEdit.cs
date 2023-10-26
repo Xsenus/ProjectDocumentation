@@ -215,7 +215,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
 
                 #region Page I_6
                 _tPreviousConclusions = Conclusion?.PreviousConclusions?.ToList() ?? new List<tPreviousConclusion>();
-                gridControlPreviousConclusions.DataSource = _tPreviousConclusions; 
+                gridControlPreviousConclusions.DataSource = _tPreviousConclusions;
                 foreach (GridColumn column in gridViewPreviousConclusions.Columns)
                 {
                     column.Visible = false;
@@ -352,7 +352,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                 {
                     _cadastralNumbers = new List<CadastralNumber>();
                 }
-                gridControlCadastralNumber.DataSource = _cadastralNumbers; 
+                gridControlCadastralNumber.DataSource = _cadastralNumbers;
                 if (gridViewCadastralNumber.Columns[nameof(CadastralNumber.Number)] is GridColumn gridCadastralNumber)
                 {
                     gridCadastralNumber.Caption = "Кадастровый номер";
@@ -656,7 +656,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                 #endregion
 
                 #region Page I_5
-                if(_tDocuments.Count > 0)
+                if (_tDocuments.Count > 0)
                 {
                     Conclusion.Documents = _tDocuments.ToArray();
                 }
@@ -851,7 +851,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                 #region Page VI
                 if (Conclusion.Summary is null)
                 {
-                    Conclusion.Summary = new tSummary();                    
+                    Conclusion.Summary = new tSummary();
                 }
                 Conclusion.Summary.ExaminationSummary = GetStringValue(memoExaminationSummary.EditValue, memoExaminationSummary, "Заполните поле общие выводы (итоговые выводы по результатам проведенной экспертизы)");
                 #endregion
@@ -872,7 +872,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Error);
                 return;
-            }            
+            }
 
             IsSave = true;
             Close();
@@ -1413,7 +1413,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
             if (sender is GridView gridView)
             {
                 popupMenuProjectDocumentsTechnicalCustomer.ShowPopup(new Point(Cursor.Position.X, Cursor.Position.Y));
-            }            
+            }
         }
 
         private void barBtnProjectDocumentsTechnicalCustomerAdd_ItemClick(object sender, ItemClickEventArgs e)
@@ -1640,7 +1640,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
         private void barBtnPreviousConclusionsAdd_ItemClick(object sender, ItemClickEventArgs e)
         {
             var form = new PreviousConclusionEdit();
-            form.ShowDialog(); 
+            form.ShowDialog();
             if (form.IsSave)
             {
                 _tPreviousConclusions.Add(form.PreviousConclusion);

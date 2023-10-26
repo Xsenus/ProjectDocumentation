@@ -36,16 +36,19 @@
             // 
             this.memoValue.Dock = System.Windows.Forms.DockStyle.Fill;
             this.memoValue.Location = new System.Drawing.Point(0, 0);
+            this.memoValue.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.memoValue.Name = "memoValue";
-            this.memoValue.Size = new System.Drawing.Size(910, 562);
+            this.memoValue.Size = new System.Drawing.Size(780, 457);
             this.memoValue.TabIndex = 0;
             // 
             // ViewForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 16F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(910, 562);
+            this.ClientSize = new System.Drawing.Size(780, 457);
             this.Controls.Add(this.memoValue);
+            this.IconOptions.Image = global::ProjectDocumentation.NET.Properties.Resources.icon;
+            this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.Name = "ViewForm";
             this.Text = "Просмотр";
             this.Load += new System.EventHandler(this.ViewForm_Load);

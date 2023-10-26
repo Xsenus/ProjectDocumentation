@@ -73,23 +73,23 @@
             // 
             // btnFile
             // 
-            this.btnFile.Location = new System.Drawing.Point(92, 30);
+            this.btnFile.Location = new System.Drawing.Point(94, 30);
             this.btnFile.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btnFile.Name = "btnFile";
             this.btnFile.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
             new DevExpress.XtraEditors.Controls.EditorButton(),
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Delete)});
-            this.btnFile.Size = new System.Drawing.Size(400, 20);
+            this.btnFile.Size = new System.Drawing.Size(398, 20);
             this.btnFile.StyleController = this.layoutControl;
             this.btnFile.TabIndex = 4;
             this.btnFile.ButtonPressed += new DevExpress.XtraEditors.Controls.ButtonPressedEventHandler(this.btnFile_ButtonPressed);
             // 
             // txtName
             // 
-            this.txtName.Location = new System.Drawing.Point(92, 6);
+            this.txtName.Location = new System.Drawing.Point(94, 6);
             this.txtName.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.txtName.Name = "txtName";
-            this.txtName.Size = new System.Drawing.Size(400, 20);
+            this.txtName.Size = new System.Drawing.Size(398, 20);
             this.txtName.StyleController = this.layoutControl;
             this.txtName.TabIndex = 5;
             // 
@@ -202,6 +202,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(498, 118);
             this.Controls.Add(this.layoutControl);
+            this.IconOptions.Image = global::ProjectDocumentation.NET.Properties.Resources.icon;
             this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.MinimumSize = new System.Drawing.Size(500, 150);
             this.Name = "FileLoad";

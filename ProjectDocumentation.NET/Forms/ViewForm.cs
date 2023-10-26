@@ -215,7 +215,7 @@ namespace ProjectDocumentation.NET.Forms
             catch (Exception)
             {
                 return default;
-            }            
+            }
         }
     }
 }

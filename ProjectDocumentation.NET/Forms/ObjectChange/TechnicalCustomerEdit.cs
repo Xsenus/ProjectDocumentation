@@ -41,7 +41,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
         private async Task FillFormControllersAsync()
         {
             radioGroupTypeOrganization.Properties.Items.AddEnum(typeof(TypeOrganization));
-            var collection = await new XPQuery<GeneralizedDictionaryXPO>(_session).ToListAsync(); 
+            var collection = await new XPQuery<GeneralizedDictionaryXPO>(_session).ToListAsync();
             var individualEntrepreneur = radioGroupTypeOrganization.Properties.Items?.FirstOrDefault(f => f.Value is TypeOrganization typeOrganization && typeOrganization == TypeOrganization.IndividualEntrepreneur);
             individualEntrepreneur.Enabled = false;
             var person = radioGroupTypeOrganization.Properties.Items?.FirstOrDefault(f => f.Value is TypeOrganization typeOrganization && typeOrganization == TypeOrganization.Person);
@@ -134,7 +134,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                             return;
                         }
                         TechnicalCustomer.Item = foreignLegalEntity;
-                        break;                    
+                        break;
                 }
             }
             catch (Exception ex)

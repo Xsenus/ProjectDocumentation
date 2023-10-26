@@ -2,7 +2,6 @@
 using Core.NET.Controllers;
 using Core.NET.Extensions;
 using Core.NET.Models.XPO;
-using DevExpress.Export;
 using DevExpress.Xpo;
 using DevExpress.XtraEditors;
 using System;
@@ -13,7 +12,8 @@ using System.Windows.Forms;
 namespace ProjectDocumentation.NET.Forms.ObjectChange
 {
     public partial class ExpretEdit : XtraForm
-    {        private Session _session => SessionController.GetSession();
+    {
+        private Session _session => SessionController.GetSession();
         public bool IsSave { get; private set; }
         public tExpert Expert { get; private set; }
 

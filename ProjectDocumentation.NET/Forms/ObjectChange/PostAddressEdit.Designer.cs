@@ -28,11 +28,11 @@
         /// </summary>
         private void InitializeComponent()
         {
-            DevExpress.XtraEditors.Controls.EditorButtonImageOptions editorButtonImageOptions2 = new DevExpress.XtraEditors.Controls.EditorButtonImageOptions();
-            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject5 = new DevExpress.Utils.SerializableAppearanceObject();
-            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject6 = new DevExpress.Utils.SerializableAppearanceObject();
-            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject7 = new DevExpress.Utils.SerializableAppearanceObject();
-            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject8 = new DevExpress.Utils.SerializableAppearanceObject();
+            DevExpress.XtraEditors.Controls.EditorButtonImageOptions editorButtonImageOptions1 = new DevExpress.XtraEditors.Controls.EditorButtonImageOptions();
+            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject1 = new DevExpress.Utils.SerializableAppearanceObject();
+            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject2 = new DevExpress.Utils.SerializableAppearanceObject();
+            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject3 = new DevExpress.Utils.SerializableAppearanceObject();
+            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject4 = new DevExpress.Utils.SerializableAppearanceObject();
             this.layoutControlExpert = new DevExpress.XtraLayout.LayoutControl();
             this.btnSave = new DevExpress.XtraEditors.SimpleButton();
             this.btnCancel = new DevExpress.XtraEditors.SimpleButton();
@@ -45,6 +45,7 @@
             this.txtRoom = new DevExpress.XtraEditors.TextEdit();
             this.txtNote = new DevExpress.XtraEditors.TextEdit();
             this.txtSettlement = new DevExpress.XtraEditors.TextEdit();
+            this.txtPostIndex = new DevExpress.XtraEditors.TextEdit();
             this.Root = new DevExpress.XtraLayout.LayoutControlGroup();
             this.layoutControlItemCountry = new DevExpress.XtraLayout.LayoutControlItem();
             this.layoutControlItemDistrict = new DevExpress.XtraLayout.LayoutControlItem();
@@ -60,7 +61,6 @@
             this.layoutControlItemRoom = new DevExpress.XtraLayout.LayoutControlItem();
             this.layoutControlItemNote = new DevExpress.XtraLayout.LayoutControlItem();
             this.layoutControlItemSettlement = new DevExpress.XtraLayout.LayoutControlItem();
-            this.txtPostIndex = new DevExpress.XtraEditors.TextEdit();
             this.layoutControlItemPostIndex = new DevExpress.XtraLayout.LayoutControlItem();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlExpert)).BeginInit();
             this.layoutControlExpert.SuspendLayout();
@@ -73,6 +73,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.txtRoom.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.txtNote.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.txtSettlement.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.txtPostIndex.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.Root)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemCountry)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemDistrict)).BeginInit();
@@ -88,7 +89,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemRoom)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemNote)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemSettlement)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.txtPostIndex.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemPostIndex)).BeginInit();
             this.SuspendLayout();
             // 
@@ -173,7 +173,7 @@
             this.cmbRegion.Name = "cmbRegion";
             this.cmbRegion.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo),
-            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Ellipsis, "", -1, true, false, false, editorButtonImageOptions2, new DevExpress.Utils.KeyShortcut(System.Windows.Forms.Keys.None), serializableAppearanceObject5, serializableAppearanceObject6, serializableAppearanceObject7, serializableAppearanceObject8, "", null, null, DevExpress.Utils.ToolTipAnchor.Default),
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Ellipsis, "", -1, true, false, false, editorButtonImageOptions1, new DevExpress.Utils.KeyShortcut(System.Windows.Forms.Keys.None), serializableAppearanceObject1, serializableAppearanceObject2, serializableAppearanceObject3, serializableAppearanceObject4, "", null, null, DevExpress.Utils.ToolTipAnchor.Default),
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Delete)});
             this.cmbRegion.Properties.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.DisableTextEditor;
             this.cmbRegion.Size = new System.Drawing.Size(352, 20);
@@ -225,6 +225,15 @@
             this.txtSettlement.Size = new System.Drawing.Size(429, 20);
             this.txtSettlement.StyleController = this.layoutControlExpert;
             this.txtSettlement.TabIndex = 9;
+            // 
+            // txtPostIndex
+            // 
+            this.txtPostIndex.Location = new System.Drawing.Point(55, 54);
+            this.txtPostIndex.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.txtPostIndex.Name = "txtPostIndex";
+            this.txtPostIndex.Size = new System.Drawing.Size(487, 20);
+            this.txtPostIndex.StyleController = this.layoutControlExpert;
+            this.txtPostIndex.TabIndex = 7;
             // 
             // Root
             // 
@@ -384,15 +393,6 @@
             this.layoutControlItemSettlement.Text = "Населенный пункт";
             this.layoutControlItemSettlement.TextSize = new System.Drawing.Size(95, 13);
             // 
-            // txtPostIndex
-            // 
-            this.txtPostIndex.Location = new System.Drawing.Point(55, 54);
-            this.txtPostIndex.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.txtPostIndex.Name = "txtPostIndex";
-            this.txtPostIndex.Size = new System.Drawing.Size(487, 20);
-            this.txtPostIndex.StyleController = this.layoutControlExpert;
-            this.txtPostIndex.TabIndex = 7;
-            // 
             // layoutControlItemPostIndex
             // 
             this.layoutControlItemPostIndex.Control = this.txtPostIndex;
@@ -410,6 +410,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(548, 318);
             this.Controls.Add(this.layoutControlExpert);
+            this.IconOptions.Image = global::ProjectDocumentation.NET.Properties.Resources.icon;
             this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.MinimumSize = new System.Drawing.Size(550, 350);
             this.Name = "PostAddressEdit";
@@ -426,6 +427,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.txtRoom.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.txtNote.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.txtSettlement.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.txtPostIndex.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.Root)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemCountry)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemDistrict)).EndInit();
@@ -441,7 +443,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemRoom)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemNote)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemSettlement)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.txtPostIndex.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemPostIndex)).EndInit();
             this.ResumeLayout(false);
 

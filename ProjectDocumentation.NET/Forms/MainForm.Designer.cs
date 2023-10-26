@@ -35,6 +35,7 @@
             this.Root = new DevExpress.XtraLayout.LayoutControlGroup();
             this.layoutControlItem1 = new DevExpress.XtraLayout.LayoutControlItem();
             this.popupMenu = new DevExpress.XtraBars.PopupMenu(this.components);
+            this.barBtnView = new DevExpress.XtraBars.BarButtonItem();
             this.barBtnAdd = new DevExpress.XtraBars.BarButtonItem();
             this.barBtnEdit = new DevExpress.XtraBars.BarButtonItem();
             this.barBtnDel = new DevExpress.XtraBars.BarButtonItem();
@@ -46,7 +47,6 @@
             this.barDockControlBottom = new DevExpress.XtraBars.BarDockControl();
             this.barDockControlLeft = new DevExpress.XtraBars.BarDockControl();
             this.barDockControlRight = new DevExpress.XtraBars.BarDockControl();
-            this.barBtnView = new DevExpress.XtraBars.BarButtonItem();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControl)).BeginInit();
             this.layoutControl.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.gridControl)).BeginInit();
@@ -62,18 +62,21 @@
             this.layoutControl.Controls.Add(this.gridControl);
             this.layoutControl.Dock = System.Windows.Forms.DockStyle.Fill;
             this.layoutControl.Location = new System.Drawing.Point(0, 0);
+            this.layoutControl.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.layoutControl.Name = "layoutControl";
             this.layoutControl.Root = this.Root;
-            this.layoutControl.Size = new System.Drawing.Size(1022, 587);
+            this.layoutControl.Size = new System.Drawing.Size(876, 477);
             this.layoutControl.TabIndex = 0;
             this.layoutControl.Text = "layoutControl1";
             // 
             // gridControl
             // 
-            this.gridControl.Location = new System.Drawing.Point(7, 7);
+            this.gridControl.EmbeddedNavigator.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.gridControl.Location = new System.Drawing.Point(6, 6);
             this.gridControl.MainView = this.gridView;
+            this.gridControl.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.gridControl.Name = "gridControl";
-            this.gridControl.Size = new System.Drawing.Size(1008, 573);
+            this.gridControl.Size = new System.Drawing.Size(864, 465);
             this.gridControl.TabIndex = 4;
             this.gridControl.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
             this.gridView});
@@ -82,6 +85,7 @@
             // 
             this.gridView.Appearance.HeaderPanel.Options.UseTextOptions = true;
             this.gridView.Appearance.HeaderPanel.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Center;
+            this.gridView.DetailHeight = 284;
             this.gridView.GridControl = this.gridControl;
             this.gridView.Name = "gridView";
             this.gridView.OptionsBehavior.Editable = false;
@@ -98,8 +102,8 @@
             this.Root.Items.AddRange(new DevExpress.XtraLayout.BaseLayoutItem[] {
             this.layoutControlItem1});
             this.Root.Name = "Root";
-            this.Root.Padding = new DevExpress.XtraLayout.Utils.Padding(5, 5, 5, 5);
-            this.Root.Size = new System.Drawing.Size(1022, 587);
+            this.Root.Padding = new DevExpress.XtraLayout.Utils.Padding(4, 4, 4, 4);
+            this.Root.Size = new System.Drawing.Size(876, 477);
             this.Root.TextVisible = false;
             // 
             // layoutControlItem1
@@ -107,7 +111,7 @@
             this.layoutControlItem1.Control = this.gridControl;
             this.layoutControlItem1.Location = new System.Drawing.Point(0, 0);
             this.layoutControlItem1.Name = "layoutControlItem1";
-            this.layoutControlItem1.Size = new System.Drawing.Size(1012, 577);
+            this.layoutControlItem1.Size = new System.Drawing.Size(868, 469);
             this.layoutControlItem1.TextSize = new System.Drawing.Size(0, 0);
             this.layoutControlItem1.TextVisible = false;
             // 
@@ -123,6 +127,15 @@
             new DevExpress.XtraBars.LinkPersistInfo(this.barBtnBaseSetting, true)});
             this.popupMenu.Manager = this.barManager;
             this.popupMenu.Name = "popupMenu";
+            // 
+            // barBtnView
+            // 
+            this.barBtnView.Caption = "Просмотр";
+            this.barBtnView.Id = 6;
+            this.barBtnView.ImageOptions.Image = global::ProjectDocumentation.NET.Properties.Resources.exporttodoc_16x16;
+            this.barBtnView.ImageOptions.LargeImage = global::ProjectDocumentation.NET.Properties.Resources.exporttodoc_32x32;
+            this.barBtnView.Name = "barBtnView";
+            this.barBtnView.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.barBtnView_ItemClick);
             // 
             // barBtnAdd
             // 
@@ -201,15 +214,17 @@
             this.barDockControlTop.Dock = System.Windows.Forms.DockStyle.Top;
             this.barDockControlTop.Location = new System.Drawing.Point(0, 0);
             this.barDockControlTop.Manager = this.barManager;
-            this.barDockControlTop.Size = new System.Drawing.Size(1022, 0);
+            this.barDockControlTop.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.barDockControlTop.Size = new System.Drawing.Size(876, 0);
             // 
             // barDockControlBottom
             // 
             this.barDockControlBottom.CausesValidation = false;
             this.barDockControlBottom.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.barDockControlBottom.Location = new System.Drawing.Point(0, 587);
+            this.barDockControlBottom.Location = new System.Drawing.Point(0, 477);
             this.barDockControlBottom.Manager = this.barManager;
-            this.barDockControlBottom.Size = new System.Drawing.Size(1022, 0);
+            this.barDockControlBottom.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.barDockControlBottom.Size = new System.Drawing.Size(876, 0);
             // 
             // barDockControlLeft
             // 
@@ -217,36 +232,29 @@
             this.barDockControlLeft.Dock = System.Windows.Forms.DockStyle.Left;
             this.barDockControlLeft.Location = new System.Drawing.Point(0, 0);
             this.barDockControlLeft.Manager = this.barManager;
-            this.barDockControlLeft.Size = new System.Drawing.Size(0, 587);
+            this.barDockControlLeft.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.barDockControlLeft.Size = new System.Drawing.Size(0, 477);
             // 
             // barDockControlRight
             // 
             this.barDockControlRight.CausesValidation = false;
             this.barDockControlRight.Dock = System.Windows.Forms.DockStyle.Right;
-            this.barDockControlRight.Location = new System.Drawing.Point(1022, 0);
+            this.barDockControlRight.Location = new System.Drawing.Point(876, 0);
             this.barDockControlRight.Manager = this.barManager;
-            this.barDockControlRight.Size = new System.Drawing.Size(0, 587);
-            // 
-            // barBtnView
-            // 
-            this.barBtnView.Caption = "Просмотр";
-            this.barBtnView.Id = 6;
-            this.barBtnView.ImageOptions.Image = global::ProjectDocumentation.NET.Properties.Resources.exporttodoc_16x16;
-            this.barBtnView.ImageOptions.LargeImage = global::ProjectDocumentation.NET.Properties.Resources.exporttodoc_32x32;
-            this.barBtnView.Name = "barBtnView";
-            this.barBtnView.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.barBtnView_ItemClick);
+            this.barDockControlRight.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.barDockControlRight.Size = new System.Drawing.Size(0, 477);
             // 
             // MainForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 16F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1022, 587);
+            this.ClientSize = new System.Drawing.Size(876, 477);
             this.Controls.Add(this.layoutControl);
             this.Controls.Add(this.barDockControlLeft);
             this.Controls.Add(this.barDockControlRight);
             this.Controls.Add(this.barDockControlBottom);
             this.Controls.Add(this.barDockControlTop);
-            this.Margin = new System.Windows.Forms.Padding(4);
+            this.IconOptions.Image = global::ProjectDocumentation.NET.Properties.Resources.icon;
             this.Name = "MainForm";
             this.Text = "Экспертизы России";
             this.Load += new System.EventHandler(this.MainForm_Load);
