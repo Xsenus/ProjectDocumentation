@@ -4,6 +4,7 @@ using Core.NET.DaDataObj;
 using Core.NET.Extensions;
 using Core.NET.Models.XPO;
 using DevExpress.Utils;
+using DevExpress.Utils.Extensions;
 using DevExpress.Xpo;
 using DevExpress.XtraBars;
 using DevExpress.XtraEditors;
@@ -263,6 +264,10 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                 SetCheckComboBoxByItems(Conclusion?.ClimateConditions?.GeologicalConditions, checkCmbGeologicalConditions);
                 SetCheckComboBoxByItems(Conclusion?.ClimateConditions?.SnowDistrict, checkCmbSnowDistrict);
                 memoClimateConditionsNote.EditValue = Conclusion?.ClimateConditionsNote;
+                if (string.IsNullOrWhiteSpace(Conclusion?.ClimateConditionsNote))
+                {
+                    memoClimateConditionsNote.EditValue = "Сведения отсутствуют.";
+                }
                 #endregion
 
                 #region Page II_4
@@ -361,7 +366,16 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
 
                 #region Page III
                 _tExpertProjectDocuments = Conclusion.ExpertProjectDocuments?.ToList() ?? new List<tExpertProjectDocuments>();
-                gridControlExpertProjectDocuments.DataSource = _tExpertProjectDocuments;
+                gridControlExpertProjectDocuments.DataSource = ExpertProjectDocumentController.GetExpertProjectDocuments(_tExpertProjectDocuments).ToArray();
+                foreach (GridColumn column in gridViewExpertProjectDocuments.Columns)
+                {
+                    column.Visible = false;
+                }
+                if (gridViewExpertProjectDocuments.Columns[nameof(ExpertProjectDocument.ExpertType)] is GridColumn gridExpertProjectDocumentExpertType)
+                {
+                    gridExpertProjectDocumentExpertType.Caption = "Направление деятельности";
+                    gridExpertProjectDocumentExpertType.Visible = true;
+                }
                 #endregion
 
                 #region Page V
@@ -1618,6 +1632,57 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                 {
                     _tPreviousConclusions.Remove(obj);
                     gridControlPreviousConclusions.RefreshDataSource();
+                }
+            }
+        }
+
+        private void gridViewExpertProjectDocuments_PopupMenuShowing(object sender, PopupMenuShowingEventArgs e)
+        {
+            if (sender is GridView gridView)
+            {
+                popupMenuExpertProjectDocuments.ShowPopup(new Point(Cursor.Position.X, Cursor.Position.Y));
+            }
+        }
+
+        private void barBtnExpertProjectDocumentsAdd_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            var form = new ExpertProjectDocumentsEdit();
+            form.ShowDialog();
+            if (form.IsSave)
+            {
+                _tExpertProjectDocuments.Add(form.ExpertProjectDocuments);
+                gridControlExpertProjectDocuments.DataSource = ExpertProjectDocumentController.GetExpertProjectDocuments(_tExpertProjectDocuments).ToArray();
+                gridControlExpertProjectDocuments.RefreshDataSource();
+            }
+        }
+
+        private void barBtnExpertProjectDocumentsEdit_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            if (gridViewExpertProjectDocuments.GetRow(gridViewExpertProjectDocuments.FocusedRowHandle) is ExpertProjectDocument obj)
+            {
+                var form = new ExpertProjectDocumentsEdit(obj.ExpertProjectDocuments);
+                form.ShowDialog();
+                if (form.IsSave)
+                {
+                    gridControlExpertProjectDocuments.DataSource = ExpertProjectDocumentController.GetExpertProjectDocuments(_tExpertProjectDocuments).ToArray();
+                    gridControlExpertProjectDocuments.RefreshDataSource();
+                }
+            }
+        }
+
+        private void barBtnExpertProjectDocumentsDel_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            if (gridViewExpertProjectDocuments.GetRow(gridViewExpertProjectDocuments.FocusedRowHandle) is ExpertProjectDocument obj)
+            {
+                if (XtraMessageBox.Show(
+                    "Вы действительно хотите удалить выделенный объект?",
+                    "Информационное сообщение",
+                    MessageBoxButtons.OKCancel,
+                    MessageBoxIcon.Question) == DialogResult.OK)
+                {
+                    _tExpertProjectDocuments.Remove(obj.ExpertProjectDocuments);
+                    gridControlExpertProjectDocuments.DataSource = ExpertProjectDocumentController.GetExpertProjectDocuments(_tExpertProjectDocuments).ToArray();
+                    gridControlExpertProjectDocuments.RefreshDataSource();
                 }
             }
         }
