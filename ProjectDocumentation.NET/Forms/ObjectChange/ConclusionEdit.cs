@@ -4,7 +4,6 @@ using Core.NET.DaDataObj;
 using Core.NET.Extensions;
 using Core.NET.Models.XPO;
 using DevExpress.Utils;
-using DevExpress.Utils.Extensions;
 using DevExpress.Xpo;
 using DevExpress.XtraBars;
 using DevExpress.XtraEditors;
@@ -38,6 +37,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
         public Conclusion Conclusion { get; private set; }
 
         private List<tPreviousConclusion> _tPreviousConclusions = new List<tPreviousConclusion>();
+        private List<tDocument> _tDocuments = new List<tDocument>();
         private List<tTEI> _tTEIs = new List<tTEI>();
         private List<tObjectPart> _tObjectParts = new List<tObjectPart>();
         private List<tFinance> _tFinances = new List<tFinance>();
@@ -177,6 +177,40 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
 
                 #region Page I_3
                 btnDeclarant.EditValue = Conclusion?.Declarant;
+                #endregion
+
+                #region Page I_5
+                _tDocuments = Conclusion?.Documents?.ToList() ?? new List<tDocument>();
+                gridControlDocuments.DataSource = DocumentObjController.GetDocumentObjs(_tDocuments).ToArray(); ;
+                foreach (GridColumn column in gridViewDocuments.Columns)
+                {
+                    column.Visible = false;
+                }
+                if (gridViewDocuments.Columns[nameof(DocumentObj.DocDate)] is GridColumn gridDocumentObjDocDate)
+                {
+                    gridDocumentObjDocDate.Caption = "Дата документа";
+                    gridDocumentObjDocDate.Visible = true;
+                    gridDocumentObjDocDate.Width = 125;
+                    gridDocumentObjDocDate.OptionsColumn.FixedWidth = true;
+                    gridDocumentObjDocDate.AppearanceCell.TextOptions.HAlignment = HorzAlignment.Center;
+                }
+                if (gridViewDocuments.Columns[nameof(DocumentObj.DocNumber)] is GridColumn gridDocumentObjDocNumber)
+                {
+                    gridDocumentObjDocNumber.Caption = "Номер документа";
+                    gridDocumentObjDocNumber.Visible = true;
+                    gridDocumentObjDocNumber.Width = 125;
+                    gridDocumentObjDocNumber.OptionsColumn.FixedWidth = true;
+                }
+                if (gridViewDocuments.Columns[nameof(DocumentObj.DocName)] is GridColumn gridDocumentObjDocName)
+                {
+                    gridDocumentObjDocName.Caption = "Наименование документа";
+                    gridDocumentObjDocName.Visible = true;
+                }
+                if (gridViewDocuments.Columns[nameof(DocumentObj.DocType)] is GridColumn gridDocumentObjDocType)
+                {
+                    gridDocumentObjDocType.Caption = "Тип документа";
+                    gridDocumentObjDocType.Visible = true;
+                }
                 #endregion
 
                 #region Page I_6
@@ -618,6 +652,13 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                     XtraMessageBox.Show("Укажите сведения о заявителе.", "Информационное сообщение", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     btnDeclarant.Focus();
                     return;
+                }
+                #endregion
+
+                #region Page I_5
+                if(_tDocuments.Count > 0)
+                {
+                    Conclusion.Documents = _tDocuments.ToArray();
                 }
                 #endregion
 
@@ -1357,9 +1398,9 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                     MessageBoxButtons.OKCancel,
                     MessageBoxIcon.Question) == DialogResult.OK)
                 {
-                    if (obj.BaseObj is tDeclarant tDesigner)
+                    if (obj.BaseObj is tDeclarant tDeclarant)
                     {
-                        _tProjectDocumentsDevelopers.Remove(tDesigner);
+                        _tProjectDocumentsDevelopers.Remove(tDeclarant);
                         gridControlProjectDocumentsDeveloper.DataSource = PersonObjController.GetPersonObjByDeclarant(_tProjectDocumentsDevelopers).ToArray();
                         gridControlProjectDocumentsDeveloper.RefreshDataSource();
                     }
@@ -1683,6 +1724,57 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                     _tExpertProjectDocuments.Remove(obj.ExpertProjectDocuments);
                     gridControlExpertProjectDocuments.DataSource = ExpertProjectDocumentController.GetExpertProjectDocuments(_tExpertProjectDocuments).ToArray();
                     gridControlExpertProjectDocuments.RefreshDataSource();
+                }
+            }
+        }
+
+        private void gridViewDocuments_PopupMenuShowing(object sender, PopupMenuShowingEventArgs e)
+        {
+            if (sender is GridView gridView)
+            {
+                popupMenuDocuments.ShowPopup(new Point(Cursor.Position.X, Cursor.Position.Y));
+            }
+        }
+
+        private void barBtnDocumentsAdd_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            var form = new DocumentEdit();
+            form.ShowDialog();
+            if (form.IsSave)
+            {
+                _tDocuments.Add(form.Document);
+                gridControlDocuments.DataSource = DocumentObjController.GetDocumentObjs(_tDocuments).ToArray();
+                gridControlDocuments.RefreshDataSource();
+            }
+        }
+
+        private void barBtnDocumentsEdit_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            if (gridViewDocuments.GetRow(gridViewDocuments.FocusedRowHandle) is DocumentObj obj)
+            {
+                var form = new DocumentEdit(obj.Document);
+                form.ShowDialog();
+                if (form.IsSave)
+                {
+                    gridControlDocuments.DataSource = DocumentObjController.GetDocumentObjs(_tDocuments).ToArray();
+                    gridControlDocuments.RefreshDataSource();
+                }
+            }
+        }
+
+        private void barBtnDocumentsDel_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            if (gridViewDocuments.GetRow(gridViewDocuments.FocusedRowHandle) is DocumentObj obj)
+            {
+                if (XtraMessageBox.Show(
+                    "Вы действительно хотите удалить выделенный объект?",
+                    "Информационное сообщение",
+                    MessageBoxButtons.OKCancel,
+                    MessageBoxIcon.Question) == DialogResult.OK)
+                {
+                    _tDocuments.Remove(obj.Document);
+                    gridControlDocuments.DataSource = DocumentObjController.GetDocumentObjs(_tDocuments).ToArray();
+                    gridControlDocuments.RefreshDataSource();
                 }
             }
         }

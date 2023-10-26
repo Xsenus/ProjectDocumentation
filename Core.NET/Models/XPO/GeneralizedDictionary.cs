@@ -85,6 +85,11 @@
         /// <summary>
         /// Виды инженерных изысканий.
         /// </summary>
-        EngineeringSurveyType
+        EngineeringSurveyType,
+
+        /// <summary>
+        /// Вид документа.
+        /// </summary>
+        DocumentType
     }
 }
