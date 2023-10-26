@@ -29,16 +29,6 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            DevExpress.XtraEditors.Controls.EditorButtonImageOptions editorButtonImageOptions8 = new DevExpress.XtraEditors.Controls.EditorButtonImageOptions();
-            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject29 = new DevExpress.Utils.SerializableAppearanceObject();
-            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject30 = new DevExpress.Utils.SerializableAppearanceObject();
-            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject31 = new DevExpress.Utils.SerializableAppearanceObject();
-            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject32 = new DevExpress.Utils.SerializableAppearanceObject();
-            DevExpress.XtraEditors.Controls.EditorButtonImageOptions editorButtonImageOptions9 = new DevExpress.XtraEditors.Controls.EditorButtonImageOptions();
-            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject33 = new DevExpress.Utils.SerializableAppearanceObject();
-            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject34 = new DevExpress.Utils.SerializableAppearanceObject();
-            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject35 = new DevExpress.Utils.SerializableAppearanceObject();
-            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject36 = new DevExpress.Utils.SerializableAppearanceObject();
             DevExpress.XtraEditors.Controls.EditorButtonImageOptions editorButtonImageOptions1 = new DevExpress.XtraEditors.Controls.EditorButtonImageOptions();
             DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject1 = new DevExpress.Utils.SerializableAppearanceObject();
             DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject2 = new DevExpress.Utils.SerializableAppearanceObject();
@@ -54,7 +44,6 @@
             DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject10 = new DevExpress.Utils.SerializableAppearanceObject();
             DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject11 = new DevExpress.Utils.SerializableAppearanceObject();
             DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject12 = new DevExpress.Utils.SerializableAppearanceObject();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ConclusionEdit));
             DevExpress.XtraEditors.Controls.EditorButtonImageOptions editorButtonImageOptions4 = new DevExpress.XtraEditors.Controls.EditorButtonImageOptions();
             DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject13 = new DevExpress.Utils.SerializableAppearanceObject();
             DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject14 = new DevExpress.Utils.SerializableAppearanceObject();
@@ -65,11 +54,22 @@
             DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject18 = new DevExpress.Utils.SerializableAppearanceObject();
             DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject19 = new DevExpress.Utils.SerializableAppearanceObject();
             DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject20 = new DevExpress.Utils.SerializableAppearanceObject();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ConclusionEdit));
             DevExpress.XtraEditors.Controls.EditorButtonImageOptions editorButtonImageOptions6 = new DevExpress.XtraEditors.Controls.EditorButtonImageOptions();
             DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject21 = new DevExpress.Utils.SerializableAppearanceObject();
             DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject22 = new DevExpress.Utils.SerializableAppearanceObject();
             DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject23 = new DevExpress.Utils.SerializableAppearanceObject();
             DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject24 = new DevExpress.Utils.SerializableAppearanceObject();
+            DevExpress.XtraEditors.Controls.EditorButtonImageOptions editorButtonImageOptions7 = new DevExpress.XtraEditors.Controls.EditorButtonImageOptions();
+            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject25 = new DevExpress.Utils.SerializableAppearanceObject();
+            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject26 = new DevExpress.Utils.SerializableAppearanceObject();
+            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject27 = new DevExpress.Utils.SerializableAppearanceObject();
+            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject28 = new DevExpress.Utils.SerializableAppearanceObject();
+            DevExpress.XtraEditors.Controls.EditorButtonImageOptions editorButtonImageOptions8 = new DevExpress.XtraEditors.Controls.EditorButtonImageOptions();
+            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject29 = new DevExpress.Utils.SerializableAppearanceObject();
+            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject30 = new DevExpress.Utils.SerializableAppearanceObject();
+            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject31 = new DevExpress.Utils.SerializableAppearanceObject();
+            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject32 = new DevExpress.Utils.SerializableAppearanceObject();
             this.xtraTabControlBase = new DevExpress.XtraTab.XtraTabControl();
             this.xtraTabPageForm1 = new DevExpress.XtraTab.XtraTabPage();
             this.layoutControl_I = new DevExpress.XtraLayout.LayoutControl();
@@ -107,6 +107,9 @@
             this.barBtnPreviousConclusionsAdd = new DevExpress.XtraBars.BarButtonItem();
             this.barBtnPreviousConclusionsEdit = new DevExpress.XtraBars.BarButtonItem();
             this.barBtnPreviousConclusionsDel = new DevExpress.XtraBars.BarButtonItem();
+            this.barBtnExpertProjectDocumentsAdd = new DevExpress.XtraBars.BarButtonItem();
+            this.barBtnExpertProjectDocumentsEdit = new DevExpress.XtraBars.BarButtonItem();
+            this.barBtnExpertProjectDocumentsDel = new DevExpress.XtraBars.BarButtonItem();
             this.cmbExaminationResult = new DevExpress.XtraEditors.ComboBoxEdit();
             this.cmbExaminationForm = new DevExpress.XtraEditors.ComboBoxEdit();
             this.cmbExaminationObjectType = new DevExpress.XtraEditors.ComboBoxEdit();
@@ -312,9 +315,6 @@
             this.popupMenuProjectDocumentsTechnicalCustomer = new DevExpress.XtraBars.PopupMenu(this.components);
             this.popupMenuPreviousConclusions = new DevExpress.XtraBars.PopupMenu(this.components);
             this.popupMenuExpertProjectDocuments = new DevExpress.XtraBars.PopupMenu(this.components);
-            this.barBtnExpertProjectDocumentsAdd = new DevExpress.XtraBars.BarButtonItem();
-            this.barBtnExpertProjectDocumentsEdit = new DevExpress.XtraBars.BarButtonItem();
-            this.barBtnExpertProjectDocumentsDel = new DevExpress.XtraBars.BarButtonItem();
             ((System.ComponentModel.ISupportInitialize)(this.xtraTabControlBase)).BeginInit();
             this.xtraTabControlBase.SuspendLayout();
             this.xtraTabPageForm1.SuspendLayout();
@@ -887,6 +887,27 @@
             this.barBtnPreviousConclusionsDel.Name = "barBtnPreviousConclusionsDel";
             this.barBtnPreviousConclusionsDel.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.barBtnPreviousConclusionsDel_ItemClick);
             // 
+            // barBtnExpertProjectDocumentsAdd
+            // 
+            this.barBtnExpertProjectDocumentsAdd.Caption = "Добавить";
+            this.barBtnExpertProjectDocumentsAdd.Id = 28;
+            this.barBtnExpertProjectDocumentsAdd.Name = "barBtnExpertProjectDocumentsAdd";
+            this.barBtnExpertProjectDocumentsAdd.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.barBtnExpertProjectDocumentsAdd_ItemClick);
+            // 
+            // barBtnExpertProjectDocumentsEdit
+            // 
+            this.barBtnExpertProjectDocumentsEdit.Caption = "Изменить";
+            this.barBtnExpertProjectDocumentsEdit.Id = 29;
+            this.barBtnExpertProjectDocumentsEdit.Name = "barBtnExpertProjectDocumentsEdit";
+            this.barBtnExpertProjectDocumentsEdit.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.barBtnExpertProjectDocumentsEdit_ItemClick);
+            // 
+            // barBtnExpertProjectDocumentsDel
+            // 
+            this.barBtnExpertProjectDocumentsDel.Caption = "Удалить";
+            this.barBtnExpertProjectDocumentsDel.Id = 30;
+            this.barBtnExpertProjectDocumentsDel.Name = "barBtnExpertProjectDocumentsDel";
+            this.barBtnExpertProjectDocumentsDel.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.barBtnExpertProjectDocumentsDel_ItemClick);
+            // 
             // cmbExaminationResult
             // 
             this.cmbExaminationResult.EditValue = "";
@@ -895,7 +916,7 @@
             this.cmbExaminationResult.Name = "cmbExaminationResult";
             this.cmbExaminationResult.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo),
-            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Ellipsis, "", -1, true, false, false, editorButtonImageOptions8, new DevExpress.Utils.KeyShortcut(System.Windows.Forms.Keys.None), serializableAppearanceObject29, serializableAppearanceObject30, serializableAppearanceObject31, serializableAppearanceObject32, "", null, null, DevExpress.Utils.ToolTipAnchor.Default),
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Ellipsis, "", -1, true, false, false, editorButtonImageOptions1, new DevExpress.Utils.KeyShortcut(System.Windows.Forms.Keys.None), serializableAppearanceObject1, serializableAppearanceObject2, serializableAppearanceObject3, serializableAppearanceObject4, "", null, null, DevExpress.Utils.ToolTipAnchor.Default),
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Delete)});
             this.cmbExaminationResult.Properties.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.DisableTextEditor;
             this.cmbExaminationResult.Size = new System.Drawing.Size(241, 20);
@@ -911,7 +932,7 @@
             this.cmbExaminationForm.Name = "cmbExaminationForm";
             this.cmbExaminationForm.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo),
-            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Ellipsis, "", -1, true, false, false, editorButtonImageOptions9, new DevExpress.Utils.KeyShortcut(System.Windows.Forms.Keys.None), serializableAppearanceObject33, serializableAppearanceObject34, serializableAppearanceObject35, serializableAppearanceObject36, "", null, null, DevExpress.Utils.ToolTipAnchor.Default),
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Ellipsis, "", -1, true, false, false, editorButtonImageOptions2, new DevExpress.Utils.KeyShortcut(System.Windows.Forms.Keys.None), serializableAppearanceObject5, serializableAppearanceObject6, serializableAppearanceObject7, serializableAppearanceObject8, "", null, null, DevExpress.Utils.ToolTipAnchor.Default),
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Delete)});
             this.cmbExaminationForm.Properties.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.DisableTextEditor;
             this.cmbExaminationForm.Size = new System.Drawing.Size(262, 20);
@@ -927,7 +948,7 @@
             this.cmbExaminationObjectType.Name = "cmbExaminationObjectType";
             this.cmbExaminationObjectType.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo),
-            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Ellipsis, "", -1, true, false, false, editorButtonImageOptions1, new DevExpress.Utils.KeyShortcut(System.Windows.Forms.Keys.None), serializableAppearanceObject1, serializableAppearanceObject2, serializableAppearanceObject3, serializableAppearanceObject4, "", null, null, DevExpress.Utils.ToolTipAnchor.Default),
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Ellipsis, "", -1, true, false, false, editorButtonImageOptions3, new DevExpress.Utils.KeyShortcut(System.Windows.Forms.Keys.None), serializableAppearanceObject9, serializableAppearanceObject10, serializableAppearanceObject11, serializableAppearanceObject12, "", null, null, DevExpress.Utils.ToolTipAnchor.Default),
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Delete)});
             this.cmbExaminationObjectType.Properties.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.DisableTextEditor;
             this.cmbExaminationObjectType.Size = new System.Drawing.Size(229, 20);
@@ -943,7 +964,7 @@
             this.cmbExaminationStage.Name = "cmbExaminationStage";
             this.cmbExaminationStage.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo),
-            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Ellipsis, "", -1, true, false, false, editorButtonImageOptions2, new DevExpress.Utils.KeyShortcut(System.Windows.Forms.Keys.None), serializableAppearanceObject5, serializableAppearanceObject6, serializableAppearanceObject7, serializableAppearanceObject8, "", null, null, DevExpress.Utils.ToolTipAnchor.Default),
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Ellipsis, "", -1, true, false, false, editorButtonImageOptions4, new DevExpress.Utils.KeyShortcut(System.Windows.Forms.Keys.None), serializableAppearanceObject13, serializableAppearanceObject14, serializableAppearanceObject15, serializableAppearanceObject16, "", null, null, DevExpress.Utils.ToolTipAnchor.Default),
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Delete)});
             this.cmbExaminationStage.Properties.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.DisableTextEditor;
             this.cmbExaminationStage.Size = new System.Drawing.Size(275, 20);
@@ -959,7 +980,7 @@
             this.cmbConstructionType.Name = "cmbConstructionType";
             this.cmbConstructionType.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo),
-            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Ellipsis, "", -1, true, false, false, editorButtonImageOptions3, new DevExpress.Utils.KeyShortcut(System.Windows.Forms.Keys.None), serializableAppearanceObject9, serializableAppearanceObject10, serializableAppearanceObject11, serializableAppearanceObject12, "", null, null, DevExpress.Utils.ToolTipAnchor.Default),
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Ellipsis, "", -1, true, false, false, editorButtonImageOptions5, new DevExpress.Utils.KeyShortcut(System.Windows.Forms.Keys.None), serializableAppearanceObject17, serializableAppearanceObject18, serializableAppearanceObject19, serializableAppearanceObject20, "", null, null, DevExpress.Utils.ToolTipAnchor.Default),
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Delete)});
             this.cmbConstructionType.Properties.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.DisableTextEditor;
             this.cmbConstructionType.Size = new System.Drawing.Size(304, 20);
@@ -1653,7 +1674,7 @@
             this.cmbObjectType.Name = "cmbObjectType";
             this.cmbObjectType.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo),
-            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Ellipsis, "", -1, true, false, false, editorButtonImageOptions4, new DevExpress.Utils.KeyShortcut(System.Windows.Forms.Keys.None), serializableAppearanceObject13, serializableAppearanceObject14, serializableAppearanceObject15, serializableAppearanceObject16, "", null, null, DevExpress.Utils.ToolTipAnchor.Default),
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Ellipsis, "", -1, true, false, false, editorButtonImageOptions6, new DevExpress.Utils.KeyShortcut(System.Windows.Forms.Keys.None), serializableAppearanceObject21, serializableAppearanceObject22, serializableAppearanceObject23, serializableAppearanceObject24, "", null, null, DevExpress.Utils.ToolTipAnchor.Default),
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Delete)});
             this.cmbObjectType.Properties.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.DisableTextEditor;
             this.cmbObjectType.Size = new System.Drawing.Size(278, 20);
@@ -1669,7 +1690,7 @@
             this.cmbFunctionsClass.Name = "cmbFunctionsClass";
             this.cmbFunctionsClass.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo),
-            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Ellipsis, "", -1, true, false, false, editorButtonImageOptions5, new DevExpress.Utils.KeyShortcut(System.Windows.Forms.Keys.None), serializableAppearanceObject17, serializableAppearanceObject18, serializableAppearanceObject19, serializableAppearanceObject20, "", null, null, DevExpress.Utils.ToolTipAnchor.Default),
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Ellipsis, "", -1, true, false, false, editorButtonImageOptions7, new DevExpress.Utils.KeyShortcut(System.Windows.Forms.Keys.None), serializableAppearanceObject25, serializableAppearanceObject26, serializableAppearanceObject27, serializableAppearanceObject28, "", null, null, DevExpress.Utils.ToolTipAnchor.Default),
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Delete)});
             this.cmbFunctionsClass.Size = new System.Drawing.Size(488, 20);
             this.cmbFunctionsClass.StyleController = this.layoutControl_Page_II_1;
@@ -1683,7 +1704,7 @@
             this.cmbObjectAddress.Name = "cmbObjectAddress";
             this.cmbObjectAddress.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Search),
-            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo, "", -1, true, false, false, editorButtonImageOptions6, new DevExpress.Utils.KeyShortcut(System.Windows.Forms.Keys.None), serializableAppearanceObject21, serializableAppearanceObject22, serializableAppearanceObject23, serializableAppearanceObject24, "", null, null, DevExpress.Utils.ToolTipAnchor.Default),
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo, "", -1, true, false, false, editorButtonImageOptions8, new DevExpress.Utils.KeyShortcut(System.Windows.Forms.Keys.None), serializableAppearanceObject29, serializableAppearanceObject30, serializableAppearanceObject31, serializableAppearanceObject32, "", null, null, DevExpress.Utils.ToolTipAnchor.Default),
             new DevExpress.XtraEditors.Controls.EditorButton(),
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Delete)});
             this.cmbObjectAddress.Size = new System.Drawing.Size(770, 20);
@@ -2439,8 +2460,7 @@
             this.xtraTabPageForm3.Controls.Add(this.layoutControlPageIII);
             this.xtraTabPageForm3.Name = "xtraTabPageForm3";
             this.xtraTabPageForm3.Size = new System.Drawing.Size(784, 538);
-            this.xtraTabPageForm3.Text = "III. Сведения, содержащиеся в документах, представленных для првоедения экспертиз" +
-    "ы результатов инженерных изысканий";
+            this.xtraTabPageForm3.Text = "III. Описание рассмотренной документации (материалов)";
             // 
             // layoutControlPageIII
             // 
@@ -2599,8 +2619,9 @@
             this.xtraTabPageForm4.Controls.Add(this.layoutControl1);
             this.xtraTabPageForm4.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.xtraTabPageForm4.Name = "xtraTabPageForm4";
+            this.xtraTabPageForm4.PageVisible = false;
             this.xtraTabPageForm4.Size = new System.Drawing.Size(784, 538);
-            this.xtraTabPageForm4.Text = "IV. Описание рассмотренной документации (материалов)";
+            this.xtraTabPageForm4.Text = "IV.???";
             // 
             // layoutControl1
             // 
@@ -2756,7 +2777,7 @@
             this.xtraTabPageForm5.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.xtraTabPageForm5.Name = "xtraTabPageForm5";
             this.xtraTabPageForm5.Size = new System.Drawing.Size(784, 538);
-            this.xtraTabPageForm5.Text = "V. Выводы по результатам рассмотрения";
+            this.xtraTabPageForm5.Text = "IV. Выводы по результатам рассмотрения";
             // 
             // layoutControl3
             // 
@@ -2957,7 +2978,7 @@
             this.xtraTabPageForm6.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.xtraTabPageForm6.Name = "xtraTabPageForm6";
             this.xtraTabPageForm6.Size = new System.Drawing.Size(784, 538);
-            this.xtraTabPageForm6.Text = "VI. Общие выводы";
+            this.xtraTabPageForm6.Text = "V. Общие выводы";
             // 
             // layoutControl4
             // 
@@ -3011,8 +3032,8 @@
             this.xtraTabPageForm7.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.xtraTabPageForm7.Name = "xtraTabPageForm7";
             this.xtraTabPageForm7.Size = new System.Drawing.Size(784, 538);
-            this.xtraTabPageForm7.Text = "VII. Перечени лиц, атестованных на право подготовки заключений экспертизы, подпис" +
-    "авших заключение экспертизы";
+            this.xtraTabPageForm7.Text = "VI. Перечени лиц, атестованных на право подготовки заключений экспертизы, подписа" +
+    "вших заключение экспертизы";
             // 
             // gridControlExpert
             // 
@@ -3242,27 +3263,6 @@
             new DevExpress.XtraBars.LinkPersistInfo(this.barBtnExpertProjectDocumentsDel)});
             this.popupMenuExpertProjectDocuments.Manager = this.barManager;
             this.popupMenuExpertProjectDocuments.Name = "popupMenuExpertProjectDocuments";
-            // 
-            // barBtnExpertProjectDocumentsAdd
-            // 
-            this.barBtnExpertProjectDocumentsAdd.Caption = "Добавить";
-            this.barBtnExpertProjectDocumentsAdd.Id = 28;
-            this.barBtnExpertProjectDocumentsAdd.Name = "barBtnExpertProjectDocumentsAdd";
-            this.barBtnExpertProjectDocumentsAdd.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.barBtnExpertProjectDocumentsAdd_ItemClick);
-            // 
-            // barBtnExpertProjectDocumentsEdit
-            // 
-            this.barBtnExpertProjectDocumentsEdit.Caption = "Изменить";
-            this.barBtnExpertProjectDocumentsEdit.Id = 29;
-            this.barBtnExpertProjectDocumentsEdit.Name = "barBtnExpertProjectDocumentsEdit";
-            this.barBtnExpertProjectDocumentsEdit.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.barBtnExpertProjectDocumentsEdit_ItemClick);
-            // 
-            // barBtnExpertProjectDocumentsDel
-            // 
-            this.barBtnExpertProjectDocumentsDel.Caption = "Удалить";
-            this.barBtnExpertProjectDocumentsDel.Id = 30;
-            this.barBtnExpertProjectDocumentsDel.Name = "barBtnExpertProjectDocumentsDel";
-            this.barBtnExpertProjectDocumentsDel.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.barBtnExpertProjectDocumentsDel_ItemClick);
             // 
             // ConclusionEdit
             // 
