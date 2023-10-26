@@ -1,4 +1,5 @@
-﻿using DevExpress.Xpo;
+﻿using Core.NET.Extensions;
+using DevExpress.Xpo;
 using System;
 
 namespace Core.NET.Models.XPO

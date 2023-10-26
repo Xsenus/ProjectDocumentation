@@ -73,6 +73,7 @@
     <Compile Include="Models\XPO\GeneralizedDictionaryXPO.cs" />
     <Compile Include="Models\XPO\ExplanatoryNoteXPO.cs" />
     <Compile Include="Models\XPO\GeneralizedDictionary.cs" />
+    <Compile Include="Models\XPO\SettingXPO.cs" />
     <Compile Include="Models\XPO\TypeOrganization.cs" />
     <Compile Include="Models\XPO\XmlObjXPO.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

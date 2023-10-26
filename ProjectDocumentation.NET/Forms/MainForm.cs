@@ -1,4 +1,5 @@
-﻿using Core.NET.Controllers;
+﻿using AutoUpdaterDotNET;
+using Core.NET.Controllers;
 using Core.NET.Models.XPO;
 using DevExpress.Utils;
 using DevExpress.Xpo;
@@ -61,12 +62,33 @@ namespace ProjectDocumentation.NET.Forms
             }
         }
 
+        private async Task CheckUpdates()
+        {
+            try
+            {
+                var path = await new XPQuery<SettingXPO>(_session).FirstOrDefaultAsync(f => f.Name == "UpdatePath");
+                if (path is null)
+                {
+                    path = new SettingXPO(_session)
+                    {
+                        Name = "UpdatePath",
+                        Value = "ftp://81.28.221.114/other/ProjectDocumentation.NET/ProjectDocumentation.NET.Update.xml"
+                    };
+                    path.Save();
+                }
+
+                AutoUpdater.Mandatory = true;
+                AutoUpdater.Start(path.Value.ToString());
+            }
+            catch (Exception) { }
+        }
+
         private async void MainForm_Load(object sender, EventArgs e)
         {
             await DataBaseController.FillingDataBaseAsync();
-
             await UpdateGridDataSourceAsync();
             InitialSetupGridControl();
+            await CheckUpdates();
         }
 
         private async Task UpdateGridDataSourceAsync(string columnName = default, object obj = default)
