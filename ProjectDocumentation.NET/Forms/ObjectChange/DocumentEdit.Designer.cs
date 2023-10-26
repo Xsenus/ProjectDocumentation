@@ -260,9 +260,6 @@
             this.txtDocNumber.Properties.Appearance.Options.UseTextOptions = true;
             this.txtDocNumber.Properties.Appearance.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Center;
             this.txtDocNumber.Properties.AutoHeight = false;
-            this.txtDocNumber.Properties.MaskSettings.Set("MaskManagerType", typeof(DevExpress.Data.Mask.RegularMaskManager));
-            this.txtDocNumber.Properties.MaskSettings.Set("MaskManagerSignature", "ignoreMaskBlank=True");
-            this.txtDocNumber.Properties.MaskSettings.Set("mask", "[0-9]{2}-[1-2]{1}-[1-2]{1}-[1-3]{1}-[0-9]{6}-[0-9]{4}");
             this.txtDocNumber.Size = new System.Drawing.Size(391, 30);
             this.txtDocNumber.StyleController = this.layoutControlObjPart;
             this.txtDocNumber.TabIndex = 18;
