@@ -103,10 +103,10 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                 }
                 PreviousConclusion.Result = ConclusionEdit.GetEnumByAttributeValue<tExaminationResult>(ConclusionEdit.GetValueGeneralizedDictionary(
                     cmbExaminationResult,
-                    message: "Заполните поле результат экспертизы").Value);
+                    message: "Заполните поле результат экспертизы")?.Value);
                 PreviousConclusion.ExaminationObjectType = ConclusionEdit.GetEnumByAttributeValue<tExaminationObjectType>(ConclusionEdit.GetValueGeneralizedDictionary(
                     cmbExaminationObjectType,
-                    message: "Заполните поле вида объекта экспертизы").Value);
+                    message: "Заполните поле вида объекта экспертизы")?.Value);
                 PreviousConclusion.Name = ConclusionEdit.GetStringValue(memoName.Text, memoName, "Заполните поле наименование объекта экспертизы");
             }
             catch (Exception ex)

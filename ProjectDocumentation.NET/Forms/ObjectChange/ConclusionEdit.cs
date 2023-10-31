@@ -4,6 +4,7 @@ using Core.NET.DaDataObj;
 using Core.NET.Extensions;
 using Core.NET.Models.XPO;
 using DevExpress.Utils;
+using DevExpress.Xpf.Printing;
 using DevExpress.Xpo;
 using DevExpress.XtraBars;
 using DevExpress.XtraEditors;
@@ -16,7 +17,10 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Drawing;
+using System.IO;
 using System.Linq;
+using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -448,7 +452,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
             }
         }
 
-        public static ICollection<T> GetCheckComboBoxItems<T>(CheckedComboBoxEdit sender, string message = default, bool isNullable = false) where T : Enum
+        public static ICollection<T> GetCheckComboBoxItems<T>(CheckedComboBoxEdit sender, string message = default, bool isNullable = true) where T : Enum
         {
             var result = new List<T>();
 
@@ -481,7 +485,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
             throw new Exception(message ?? "Не заполнен один из параметров.");
         }
 
-        public static GeneralizedDictionaryXPO GetValueGeneralizedDictionary(object sender, string message = default, bool isNullAble = false)
+        public static GeneralizedDictionaryXPO GetValueGeneralizedDictionary(object sender, string message = default, bool isNullAble = true)
         {
             if (sender is ButtonEdit buttonEdit)
             {
@@ -511,13 +515,18 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
             throw new Exception(message ?? "Не заполнен один из параметров.");
         }
 
-        public static T GetEnumByAttributeValue<T>(string value, bool isNullAble = false) where T : Enum
+        public static T GetEnumByAttributeValue<T>(string value, bool isNullAble = true)
         {
-            foreach (T type in Enum.GetValues(typeof(T)))
+            if (typeof(T).GetTypeInfo().BaseType == typeof(Enum))
             {
-                if (type.GetEnumXmlAttributeValue()?.ToString()?.Equals(value) is true)
+                var method = GetMethodName("GetEnumXmlAttributeValue");
+                foreach (T type in Enum.GetValues(typeof(T)))
                 {
-                    return type;
+                    var typeValue = method.Invoke(type, new object[] { type })?.ToString();
+                    if (!string.IsNullOrWhiteSpace(typeValue) && typeValue.Equals(value))
+                    {
+                        return type;
+                    }
                 }
             }
 
@@ -529,7 +538,37 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
             throw new Exception();
         }
 
-        public static string GetStringValue(object sender, object control = default, string message = default, bool isNullAble = false, object objPage = null)
+        private static MethodInfo GetMethodName(string methodName)
+        {
+            var filePath = "Core.NET.dll";
+            if (File.Exists(filePath) is false)
+            {
+                filePath = "dll\\Core.NET.dll";
+                if (File.Exists(filePath) is false)
+                {
+                    throw new Exception("Не найден Core.NET.dll.");
+                }
+            }
+
+            var targetType = typeof(Enum);
+            var fileInfo = new FileInfo(filePath);
+            var assemblyPath = fileInfo.FullName;
+            var externalAssembly = Assembly.LoadFile(assemblyPath);
+
+            var extensionMethods = externalAssembly
+                .GetTypes()
+                .SelectMany(t => t.GetMethods())
+                .Where(m => m.IsDefined(typeof(ExtensionAttribute), false))
+                .ToArray();
+
+            var matchingExtensions = extensionMethods
+                .Where(m => m.GetParameters()[0].ParameterType == targetType)
+                .ToArray();
+
+            return matchingExtensions.FirstOrDefault(f => f.Name == methodName);
+        }
+
+        public static string GetStringValue(object sender, object control = default, string message = default, bool isNullAble = true, object objPage = null)
         {
             var result = sender?.ToString();
             if (!string.IsNullOrWhiteSpace(result))
@@ -559,19 +598,19 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                 Conclusion.ExaminationObject = new tExaminationObject();
                 Conclusion.ExaminationObject.ExaminationResult = GetEnumByAttributeValue<tExaminationResult>(GetValueGeneralizedDictionary(
                     cmbExaminationResult,
-                    message: "Заполните поле результат экспертизы").Value);
+                    message: "Заполните поле результат экспертизы")?.Value);
                 Conclusion.ExaminationObject.ExaminationForm = GetEnumByAttributeValue<tExaminationForm>(GetValueGeneralizedDictionary(
                     cmbExaminationForm,
-                    message: "Заполните поле формы экспертизы").Value);
+                    message: "Заполните поле формы экспертизы")?.Value);
                 Conclusion.ExaminationObject.ExaminationObjectType = GetEnumByAttributeValue<tExaminationObjectType>(GetValueGeneralizedDictionary(
                     cmbExaminationObjectType,
-                    message: "Заполните поле вида объекта экспертизы").Value);
+                    message: "Заполните поле вида объекта экспертизы")?.Value);
                 Conclusion.ExaminationObject.ExaminationStage = GetEnumByAttributeValue<tExaminationStage>(GetValueGeneralizedDictionary(
                    cmbExaminationStage,
-                   message: "Заполните поле вид экспертизы").Value);
+                   message: "Заполните поле вид экспертизы")?.Value);
                 Conclusion.ExaminationObject.ConstructionType = GetEnumByAttributeValue<tConstractionType>(GetValueGeneralizedDictionary(
                    cmbConstructionType,
-                   message: "Заполните поле вид работ").Value);
+                   message: "Заполните поле вид работ")?.Value);
                 Conclusion.ExaminationObject.ExaminationType = GetCheckComboBoxItems<tExaminationType>(
                     checkCmbExaminationType,
                     "Заполните поле предмет экспертизы").ToArray();
@@ -592,12 +631,12 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                 }
                 else
                 {
-                    btnAddress.Focus();
-                    XtraMessageBox.Show("Заполните адрес организации",
-                        "Информационное сообщение",
-                        MessageBoxButtons.OK,
-                        MessageBoxIcon.Error);
-                    return;
+                    //btnAddress.Focus();
+                    //XtraMessageBox.Show("Заполните адрес организации",
+                    //    "Информационное сообщение",
+                    //    MessageBoxButtons.OK,
+                    //    MessageBoxIcon.Error);
+                    //return;
                 }
                 Conclusion.Approver = new tWorkPerson();
                 Conclusion.Approver.FamilyName = GetStringValue(txtFamilyName.EditValue, txtFamilyName, "Заполните фамилию подписанта");
@@ -613,9 +652,9 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                 }
                 else
                 {
-                    XtraMessageBox.Show("Укажите сведения о заявителе.", "Информационное сообщение", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    btnDeclarant.Focus();
-                    return;
+                    //XtraMessageBox.Show("Укажите сведения о заявителе.", "Информационное сообщение", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    //btnDeclarant.Focus();
+                    //return;
                 }
                 #endregion
 
@@ -638,7 +677,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                 Conclusion.Object.Name = GetStringValue(memoObjectName.Text, memoObjectName, "Заполните поле наименование объекта капитального строительства");
                 Conclusion.Object.Type = GetEnumByAttributeValue<tObjectType>(GetValueGeneralizedDictionary(
                    cmbObjectType,
-                   message: "Заполните поле вид объекта капитального строительства").Value);
+                   message: "Заполните поле вид объекта капитального строительства")?.Value);
                 Conclusion.Object.Item = GetStringValue(cmbFunctionsClass.EditValue?.ToString(), cmbFunctionsClass, "Функциональное назначение объекта капитального строительства (код по классификатору)");
                 if (cmbObjectAddress.EditValue is tAddress objectAddress)
                 {
@@ -646,9 +685,9 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                 }
                 else
                 {
-                    XtraMessageBox.Show("Укажите адрес объекта.", "Информационное сообщение", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    cmbObjectAddress.Focus();
-                    return;
+                    //XtraMessageBox.Show("Укажите адрес объекта.", "Информационное сообщение", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    //cmbObjectAddress.Focus();
+                    //return;
                 }
                 if (_tTEIs.Count > 0)
                 {
@@ -656,32 +695,32 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                     {
                         if (string.IsNullOrWhiteSpace(item.Name))
                         {
-                            XtraMessageBox.Show("Наименование технико-экономического показателя не может быть пустым.",
-                                "Информационное сообщение",
-                                MessageBoxButtons.OK,
-                                MessageBoxIcon.Error);
-                            gridViewTEI.Focus();
-                            return;
+                            //XtraMessageBox.Show("Наименование технико-экономического показателя не может быть пустым.",
+                            //    "Информационное сообщение",
+                            //    MessageBoxButtons.OK,
+                            //    MessageBoxIcon.Error);
+                            //gridViewTEI.Focus();
+                            //return;
                         }
 
                         if (string.IsNullOrWhiteSpace(item.Measure))
                         {
-                            XtraMessageBox.Show("Единица измерения технико-экономического показателя не может быть пустой.",
-                                "Информационное сообщение",
-                                MessageBoxButtons.OK,
-                                MessageBoxIcon.Error);
-                            gridViewTEI.Focus();
-                            return;
+                            //XtraMessageBox.Show("Единица измерения технико-экономического показателя не может быть пустой.",
+                            //    "Информационное сообщение",
+                            //    MessageBoxButtons.OK,
+                            //    MessageBoxIcon.Error);
+                            //gridViewTEI.Focus();
+                            //return;
                         }
 
                         if (string.IsNullOrWhiteSpace(item.Value))
                         {
-                            XtraMessageBox.Show("Значение технико-экономического показателя не может быть пустым.",
-                                "Информационное сообщение",
-                                MessageBoxButtons.OK,
-                                MessageBoxIcon.Error);
-                            gridViewTEI.Focus();
-                            return;
+                            //XtraMessageBox.Show("Значение технико-экономического показателя не может быть пустым.",
+                            //    "Информационное сообщение",
+                            //    MessageBoxButtons.OK,
+                            //    MessageBoxIcon.Error);
+                            //gridViewTEI.Focus();
+                            //return;
                         }
                     }
                     Conclusion.Object.TEI = _tTEIs.ToArray();
@@ -765,13 +804,13 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                     {
                         if (string.IsNullOrWhiteSpace(obj.Number))
                         {
-                            gridControlCadastralNumber.Focus();
-                            XtraMessageBox.Show(
-                                "Кадастровый номер не может быть пустым.",
-                                "Информационное сообщение",
-                                MessageBoxButtons.OK,
-                                MessageBoxIcon.Error);
-                            return;
+                            //gridControlCadastralNumber.Focus();
+                            //XtraMessageBox.Show(
+                            //    "Кадастровый номер не может быть пустым.",
+                            //    "Информационное сообщение",
+                            //    MessageBoxButtons.OK,
+                            //    MessageBoxIcon.Error);
+                            //return;
                         }
                         else
                         {

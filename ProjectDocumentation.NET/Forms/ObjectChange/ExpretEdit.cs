@@ -66,7 +66,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                 Expert.SecondName = ConclusionEdit.GetStringValue(txtSecondName.EditValue, txtSecondName, isNullAble: true);
                 Expert.ExpertType = ConclusionEdit.GetEnumByAttributeValue<tExpertType>(ConclusionEdit.GetValueGeneralizedDictionary(
                         cmbExpertType,
-                        message: "Заполните поле направление деятельности эксперта").Value);
+                        message: "Заполните поле направление деятельности эксперта")?.Value);
                 Expert.ExpertCertificate = ConclusionEdit.GetStringValue(txtExpertCertificate.EditValue, txtExpertCertificate, "Заполните номер сертификата");
                 if (dateExpertCertificateBeginDate.EditValue is null)
                 {

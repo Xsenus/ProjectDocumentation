@@ -119,7 +119,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
             {
                 Document.DocType = ConclusionEdit.GetEnumByAttributeValue<tDocumentType>(ConclusionEdit.GetValueGeneralizedDictionary(
                     cmbDocType,
-                    message: "Заполните поле тип документа").Value);
+                    message: "Заполните поле тип документа")?.Value);
                 Document.DocName = ConclusionEdit.GetStringValue(txtDocName.EditValue, txtDocName, "Заполните поле наименование документа.");
                 Document.DocNumber = ConclusionEdit.GetStringValue(txtDocNumber.EditValue, txtDocNumber, "Заполните поле номер документа.", isNullAble: true);
                 if (dateDocDate.EditValue is DateTime date)

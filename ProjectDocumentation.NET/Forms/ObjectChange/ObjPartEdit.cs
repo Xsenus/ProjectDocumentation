@@ -82,7 +82,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                 ObjectPart.Name = ConclusionEdit.GetStringValue(memoObjectName.Text, memoObjectName, "Заполните поле наименование объекта капитального строительства");
                 //ObjectPart.Type = ConclusionEdit.GetEnumByAttributeValue<tObjectType>(ConclusionEdit.GetValueGeneralizedDictionary(
                 //   cmbObjectType,
-                //   message: "Заполните поле вид объекта капитального строительства").Value);
+                //   message: "Заполните поле вид объекта капитального строительства")?.Value);
                 ObjectPart.Item = ConclusionEdit.GetStringValue(cmbFunctionsClass.EditValue?.ToString(), cmbFunctionsClass, "Функциональное назначение объекта капитального строительства (код по классификатору)");
                 if (cmbObjectAddress.EditValue is tAddress objectAddress)
                 {

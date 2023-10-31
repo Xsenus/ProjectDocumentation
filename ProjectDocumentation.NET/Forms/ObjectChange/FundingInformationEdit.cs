@@ -103,7 +103,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
             {
                 var financeType = ConclusionEdit.GetEnumByAttributeValue<tFinanceType>(ConclusionEdit.GetValueGeneralizedDictionary(
                    cmbFinanceType,
-                   message: "Заполните поле вид источника финансирования").Value);
+                   message: "Заполните поле вид источника финансирования")?.Value);
 
                 Finance.FinanceType = financeType;
                 Finance.FinanceOwner = null;
@@ -113,7 +113,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                     case tFinanceType.Item1:
                         Finance.BudgetType = ConclusionEdit.GetEnumByAttributeValue<tBudgetType>(ConclusionEdit.GetValueGeneralizedDictionary(
                            cmbBudgetType,
-                           message: "Заполните поле вид бюджета").Value);
+                           message: "Заполните поле вид бюджета")?.Value);
                         break;
 
                     case tFinanceType.Item2:
@@ -218,7 +218,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                 {
                     var financeType = ConclusionEdit.GetEnumByAttributeValue<tFinanceType>(ConclusionEdit.GetValueGeneralizedDictionary(
                        cmbFinanceType,
-                       message: "Заполните поле вид источника финансирования").Value);
+                       message: "Заполните поле вид источника финансирования")?.Value);
 
                     switch (financeType)
                     {

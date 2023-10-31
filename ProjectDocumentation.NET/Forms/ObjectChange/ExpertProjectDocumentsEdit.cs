@@ -65,7 +65,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
             {
                 ExpertProjectDocuments.ExpertType = ConclusionEdit.GetEnumByAttributeValue<tExpertType>(ConclusionEdit.GetValueGeneralizedDictionary(
                     cmbExpertType,
-                    message: "Заполните поле направление деятельности в области экспертизы проектной документации.").Value);
+                    message: "Заполните поле направление деятельности в области экспертизы проектной документации.")?.Value);
 
                 ExpertProjectDocuments.ProjectDocumentsReview = ConclusionEdit.GetStringValue(richEditControlProjectDocumentsReview.Text, richEditControlProjectDocumentsReview, "Заполните поле описание основных решений (мероприятий), принятых в проектной документации.", isNullAble: true);
                 ExpertProjectDocuments.ProjectDocumentsChanges = ConclusionEdit.GetStringValue(richEditControlProjectDocumentsChanges.Text, richEditControlProjectDocumentsChanges, "Заполните поле сведения об оперативных изменениях.", isNullAble: true);

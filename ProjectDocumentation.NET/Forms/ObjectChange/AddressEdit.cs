@@ -77,7 +77,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                 Address.Note = txtNote.Text;
                 Address.Region = ConclusionEdit.GetEnumByAttributeValue<tRegionsRF>(ConclusionEdit.GetValueGeneralizedDictionary(
                     cmbRegion,
-                    message: "Заполните поле региона Субъекта Российской Федерации").Value);
+                    message: "Заполните поле региона Субъекта Российской Федерации")?.Value);
             }
             catch (Exception ex)
             {
