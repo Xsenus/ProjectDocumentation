@@ -128,341 +128,305 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
             {
                 Conclusion = new Conclusion();
             }
+
+            #region Page I
+            cmbExaminationResult.EditValue = cmbExaminationResult.Properties.Items
+                ?.Cast<GeneralizedDictionaryXPO>()
+                ?.Where(w => w.GeneralizedDictionary == GeneralizedDictionary.ExaminationResult)
+                ?.FirstOrDefault(f => f.ValueInt == Conclusion?.ExaminationObject?.ExaminationResult.GetEnumXmlAttributeValueInt());
+
+            cmbExaminationForm.EditValue = cmbExaminationForm.Properties.Items
+                ?.Cast<GeneralizedDictionaryXPO>()
+                ?.Where(w => w.GeneralizedDictionary == GeneralizedDictionary.ExaminationForm)
+                ?.FirstOrDefault(f => f.ValueInt == Conclusion?.ExaminationObject?.ExaminationForm.GetEnumXmlAttributeValueInt());
+
+            cmbExaminationObjectType.EditValue = cmbExaminationObjectType.Properties.Items
+                ?.Cast<GeneralizedDictionaryXPO>()
+                ?.Where(w => w.GeneralizedDictionary == GeneralizedDictionary.ExaminationObjectType)
+                ?.FirstOrDefault(f => f.ValueInt == Conclusion?.ExaminationObject?.ExaminationObjectType.GetEnumXmlAttributeValueInt());
+
+            cmbExaminationStage.EditValue = cmbExaminationStage.Properties.Items
+               ?.Cast<GeneralizedDictionaryXPO>()
+               ?.Where(w => w.GeneralizedDictionary == GeneralizedDictionary.ExaminationStage)
+               ?.FirstOrDefault(f => f.ValueInt == Conclusion?.ExaminationObject?.ExaminationStage.GetEnumXmlAttributeValueInt());
+
+            cmbConstructionType.EditValue = cmbConstructionType.Properties.Items
+              ?.Cast<GeneralizedDictionaryXPO>()
+              ?.Where(w => w.GeneralizedDictionary == GeneralizedDictionary.ConstructionType)
+              ?.FirstOrDefault(f => f.ValueInt == Conclusion?.ExaminationObject?.ConstructionType.GetEnumXmlAttributeValueInt());
+
+            SetCheckComboBoxByItems(Conclusion?.ExaminationObject?.ExaminationType, checkCmbExaminationType);
+            memoName.Text = Conclusion?.ExaminationObject?.Name;
+            memoExaminationStageNote.Text = Conclusion?.ExaminationObject?.ExaminationStageNote;
+            #endregion
+
+            #region Page I_2
+            btnSearch.EditValue = Conclusion?.ExpertOrganization?.OrgINN;
+            txtOrgFullName.EditValue = Conclusion?.ExpertOrganization?.OrgFullName;
+            txtOrgOGRN.EditValue = Conclusion?.ExpertOrganization?.OrgOGRN;
+            txtOrgKPP.EditValue = Conclusion?.ExpertOrganization?.OrgKPP;
+            txtOrgINN.EditValue = Conclusion?.ExpertOrganization?.OrgINN;
+            txtEmail.EditValue = Conclusion?.ExpertOrganization?.Email;
+            btnAddress.EditValue = Conclusion?.ExpertOrganization?.Address;
+            txtFamilyName.EditValue = Conclusion?.Approver?.FamilyName;
+            txtFirstName.EditValue = Conclusion?.Approver?.FirstName;
+            txtSecondName.EditValue = Conclusion?.Approver?.SecondName;
+            txtPosition.EditValue = Conclusion?.Approver?.Position;
+            #endregion
+
+            #region Page I_3
+            btnDeclarant.EditValue = Conclusion?.Declarant;
+            #endregion
+
+            #region Page I_6
+            _tPreviousConclusions = Conclusion?.PreviousConclusions?.ToList() ?? new List<tPreviousConclusion>();
+            gridControlPreviousConclusions.DataSource = _tPreviousConclusions;
+            foreach (GridColumn column in gridViewPreviousConclusions.Columns)
+            {
+                column.Visible = false;
+            }
+            if (gridViewPreviousConclusions.Columns[nameof(tPreviousConclusion.Name)] is GridColumn gridPreviousConclusionName)
+            {
+                gridPreviousConclusionName.Caption = "Наименование объекта экспертизы";
+                gridPreviousConclusionName.Visible = true;
+            }
+            #endregion
+
+            #region Page II_1
+            memoObjectName.EditValue = Conclusion?.Object?.Name;
+            cmbObjectType.EditValue = cmbObjectType.Properties.Items
+              ?.Cast<GeneralizedDictionaryXPO>()
+              ?.Where(w => w.GeneralizedDictionary == GeneralizedDictionary.ObjectType)
+              ?.FirstOrDefault(f => f.ValueInt == Conclusion?.Object?.Type.GetEnumXmlAttributeValueInt());
+            cmbFunctionsClass.EditValue = Conclusion?.Object?.Item;
+            cmbObjectAddress.EditValue = Conclusion?.Object?.Address?.FirstOrDefault();
+            _tTEIs = Conclusion?.Object?.TEI?.ToList() ?? new List<tTEI>();
+            gridControlTEI.DataSource = _tTEIs;
+            if (gridViewTEI.Columns[nameof(tTEI.Name)] is GridColumn gridTEIName)
+            {
+                gridTEIName.Caption = "Наименование показателя";
+            }
+            if (gridViewTEI.Columns[nameof(tTEI.Measure)] is GridColumn gridTEIMeasure)
+            {
+                gridTEIMeasure.Caption = "Единица измерения показателя";
+            }
+            if (gridViewTEI.Columns[nameof(tTEI.Value)] is GridColumn gridTEIValue)
+            {
+                gridTEIValue.Caption = "Значение показателя";
+            }
+            _tObjectParts = Conclusion?.Object?.ObjectPart?.ToList() ?? new List<tObjectPart>();
+            gridControlObjectPart.DataSource = _tObjectParts;
+            foreach (GridColumn column in gridViewObjectPart.Columns)
+            {
+                column.Visible = false;
+            }
+            if (gridViewObjectPart.Columns[nameof(tObjectPart.Name)] is GridColumn gridObjectPartName)
+            {
+                gridObjectPartName.Caption = "Наименование объекта";
+                gridObjectPartName.Visible = true;
+            }
+            #endregion
+
+            #region Page II_2
+            _tFinances = Conclusion?.Finance?.ToList() ?? new List<tFinance>();
+            //gridControlFinances.DataSource = _tFinances;
+            gridControlFinances.DataSource = FinanceObjController.GetFinanceObj(_tFinances);
+            foreach (GridColumn column in gridViewFinances.Columns)
+            {
+                column.Visible = false;
+            }
+            if (gridViewFinances.Columns[nameof(FinanceObj.FinanceSize)] is GridColumn gridFinanceFinanceSize)
+            {
+                gridFinanceFinanceSize.Caption = "Размер финансирования (в % от общей суммы)";
+                gridFinanceFinanceSize.Visible = true;
+
+                gridFinanceFinanceSize.DisplayFormat.FormatType = FormatType.Numeric;
+                gridFinanceFinanceSize.DisplayFormat.FormatString = "n5";
+            }
+            if (gridViewFinances.Columns[nameof(FinanceObj.BudgetType)] is GridColumn gridFinanceBudgetType)
+            {
+                gridFinanceBudgetType.Caption = "Уровень бюджета (в случае бюджетного финансирования)";
+                gridFinanceBudgetType.Visible = true;
+            }
+            if (gridViewFinances.Columns[nameof(FinanceObj.FinanceType)] is GridColumn gridFinanceFinanceType)
+            {
+                gridFinanceFinanceType.Caption = "Вид источника финансирования";
+                gridFinanceFinanceType.Visible = true;
+            }
+            memoFinanceComment.EditValue = Conclusion.FinanceComment;
+            #endregion
+
+            #region Page II_3
+            SetCheckComboBoxByItems(Conclusion?.ClimateConditions?.ClimateDistrict, checkCmbClimateDistrict);
+            SetCheckComboBoxByItems(Conclusion?.ClimateConditions?.SeismicActivity, checkCmbSeismicActivity);
+            SetCheckComboBoxByItems(Conclusion?.ClimateConditions?.WindDistrict, checkCmbWindDistrict);
+            SetCheckComboBoxByItems(Conclusion?.ClimateConditions?.GeologicalConditions, checkCmbGeologicalConditions);
+            SetCheckComboBoxByItems(Conclusion?.ClimateConditions?.SnowDistrict, checkCmbSnowDistrict);
+            memoClimateConditionsNote.EditValue = Conclusion?.ClimateConditionsNote;
+            if (string.IsNullOrWhiteSpace(Conclusion?.ClimateConditionsNote))
+            {
+                memoClimateConditionsNote.EditValue = "Сведения отсутствуют.";
+            }
+            #endregion
+
+            #region Page II_4
+            _tDesigners = Conclusion?.Designer?.ToList() ?? new List<tDesigner>();
+            gridControlDesigners.DataSource = PersonObjController.GetPersonObjByDesigner(_tDesigners)?.ToArray();
+            foreach (GridColumn column in gridViewDesigners.Columns)
+            {
+                column.Visible = false;
+            }
+            if (gridViewDesigners.Columns[nameof(PersonObj.Name)] is GridColumn gridPersonObjName)
+            {
+                gridPersonObjName.Caption = "Наименование";
+                gridPersonObjName.Visible = true;
+            }
+            #endregion
+
+            #region Page II_5
+            var eEPDUse = Conclusion?.EEPDUse?.FirstOrDefault();
+            if (eEPDUse != null)
+            {
+                var number = eEPDUse.EEPDNumber;
+                if (number != null)
+                {
+                    checkEEPDUse.EditValue = true;
+                    switch (number.ItemElementName)
+                    {
+                        case ItemChoiceType.EGRZ:
+                            radioGroupConclusionNumber.SelectedIndex = (int)ItemChoiceType.EGRZ;
+                            break;
+
+                        case ItemChoiceType.noEGRZ:
+                            radioGroupConclusionNumber.SelectedIndex = (int)ItemChoiceType.noEGRZ;
+                            break;
+                    }
+                    txtEEPDNumber.EditValue = number.Item;
+                    dateEEPDDate.EditValue = eEPDUse.EEPDDate;
+                    memoEEPDNote.EditValue = eEPDUse.EEPDNote;
+                }
+            }
+            #endregion
+
+            #region Page II_6
+            if (Conclusion?.CadastralNumber?.Length > 0)
+            {
+                _cadastralNumbers.AddRange(Conclusion?.CadastralNumber?.Select(s => new CadastralNumber() { Number = s }));
+            }
             else
             {
-                #region Page I
-                cmbExaminationResult.EditValue = cmbExaminationResult.Properties.Items
-                    ?.Cast<GeneralizedDictionaryXPO>()
-                    ?.Where(w => w.GeneralizedDictionary == GeneralizedDictionary.ExaminationResult)
-                    ?.FirstOrDefault(f => f.ValueInt == Conclusion?.ExaminationObject?.ExaminationResult.GetEnumXmlAttributeValueInt());
-
-                cmbExaminationForm.EditValue = cmbExaminationForm.Properties.Items
-                    ?.Cast<GeneralizedDictionaryXPO>()
-                    ?.Where(w => w.GeneralizedDictionary == GeneralizedDictionary.ExaminationForm)
-                    ?.FirstOrDefault(f => f.ValueInt == Conclusion?.ExaminationObject?.ExaminationForm.GetEnumXmlAttributeValueInt());
-
-                cmbExaminationObjectType.EditValue = cmbExaminationObjectType.Properties.Items
-                    ?.Cast<GeneralizedDictionaryXPO>()
-                    ?.Where(w => w.GeneralizedDictionary == GeneralizedDictionary.ExaminationObjectType)
-                    ?.FirstOrDefault(f => f.ValueInt == Conclusion?.ExaminationObject?.ExaminationObjectType.GetEnumXmlAttributeValueInt());
-
-                cmbExaminationStage.EditValue = cmbExaminationStage.Properties.Items
-                   ?.Cast<GeneralizedDictionaryXPO>()
-                   ?.Where(w => w.GeneralizedDictionary == GeneralizedDictionary.ExaminationStage)
-                   ?.FirstOrDefault(f => f.ValueInt == Conclusion?.ExaminationObject?.ExaminationStage.GetEnumXmlAttributeValueInt());
-
-                cmbConstructionType.EditValue = cmbConstructionType.Properties.Items
-                  ?.Cast<GeneralizedDictionaryXPO>()
-                  ?.Where(w => w.GeneralizedDictionary == GeneralizedDictionary.ConstructionType)
-                  ?.FirstOrDefault(f => f.ValueInt == Conclusion?.ExaminationObject?.ConstructionType.GetEnumXmlAttributeValueInt());
-
-                SetCheckComboBoxByItems(Conclusion?.ExaminationObject?.ExaminationType, checkCmbExaminationType);
-                memoName.Text = Conclusion.ExaminationObject?.Name;
-                memoExaminationStageNote.Text = Conclusion.ExaminationObject?.ExaminationStageNote;
-                #endregion
-
-                #region Page I_2
-                btnSearch.EditValue = Conclusion?.ExpertOrganization?.OrgINN;
-                txtOrgFullName.EditValue = Conclusion?.ExpertOrganization?.OrgFullName;
-                txtOrgOGRN.EditValue = Conclusion?.ExpertOrganization?.OrgOGRN;
-                txtOrgKPP.EditValue = Conclusion?.ExpertOrganization?.OrgKPP;
-                txtOrgINN.EditValue = Conclusion?.ExpertOrganization?.OrgINN;
-                txtEmail.EditValue = Conclusion?.ExpertOrganization?.Email;
-                btnAddress.EditValue = Conclusion?.ExpertOrganization?.Address;
-                txtFamilyName.EditValue = Conclusion?.Approver?.FamilyName;
-                txtFirstName.EditValue = Conclusion?.Approver?.FirstName;
-                txtSecondName.EditValue = Conclusion?.Approver?.SecondName;
-                txtPosition.EditValue = Conclusion?.Approver?.Position;
-                #endregion
-
-                #region Page I_3
-                btnDeclarant.EditValue = Conclusion?.Declarant;
-                #endregion
-
-                #region Page I_5
-                _tDocuments = Conclusion?.Documents?.ToList() ?? new List<tDocument>();
-                gridControlDocuments.DataSource = DocumentObjController.GetDocumentObjs(_tDocuments).ToArray(); ;
-                foreach (GridColumn column in gridViewDocuments.Columns)
-                {
-                    column.Visible = false;
-                }
-                if (gridViewDocuments.Columns[nameof(DocumentObj.DocDate)] is GridColumn gridDocumentObjDocDate)
-                {
-                    gridDocumentObjDocDate.Caption = "Дата документа";
-                    gridDocumentObjDocDate.Visible = true;
-                    gridDocumentObjDocDate.Width = 125;
-                    gridDocumentObjDocDate.OptionsColumn.FixedWidth = true;
-                    gridDocumentObjDocDate.AppearanceCell.TextOptions.HAlignment = HorzAlignment.Center;
-                }
-                if (gridViewDocuments.Columns[nameof(DocumentObj.DocNumber)] is GridColumn gridDocumentObjDocNumber)
-                {
-                    gridDocumentObjDocNumber.Caption = "Номер документа";
-                    gridDocumentObjDocNumber.Visible = true;
-                    gridDocumentObjDocNumber.Width = 125;
-                    gridDocumentObjDocNumber.OptionsColumn.FixedWidth = true;
-                }
-                if (gridViewDocuments.Columns[nameof(DocumentObj.DocName)] is GridColumn gridDocumentObjDocName)
-                {
-                    gridDocumentObjDocName.Caption = "Наименование документа";
-                    gridDocumentObjDocName.Visible = true;
-                }
-                if (gridViewDocuments.Columns[nameof(DocumentObj.DocType)] is GridColumn gridDocumentObjDocType)
-                {
-                    gridDocumentObjDocType.Caption = "Тип документа";
-                    gridDocumentObjDocType.Visible = true;
-                }
-                #endregion
-
-                #region Page I_6
-                _tPreviousConclusions = Conclusion?.PreviousConclusions?.ToList() ?? new List<tPreviousConclusion>();
-                gridControlPreviousConclusions.DataSource = _tPreviousConclusions;
-                foreach (GridColumn column in gridViewPreviousConclusions.Columns)
-                {
-                    column.Visible = false;
-                }
-                if (gridViewPreviousConclusions.Columns[nameof(tPreviousConclusion.Name)] is GridColumn gridPreviousConclusionName)
-                {
-                    gridPreviousConclusionName.Caption = "Наименование объекта экспертизы";
-                    gridPreviousConclusionName.Visible = true;
-                }
-                #endregion
-
-                #region Page II_1
-                memoObjectName.EditValue = Conclusion.Object?.Name;
-                cmbObjectType.EditValue = cmbObjectType.Properties.Items
-                  ?.Cast<GeneralizedDictionaryXPO>()
-                  ?.Where(w => w.GeneralizedDictionary == GeneralizedDictionary.ObjectType)
-                  ?.FirstOrDefault(f => f.ValueInt == Conclusion?.Object?.Type.GetEnumXmlAttributeValueInt());
-                cmbFunctionsClass.EditValue = Conclusion.Object?.Item;
-                cmbObjectAddress.EditValue = Conclusion.Object?.Address?.FirstOrDefault();
-                _tTEIs = Conclusion.Object?.TEI?.ToList() ?? new List<tTEI>();
-                gridControlTEI.DataSource = _tTEIs;
-                if (gridViewTEI.Columns[nameof(tTEI.Name)] is GridColumn gridTEIName)
-                {
-                    gridTEIName.Caption = "Наименование показателя";
-                }
-                if (gridViewTEI.Columns[nameof(tTEI.Measure)] is GridColumn gridTEIMeasure)
-                {
-                    gridTEIMeasure.Caption = "Единица измерения показателя";
-                }
-                if (gridViewTEI.Columns[nameof(tTEI.Value)] is GridColumn gridTEIValue)
-                {
-                    gridTEIValue.Caption = "Значение показателя";
-                }
-                _tObjectParts = Conclusion.Object?.ObjectPart?.ToList() ?? new List<tObjectPart>();
-                gridControlObjectPart.DataSource = _tObjectParts;
-                foreach (GridColumn column in gridViewObjectPart.Columns)
-                {
-                    column.Visible = false;
-                }
-                if (gridViewObjectPart.Columns[nameof(tObjectPart.Name)] is GridColumn gridObjectPartName)
-                {
-                    gridObjectPartName.Caption = "Наименование объекта";
-                    gridObjectPartName.Visible = true;
-                }
-                #endregion
-
-                #region Page II_2
-                _tFinances = Conclusion?.Finance?.ToList() ?? new List<tFinance>();
-                //gridControlFinances.DataSource = _tFinances;
-                gridControlFinances.DataSource = FinanceObjController.GetFinanceObj(_tFinances);
-                foreach (GridColumn column in gridViewFinances.Columns)
-                {
-                    column.Visible = false;
-                }
-                if (gridViewFinances.Columns[nameof(FinanceObj.FinanceSize)] is GridColumn gridFinanceFinanceSize)
-                {
-                    gridFinanceFinanceSize.Caption = "Размер финансирования (в % от общей суммы)";
-                    gridFinanceFinanceSize.Visible = true;
-
-                    gridFinanceFinanceSize.DisplayFormat.FormatType = FormatType.Numeric;
-                    gridFinanceFinanceSize.DisplayFormat.FormatString = "n5";
-                }
-                if (gridViewFinances.Columns[nameof(FinanceObj.BudgetType)] is GridColumn gridFinanceBudgetType)
-                {
-                    gridFinanceBudgetType.Caption = "Уровень бюджета (в случае бюджетного финансирования)";
-                    gridFinanceBudgetType.Visible = true;
-                }
-                if (gridViewFinances.Columns[nameof(FinanceObj.FinanceType)] is GridColumn gridFinanceFinanceType)
-                {
-                    gridFinanceFinanceType.Caption = "Вид источника финансирования";
-                    gridFinanceFinanceType.Visible = true;
-                }
-                memoFinanceComment.EditValue = Conclusion.FinanceComment;
-                #endregion
-
-                #region Page II_3
-                SetCheckComboBoxByItems(Conclusion?.ClimateConditions?.ClimateDistrict, checkCmbClimateDistrict);
-                SetCheckComboBoxByItems(Conclusion?.ClimateConditions?.SeismicActivity, checkCmbSeismicActivity);
-                SetCheckComboBoxByItems(Conclusion?.ClimateConditions?.WindDistrict, checkCmbWindDistrict);
-                SetCheckComboBoxByItems(Conclusion?.ClimateConditions?.GeologicalConditions, checkCmbGeologicalConditions);
-                SetCheckComboBoxByItems(Conclusion?.ClimateConditions?.SnowDistrict, checkCmbSnowDistrict);
-                memoClimateConditionsNote.EditValue = Conclusion?.ClimateConditionsNote;
-                if (string.IsNullOrWhiteSpace(Conclusion?.ClimateConditionsNote))
-                {
-                    memoClimateConditionsNote.EditValue = "Сведения отсутствуют.";
-                }
-                #endregion
-
-                #region Page II_4
-                _tDesigners = Conclusion.Designer?.ToList() ?? new List<tDesigner>();
-                gridControlDesigners.DataSource = PersonObjController.GetPersonObjByDesigner(_tDesigners)?.ToArray();
-                foreach (GridColumn column in gridViewDesigners.Columns)
-                {
-                    column.Visible = false;
-                }
-                if (gridViewDesigners.Columns[nameof(PersonObj.Name)] is GridColumn gridPersonObjName)
-                {
-                    gridPersonObjName.Caption = "Наименование";
-                    gridPersonObjName.Visible = true;
-                }
-                #endregion
-
-                #region Page II_5
-                var eEPDUse = Conclusion.EEPDUse?.FirstOrDefault();
-                if (eEPDUse != null)
-                {
-                    var number = eEPDUse.EEPDNumber;
-                    if (number != null)
-                    {
-                        checkEEPDUse.EditValue = true;
-                        switch (number.ItemElementName)
-                        {
-                            case ItemChoiceType.EGRZ:
-                                radioGroupConclusionNumber.SelectedIndex = (int)ItemChoiceType.EGRZ;
-                                break;
-
-                            case ItemChoiceType.noEGRZ:
-                                radioGroupConclusionNumber.SelectedIndex = (int)ItemChoiceType.noEGRZ;
-                                break;
-                        }
-                        txtEEPDNumber.EditValue = number.Item;
-                        dateEEPDDate.EditValue = eEPDUse.EEPDDate;
-                        memoEEPDNote.EditValue = eEPDUse.EEPDNote;
-                    }
-                }
-                #endregion
-
-                #region Page II_6
-                if (Conclusion.CadastralNumber?.Length > 0)
-                {
-                    _cadastralNumbers.AddRange(Conclusion.CadastralNumber?.Select(s => new CadastralNumber() { Number = s }));
-                }
-                else
-                {
-                    _cadastralNumbers = new List<CadastralNumber>();
-                }
-                gridControlCadastralNumber.DataSource = _cadastralNumbers;
-                if (gridViewCadastralNumber.Columns[nameof(CadastralNumber.Number)] is GridColumn gridCadastralNumber)
-                {
-                    gridCadastralNumber.Caption = "Кадастровый номер";
-                    gridCadastralNumber.Visible = true;
-                }
-                #endregion
-
-                #region Page II_7
-                var projectDocumentsObjs = Conclusion.Items;
-                if (projectDocumentsObjs != null)
-                {
-                    foreach (var item in projectDocumentsObjs)
-                    {
-                        if (item is tDeclarant tDeclarant)
-                        {
-                            _tProjectDocumentsDevelopers.Add(tDeclarant);
-                        }
-                        else if (item is tTechnicalCustomer tTechnicalCustomer)
-                        {
-                            _tProjectDocumentsTechnicalCustomer.Add(tTechnicalCustomer);
-                        }
-                    }
-                }
-                gridControlProjectDocumentsDeveloper.DataSource = PersonObjController.GetPersonObjByDeclarant(_tProjectDocumentsDevelopers).ToArray();
-                foreach (GridColumn column in gridViewProjectDocumentsDeveloper.Columns)
-                {
-                    column.Visible = false;
-                }
-                if (gridViewProjectDocumentsDeveloper.Columns[nameof(PersonObj.Name)] is GridColumn gridProjectDocumentsDevelopersName)
-                {
-                    gridProjectDocumentsDevelopersName.Caption = "Наименование";
-                    gridProjectDocumentsDevelopersName.Visible = true;
-                }
-                gridControlProjectDocumentsTechnicalCustomer.DataSource = PersonObjController.GetPersonObjByTechnicalCustomer(_tProjectDocumentsTechnicalCustomer).ToArray();
-                foreach (GridColumn column in gridViewProjectDocumentsTechnicalCustomer.Columns)
-                {
-                    column.Visible = false;
-                }
-                if (gridViewProjectDocumentsTechnicalCustomer.Columns[nameof(PersonObj.Name)] is GridColumn gridProjectDocumentsTechnicalCustomerName)
-                {
-                    gridProjectDocumentsTechnicalCustomerName.Caption = "Наименование";
-                    gridProjectDocumentsTechnicalCustomerName.Visible = true;
-                }
-                #endregion
-
-                #region Page III
-                _tExpertProjectDocuments = Conclusion.ExpertProjectDocuments?.ToList() ?? new List<tExpertProjectDocuments>();
-                gridControlExpertProjectDocuments.DataSource = ExpertProjectDocumentController.GetExpertProjectDocuments(_tExpertProjectDocuments).ToArray();
-                foreach (GridColumn column in gridViewExpertProjectDocuments.Columns)
-                {
-                    column.Visible = false;
-                }
-                if (gridViewExpertProjectDocuments.Columns[nameof(ExpertProjectDocument.ExpertType)] is GridColumn gridExpertProjectDocumentExpertType)
-                {
-                    gridExpertProjectDocumentExpertType.Caption = "Направление деятельности";
-                    gridExpertProjectDocumentExpertType.Visible = true;
-                }
-                #endregion
-
-                #region Page V
-                memoEngineeringSurveySummary.EditValue = Conclusion.Summary?.EngineeringSurveySummary;
-                memoEngineeringSurveySummaryDate.EditValue = Conclusion.Summary?.EngineeringSurveySummaryDate;
-                SetCheckComboBoxByItems(Conclusion.Summary?.EngineeringSurveyType, checkCmbEngineeringSurveyType);
-                memoProjectDocumentsSummary.EditValue = Conclusion.Summary?.ProjectDocumentsSummary;
-                memoProjectDocumentsSummaryDate.EditValue = Conclusion.Summary?.ProjectDocumentsSummaryDate;
-                memoEstimateNormsAndWorksSummary.EditValue = Conclusion.Summary?.EstimateNormsAndWorksSummary;
-                memoEstimateSummary.EditValue = Conclusion.Summary?.EstimateSummary;
-                #endregion
-
-                #region Page VI
-                memoExaminationSummary.EditValue = Conclusion.Summary?.ExaminationSummary;
-                #endregion
-
-                #region Page VII
-                _experts = Conclusion.Experts?.ToList() ?? new List<tExpert>();
-                gridControlExpert.DataSource = _experts;
-                if (gridViewExpert.Columns[nameof(tExpert.FamilyName)] is GridColumn gridColumntExpertFamilyName)
-                {
-                    gridColumntExpertFamilyName.Caption = "Фамилия";
-                }
-                if (gridViewExpert.Columns[nameof(tExpert.FirstName)] is GridColumn gridColumntExpertFirstName)
-                {
-                    gridColumntExpertFirstName.Caption = "Имя";
-                }
-                if (gridViewExpert.Columns[nameof(tExpert.SecondName)] is GridColumn gridColumntExpertSecondName)
-                {
-                    gridColumntExpertSecondName.Caption = "Отчество";
-                }
-                if (gridViewExpert.Columns[nameof(tExpert.ExpertType)] is GridColumn gridColumntExpertExpertType)
-                {
-                    gridColumntExpertExpertType.Visible = false;
-                }
-                if (gridViewExpert.Columns[nameof(tExpert.ExpertTypeString)] is GridColumn gridColumntExpertExpertTypeString)
-                {
-                    gridColumntExpertExpertTypeString.Caption = "Направление деятельности";
-                }
-                if (gridViewExpert.Columns[nameof(tExpert.ExpertCertificate)] is GridColumn gridColumntExpertExpertCertificate)
-                {
-                    gridColumntExpertExpertCertificate.Caption = "Номер аттестата";
-                }
-                if (gridViewExpert.Columns[nameof(tExpert.ExpertCertificateBeginDate)] is GridColumn gridColumntExpertExpertCertificateBeginDate)
-                {
-                    gridColumntExpertExpertCertificateBeginDate.Caption = "Дата выдачи";
-                }
-                if (gridViewExpert.Columns[nameof(tExpert.ExpertCertificateEndDate)] is GridColumn gridColumntExpertExpertCertificateEndDate)
-                {
-                    gridColumntExpertExpertCertificateEndDate.Caption = "Дата окончания";
-                }
-                #endregion
+                _cadastralNumbers = new List<CadastralNumber>();
             }
+            gridControlCadastralNumber.DataSource = _cadastralNumbers;
+            if (gridViewCadastralNumber.Columns[nameof(CadastralNumber.Number)] is GridColumn gridCadastralNumber)
+            {
+                gridCadastralNumber.Caption = "Кадастровый номер";
+                gridCadastralNumber.Visible = true;
+            }
+            #endregion
+
+            #region Page II_7
+            var projectDocumentsObjs = Conclusion?.Items;
+            if (projectDocumentsObjs != null)
+            {
+                foreach (var item in projectDocumentsObjs)
+                {
+                    if (item is tDeclarant tDeclarant)
+                    {
+                        _tProjectDocumentsDevelopers.Add(tDeclarant);
+                    }
+                    else if (item is tTechnicalCustomer tTechnicalCustomer)
+                    {
+                        _tProjectDocumentsTechnicalCustomer.Add(tTechnicalCustomer);
+                    }
+                }
+            }
+            gridControlProjectDocumentsDeveloper.DataSource = PersonObjController.GetPersonObjByDeclarant(_tProjectDocumentsDevelopers).ToArray();
+            foreach (GridColumn column in gridViewProjectDocumentsDeveloper.Columns)
+            {
+                column.Visible = false;
+            }
+            if (gridViewProjectDocumentsDeveloper.Columns[nameof(PersonObj.Name)] is GridColumn gridProjectDocumentsDevelopersName)
+            {
+                gridProjectDocumentsDevelopersName.Caption = "Наименование";
+                gridProjectDocumentsDevelopersName.Visible = true;
+            }
+            gridControlProjectDocumentsTechnicalCustomer.DataSource = PersonObjController.GetPersonObjByTechnicalCustomer(_tProjectDocumentsTechnicalCustomer).ToArray();
+            foreach (GridColumn column in gridViewProjectDocumentsTechnicalCustomer.Columns)
+            {
+                column.Visible = false;
+            }
+            if (gridViewProjectDocumentsTechnicalCustomer.Columns[nameof(PersonObj.Name)] is GridColumn gridProjectDocumentsTechnicalCustomerName)
+            {
+                gridProjectDocumentsTechnicalCustomerName.Caption = "Наименование";
+                gridProjectDocumentsTechnicalCustomerName.Visible = true;
+            }
+            #endregion
+
+            #region Page III
+            _tExpertProjectDocuments = Conclusion?.ExpertProjectDocuments?.ToList() ?? new List<tExpertProjectDocuments>();
+            gridControlExpertProjectDocuments.DataSource = ExpertProjectDocumentController.GetExpertProjectDocuments(_tExpertProjectDocuments).ToArray();
+            foreach (GridColumn column in gridViewExpertProjectDocuments.Columns)
+            {
+                column.Visible = false;
+            }
+            if (gridViewExpertProjectDocuments.Columns[nameof(ExpertProjectDocument.ExpertType)] is GridColumn gridExpertProjectDocumentExpertType)
+            {
+                gridExpertProjectDocumentExpertType.Caption = "Направление деятельности";
+                gridExpertProjectDocumentExpertType.Visible = true;
+            }
+            #endregion
+
+            #region Page V
+            memoEngineeringSurveySummary.EditValue = Conclusion?.Summary?.EngineeringSurveySummary;
+            memoEngineeringSurveySummaryDate.EditValue = Conclusion?.Summary?.EngineeringSurveySummaryDate;
+            SetCheckComboBoxByItems(Conclusion?.Summary?.EngineeringSurveyType, checkCmbEngineeringSurveyType);
+            memoProjectDocumentsSummary.EditValue = Conclusion?.Summary?.ProjectDocumentsSummary;
+            memoProjectDocumentsSummaryDate.EditValue = Conclusion?.Summary?.ProjectDocumentsSummaryDate;
+            memoEstimateNormsAndWorksSummary.EditValue = Conclusion?.Summary?.EstimateNormsAndWorksSummary;
+            memoEstimateSummary.EditValue = Conclusion?.Summary?.EstimateSummary;
+            #endregion
+
+            #region Page VI
+            memoExaminationSummary.EditValue = Conclusion?.Summary?.ExaminationSummary;
+            #endregion
+
+            #region Page VII
+            _experts = Conclusion?.Experts?.ToList() ?? new List<tExpert>();
+            gridControlExpert.DataSource = _experts;
+            if (gridViewExpert.Columns[nameof(tExpert.FamilyName)] is GridColumn gridColumntExpertFamilyName)
+            {
+                gridColumntExpertFamilyName.Caption = "Фамилия";
+            }
+            if (gridViewExpert.Columns[nameof(tExpert.FirstName)] is GridColumn gridColumntExpertFirstName)
+            {
+                gridColumntExpertFirstName.Caption = "Имя";
+            }
+            if (gridViewExpert.Columns[nameof(tExpert.SecondName)] is GridColumn gridColumntExpertSecondName)
+            {
+                gridColumntExpertSecondName.Caption = "Отчество";
+            }
+            if (gridViewExpert.Columns[nameof(tExpert.ExpertType)] is GridColumn gridColumntExpertExpertType)
+            {
+                gridColumntExpertExpertType.Visible = false;
+            }
+            if (gridViewExpert.Columns[nameof(tExpert.ExpertTypeString)] is GridColumn gridColumntExpertExpertTypeString)
+            {
+                gridColumntExpertExpertTypeString.Caption = "Направление деятельности";
+            }
+            if (gridViewExpert.Columns[nameof(tExpert.ExpertCertificate)] is GridColumn gridColumntExpertExpertCertificate)
+            {
+                gridColumntExpertExpertCertificate.Caption = "Номер аттестата";
+            }
+            if (gridViewExpert.Columns[nameof(tExpert.ExpertCertificateBeginDate)] is GridColumn gridColumntExpertExpertCertificateBeginDate)
+            {
+                gridColumntExpertExpertCertificateBeginDate.Caption = "Дата выдачи";
+            }
+            if (gridViewExpert.Columns[nameof(tExpert.ExpertCertificateEndDate)] is GridColumn gridColumntExpertExpertCertificateEndDate)
+            {
+                gridColumntExpertExpertCertificateEndDate.Caption = "Дата окончания";
+            }
+            #endregion
         }
 
         public static void SetCheckComboBoxByItems<T>(ICollection<T> collection, CheckedComboBoxEdit comboBoxEdit) where T : Enum
