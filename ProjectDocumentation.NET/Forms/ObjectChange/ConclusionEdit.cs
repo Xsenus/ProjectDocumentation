@@ -4,7 +4,6 @@ using Core.NET.DaDataObj;
 using Core.NET.Extensions;
 using Core.NET.Models.XPO;
 using DevExpress.Utils;
-using DevExpress.Xpf.Printing;
 using DevExpress.Xpo;
 using DevExpress.XtraBars;
 using DevExpress.XtraEditors;
@@ -834,6 +833,13 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                 if (listObj.Count > 0)
                 {
                     Conclusion.Items = listObj.ToArray();
+                }
+                #endregion
+
+                #region Page III
+                if (_tExpertProjectDocuments?.Count() > 0)
+                {
+                    Conclusion.ExpertProjectDocuments = _tExpertProjectDocuments.ToArray();
                 }
                 #endregion
 
