@@ -185,7 +185,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
 
             #region Page I_5
             _tDocuments = Conclusion.Documents?.ToList() ?? new List<tDocument>();
-            gridControlDocuments.DataSource = DocumentObjController.GetDocumentObjs(_tDocuments).ToArray(); 
+            gridControlDocuments.DataSource = DocumentObjController.GetDocumentObjs(_tDocuments).ToArray();
             foreach (GridColumn column in gridViewDocuments.Columns)
             {
                 column.Visible = false;
@@ -733,7 +733,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                 {
                     Conclusion.Documents = _tDocuments.ToArray();
                 }
-                else 
+                else
                 {
                     Conclusion.Documents = null;
                 }
@@ -2027,6 +2027,6 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                     gridControlDocuments.RefreshDataSource();
                 }
             }
-        }        
+        }
     }
 }
