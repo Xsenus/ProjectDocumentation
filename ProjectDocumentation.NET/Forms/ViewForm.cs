@@ -173,20 +173,25 @@ namespace ProjectDocumentation.NET.Forms
 
         private string GetProcessedList(IEnumerable<tTEI> collection)
         {
-            var maxLenght = collection.Max(m => m.Name?.Length);
-            var result = new List<string>();
-            foreach (var item in collection)
+            if (collection != null)
             {
-                var name = item.Name;
-                while (name.Length < maxLenght)
+                var maxLenght = collection.Max(m => m.Name?.Length);
+                var result = new List<string>();
+                foreach (var item in collection)
                 {
-                    name += " ";
+                    var name = item.Name;
+                    while (name.Length < maxLenght)
+                    {
+                        name += " ";
+                    }
+
+                    result.Add($"{name}\t{item.Measure}\t{item.Value}");
                 }
 
-                result.Add($"{name}\t{item.Measure}\t{item.Value}");
+                return string.Join(Environment.NewLine, result.ToArray());
             }
 
-            return string.Join(Environment.NewLine, result.ToArray());
+            return default;
         }
 
         private void AddValueToString()
