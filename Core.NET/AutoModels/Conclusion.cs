@@ -4744,135 +4744,32 @@ namespace Core.NET.AutoModels
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     public partial class tDocument
     {
+        public string DocTypeName => DocType.GetEnumDescription();
 
-        private tDocumentType docTypeField;
+        public tDocumentType DocType { get; set; }
 
-        private string docNameField;
-
-        private string docNumberField;
-
-        private System.DateTime docDateField;
-
-        private bool docDateFieldSpecified;
-
-        private object[] itemsField;
-
-        private string docChangesField;
-
-        private object[] items1Field;
-
-        /// <remarks/>
-        public tDocumentType DocType
-        {
-            get
-            {
-                return this.docTypeField;
-            }
-            set
-            {
-                this.docTypeField = value;
-            }
-        }
-
-        /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(DataType = "normalizedString")]
-        public string DocName
-        {
-            get
-            {
-                return this.docNameField;
-            }
-            set
-            {
-                this.docNameField = value;
-            }
-        }
+        public string DocName { get; set; }
 
-        /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(DataType = "normalizedString")]
-        public string DocNumber
-        {
-            get
-            {
-                return this.docNumberField;
-            }
-            set
-            {
-                this.docNumberField = value;
-            }
-        }
+        public string DocNumber { get; set; }
 
-        /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(DataType = "date")]
-        public System.DateTime DocDate
-        {
-            get
-            {
-                return this.docDateField;
-            }
-            set
-            {
-                this.docDateField = value;
-            }
-        }
+        public System.DateTime DocDate { get; set; }
 
-        /// <remarks/>
         [System.Xml.Serialization.XmlIgnoreAttribute()]
-        public bool DocDateSpecified
-        {
-            get
-            {
-                return this.docDateFieldSpecified;
-            }
-            set
-            {
-                this.docDateFieldSpecified = value;
-            }
-        }
+        public bool DocDateSpecified { get; set; }
 
-        /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute("DocIssueAuthor", typeof(string), DataType = "normalizedString")]
         [System.Xml.Serialization.XmlElementAttribute("FullDocIssueAuthor", typeof(tDeclarant))]
-        public object[] Items
-        {
-            get
-            {
-                return this.itemsField;
-            }
-            set
-            {
-                this.itemsField = value;
-            }
-        }
+        public object[] Items { get; set; }
 
-        /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(DataType = "normalizedString")]
-        public string DocChanges
-        {
-            get
-            {
-                return this.docChangesField;
-            }
-            set
-            {
-                this.docChangesField = value;
-            }
-        }
+        public string DocChanges { get; set; }
 
-        /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute("File", typeof(tFile))]
         [System.Xml.Serialization.XmlElementAttribute("Included", typeof(string), DataType = "normalizedString")]
-        public object[] Items1
-        {
-            get
-            {
-                return this.items1Field;
-            }
-            set
-            {
-                this.items1Field = value;
-            }
-        }
+        public object[] Items1 { get; set; }
     }
 
     /// <remarks/>

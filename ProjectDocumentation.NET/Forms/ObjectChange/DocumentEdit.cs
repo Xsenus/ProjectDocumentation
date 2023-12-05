@@ -66,6 +66,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
             {
                 dateDocDate.EditValue = Document.DocDate;
             }
+            memoDocChanges.EditValue = Document.DocChanges;
 
             if (Document.Items?.Count() > 0)
             {
@@ -132,6 +133,8 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                     Document.DocDate = default;
                     Document.DocDateSpecified = false;
                 }
+
+                Document.DocChanges = ConclusionEdit.GetStringValue(memoDocChanges.EditValue, memoDocChanges, "Заполните поле примечание об изменении документа.", isNullAble: true);
 
                 if (_tDeclarants.Count > 0)
                 {

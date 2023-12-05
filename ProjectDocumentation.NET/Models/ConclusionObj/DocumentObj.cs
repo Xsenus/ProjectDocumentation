@@ -30,10 +30,11 @@ namespace ProjectDocumentation.NET.Models.ConclusionObj
 
         public tDocument Document { get; private set; }
 
-        public string DocType { get; private set; }
+        public string DocTypeName { get; private set; }
         public string DocName { get; private set; }
         public string DocNumber { get; private set; }
         public string DocDate { get; private set; }
+        public string DocChanges { get; private set; }
 
         public async void SetEnumObj()
         {
@@ -44,7 +45,7 @@ namespace ProjectDocumentation.NET.Models.ConclusionObj
                 var docType = await new XPQuery<GeneralizedDictionaryXPO>(session)?
                 .FirstOrDefaultAsync(f => f.GeneralizedDictionary == GeneralizedDictionary.DocumentType
                     && f.Value == Document.DocType.GetEnumXmlAttributeValue().ToString());
-                DocType = docType?.Name;
+                DocTypeName = docType?.Name;
 
                 DocName = Document.DocName;
                 DocNumber = Document.DocNumber;
@@ -52,6 +53,7 @@ namespace ProjectDocumentation.NET.Models.ConclusionObj
                 {
                     DocDate = Document.DocDate.ToShortDateString();
                 }
+                DocChanges = Document.DocChanges;
             }
         }
 

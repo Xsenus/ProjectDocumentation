@@ -45,7 +45,7 @@
             this.cmbDocType = new DevExpress.XtraEditors.ComboBoxEdit();
             this.txtDocName = new DevExpress.XtraEditors.TextEdit();
             this.txtDocNumber = new DevExpress.XtraEditors.TextEdit();
-            this.memoName = new DevExpress.XtraEditors.MemoEdit();
+            this.memoDocChanges = new DevExpress.XtraEditors.MemoEdit();
             this.txtDocIssueAuthor = new DevExpress.XtraEditors.TextEdit();
             this.Root = new DevExpress.XtraLayout.LayoutControlGroup();
             this.emptySpaceItemSave = new DevExpress.XtraLayout.EmptySpaceItem();
@@ -85,7 +85,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.cmbDocType.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.txtDocName.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.txtDocNumber.Properties)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.memoName.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.memoDocChanges.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.txtDocIssueAuthor.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.Root)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.emptySpaceItemSave)).BeginInit();
@@ -118,7 +118,7 @@
             this.layoutControlObjPart.Controls.Add(this.cmbDocType);
             this.layoutControlObjPart.Controls.Add(this.txtDocName);
             this.layoutControlObjPart.Controls.Add(this.txtDocNumber);
-            this.layoutControlObjPart.Controls.Add(this.memoName);
+            this.layoutControlObjPart.Controls.Add(this.memoDocChanges);
             this.layoutControlObjPart.Controls.Add(this.txtDocIssueAuthor);
             this.layoutControlObjPart.Dock = System.Windows.Forms.DockStyle.Fill;
             this.layoutControlObjPart.Location = new System.Drawing.Point(0, 0);
@@ -266,13 +266,13 @@
             // 
             // memoName
             // 
-            this.memoName.Location = new System.Drawing.Point(6, 302);
-            this.memoName.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.memoName.Name = "memoName";
-            this.memoName.Properties.ScrollBars = System.Windows.Forms.ScrollBars.None;
-            this.memoName.Size = new System.Drawing.Size(786, 73);
-            this.memoName.StyleController = this.layoutControlObjPart;
-            this.memoName.TabIndex = 7;
+            this.memoDocChanges.Location = new System.Drawing.Point(6, 302);
+            this.memoDocChanges.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.memoDocChanges.Name = "memoName";
+            this.memoDocChanges.Properties.ScrollBars = System.Windows.Forms.ScrollBars.None;
+            this.memoDocChanges.Size = new System.Drawing.Size(786, 73);
+            this.memoDocChanges.StyleController = this.layoutControlObjPart;
+            this.memoDocChanges.TabIndex = 7;
             // 
             // txtDocIssueAuthor
             // 
@@ -393,7 +393,7 @@
             // 
             // layoutControlItemName
             // 
-            this.layoutControlItemName.Control = this.memoName;
+            this.layoutControlItemName.Control = this.memoDocChanges;
             this.layoutControlItemName.ControlAlignment = System.Drawing.ContentAlignment.TopLeft;
             this.layoutControlItemName.CustomizationFormText = "Наименование объекта экспертизы *";
             this.layoutControlItemName.Location = new System.Drawing.Point(0, 280);
@@ -575,7 +575,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.cmbDocType.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.txtDocName.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.txtDocNumber.Properties)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.memoName.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.memoDocChanges.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.txtDocIssueAuthor.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.Root)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.emptySpaceItemSave)).EndInit();
@@ -618,7 +618,7 @@
         private DevExpress.XtraLayout.LayoutControlItem layoutControlItemDocName;
         private DevExpress.XtraEditors.TextEdit txtDocNumber;
         private DevExpress.XtraLayout.LayoutControlItem layoutControlItemDocNumber;
-        private DevExpress.XtraEditors.MemoEdit memoName;
+        private DevExpress.XtraEditors.MemoEdit memoDocChanges;
         private DevExpress.XtraLayout.LayoutControlItem layoutControlItemName;
         private DevExpress.XtraEditors.TextEdit txtDocIssueAuthor;
         private DevExpress.XtraLayout.LayoutControlItem layoutControlItemDocIssueAuthor;

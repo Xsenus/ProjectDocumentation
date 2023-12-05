@@ -181,6 +181,40 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
             btnDeclarant.EditValue = Conclusion?.Declarant;
             #endregion
 
+            #region Page I_5
+            _tDocuments = Conclusion.Documents?.ToList() ?? new List<tDocument>();
+            gridControlDocuments.DataSource = DocumentObjController.GetDocumentObjs(_tDocuments).ToArray(); 
+            foreach (GridColumn column in gridViewDocuments.Columns)
+            {
+                column.Visible = false;
+            }
+            if (gridViewDocuments.Columns[nameof(DocumentObj.DocChanges)] is GridColumn gridDocumentDocChanges)
+            {
+                gridDocumentDocChanges.Caption = "Примечание";
+                gridDocumentDocChanges.Visible = true;
+            }
+            if (gridViewDocuments.Columns[nameof(DocumentObj.DocDate)] is GridColumn gridDocumentDocDate)
+            {
+                gridDocumentDocDate.Caption = "Дата документа";
+                gridDocumentDocDate.Visible = true;
+            }
+            if (gridViewDocuments.Columns[nameof(DocumentObj.DocNumber)] is GridColumn gridDocumentDocNumber)
+            {
+                gridDocumentDocNumber.Caption = "Номер документа";
+                gridDocumentDocNumber.Visible = true;
+            }
+            if (gridViewDocuments.Columns[nameof(DocumentObj.DocName)] is GridColumn gridDocumentDocName)
+            {
+                gridDocumentDocName.Caption = "Наименование документа";
+                gridDocumentDocName.Visible = true;
+            }
+            if (gridViewDocuments.Columns[nameof(DocumentObj.DocTypeName)] is GridColumn gridDocumentDocTypeName)
+            {
+                gridDocumentDocTypeName.Caption = "Тип документа";
+                gridDocumentDocTypeName.Visible = true;
+            }
+            #endregion
+
             #region Page I_6
             _tPreviousConclusions = Conclusion?.PreviousConclusions?.ToList() ?? new List<tPreviousConclusion>();
             gridControlPreviousConclusions.DataSource = _tPreviousConclusions;
@@ -662,12 +696,20 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                 {
                     Conclusion.Documents = _tDocuments.ToArray();
                 }
+                else 
+                {
+                    Conclusion.Documents = null;
+                }
                 #endregion
 
                 #region Page 1_6
                 if (_tPreviousConclusions.Count > 0)
                 {
                     Conclusion.PreviousConclusions = _tPreviousConclusions.ToArray();
+                }
+                else
+                {
+                    Conclusion.PreviousConclusions = null;
                 }
                 #endregion
 
@@ -724,9 +766,23 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                     }
                     Conclusion.Object.TEI = _tTEIs.ToArray();
                 }
+                else
+                {
+                    if (Conclusion.Object?.TEI != null)
+                    {
+                        Conclusion.Object.TEI = null;
+                    }
+                }
                 if (_tObjectParts.Count > 0)
                 {
                     Conclusion.Object.ObjectPart = _tObjectParts.ToArray();
+                }
+                else
+                {
+                    if (Conclusion.Object?.ObjectPart != null)
+                    {
+                        Conclusion.Object.ObjectPart = null;
+                    }
                 }
                 #endregion
 
@@ -734,6 +790,10 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                 if (_tFinances.Count > 0)
                 {
                     Conclusion.Finance = _tFinances.ToArray();
+                }
+                else
+                {
+                    Conclusion.Finance = null;
                 }
                 Conclusion.FinanceComment = GetStringValue(memoFinanceComment.EditValue, isNullAble: true);
                 #endregion
@@ -752,6 +812,10 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                 if (_tDesigners.Count > 0)
                 {
                     Conclusion.Designer = _tDesigners.ToArray();
+                }
+                else
+                {
+                    Conclusion.Designer = null;
                 }
                 #endregion
 
@@ -792,7 +856,6 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                     eEPDUse.EEPDNumber = number;
                     Conclusion.EEPDUse = new tEEPDUse[] { eEPDUse };
                 }
-
                 #endregion
 
                 #region Page II_6
@@ -818,6 +881,10 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                     }
                     Conclusion.CadastralNumber = cadastralNumbers.ToArray();
                 }
+                else
+                {
+                    Conclusion.CadastralNumber = null;
+                }
                 #endregion
 
                 #region Page II_7
@@ -840,6 +907,10 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                 if (_tExpertProjectDocuments?.Count() > 0)
                 {
                     Conclusion.ExpertProjectDocuments = _tExpertProjectDocuments.ToArray();
+                }
+                else
+                {
+                    Conclusion.ExpertProjectDocuments = null;
                 }
                 #endregion
 
@@ -869,6 +940,10 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                 if (_experts.Count > 0)
                 {
                     Conclusion.Experts = _experts.ToArray();
+                }
+                else
+                {
+                    Conclusion.Experts = null;
                 }
                 #endregion
 

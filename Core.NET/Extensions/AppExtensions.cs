@@ -23,26 +23,6 @@ namespace Core.NET.Extensions
             }
         }
 
-        public static string GetEnumDescription(this Enum genericEnum)
-        {
-            if (genericEnum is null)
-            {
-                return default;
-            }
-
-            Type genericEnumType = genericEnum.GetType();
-            MemberInfo[] memberInfo = genericEnumType.GetMember(genericEnum.ToString());
-            if ((memberInfo != null && memberInfo.Length > 0))
-            {
-                var _Attribs = memberInfo[0].GetCustomAttributes(typeof(DescriptionAttribute), false);
-                if ((_Attribs != null && _Attribs.Count() > 0))
-                {
-                    return ((DescriptionAttribute)_Attribs.ElementAt(0)).Description;
-                }
-            }
-            return genericEnum.ToString();
-        }
-
         public static void ConsoleWriteLine(string message)
         {
             ConsoleWriteLineWithColor(message, ConsoleColor.Green);
