@@ -48,6 +48,8 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
         private List<CadastralNumber> _cadastralNumbers = new List<CadastralNumber>();
         private List<tDeclarant> _tProjectDocumentsDevelopers = new List<tDeclarant>();
         private List<tTechnicalCustomer> _tProjectDocumentsTechnicalCustomer = new List<tTechnicalCustomer>();
+        private List<tDeclarant> _tEngineeringSurveyDeveloper = new List<tDeclarant>();
+        private List<tTechnicalCustomer> _tEngineeringSurveyTechnicalCustomer = new List<tTechnicalCustomer>();
         private List<tExpertProjectDocuments> _tExpertProjectDocuments = new List<tExpertProjectDocuments>();
 
         private List<tMismatch> _mismatch = new List<tMismatch>();
@@ -363,6 +365,41 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
             #endregion
 
             #region Page II_7
+            var engineeringSurveyObjs = Conclusion?.Items1;
+            if (engineeringSurveyObjs != null)
+            {
+                foreach (var item in engineeringSurveyObjs)
+                {
+                    if (item is tDeclarant tDeclarant)
+                    {
+                        _tEngineeringSurveyDeveloper.Add(tDeclarant);
+                    }
+                    else if (item is tTechnicalCustomer tTechnicalCustomer)
+                    {
+                        _tEngineeringSurveyTechnicalCustomer.Add(tTechnicalCustomer);
+                    }
+                }
+            }
+            gridControlEngineeringSurveyDeveloper.DataSource = PersonObjController.GetPersonObjByDeclarant(_tEngineeringSurveyDeveloper).ToArray();
+            foreach (GridColumn column in gridViewEngineeringSurveyDeveloper.Columns)
+            {
+                column.Visible = false;
+            }
+            if (gridViewEngineeringSurveyDeveloper.Columns[nameof(PersonObj.Name)] is GridColumn gridEngineeringSurveyDeveloperName)
+            {
+                gridEngineeringSurveyDeveloperName.Caption = "Наименование";
+                gridEngineeringSurveyDeveloperName.Visible = true;
+            }
+            gridControlEngineeringSurveyTechnicalCustomer.DataSource = PersonObjController.GetPersonObjByTechnicalCustomer(_tEngineeringSurveyTechnicalCustomer).ToArray();
+            foreach (GridColumn column in gridViewEngineeringSurveyTechnicalCustomer.Columns)
+            {
+                column.Visible = false;
+            }
+            if (gridViewEngineeringSurveyTechnicalCustomer.Columns[nameof(PersonObj.Name)] is GridColumn gridEngineeringSurveyTechnicalCustomerName)
+            {
+                gridEngineeringSurveyTechnicalCustomerName.Caption = "Наименование";
+                gridEngineeringSurveyTechnicalCustomerName.Visible = true;
+            }
             var projectDocumentsObjs = Conclusion?.Items;
             if (projectDocumentsObjs != null)
             {
@@ -888,22 +925,39 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                 #endregion
 
                 #region Page II_7
-                var listObj = new List<object>();
+                var listObjItems = new List<object>();
                 if (_tProjectDocumentsDevelopers?.Count() > 0)
                 {
-                    listObj.AddRange(_tProjectDocumentsDevelopers);
+                    listObjItems.AddRange(_tProjectDocumentsDevelopers);
                 }
                 if (_tProjectDocumentsTechnicalCustomer?.Count() > 0)
                 {
-                    listObj.AddRange(_tProjectDocumentsTechnicalCustomer);
+                    listObjItems.AddRange(_tProjectDocumentsTechnicalCustomer);
                 }
-                if (listObj.Count > 0)
+                if (listObjItems.Count > 0)
                 {
-                    Conclusion.Items = listObj.ToArray();
+                    Conclusion.Items = listObjItems.ToArray();
                 }
                 else
                 {
                     Conclusion.Items = null;
+                }
+                var listObjItems1 = new List<object>();
+                if (_tEngineeringSurveyDeveloper?.Count() > 0)
+                {
+                    listObjItems1.AddRange(_tEngineeringSurveyDeveloper);
+                }
+                if (_tEngineeringSurveyTechnicalCustomer?.Count() > 0)
+                {
+                    listObjItems1.AddRange(_tEngineeringSurveyTechnicalCustomer);
+                }
+                if (listObjItems1.Count > 0)
+                {
+                    Conclusion.Items1 = listObjItems1.ToArray();
+                }
+                else
+                {
+                    Conclusion.Items1 = null;
                 }
                 #endregion
 
@@ -1442,6 +1496,114 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
             }
         }
 
+        private void gridViewEngineeringSurveyDeveloper_PopupMenuShowing(object sender, PopupMenuShowingEventArgs e)
+        {
+            if (sender is GridView gridView)
+            {
+                popupEngineeringSurveyDeveloper.ShowPopup(new Point(Cursor.Position.X, Cursor.Position.Y));
+            }
+        }
+
+        private void barBtnEngineeringSurveyDeveloperAdd_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            var form = new DeclarantEdit();
+            form.ShowDialog();
+            if (form.IsSave)
+            {
+                _tEngineeringSurveyDeveloper.Add(form.Declarant);
+                gridControlEngineeringSurveyDeveloper.DataSource = PersonObjController.GetPersonObjByDeclarant(_tEngineeringSurveyDeveloper).ToArray();
+                gridControlEngineeringSurveyDeveloper.RefreshDataSource();
+            }
+        }
+
+        private void barBtnEngineeringSurveyDeveloperEdit_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            if (gridViewEngineeringSurveyDeveloper.GetRow(gridViewEngineeringSurveyDeveloper.FocusedRowHandle) is PersonObj obj)
+            {
+                var form = new DeclarantEdit(obj.BaseObj);
+                form.ShowDialog();
+                if (form.IsSave)
+                {
+                    gridControlEngineeringSurveyDeveloper.DataSource = PersonObjController.GetPersonObjByDeclarant(_tEngineeringSurveyDeveloper).ToArray();
+                    gridControlEngineeringSurveyDeveloper.RefreshDataSource();
+                }
+            }
+        }
+
+        private void barBtnEngineeringSurveyDeveloperDel_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            if (gridViewEngineeringSurveyDeveloper.GetRow(gridViewEngineeringSurveyDeveloper.FocusedRowHandle) is PersonObj obj)
+            {
+                if (XtraMessageBox.Show(
+                    "Вы действительно хотите удалить выделенный объект?",
+                    "Информационное сообщение",
+                    MessageBoxButtons.OKCancel,
+                    MessageBoxIcon.Question) == DialogResult.OK)
+                {
+                    if (obj.BaseObj is tDeclarant tDeclarant)
+                    {
+                        _tEngineeringSurveyDeveloper.Remove(tDeclarant);
+                        gridControlEngineeringSurveyDeveloper.DataSource = PersonObjController.GetPersonObjByDeclarant(_tEngineeringSurveyDeveloper).ToArray();
+                        gridControlEngineeringSurveyDeveloper.RefreshDataSource();
+                    }
+                }
+            }
+        }
+
+        private void gridViewEngineeringSurveyTechnicalCustomer_PopupMenuShowing(object sender, PopupMenuShowingEventArgs e)
+        {
+            if (sender is GridView gridView)
+            {
+                popupEngineeringSurveyTechnicalCustomer.ShowPopup(new Point(Cursor.Position.X, Cursor.Position.Y));
+            }
+        }
+
+        private void barBtnEngineeringSurveyTechnicalCustomerAdd_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            var form = new TechnicalCustomerEdit();
+            form.ShowDialog();
+            if (form.IsSave)
+            {
+                _tEngineeringSurveyTechnicalCustomer.Add(form.TechnicalCustomer);
+                gridControlEngineeringSurveyTechnicalCustomer.DataSource = PersonObjController.GetPersonObjByTechnicalCustomer(_tEngineeringSurveyTechnicalCustomer).ToArray();
+                gridControlEngineeringSurveyTechnicalCustomer.RefreshDataSource();
+            }
+        }
+
+        private void barBtnEngineeringSurveyTechnicalCustomerEdit_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            if (gridViewEngineeringSurveyTechnicalCustomer.GetRow(gridViewEngineeringSurveyTechnicalCustomer.FocusedRowHandle) is PersonObj obj)
+            {
+                var form = new TechnicalCustomerEdit(obj.BaseObj);
+                form.ShowDialog();
+                if (form.IsSave)
+                {
+                    gridControlEngineeringSurveyTechnicalCustomer.DataSource = PersonObjController.GetPersonObjByTechnicalCustomer(_tEngineeringSurveyTechnicalCustomer).ToArray();
+                    gridControlEngineeringSurveyTechnicalCustomer.RefreshDataSource();
+                }
+            }
+        }
+
+        private void barBtnEngineeringSurveyTechnicalCustomerDel_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            if (gridViewEngineeringSurveyTechnicalCustomer.GetRow(gridViewEngineeringSurveyTechnicalCustomer.FocusedRowHandle) is PersonObj obj)
+            {
+                if (XtraMessageBox.Show(
+                    "Вы действительно хотите удалить выделенный объект?",
+                    "Информационное сообщение",
+                    MessageBoxButtons.OKCancel,
+                    MessageBoxIcon.Question) == DialogResult.OK)
+                {
+                    if (obj.BaseObj is tTechnicalCustomer tTechnicalCustomer)
+                    {
+                        _tEngineeringSurveyTechnicalCustomer.Remove(tTechnicalCustomer);
+                        gridControlEngineeringSurveyTechnicalCustomer.DataSource = PersonObjController.GetPersonObjByTechnicalCustomer(_tEngineeringSurveyTechnicalCustomer).ToArray();
+                        gridControlEngineeringSurveyTechnicalCustomer.RefreshDataSource();
+                    }
+                }
+            }
+        }
+
         private void gridViewProjectDocumentsDeveloper_PopupMenuShowing(object sender, PopupMenuShowingEventArgs e)
         {
             if (sender is GridView gridView)
@@ -1865,6 +2027,6 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                     gridControlDocuments.RefreshDataSource();
                 }
             }
-        }
+        }        
     }
 }

@@ -41,6 +41,10 @@ namespace Core.NET.AutoModels
         [System.Xml.Serialization.XmlElementAttribute("ProjectDocumentsTechnicalCustomer", typeof(tTechnicalCustomer))]
         public object[] Items { get; set; }
 
+        [System.Xml.Serialization.XmlElementAttribute("EngineeringSurveyDeveloper", typeof(tDeclarant))]
+        [System.Xml.Serialization.XmlElementAttribute("EngineeringSurveyTechnicalCustomer", typeof(tTechnicalCustomer))]
+        public object[] Items1 { get; set; }
+
         [System.Xml.Serialization.XmlElementAttribute("Finance")]
         public tFinance[] Finance { get; set; }
 
@@ -57,10 +61,6 @@ namespace Core.NET.AutoModels
 
         [System.Xml.Serialization.XmlElementAttribute("EngineeringSurveyAddress")]
         public tEngineeringSurveyAddress[] EngineeringSurveyAddress { get; set; }
-
-        [System.Xml.Serialization.XmlElementAttribute("EngineeringSurveyDeveloper", typeof(tDeclarant))]
-        [System.Xml.Serialization.XmlElementAttribute("EngineeringSurveyTechnicalCustomer", typeof(tTechnicalCustomer))]
-        public object[] Items1 { get; set; }
 
         [System.Xml.Serialization.XmlElementAttribute("ExpertEngineeringSurveys")]
         public tExpertEngineeringSurveys[] ExpertEngineeringSurveys { get; set; }
