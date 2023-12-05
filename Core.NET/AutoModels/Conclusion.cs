@@ -12,433 +12,76 @@ namespace Core.NET.AutoModels
     [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class Conclusion
     {
-        private tOrganization expertOrganizationField;
-
-        private tWorkPerson approverField;
-
-        private tExaminationObject examinationObjectField;
-
-        private tDocument[] documentsField;
-
-        private tPreviousConclusion[] previousConclusionsField;
-
-        private tPreviousSimpleConclusion[] previousSimpleConclusionsField;
-
-        private tObject objectField;
-
-        private string[] cadastralNumberField;
-
-        private tDeclarant declarantField;
-
-        private object[] itemsField;
-
-        private tFinance[] financeField;
-
-        private string financeCommentField;
-
-        private tEstimatedCost estimatedCostField;
-
-        private tClimateConditions climateConditionsField;
-
-        private string climateConditionsNoteField;
-
-        private tDesigner[] designerField;
-
-        private tEEPDUse[] eEPDUseField;
-
-        private tEngineeringSurveyAddress[] engineeringSurveyAddressField;
-
-        private object[] items1Field;
-
-        private tExpertEngineeringSurveys[] expertEngineeringSurveysField;
-
-        private tExpertProjectDocuments[] expertProjectDocumentsField;
-
-        private tExpertEstimate expertEstimateField;
-
-        private tSummary summaryField;
-
-        private tExpert[] expertsField;
-
-        private string conclusionGUIDField;
-
-        private string schemaVersionField;
-
-        private string schemaLinkField;
-
         public Conclusion()
         {
-            this.schemaVersionField = "01.02";
+            SchemaVersion = "01.02";
         }
 
-        /// <remarks/>
-        public tOrganization ExpertOrganization
-        {
-            get
-            {
-                return this.expertOrganizationField;
-            }
-            set
-            {
-                this.expertOrganizationField = value;
-            }
-        }
+        public tOrganization ExpertOrganization { get; set; }
+        public tWorkPerson Approver { get; set; }
+        public tExaminationObject ExaminationObject { get; set; }
 
-        /// <remarks/>
-        public tWorkPerson Approver
-        {
-            get
-            {
-                return this.approverField;
-            }
-            set
-            {
-                this.approverField = value;
-            }
-        }
-
-        /// <remarks/>
-        public tExaminationObject ExaminationObject
-        {
-            get
-            {
-                return this.examinationObjectField;
-            }
-            set
-            {
-                this.examinationObjectField = value;
-            }
-        }
-
-        /// <remarks/>
         [System.Xml.Serialization.XmlArrayItemAttribute("Document", IsNullable = false)]
-        public tDocument[] Documents
-        {
-            get
-            {
-                return this.documentsField;
-            }
-            set
-            {
-                this.documentsField = value;
-            }
-        }
+        public tDocument[] Documents { get; set; }
 
-        /// <remarks/>
         [System.Xml.Serialization.XmlArrayItemAttribute("PreviousConclusion", IsNullable = false)]
-        public tPreviousConclusion[] PreviousConclusions
-        {
-            get
-            {
-                return this.previousConclusionsField;
-            }
-            set
-            {
-                this.previousConclusionsField = value;
-            }
-        }
+        public tPreviousConclusion[] PreviousConclusions { get; set; }
 
-        /// <remarks/>
         [System.Xml.Serialization.XmlArrayItemAttribute("PreviousSimpleConclusion", IsNullable = false)]
-        public tPreviousSimpleConclusion[] PreviousSimpleConclusions
-        {
-            get
-            {
-                return this.previousSimpleConclusionsField;
-            }
-            set
-            {
-                this.previousSimpleConclusionsField = value;
-            }
-        }
+        public tPreviousSimpleConclusion[] PreviousSimpleConclusions { get; set; }
 
-        /// <remarks/>
-        public tObject Object
-        {
-            get
-            {
-                return this.objectField;
-            }
-            set
-            {
-                this.objectField = value;
-            }
-        }
+        public tObject Object { get; set; }
 
-        /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute("CadastralNumber")]
-        public string[] CadastralNumber
-        {
-            get
-            {
-                return this.cadastralNumberField;
-            }
-            set
-            {
-                this.cadastralNumberField = value;
-            }
-        }
+        public string[] CadastralNumber { get; set; }
 
-        /// <remarks/>
-        public tDeclarant Declarant
-        {
-            get
-            {
-                return this.declarantField;
-            }
-            set
-            {
-                this.declarantField = value;
-            }
-        }
+        public tDeclarant Declarant { get; set; }
 
-        /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute("ProjectDocumentsDeveloper", typeof(tDeclarant))]
         [System.Xml.Serialization.XmlElementAttribute("ProjectDocumentsTechnicalCustomer", typeof(tTechnicalCustomer))]
-        public object[] Items
-        {
-            get
-            {
-                return this.itemsField;
-            }
-            set
-            {
-                this.itemsField = value;
-            }
-        }
+        public object[] Items { get; set; }
 
-        /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute("Finance")]
-        public tFinance[] Finance
-        {
-            get
-            {
-                return this.financeField;
-            }
-            set
-            {
-                this.financeField = value;
-            }
-        }
+        public tFinance[] Finance { get; set; }
 
-        /// <remarks/>
-        public string FinanceComment
-        {
-            get
-            {
-                return this.financeCommentField;
-            }
-            set
-            {
-                this.financeCommentField = value;
-            }
-        }
+        public string FinanceComment { get; set; }
+        public tEstimatedCost EstimatedCost { get; set; }
+        public tClimateConditions ClimateConditions { get; set; }
+        public string ClimateConditionsNote { get; set; }
 
-        /// <remarks/>
-        public tEstimatedCost EstimatedCost
-        {
-            get
-            {
-                return this.estimatedCostField;
-            }
-            set
-            {
-                this.estimatedCostField = value;
-            }
-        }
-
-        /// <remarks/>
-        public tClimateConditions ClimateConditions
-        {
-            get
-            {
-                return this.climateConditionsField;
-            }
-            set
-            {
-                this.climateConditionsField = value;
-            }
-        }
-
-        /// <remarks/>
-        public string ClimateConditionsNote
-        {
-            get
-            {
-                return this.climateConditionsNoteField;
-            }
-            set
-            {
-                this.climateConditionsNoteField = value;
-            }
-        }
-
-        /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute("Designer")]
-        public tDesigner[] Designer
-        {
-            get
-            {
-                return this.designerField;
-            }
-            set
-            {
-                this.designerField = value;
-            }
-        }
+        public tDesigner[] Designer { get; set; }
 
-        /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute("EEPDUse")]
-        public tEEPDUse[] EEPDUse
-        {
-            get
-            {
-                return this.eEPDUseField;
-            }
-            set
-            {
-                this.eEPDUseField = value;
-            }
-        }
+        public tEEPDUse[] EEPDUse { get; set; }
 
-        /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute("EngineeringSurveyAddress")]
-        public tEngineeringSurveyAddress[] EngineeringSurveyAddress
-        {
-            get
-            {
-                return this.engineeringSurveyAddressField;
-            }
-            set
-            {
-                this.engineeringSurveyAddressField = value;
-            }
-        }
+        public tEngineeringSurveyAddress[] EngineeringSurveyAddress { get; set; }
 
-        /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute("EngineeringSurveyDeveloper", typeof(tDeclarant))]
         [System.Xml.Serialization.XmlElementAttribute("EngineeringSurveyTechnicalCustomer", typeof(tTechnicalCustomer))]
-        public object[] Items1
-        {
-            get
-            {
-                return this.items1Field;
-            }
-            set
-            {
-                this.items1Field = value;
-            }
-        }
+        public object[] Items1 { get; set; }
 
-        /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute("ExpertEngineeringSurveys")]
-        public tExpertEngineeringSurveys[] ExpertEngineeringSurveys
-        {
-            get
-            {
-                return this.expertEngineeringSurveysField;
-            }
-            set
-            {
-                this.expertEngineeringSurveysField = value;
-            }
-        }
+        public tExpertEngineeringSurveys[] ExpertEngineeringSurveys { get; set; }
 
-        /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute("ExpertProjectDocuments")]
-        public tExpertProjectDocuments[] ExpertProjectDocuments
-        {
-            get
-            {
-                return this.expertProjectDocumentsField;
-            }
-            set
-            {
-                this.expertProjectDocumentsField = value;
-            }
-        }
+        public tExpertProjectDocuments[] ExpertProjectDocuments { get; set; }
 
-        /// <remarks/>
-        public tExpertEstimate ExpertEstimate
-        {
-            get
-            {
-                return this.expertEstimateField;
-            }
-            set
-            {
-                this.expertEstimateField = value;
-            }
-        }
+        public tExpertEstimate ExpertEstimate { get; set; }
+        public tSummary Summary { get; set; }
 
-        /// <remarks/>
-        public tSummary Summary
-        {
-            get
-            {
-                return this.summaryField;
-            }
-            set
-            {
-                this.summaryField = value;
-            }
-        }
-
-        /// <remarks/>
         [System.Xml.Serialization.XmlArrayItemAttribute("Expert", IsNullable = false)]
-        public tExpert[] Experts
-        {
-            get
-            {
-                return this.expertsField;
-            }
-            set
-            {
-                this.expertsField = value;
-            }
-        }
+        public tExpert[] Experts { get; set; }
 
-        /// <remarks/>
         [System.Xml.Serialization.XmlAttributeAttribute()]
-        public string ConclusionGUID
-        {
-            get
-            {
-                return this.conclusionGUIDField;
-            }
-            set
-            {
-                this.conclusionGUIDField = value;
-            }
-        }
+        public string ConclusionGUID { get; set; }
 
-        /// <remarks/>
         [System.Xml.Serialization.XmlAttributeAttribute()]
-        public string SchemaVersion
-        {
-            get
-            {
-                return this.schemaVersionField;
-            }
-            set
-            {
-                this.schemaVersionField = value;
-            }
-        }
+        public string SchemaVersion { get; set; }
 
-        /// <remarks/>
         [System.Xml.Serialization.XmlAttributeAttribute()]
-        public string SchemaLink
-        {
-            get
-            {
-                return this.schemaLinkField;
-            }
-            set
-            {
-                this.schemaLinkField = value;
-            }
-        }
+        public string SchemaLink { get; set; }
     }
 
     /// <remarks/>
@@ -1963,134 +1606,23 @@ namespace Core.NET.AutoModels
         Item95543,
     }
 
-    /// <remarks/>
     [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.6.1055.0")]
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     public partial class tSummary
     {
+        public string EngineeringSurveySummary { get; set; }
+        public string EngineeringSurveySummaryDate { get; set; }
 
-        private string engineeringSurveySummaryField;
-
-        private string engineeringSurveySummaryDateField;
-
-        private tEngineeringSurveyType[] engineeringSurveyTypeField;
-
-        private string projectDocumentsSummaryField;
-
-        private string projectDocumentsSummaryDateField;
-
-        private string estimateNormsAndWorksSummaryField;
-
-        private string estimateSummaryField;
-
-        private string examinationSummaryField;
-
-        /// <remarks/>
-        public string EngineeringSurveySummary
-        {
-            get
-            {
-                return this.engineeringSurveySummaryField;
-            }
-            set
-            {
-                this.engineeringSurveySummaryField = value;
-            }
-        }
-
-        /// <remarks/>
-        public string EngineeringSurveySummaryDate
-        {
-            get
-            {
-                return this.engineeringSurveySummaryDateField;
-            }
-            set
-            {
-                this.engineeringSurveySummaryDateField = value;
-            }
-        }
-
-        /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute("EngineeringSurveyType")]
-        public tEngineeringSurveyType[] EngineeringSurveyType
-        {
-            get
-            {
-                return this.engineeringSurveyTypeField;
-            }
-            set
-            {
-                this.engineeringSurveyTypeField = value;
-            }
-        }
+        public tEngineeringSurveyType[] EngineeringSurveyType { get; set; }
 
-        /// <remarks/>
-        public string ProjectDocumentsSummary
-        {
-            get
-            {
-                return this.projectDocumentsSummaryField;
-            }
-            set
-            {
-                this.projectDocumentsSummaryField = value;
-            }
-        }
-
-        /// <remarks/>
-        public string ProjectDocumentsSummaryDate
-        {
-            get
-            {
-                return this.projectDocumentsSummaryDateField;
-            }
-            set
-            {
-                this.projectDocumentsSummaryDateField = value;
-            }
-        }
-
-        /// <remarks/>
-        public string EstimateNormsAndWorksSummary
-        {
-            get
-            {
-                return this.estimateNormsAndWorksSummaryField;
-            }
-            set
-            {
-                this.estimateNormsAndWorksSummaryField = value;
-            }
-        }
-
-        /// <remarks/>
-        public string EstimateSummary
-        {
-            get
-            {
-                return this.estimateSummaryField;
-            }
-            set
-            {
-                this.estimateSummaryField = value;
-            }
-        }
-
-        /// <remarks/>
-        public string ExaminationSummary
-        {
-            get
-            {
-                return this.examinationSummaryField;
-            }
-            set
-            {
-                this.examinationSummaryField = value;
-            }
-        }
+        public string ProjectDocumentsSummary { get; set; }
+        public string ProjectDocumentsSummaryDate { get; set; }
+        public string EstimateNormsAndWorksSummary { get; set; }
+        public string EstimateSummary { get; set; }
+        public string ExaminationSummary { get; set; }
     }
 
     /// <remarks/>
@@ -2310,51 +1842,9 @@ namespace Core.NET.AutoModels
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     public partial class tMismatch
     {
-
-        private string summaryField;
-
-        private string partField;
-
-        private string linkField;
-
-        /// <remarks/>
-        public string Summary
-        {
-            get
-            {
-                return this.summaryField;
-            }
-            set
-            {
-                this.summaryField = value;
-            }
-        }
-
-        /// <remarks/>
-        public string Part
-        {
-            get
-            {
-                return this.partField;
-            }
-            set
-            {
-                this.partField = value;
-            }
-        }
-
-        /// <remarks/>
-        public string Link
-        {
-            get
-            {
-                return this.linkField;
-            }
-            set
-            {
-                this.linkField = value;
-            }
-        }
+        public string Summary { get; set; }
+        public string Part { get; set; }
+        public string Link { get; set; }
     }
 
     /// <remarks/>
@@ -2483,45 +1973,17 @@ namespace Core.NET.AutoModels
         public tProjectDocumentsMismatches Mismatches { get; set; }
     }
 
-    /// <remarks/>
     [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.6.1055.0")]
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     public partial class tExpertEngineeringSurveys
     {
-
-        private tMismatch[] mismatchesField;
-
-        private tEngineeringSurveyType engineeringSurveyTypeField;
-
-        /// <remarks/>
         [System.Xml.Serialization.XmlArrayItemAttribute("NormsMismatch", IsNullable = false)]
-        public tMismatch[] Mismatches
-        {
-            get
-            {
-                return this.mismatchesField;
-            }
-            set
-            {
-                this.mismatchesField = value;
-            }
-        }
+        public tMismatch[] Mismatches { get; set; }
 
-        /// <remarks/>
         [System.Xml.Serialization.XmlAttributeAttribute()]
-        public tEngineeringSurveyType EngineeringSurveyType
-        {
-            get
-            {
-                return this.engineeringSurveyTypeField;
-            }
-            set
-            {
-                this.engineeringSurveyTypeField = value;
-            }
-        }
+        public tEngineeringSurveyType EngineeringSurveyType { get; set; }
     }
 
     /// <remarks/>
@@ -3960,22 +3422,9 @@ namespace Core.NET.AutoModels
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     public partial class tTechnicalCustomer
     {
-        private object itemField;
-
-        /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute("ForeignOrganization", typeof(tForeignOrganization))]
         [System.Xml.Serialization.XmlElementAttribute("Organization", typeof(tOrganization))]
-        public object Item
-        {
-            get
-            {
-                return this.itemField;
-            }
-            set
-            {
-                this.itemField = value;
-            }
-        }
+        public object Item { get; set; }
     }
 
     /// <remarks/>

@@ -901,6 +901,10 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                 {
                     Conclusion.Items = listObj.ToArray();
                 }
+                else
+                {
+                    Conclusion.Items = null;
+                }
                 #endregion
 
                 #region Page III
