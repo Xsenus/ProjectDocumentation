@@ -41,10 +41,6 @@ namespace Core.NET.AutoModels
         [System.Xml.Serialization.XmlElementAttribute("ProjectDocumentsTechnicalCustomer", typeof(tTechnicalCustomer))]
         public object[] Items { get; set; }
 
-        [System.Xml.Serialization.XmlElementAttribute("EngineeringSurveyDeveloper", typeof(tDeclarant))]
-        [System.Xml.Serialization.XmlElementAttribute("EngineeringSurveyTechnicalCustomer", typeof(tTechnicalCustomer))]
-        public object[] Items1 { get; set; }
-
         [System.Xml.Serialization.XmlElementAttribute("Finance")]
         public tFinance[] Finance { get; set; }
 
@@ -61,6 +57,10 @@ namespace Core.NET.AutoModels
 
         [System.Xml.Serialization.XmlElementAttribute("EngineeringSurveyAddress")]
         public tEngineeringSurveyAddress[] EngineeringSurveyAddress { get; set; }
+
+        [System.Xml.Serialization.XmlElementAttribute("EngineeringSurveyDeveloper", typeof(tDeclarant))]
+        [System.Xml.Serialization.XmlElementAttribute("EngineeringSurveyTechnicalCustomer", typeof(tTechnicalCustomer))]
+        public object[] Items1 { get; set; }
 
         [System.Xml.Serialization.XmlElementAttribute("ExpertEngineeringSurveys")]
         public tExpertEngineeringSurveys[] ExpertEngineeringSurveys { get; set; }
@@ -1979,11 +1979,15 @@ namespace Core.NET.AutoModels
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     public partial class tExpertEngineeringSurveys
     {
-        [System.Xml.Serialization.XmlArrayItemAttribute("NormsMismatch", IsNullable = false)]
+        [System.Xml.Serialization.XmlArrayItemAttribute("NormsMismatch", IsNullable = true)]
         public tMismatch[] Mismatches { get; set; }
 
         [System.Xml.Serialization.XmlAttributeAttribute()]
         public tEngineeringSurveyType EngineeringSurveyType { get; set; }
+        public string EngineeringSurveyConditions { get; set; }
+        public string EngineeringSurveyProgramNote { get; set; }
+        public string EngineeringSurveyMethods { get; set; }
+        public string EngineeringSurveyChanges { get; set; }
     }
 
     /// <remarks/>

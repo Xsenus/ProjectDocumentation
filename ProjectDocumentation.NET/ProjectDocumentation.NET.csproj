@@ -113,6 +113,12 @@
     <Compile Include="Forms\MainForm.Designer.cs">
       <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\ObjectChange\ExpertEngineeringSurveyEdit.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\ObjectChange\ExpertEngineeringSurveyEdit.Designer.cs">
+      <DependentUpon>ExpertEngineeringSurveyEdit.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\ObjectChange\ExpertProjectDocumentsEdit.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -204,6 +210,7 @@
       <DependentUpon>ViewForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Models\ConclusionObj\DocumentObj.cs" />
+    <Compile Include="Models\ConclusionObj\ExpertEngineeringSurvey.cs" />
     <Compile Include="Models\ConclusionObj\ExpertProjectDocument.cs" />
     <Compile Include="Models\ConclusionObj\FinanceObj.cs" />
     <Compile Include="Models\ConclusionObj\PersonObj.cs" />
@@ -214,6 +221,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\ObjectChange\ExpertEngineeringSurveyEdit.resx">
+      <DependentUpon>ExpertEngineeringSurveyEdit.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\ObjectChange\ExpertProjectDocumentsEdit.resx">
       <DependentUpon>ExpertProjectDocumentsEdit.cs</DependentUpon>

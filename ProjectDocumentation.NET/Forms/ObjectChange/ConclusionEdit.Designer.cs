@@ -29,11 +29,6 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            DevExpress.XtraEditors.Controls.EditorButtonImageOptions editorButtonImageOptions7 = new DevExpress.XtraEditors.Controls.EditorButtonImageOptions();
-            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject25 = new DevExpress.Utils.SerializableAppearanceObject();
-            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject26 = new DevExpress.Utils.SerializableAppearanceObject();
-            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject27 = new DevExpress.Utils.SerializableAppearanceObject();
-            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject28 = new DevExpress.Utils.SerializableAppearanceObject();
             DevExpress.XtraEditors.Controls.EditorButtonImageOptions editorButtonImageOptions8 = new DevExpress.XtraEditors.Controls.EditorButtonImageOptions();
             DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject29 = new DevExpress.Utils.SerializableAppearanceObject();
             DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject30 = new DevExpress.Utils.SerializableAppearanceObject();
@@ -54,12 +49,12 @@
             DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject6 = new DevExpress.Utils.SerializableAppearanceObject();
             DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject7 = new DevExpress.Utils.SerializableAppearanceObject();
             DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject8 = new DevExpress.Utils.SerializableAppearanceObject();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ConclusionEdit));
             DevExpress.XtraEditors.Controls.EditorButtonImageOptions editorButtonImageOptions3 = new DevExpress.XtraEditors.Controls.EditorButtonImageOptions();
             DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject9 = new DevExpress.Utils.SerializableAppearanceObject();
             DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject10 = new DevExpress.Utils.SerializableAppearanceObject();
             DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject11 = new DevExpress.Utils.SerializableAppearanceObject();
             DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject12 = new DevExpress.Utils.SerializableAppearanceObject();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ConclusionEdit));
             DevExpress.XtraEditors.Controls.EditorButtonImageOptions editorButtonImageOptions4 = new DevExpress.XtraEditors.Controls.EditorButtonImageOptions();
             DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject13 = new DevExpress.Utils.SerializableAppearanceObject();
             DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject14 = new DevExpress.Utils.SerializableAppearanceObject();
@@ -70,6 +65,11 @@
             DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject18 = new DevExpress.Utils.SerializableAppearanceObject();
             DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject19 = new DevExpress.Utils.SerializableAppearanceObject();
             DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject20 = new DevExpress.Utils.SerializableAppearanceObject();
+            DevExpress.XtraEditors.Controls.EditorButtonImageOptions editorButtonImageOptions6 = new DevExpress.XtraEditors.Controls.EditorButtonImageOptions();
+            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject21 = new DevExpress.Utils.SerializableAppearanceObject();
+            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject22 = new DevExpress.Utils.SerializableAppearanceObject();
+            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject23 = new DevExpress.Utils.SerializableAppearanceObject();
+            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject24 = new DevExpress.Utils.SerializableAppearanceObject();
             this.xtraTabControlBase = new DevExpress.XtraTab.XtraTabControl();
             this.xtraTabPageForm1 = new DevExpress.XtraTab.XtraTabPage();
             this.layoutControl_I = new DevExpress.XtraLayout.LayoutControl();
@@ -113,6 +113,12 @@
             this.barBtnDocumentsAdd = new DevExpress.XtraBars.BarButtonItem();
             this.barBtnDocumentsEdit = new DevExpress.XtraBars.BarButtonItem();
             this.barBtnDocumentsDel = new DevExpress.XtraBars.BarButtonItem();
+            this.barBtnEngineeringSurveyDeveloperAdd = new DevExpress.XtraBars.BarButtonItem();
+            this.barBtnEngineeringSurveyDeveloperEdit = new DevExpress.XtraBars.BarButtonItem();
+            this.barBtnEngineeringSurveyDeveloperDel = new DevExpress.XtraBars.BarButtonItem();
+            this.barBtnEngineeringSurveyTechnicalCustomerAdd = new DevExpress.XtraBars.BarButtonItem();
+            this.barBtnEngineeringSurveyTechnicalCustomerEdit = new DevExpress.XtraBars.BarButtonItem();
+            this.barBtnEngineeringSurveyTechnicalCustomerDel = new DevExpress.XtraBars.BarButtonItem();
             this.cmbExaminationResult = new DevExpress.XtraEditors.ComboBoxEdit();
             this.cmbExaminationForm = new DevExpress.XtraEditors.ComboBoxEdit();
             this.cmbExaminationObjectType = new DevExpress.XtraEditors.ComboBoxEdit();
@@ -243,10 +249,18 @@
             this.gridViewProjectDocumentsTechnicalCustomer = new DevExpress.XtraGrid.Views.Grid.GridView();
             this.gridControlProjectDocumentsDeveloper = new DevExpress.XtraGrid.GridControl();
             this.gridViewProjectDocumentsDeveloper = new DevExpress.XtraGrid.Views.Grid.GridView();
+            this.gridControlEngineeringSurveyDeveloper = new DevExpress.XtraGrid.GridControl();
+            this.gridViewEngineeringSurveyDeveloper = new DevExpress.XtraGrid.Views.Grid.GridView();
+            this.gridControlEngineeringSurveyTechnicalCustomer = new DevExpress.XtraGrid.GridControl();
+            this.gridViewEngineeringSurveyTechnicalCustomer = new DevExpress.XtraGrid.Views.Grid.GridView();
             this.layoutControlGroup6 = new DevExpress.XtraLayout.LayoutControlGroup();
             this.layoutControlItemProjectDocumentsDeveloper = new DevExpress.XtraLayout.LayoutControlItem();
             this.layoutControlItemProjectDocumentsTechnicalCustomer = new DevExpress.XtraLayout.LayoutControlItem();
             this.splitterItem1 = new DevExpress.XtraLayout.SplitterItem();
+            this.layoutControlItemEngineeringSurveyDeveloper = new DevExpress.XtraLayout.LayoutControlItem();
+            this.layoutControlItemEngineeringSurveyTechnicalCustomer = new DevExpress.XtraLayout.LayoutControlItem();
+            this.splitterItemEngineeringSurveyDeveloper = new DevExpress.XtraLayout.SplitterItem();
+            this.splitterItemEngineeringSurveyTechnicalCustomer = new DevExpress.XtraLayout.SplitterItem();
             this.xtraTabPageForm3 = new DevExpress.XtraTab.XtraTabPage();
             this.layoutControlPageIII = new DevExpress.XtraLayout.LayoutControl();
             this.gridControlExpertEngineeringSurveys = new DevExpress.XtraGrid.GridControl();
@@ -322,22 +336,12 @@
             this.popupMenuPreviousConclusions = new DevExpress.XtraBars.PopupMenu(this.components);
             this.popupMenuExpertProjectDocuments = new DevExpress.XtraBars.PopupMenu(this.components);
             this.popupMenuDocuments = new DevExpress.XtraBars.PopupMenu(this.components);
-            this.gridControlEngineeringSurveyDeveloper = new DevExpress.XtraGrid.GridControl();
-            this.gridViewEngineeringSurveyDeveloper = new DevExpress.XtraGrid.Views.Grid.GridView();
-            this.layoutControlItemEngineeringSurveyDeveloper = new DevExpress.XtraLayout.LayoutControlItem();
-            this.gridControlEngineeringSurveyTechnicalCustomer = new DevExpress.XtraGrid.GridControl();
-            this.gridViewEngineeringSurveyTechnicalCustomer = new DevExpress.XtraGrid.Views.Grid.GridView();
-            this.layoutControlItemEngineeringSurveyTechnicalCustomer = new DevExpress.XtraLayout.LayoutControlItem();
-            this.splitterItemEngineeringSurveyDeveloper = new DevExpress.XtraLayout.SplitterItem();
-            this.splitterItemEngineeringSurveyTechnicalCustomer = new DevExpress.XtraLayout.SplitterItem();
-            this.popupEngineeringSurveyDeveloper = new DevExpress.XtraBars.PopupMenu(this.components);
-            this.barBtnEngineeringSurveyDeveloperAdd = new DevExpress.XtraBars.BarButtonItem();
-            this.barBtnEngineeringSurveyDeveloperEdit = new DevExpress.XtraBars.BarButtonItem();
-            this.barBtnEngineeringSurveyDeveloperDel = new DevExpress.XtraBars.BarButtonItem();
-            this.popupEngineeringSurveyTechnicalCustomer = new DevExpress.XtraBars.PopupMenu(this.components);
-            this.barBtnEngineeringSurveyTechnicalCustomerAdd = new DevExpress.XtraBars.BarButtonItem();
-            this.barBtnEngineeringSurveyTechnicalCustomerEdit = new DevExpress.XtraBars.BarButtonItem();
-            this.barBtnEngineeringSurveyTechnicalCustomerDel = new DevExpress.XtraBars.BarButtonItem();
+            this.popupMenuEngineeringSurveyDeveloper = new DevExpress.XtraBars.PopupMenu(this.components);
+            this.popupMenuEngineeringSurveyTechnicalCustomer = new DevExpress.XtraBars.PopupMenu(this.components);
+            this.popupMenuExpertEngineeringSurveys = new DevExpress.XtraBars.PopupMenu(this.components);
+            this.barBtnExpertEngineeringSurveysAdd = new DevExpress.XtraBars.BarButtonItem();
+            this.barBtnExpertEngineeringSurveysEdit = new DevExpress.XtraBars.BarButtonItem();
+            this.barBtnExpertEngineeringSurveysDel = new DevExpress.XtraBars.BarButtonItem();
             ((System.ComponentModel.ISupportInitialize)(this.xtraTabControlBase)).BeginInit();
             this.xtraTabControlBase.SuspendLayout();
             this.xtraTabPageForm1.SuspendLayout();
@@ -483,10 +487,18 @@
             ((System.ComponentModel.ISupportInitialize)(this.gridViewProjectDocumentsTechnicalCustomer)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.gridControlProjectDocumentsDeveloper)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.gridViewProjectDocumentsDeveloper)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.gridControlEngineeringSurveyDeveloper)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.gridViewEngineeringSurveyDeveloper)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.gridControlEngineeringSurveyTechnicalCustomer)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.gridViewEngineeringSurveyTechnicalCustomer)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlGroup6)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemProjectDocumentsDeveloper)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemProjectDocumentsTechnicalCustomer)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.splitterItem1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemEngineeringSurveyDeveloper)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemEngineeringSurveyTechnicalCustomer)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.splitterItemEngineeringSurveyDeveloper)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.splitterItemEngineeringSurveyTechnicalCustomer)).BeginInit();
             this.xtraTabPageForm3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlPageIII)).BeginInit();
             this.layoutControlPageIII.SuspendLayout();
@@ -565,16 +577,9 @@
             ((System.ComponentModel.ISupportInitialize)(this.popupMenuPreviousConclusions)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.popupMenuExpertProjectDocuments)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.popupMenuDocuments)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.gridControlEngineeringSurveyDeveloper)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.gridViewEngineeringSurveyDeveloper)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemEngineeringSurveyDeveloper)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.gridControlEngineeringSurveyTechnicalCustomer)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.gridViewEngineeringSurveyTechnicalCustomer)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemEngineeringSurveyTechnicalCustomer)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.splitterItemEngineeringSurveyDeveloper)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.splitterItemEngineeringSurveyTechnicalCustomer)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.popupEngineeringSurveyDeveloper)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.popupEngineeringSurveyTechnicalCustomer)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.popupMenuEngineeringSurveyDeveloper)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.popupMenuEngineeringSurveyTechnicalCustomer)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.popupMenuExpertEngineeringSurveys)).BeginInit();
             this.SuspendLayout();
             // 
             // xtraTabControlBase
@@ -699,8 +704,11 @@
             this.barBtnEngineeringSurveyDeveloperDel,
             this.barBtnEngineeringSurveyTechnicalCustomerAdd,
             this.barBtnEngineeringSurveyTechnicalCustomerEdit,
-            this.barBtnEngineeringSurveyTechnicalCustomerDel});
-            this.barManager.MaxItemId = 40;
+            this.barBtnEngineeringSurveyTechnicalCustomerDel,
+            this.barBtnExpertEngineeringSurveysAdd,
+            this.barBtnExpertEngineeringSurveysEdit,
+            this.barBtnExpertEngineeringSurveysDel});
+            this.barManager.MaxItemId = 43;
             // 
             // barDockControlTop
             // 
@@ -976,6 +984,48 @@
             this.barBtnDocumentsDel.Name = "barBtnDocumentsDel";
             this.barBtnDocumentsDel.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.barBtnDocumentsDel_ItemClick);
             // 
+            // barBtnEngineeringSurveyDeveloperAdd
+            // 
+            this.barBtnEngineeringSurveyDeveloperAdd.Caption = "Добавить";
+            this.barBtnEngineeringSurveyDeveloperAdd.Id = 34;
+            this.barBtnEngineeringSurveyDeveloperAdd.Name = "barBtnEngineeringSurveyDeveloperAdd";
+            this.barBtnEngineeringSurveyDeveloperAdd.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.barBtnEngineeringSurveyDeveloperAdd_ItemClick);
+            // 
+            // barBtnEngineeringSurveyDeveloperEdit
+            // 
+            this.barBtnEngineeringSurveyDeveloperEdit.Caption = "Изменить";
+            this.barBtnEngineeringSurveyDeveloperEdit.Id = 35;
+            this.barBtnEngineeringSurveyDeveloperEdit.Name = "barBtnEngineeringSurveyDeveloperEdit";
+            this.barBtnEngineeringSurveyDeveloperEdit.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.barBtnEngineeringSurveyDeveloperEdit_ItemClick);
+            // 
+            // barBtnEngineeringSurveyDeveloperDel
+            // 
+            this.barBtnEngineeringSurveyDeveloperDel.Caption = "Удалить";
+            this.barBtnEngineeringSurveyDeveloperDel.Id = 36;
+            this.barBtnEngineeringSurveyDeveloperDel.Name = "barBtnEngineeringSurveyDeveloperDel";
+            this.barBtnEngineeringSurveyDeveloperDel.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.barBtnEngineeringSurveyDeveloperDel_ItemClick);
+            // 
+            // barBtnEngineeringSurveyTechnicalCustomerAdd
+            // 
+            this.barBtnEngineeringSurveyTechnicalCustomerAdd.Caption = "Добавить";
+            this.barBtnEngineeringSurveyTechnicalCustomerAdd.Id = 37;
+            this.barBtnEngineeringSurveyTechnicalCustomerAdd.Name = "barBtnEngineeringSurveyTechnicalCustomerAdd";
+            this.barBtnEngineeringSurveyTechnicalCustomerAdd.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.barBtnEngineeringSurveyTechnicalCustomerAdd_ItemClick);
+            // 
+            // barBtnEngineeringSurveyTechnicalCustomerEdit
+            // 
+            this.barBtnEngineeringSurveyTechnicalCustomerEdit.Caption = "Изменить";
+            this.barBtnEngineeringSurveyTechnicalCustomerEdit.Id = 38;
+            this.barBtnEngineeringSurveyTechnicalCustomerEdit.Name = "barBtnEngineeringSurveyTechnicalCustomerEdit";
+            this.barBtnEngineeringSurveyTechnicalCustomerEdit.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.barBtnEngineeringSurveyTechnicalCustomerEdit_ItemClick);
+            // 
+            // barBtnEngineeringSurveyTechnicalCustomerDel
+            // 
+            this.barBtnEngineeringSurveyTechnicalCustomerDel.Caption = "Удалить";
+            this.barBtnEngineeringSurveyTechnicalCustomerDel.Id = 39;
+            this.barBtnEngineeringSurveyTechnicalCustomerDel.Name = "barBtnEngineeringSurveyTechnicalCustomerDel";
+            this.barBtnEngineeringSurveyTechnicalCustomerDel.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.barBtnEngineeringSurveyTechnicalCustomerDel_ItemClick);
+            // 
             // cmbExaminationResult
             // 
             this.cmbExaminationResult.EditValue = "";
@@ -984,7 +1034,7 @@
             this.cmbExaminationResult.Name = "cmbExaminationResult";
             this.cmbExaminationResult.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo),
-            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Ellipsis, "", -1, true, false, false, editorButtonImageOptions7, new DevExpress.Utils.KeyShortcut(System.Windows.Forms.Keys.None), serializableAppearanceObject25, serializableAppearanceObject26, serializableAppearanceObject27, serializableAppearanceObject28, "", null, null, DevExpress.Utils.ToolTipAnchor.Default),
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Ellipsis, "", -1, true, false, false, editorButtonImageOptions8, new DevExpress.Utils.KeyShortcut(System.Windows.Forms.Keys.None), serializableAppearanceObject29, serializableAppearanceObject30, serializableAppearanceObject31, serializableAppearanceObject32, "", null, null, DevExpress.Utils.ToolTipAnchor.Default),
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Delete)});
             this.cmbExaminationResult.Properties.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.DisableTextEditor;
             this.cmbExaminationResult.Size = new System.Drawing.Size(240, 20);
@@ -1000,7 +1050,7 @@
             this.cmbExaminationForm.Name = "cmbExaminationForm";
             this.cmbExaminationForm.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo),
-            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Ellipsis, "", -1, true, false, false, editorButtonImageOptions8, new DevExpress.Utils.KeyShortcut(System.Windows.Forms.Keys.None), serializableAppearanceObject29, serializableAppearanceObject30, serializableAppearanceObject31, serializableAppearanceObject32, "", null, null, DevExpress.Utils.ToolTipAnchor.Default),
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Ellipsis, "", -1, true, false, false, editorButtonImageOptions9, new DevExpress.Utils.KeyShortcut(System.Windows.Forms.Keys.None), serializableAppearanceObject33, serializableAppearanceObject34, serializableAppearanceObject35, serializableAppearanceObject36, "", null, null, DevExpress.Utils.ToolTipAnchor.Default),
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Delete)});
             this.cmbExaminationForm.Properties.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.DisableTextEditor;
             this.cmbExaminationForm.Size = new System.Drawing.Size(263, 20);
@@ -1016,7 +1066,7 @@
             this.cmbExaminationObjectType.Name = "cmbExaminationObjectType";
             this.cmbExaminationObjectType.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo),
-            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Ellipsis, "", -1, true, false, false, editorButtonImageOptions9, new DevExpress.Utils.KeyShortcut(System.Windows.Forms.Keys.None), serializableAppearanceObject33, serializableAppearanceObject34, serializableAppearanceObject35, serializableAppearanceObject36, "", null, null, DevExpress.Utils.ToolTipAnchor.Default),
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Ellipsis, "", -1, true, false, false, editorButtonImageOptions1, new DevExpress.Utils.KeyShortcut(System.Windows.Forms.Keys.None), serializableAppearanceObject1, serializableAppearanceObject2, serializableAppearanceObject3, serializableAppearanceObject4, "", null, null, DevExpress.Utils.ToolTipAnchor.Default),
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Delete)});
             this.cmbExaminationObjectType.Properties.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.DisableTextEditor;
             this.cmbExaminationObjectType.Size = new System.Drawing.Size(228, 20);
@@ -1032,7 +1082,7 @@
             this.cmbExaminationStage.Name = "cmbExaminationStage";
             this.cmbExaminationStage.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo),
-            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Ellipsis, "", -1, true, false, false, editorButtonImageOptions1, new DevExpress.Utils.KeyShortcut(System.Windows.Forms.Keys.None), serializableAppearanceObject1, serializableAppearanceObject2, serializableAppearanceObject3, serializableAppearanceObject4, "", null, null, DevExpress.Utils.ToolTipAnchor.Default),
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Ellipsis, "", -1, true, false, false, editorButtonImageOptions2, new DevExpress.Utils.KeyShortcut(System.Windows.Forms.Keys.None), serializableAppearanceObject5, serializableAppearanceObject6, serializableAppearanceObject7, serializableAppearanceObject8, "", null, null, DevExpress.Utils.ToolTipAnchor.Default),
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Delete)});
             this.cmbExaminationStage.Properties.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.DisableTextEditor;
             this.cmbExaminationStage.Size = new System.Drawing.Size(276, 20);
@@ -1048,7 +1098,7 @@
             this.cmbConstructionType.Name = "cmbConstructionType";
             this.cmbConstructionType.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo),
-            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Ellipsis, "", -1, true, false, false, editorButtonImageOptions2, new DevExpress.Utils.KeyShortcut(System.Windows.Forms.Keys.None), serializableAppearanceObject5, serializableAppearanceObject6, serializableAppearanceObject7, serializableAppearanceObject8, "", null, null, DevExpress.Utils.ToolTipAnchor.Default),
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Ellipsis, "", -1, true, false, false, editorButtonImageOptions3, new DevExpress.Utils.KeyShortcut(System.Windows.Forms.Keys.None), serializableAppearanceObject9, serializableAppearanceObject10, serializableAppearanceObject11, serializableAppearanceObject12, "", null, null, DevExpress.Utils.ToolTipAnchor.Default),
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Delete)});
             this.cmbConstructionType.Properties.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.DisableTextEditor;
             this.cmbConstructionType.Size = new System.Drawing.Size(303, 20);
@@ -1783,7 +1833,7 @@
             this.cmbObjectType.Name = "cmbObjectType";
             this.cmbObjectType.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo),
-            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Ellipsis, "", -1, true, false, false, editorButtonImageOptions3, new DevExpress.Utils.KeyShortcut(System.Windows.Forms.Keys.None), serializableAppearanceObject9, serializableAppearanceObject10, serializableAppearanceObject11, serializableAppearanceObject12, "", null, null, DevExpress.Utils.ToolTipAnchor.Default),
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Ellipsis, "", -1, true, false, false, editorButtonImageOptions4, new DevExpress.Utils.KeyShortcut(System.Windows.Forms.Keys.None), serializableAppearanceObject13, serializableAppearanceObject14, serializableAppearanceObject15, serializableAppearanceObject16, "", null, null, DevExpress.Utils.ToolTipAnchor.Default),
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Delete)});
             this.cmbObjectType.Properties.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.DisableTextEditor;
             this.cmbObjectType.Size = new System.Drawing.Size(278, 20);
@@ -1799,7 +1849,7 @@
             this.cmbFunctionsClass.Name = "cmbFunctionsClass";
             this.cmbFunctionsClass.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo),
-            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Ellipsis, "", -1, true, false, false, editorButtonImageOptions4, new DevExpress.Utils.KeyShortcut(System.Windows.Forms.Keys.None), serializableAppearanceObject13, serializableAppearanceObject14, serializableAppearanceObject15, serializableAppearanceObject16, "", null, null, DevExpress.Utils.ToolTipAnchor.Default),
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Ellipsis, "", -1, true, false, false, editorButtonImageOptions5, new DevExpress.Utils.KeyShortcut(System.Windows.Forms.Keys.None), serializableAppearanceObject17, serializableAppearanceObject18, serializableAppearanceObject19, serializableAppearanceObject20, "", null, null, DevExpress.Utils.ToolTipAnchor.Default),
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Delete)});
             this.cmbFunctionsClass.Size = new System.Drawing.Size(488, 20);
             this.cmbFunctionsClass.StyleController = this.layoutControl_Page_II_1;
@@ -1813,7 +1863,7 @@
             this.cmbObjectAddress.Name = "cmbObjectAddress";
             this.cmbObjectAddress.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Search),
-            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo, "", -1, true, false, false, editorButtonImageOptions5, new DevExpress.Utils.KeyShortcut(System.Windows.Forms.Keys.None), serializableAppearanceObject17, serializableAppearanceObject18, serializableAppearanceObject19, serializableAppearanceObject20, "", null, null, DevExpress.Utils.ToolTipAnchor.Default),
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo, "", -1, true, false, false, editorButtonImageOptions6, new DevExpress.Utils.KeyShortcut(System.Windows.Forms.Keys.None), serializableAppearanceObject21, serializableAppearanceObject22, serializableAppearanceObject23, serializableAppearanceObject24, "", null, null, DevExpress.Utils.ToolTipAnchor.Default),
             new DevExpress.XtraEditors.Controls.EditorButton(),
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Delete)});
             this.cmbObjectAddress.Size = new System.Drawing.Size(770, 20);
@@ -2526,6 +2576,56 @@
             this.gridViewProjectDocumentsDeveloper.OptionsView.ShowGroupPanel = false;
             this.gridViewProjectDocumentsDeveloper.PopupMenuShowing += new DevExpress.XtraGrid.Views.Grid.PopupMenuShowingEventHandler(this.gridViewProjectDocumentsDeveloper_PopupMenuShowing);
             // 
+            // gridControlEngineeringSurveyDeveloper
+            // 
+            this.gridControlEngineeringSurveyDeveloper.EmbeddedNavigator.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.gridControlEngineeringSurveyDeveloper.Location = new System.Drawing.Point(7, 23);
+            this.gridControlEngineeringSurveyDeveloper.MainView = this.gridViewEngineeringSurveyDeveloper;
+            this.gridControlEngineeringSurveyDeveloper.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.gridControlEngineeringSurveyDeveloper.Name = "gridControlEngineeringSurveyDeveloper";
+            this.gridControlEngineeringSurveyDeveloper.Size = new System.Drawing.Size(768, 71);
+            this.gridControlEngineeringSurveyDeveloper.TabIndex = 7;
+            this.gridControlEngineeringSurveyDeveloper.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
+            this.gridViewEngineeringSurveyDeveloper});
+            // 
+            // gridViewEngineeringSurveyDeveloper
+            // 
+            this.gridViewEngineeringSurveyDeveloper.Appearance.HeaderPanel.Options.UseTextOptions = true;
+            this.gridViewEngineeringSurveyDeveloper.Appearance.HeaderPanel.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Center;
+            this.gridViewEngineeringSurveyDeveloper.DetailHeight = 284;
+            this.gridViewEngineeringSurveyDeveloper.GridControl = this.gridControlEngineeringSurveyDeveloper;
+            this.gridViewEngineeringSurveyDeveloper.Name = "gridViewEngineeringSurveyDeveloper";
+            this.gridViewEngineeringSurveyDeveloper.OptionsBehavior.Editable = false;
+            this.gridViewEngineeringSurveyDeveloper.OptionsView.ColumnHeaderAutoHeight = DevExpress.Utils.DefaultBoolean.True;
+            this.gridViewEngineeringSurveyDeveloper.OptionsView.RowAutoHeight = true;
+            this.gridViewEngineeringSurveyDeveloper.OptionsView.ShowGroupPanel = false;
+            this.gridViewEngineeringSurveyDeveloper.PopupMenuShowing += new DevExpress.XtraGrid.Views.Grid.PopupMenuShowingEventHandler(this.gridViewEngineeringSurveyDeveloper_PopupMenuShowing);
+            // 
+            // gridControlEngineeringSurveyTechnicalCustomer
+            // 
+            this.gridControlEngineeringSurveyTechnicalCustomer.EmbeddedNavigator.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.gridControlEngineeringSurveyTechnicalCustomer.Location = new System.Drawing.Point(7, 124);
+            this.gridControlEngineeringSurveyTechnicalCustomer.MainView = this.gridViewEngineeringSurveyTechnicalCustomer;
+            this.gridControlEngineeringSurveyTechnicalCustomer.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.gridControlEngineeringSurveyTechnicalCustomer.Name = "gridControlEngineeringSurveyTechnicalCustomer";
+            this.gridControlEngineeringSurveyTechnicalCustomer.Size = new System.Drawing.Size(768, 67);
+            this.gridControlEngineeringSurveyTechnicalCustomer.TabIndex = 8;
+            this.gridControlEngineeringSurveyTechnicalCustomer.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
+            this.gridViewEngineeringSurveyTechnicalCustomer});
+            // 
+            // gridViewEngineeringSurveyTechnicalCustomer
+            // 
+            this.gridViewEngineeringSurveyTechnicalCustomer.Appearance.HeaderPanel.Options.UseTextOptions = true;
+            this.gridViewEngineeringSurveyTechnicalCustomer.Appearance.HeaderPanel.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Center;
+            this.gridViewEngineeringSurveyTechnicalCustomer.DetailHeight = 284;
+            this.gridViewEngineeringSurveyTechnicalCustomer.GridControl = this.gridControlEngineeringSurveyTechnicalCustomer;
+            this.gridViewEngineeringSurveyTechnicalCustomer.Name = "gridViewEngineeringSurveyTechnicalCustomer";
+            this.gridViewEngineeringSurveyTechnicalCustomer.OptionsBehavior.Editable = false;
+            this.gridViewEngineeringSurveyTechnicalCustomer.OptionsView.ColumnHeaderAutoHeight = DevExpress.Utils.DefaultBoolean.True;
+            this.gridViewEngineeringSurveyTechnicalCustomer.OptionsView.RowAutoHeight = true;
+            this.gridViewEngineeringSurveyTechnicalCustomer.OptionsView.ShowGroupPanel = false;
+            this.gridViewEngineeringSurveyTechnicalCustomer.PopupMenuShowing += new DevExpress.XtraGrid.Views.Grid.PopupMenuShowingEventHandler(this.gridViewEngineeringSurveyTechnicalCustomer_PopupMenuShowing);
+            // 
             // layoutControlGroup6
             // 
             this.layoutControlGroup6.EnableIndentsWithoutBorders = DevExpress.Utils.DefaultBoolean.True;
@@ -2572,6 +2672,46 @@
             this.splitterItem1.Name = "splitterItem1";
             this.splitterItem1.Size = new System.Drawing.Size(772, 10);
             // 
+            // layoutControlItemEngineeringSurveyDeveloper
+            // 
+            this.layoutControlItemEngineeringSurveyDeveloper.Control = this.gridControlEngineeringSurveyDeveloper;
+            this.layoutControlItemEngineeringSurveyDeveloper.ControlAlignment = System.Drawing.ContentAlignment.TopLeft;
+            this.layoutControlItemEngineeringSurveyDeveloper.CustomizationFormText = "Застройщик, обеспечивший подготовку проектной документации (внесение изменений в " +
+    "проектную документацию)";
+            this.layoutControlItemEngineeringSurveyDeveloper.Location = new System.Drawing.Point(0, 0);
+            this.layoutControlItemEngineeringSurveyDeveloper.Name = "layoutControlItemEngineeringSurveyDeveloper";
+            this.layoutControlItemEngineeringSurveyDeveloper.Size = new System.Drawing.Size(772, 91);
+            this.layoutControlItemEngineeringSurveyDeveloper.Text = "Застройщик, обеспечивший подготовку проектной документации";
+            this.layoutControlItemEngineeringSurveyDeveloper.TextLocation = DevExpress.Utils.Locations.Top;
+            this.layoutControlItemEngineeringSurveyDeveloper.TextSize = new System.Drawing.Size(652, 13);
+            // 
+            // layoutControlItemEngineeringSurveyTechnicalCustomer
+            // 
+            this.layoutControlItemEngineeringSurveyTechnicalCustomer.Control = this.gridControlEngineeringSurveyTechnicalCustomer;
+            this.layoutControlItemEngineeringSurveyTechnicalCustomer.ControlAlignment = System.Drawing.ContentAlignment.TopLeft;
+            this.layoutControlItemEngineeringSurveyTechnicalCustomer.CustomizationFormText = "Технический заказчик, обеспечивший подготовку проектной документации (внесение из" +
+    "менений в проектную документацию)";
+            this.layoutControlItemEngineeringSurveyTechnicalCustomer.Location = new System.Drawing.Point(0, 101);
+            this.layoutControlItemEngineeringSurveyTechnicalCustomer.Name = "layoutControlItemEngineeringSurveyTechnicalCustomer";
+            this.layoutControlItemEngineeringSurveyTechnicalCustomer.Size = new System.Drawing.Size(772, 87);
+            this.layoutControlItemEngineeringSurveyTechnicalCustomer.Text = "Технический заказчик, обеспечивший подготовку проектной документации";
+            this.layoutControlItemEngineeringSurveyTechnicalCustomer.TextLocation = DevExpress.Utils.Locations.Top;
+            this.layoutControlItemEngineeringSurveyTechnicalCustomer.TextSize = new System.Drawing.Size(652, 13);
+            // 
+            // splitterItemEngineeringSurveyDeveloper
+            // 
+            this.splitterItemEngineeringSurveyDeveloper.AllowHotTrack = true;
+            this.splitterItemEngineeringSurveyDeveloper.Location = new System.Drawing.Point(0, 91);
+            this.splitterItemEngineeringSurveyDeveloper.Name = "splitterItemEngineeringSurveyDeveloper";
+            this.splitterItemEngineeringSurveyDeveloper.Size = new System.Drawing.Size(772, 10);
+            // 
+            // splitterItemEngineeringSurveyTechnicalCustomer
+            // 
+            this.splitterItemEngineeringSurveyTechnicalCustomer.AllowHotTrack = true;
+            this.splitterItemEngineeringSurveyTechnicalCustomer.Location = new System.Drawing.Point(0, 188);
+            this.splitterItemEngineeringSurveyTechnicalCustomer.Name = "splitterItemEngineeringSurveyTechnicalCustomer";
+            this.splitterItemEngineeringSurveyTechnicalCustomer.Size = new System.Drawing.Size(772, 10);
+            // 
             // xtraTabPageForm3
             // 
             this.xtraTabPageForm3.Controls.Add(this.layoutControlPageIII);
@@ -2617,6 +2757,7 @@
             this.gridViewExpertEngineeringSurveys.OptionsView.ColumnHeaderAutoHeight = DevExpress.Utils.DefaultBoolean.True;
             this.gridViewExpertEngineeringSurveys.OptionsView.RowAutoHeight = true;
             this.gridViewExpertEngineeringSurveys.OptionsView.ShowGroupPanel = false;
+            this.gridViewExpertEngineeringSurveys.PopupMenuShowing += new DevExpress.XtraGrid.Views.Grid.PopupMenuShowingEventHandler(this.gridViewExpertEngineeringSurveys_PopupMenuShowing);
             // 
             // gridControlExpertProjectDocuments
             // 
@@ -3390,155 +3531,53 @@
             this.popupMenuDocuments.Manager = this.barManager;
             this.popupMenuDocuments.Name = "popupMenuDocuments";
             // 
-            // gridControlEngineeringSurveyDeveloper
+            // popupMenuEngineeringSurveyDeveloper
             // 
-            this.gridControlEngineeringSurveyDeveloper.EmbeddedNavigator.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.gridControlEngineeringSurveyDeveloper.Location = new System.Drawing.Point(7, 23);
-            this.gridControlEngineeringSurveyDeveloper.MainView = this.gridViewEngineeringSurveyDeveloper;
-            this.gridControlEngineeringSurveyDeveloper.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.gridControlEngineeringSurveyDeveloper.Name = "gridControlEngineeringSurveyDeveloper";
-            this.gridControlEngineeringSurveyDeveloper.Size = new System.Drawing.Size(768, 71);
-            this.gridControlEngineeringSurveyDeveloper.TabIndex = 7;
-            this.gridControlEngineeringSurveyDeveloper.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
-            this.gridViewEngineeringSurveyDeveloper});
-            // 
-            // gridViewEngineeringSurveyDeveloper
-            // 
-            this.gridViewEngineeringSurveyDeveloper.Appearance.HeaderPanel.Options.UseTextOptions = true;
-            this.gridViewEngineeringSurveyDeveloper.Appearance.HeaderPanel.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Center;
-            this.gridViewEngineeringSurveyDeveloper.DetailHeight = 284;
-            this.gridViewEngineeringSurveyDeveloper.GridControl = this.gridControlEngineeringSurveyDeveloper;
-            this.gridViewEngineeringSurveyDeveloper.Name = "gridViewEngineeringSurveyDeveloper";
-            this.gridViewEngineeringSurveyDeveloper.OptionsBehavior.Editable = false;
-            this.gridViewEngineeringSurveyDeveloper.OptionsView.ColumnHeaderAutoHeight = DevExpress.Utils.DefaultBoolean.True;
-            this.gridViewEngineeringSurveyDeveloper.OptionsView.RowAutoHeight = true;
-            this.gridViewEngineeringSurveyDeveloper.OptionsView.ShowGroupPanel = false;
-            this.gridViewEngineeringSurveyDeveloper.PopupMenuShowing += new DevExpress.XtraGrid.Views.Grid.PopupMenuShowingEventHandler(this.gridViewEngineeringSurveyDeveloper_PopupMenuShowing);
-            // 
-            // layoutControlItemEngineeringSurveyDeveloper
-            // 
-            this.layoutControlItemEngineeringSurveyDeveloper.Control = this.gridControlEngineeringSurveyDeveloper;
-            this.layoutControlItemEngineeringSurveyDeveloper.ControlAlignment = System.Drawing.ContentAlignment.TopLeft;
-            this.layoutControlItemEngineeringSurveyDeveloper.CustomizationFormText = "Застройщик, обеспечивший подготовку проектной документации (внесение изменений в " +
-    "проектную документацию)";
-            this.layoutControlItemEngineeringSurveyDeveloper.Location = new System.Drawing.Point(0, 0);
-            this.layoutControlItemEngineeringSurveyDeveloper.Name = "layoutControlItemEngineeringSurveyDeveloper";
-            this.layoutControlItemEngineeringSurveyDeveloper.Size = new System.Drawing.Size(772, 91);
-            this.layoutControlItemEngineeringSurveyDeveloper.Text = "Застройщик, обеспечивший подготовку проектной документации";
-            this.layoutControlItemEngineeringSurveyDeveloper.TextLocation = DevExpress.Utils.Locations.Top;
-            this.layoutControlItemEngineeringSurveyDeveloper.TextSize = new System.Drawing.Size(652, 13);
-            // 
-            // gridControlEngineeringSurveyTechnicalCustomer
-            // 
-            this.gridControlEngineeringSurveyTechnicalCustomer.EmbeddedNavigator.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.gridControlEngineeringSurveyTechnicalCustomer.Location = new System.Drawing.Point(7, 124);
-            this.gridControlEngineeringSurveyTechnicalCustomer.MainView = this.gridViewEngineeringSurveyTechnicalCustomer;
-            this.gridControlEngineeringSurveyTechnicalCustomer.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.gridControlEngineeringSurveyTechnicalCustomer.Name = "gridControlEngineeringSurveyTechnicalCustomer";
-            this.gridControlEngineeringSurveyTechnicalCustomer.Size = new System.Drawing.Size(768, 67);
-            this.gridControlEngineeringSurveyTechnicalCustomer.TabIndex = 8;
-            this.gridControlEngineeringSurveyTechnicalCustomer.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
-            this.gridViewEngineeringSurveyTechnicalCustomer});
-            // 
-            // gridViewEngineeringSurveyTechnicalCustomer
-            // 
-            this.gridViewEngineeringSurveyTechnicalCustomer.Appearance.HeaderPanel.Options.UseTextOptions = true;
-            this.gridViewEngineeringSurveyTechnicalCustomer.Appearance.HeaderPanel.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Center;
-            this.gridViewEngineeringSurveyTechnicalCustomer.DetailHeight = 284;
-            this.gridViewEngineeringSurveyTechnicalCustomer.GridControl = this.gridControlEngineeringSurveyTechnicalCustomer;
-            this.gridViewEngineeringSurveyTechnicalCustomer.Name = "gridViewEngineeringSurveyTechnicalCustomer";
-            this.gridViewEngineeringSurveyTechnicalCustomer.OptionsBehavior.Editable = false;
-            this.gridViewEngineeringSurveyTechnicalCustomer.OptionsView.ColumnHeaderAutoHeight = DevExpress.Utils.DefaultBoolean.True;
-            this.gridViewEngineeringSurveyTechnicalCustomer.OptionsView.RowAutoHeight = true;
-            this.gridViewEngineeringSurveyTechnicalCustomer.OptionsView.ShowGroupPanel = false;
-            this.gridViewEngineeringSurveyTechnicalCustomer.PopupMenuShowing += new DevExpress.XtraGrid.Views.Grid.PopupMenuShowingEventHandler(this.gridViewEngineeringSurveyTechnicalCustomer_PopupMenuShowing);
-            // 
-            // layoutControlItemEngineeringSurveyTechnicalCustomer
-            // 
-            this.layoutControlItemEngineeringSurveyTechnicalCustomer.Control = this.gridControlEngineeringSurveyTechnicalCustomer;
-            this.layoutControlItemEngineeringSurveyTechnicalCustomer.ControlAlignment = System.Drawing.ContentAlignment.TopLeft;
-            this.layoutControlItemEngineeringSurveyTechnicalCustomer.CustomizationFormText = "Технический заказчик, обеспечивший подготовку проектной документации (внесение из" +
-    "менений в проектную документацию)";
-            this.layoutControlItemEngineeringSurveyTechnicalCustomer.Location = new System.Drawing.Point(0, 101);
-            this.layoutControlItemEngineeringSurveyTechnicalCustomer.Name = "layoutControlItemEngineeringSurveyTechnicalCustomer";
-            this.layoutControlItemEngineeringSurveyTechnicalCustomer.Size = new System.Drawing.Size(772, 87);
-            this.layoutControlItemEngineeringSurveyTechnicalCustomer.Text = "Технический заказчик, обеспечивший подготовку проектной документации";
-            this.layoutControlItemEngineeringSurveyTechnicalCustomer.TextLocation = DevExpress.Utils.Locations.Top;
-            this.layoutControlItemEngineeringSurveyTechnicalCustomer.TextSize = new System.Drawing.Size(652, 13);
-            // 
-            // splitterItemEngineeringSurveyDeveloper
-            // 
-            this.splitterItemEngineeringSurveyDeveloper.AllowHotTrack = true;
-            this.splitterItemEngineeringSurveyDeveloper.Location = new System.Drawing.Point(0, 91);
-            this.splitterItemEngineeringSurveyDeveloper.Name = "splitterItemEngineeringSurveyDeveloper";
-            this.splitterItemEngineeringSurveyDeveloper.Size = new System.Drawing.Size(772, 10);
-            // 
-            // splitterItemEngineeringSurveyTechnicalCustomer
-            // 
-            this.splitterItemEngineeringSurveyTechnicalCustomer.AllowHotTrack = true;
-            this.splitterItemEngineeringSurveyTechnicalCustomer.Location = new System.Drawing.Point(0, 188);
-            this.splitterItemEngineeringSurveyTechnicalCustomer.Name = "splitterItemEngineeringSurveyTechnicalCustomer";
-            this.splitterItemEngineeringSurveyTechnicalCustomer.Size = new System.Drawing.Size(772, 10);
-            // 
-            // popupEngineeringSurveyDeveloper
-            // 
-            this.popupEngineeringSurveyDeveloper.LinksPersistInfo.AddRange(new DevExpress.XtraBars.LinkPersistInfo[] {
+            this.popupMenuEngineeringSurveyDeveloper.LinksPersistInfo.AddRange(new DevExpress.XtraBars.LinkPersistInfo[] {
             new DevExpress.XtraBars.LinkPersistInfo(this.barBtnEngineeringSurveyDeveloperAdd),
             new DevExpress.XtraBars.LinkPersistInfo(this.barBtnEngineeringSurveyDeveloperEdit),
             new DevExpress.XtraBars.LinkPersistInfo(this.barBtnEngineeringSurveyDeveloperDel)});
-            this.popupEngineeringSurveyDeveloper.Manager = this.barManager;
-            this.popupEngineeringSurveyDeveloper.Name = "popupEngineeringSurveyDeveloper";
+            this.popupMenuEngineeringSurveyDeveloper.Manager = this.barManager;
+            this.popupMenuEngineeringSurveyDeveloper.Name = "popupMenuEngineeringSurveyDeveloper";
             // 
-            // barBtnEngineeringSurveyDeveloperAdd
+            // popupMenuEngineeringSurveyTechnicalCustomer
             // 
-            this.barBtnEngineeringSurveyDeveloperAdd.Caption = "Добавить";
-            this.barBtnEngineeringSurveyDeveloperAdd.Id = 34;
-            this.barBtnEngineeringSurveyDeveloperAdd.Name = "barBtnEngineeringSurveyDeveloperAdd";
-            this.barBtnEngineeringSurveyDeveloperAdd.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.barBtnEngineeringSurveyDeveloperAdd_ItemClick);
-            // 
-            // barBtnEngineeringSurveyDeveloperEdit
-            // 
-            this.barBtnEngineeringSurveyDeveloperEdit.Caption = "Изменить";
-            this.barBtnEngineeringSurveyDeveloperEdit.Id = 35;
-            this.barBtnEngineeringSurveyDeveloperEdit.Name = "barBtnEngineeringSurveyDeveloperEdit";
-            this.barBtnEngineeringSurveyDeveloperEdit.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.barBtnEngineeringSurveyDeveloperEdit_ItemClick);
-            // 
-            // barBtnEngineeringSurveyDeveloperDel
-            // 
-            this.barBtnEngineeringSurveyDeveloperDel.Caption = "Удалить";
-            this.barBtnEngineeringSurveyDeveloperDel.Id = 36;
-            this.barBtnEngineeringSurveyDeveloperDel.Name = "barBtnEngineeringSurveyDeveloperDel";
-            this.barBtnEngineeringSurveyDeveloperDel.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.barBtnEngineeringSurveyDeveloperDel_ItemClick);
-            // 
-            // popupEngineeringSurveyTechnicalCustomer
-            // 
-            this.popupEngineeringSurveyTechnicalCustomer.LinksPersistInfo.AddRange(new DevExpress.XtraBars.LinkPersistInfo[] {
+            this.popupMenuEngineeringSurveyTechnicalCustomer.LinksPersistInfo.AddRange(new DevExpress.XtraBars.LinkPersistInfo[] {
             new DevExpress.XtraBars.LinkPersistInfo(this.barBtnEngineeringSurveyTechnicalCustomerAdd),
             new DevExpress.XtraBars.LinkPersistInfo(this.barBtnEngineeringSurveyTechnicalCustomerEdit),
             new DevExpress.XtraBars.LinkPersistInfo(this.barBtnEngineeringSurveyTechnicalCustomerDel)});
-            this.popupEngineeringSurveyTechnicalCustomer.Manager = this.barManager;
-            this.popupEngineeringSurveyTechnicalCustomer.Name = "popupEngineeringSurveyTechnicalCustomer";
+            this.popupMenuEngineeringSurveyTechnicalCustomer.Manager = this.barManager;
+            this.popupMenuEngineeringSurveyTechnicalCustomer.Name = "popupMenuEngineeringSurveyTechnicalCustomer";
             // 
-            // barBtnEngineeringSurveyTechnicalCustomerAdd
+            // popupMenuExpertEngineeringSurveys
             // 
-            this.barBtnEngineeringSurveyTechnicalCustomerAdd.Caption = "Добавить";
-            this.barBtnEngineeringSurveyTechnicalCustomerAdd.Id = 37;
-            this.barBtnEngineeringSurveyTechnicalCustomerAdd.Name = "barBtnEngineeringSurveyTechnicalCustomerAdd";
-            this.barBtnEngineeringSurveyTechnicalCustomerAdd.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.barBtnEngineeringSurveyTechnicalCustomerAdd_ItemClick);
+            this.popupMenuExpertEngineeringSurveys.LinksPersistInfo.AddRange(new DevExpress.XtraBars.LinkPersistInfo[] {
+            new DevExpress.XtraBars.LinkPersistInfo(this.barBtnExpertEngineeringSurveysAdd),
+            new DevExpress.XtraBars.LinkPersistInfo(this.barBtnExpertEngineeringSurveysEdit),
+            new DevExpress.XtraBars.LinkPersistInfo(this.barBtnExpertEngineeringSurveysDel)});
+            this.popupMenuExpertEngineeringSurveys.Manager = this.barManager;
+            this.popupMenuExpertEngineeringSurveys.Name = "popupMenuExpertEngineeringSurveys";
             // 
-            // barBtnEngineeringSurveyTechnicalCustomerEdit
+            // barBtnExpertEngineeringSurveysAdd
             // 
-            this.barBtnEngineeringSurveyTechnicalCustomerEdit.Caption = "Изменить";
-            this.barBtnEngineeringSurveyTechnicalCustomerEdit.Id = 38;
-            this.barBtnEngineeringSurveyTechnicalCustomerEdit.Name = "barBtnEngineeringSurveyTechnicalCustomerEdit";
-            this.barBtnEngineeringSurveyTechnicalCustomerEdit.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.barBtnEngineeringSurveyTechnicalCustomerEdit_ItemClick);
+            this.barBtnExpertEngineeringSurveysAdd.Caption = "Добавить";
+            this.barBtnExpertEngineeringSurveysAdd.Id = 40;
+            this.barBtnExpertEngineeringSurveysAdd.Name = "barBtnExpertEngineeringSurveysAdd";
+            this.barBtnExpertEngineeringSurveysAdd.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.barBtnExpertEngineeringSurveysAdd_ItemClick);
             // 
-            // barBtnEngineeringSurveyTechnicalCustomerDel
+            // barBtnExpertEngineeringSurveysEdit
             // 
-            this.barBtnEngineeringSurveyTechnicalCustomerDel.Caption = "Удалить";
-            this.barBtnEngineeringSurveyTechnicalCustomerDel.Id = 39;
-            this.barBtnEngineeringSurveyTechnicalCustomerDel.Name = "barBtnEngineeringSurveyTechnicalCustomerDel";
-            this.barBtnEngineeringSurveyTechnicalCustomerDel.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.barBtnEngineeringSurveyTechnicalCustomerDel_ItemClick);
+            this.barBtnExpertEngineeringSurveysEdit.Caption = "Изменить";
+            this.barBtnExpertEngineeringSurveysEdit.Id = 41;
+            this.barBtnExpertEngineeringSurveysEdit.Name = "barBtnExpertEngineeringSurveysEdit";
+            this.barBtnExpertEngineeringSurveysEdit.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.barBtnExpertEngineeringSurveysEdit_ItemClick);
+            // 
+            // barBtnExpertEngineeringSurveysDel
+            // 
+            this.barBtnExpertEngineeringSurveysDel.Caption = "Удалить";
+            this.barBtnExpertEngineeringSurveysDel.Id = 42;
+            this.barBtnExpertEngineeringSurveysDel.Name = "barBtnExpertEngineeringSurveysDel";
+            this.barBtnExpertEngineeringSurveysDel.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.barBtnExpertEngineeringSurveysDel_ItemClick);
             // 
             // ConclusionEdit
             // 
@@ -3701,10 +3740,18 @@
             ((System.ComponentModel.ISupportInitialize)(this.gridViewProjectDocumentsTechnicalCustomer)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.gridControlProjectDocumentsDeveloper)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.gridViewProjectDocumentsDeveloper)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.gridControlEngineeringSurveyDeveloper)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.gridViewEngineeringSurveyDeveloper)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.gridControlEngineeringSurveyTechnicalCustomer)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.gridViewEngineeringSurveyTechnicalCustomer)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlGroup6)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemProjectDocumentsDeveloper)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemProjectDocumentsTechnicalCustomer)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.splitterItem1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemEngineeringSurveyDeveloper)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemEngineeringSurveyTechnicalCustomer)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.splitterItemEngineeringSurveyDeveloper)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.splitterItemEngineeringSurveyTechnicalCustomer)).EndInit();
             this.xtraTabPageForm3.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlPageIII)).EndInit();
             this.layoutControlPageIII.ResumeLayout(false);
@@ -3783,16 +3830,9 @@
             ((System.ComponentModel.ISupportInitialize)(this.popupMenuPreviousConclusions)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.popupMenuExpertProjectDocuments)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.popupMenuDocuments)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.gridControlEngineeringSurveyDeveloper)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.gridViewEngineeringSurveyDeveloper)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemEngineeringSurveyDeveloper)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.gridControlEngineeringSurveyTechnicalCustomer)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.gridViewEngineeringSurveyTechnicalCustomer)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemEngineeringSurveyTechnicalCustomer)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.splitterItemEngineeringSurveyDeveloper)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.splitterItemEngineeringSurveyTechnicalCustomer)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.popupEngineeringSurveyDeveloper)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.popupEngineeringSurveyTechnicalCustomer)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.popupMenuEngineeringSurveyDeveloper)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.popupMenuEngineeringSurveyTechnicalCustomer)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.popupMenuExpertEngineeringSurveys)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -4063,10 +4103,14 @@
         private DevExpress.XtraBars.BarButtonItem barBtnEngineeringSurveyDeveloperAdd;
         private DevExpress.XtraBars.BarButtonItem barBtnEngineeringSurveyDeveloperEdit;
         private DevExpress.XtraBars.BarButtonItem barBtnEngineeringSurveyDeveloperDel;
-        private DevExpress.XtraBars.PopupMenu popupEngineeringSurveyDeveloper;
+        private DevExpress.XtraBars.PopupMenu popupMenuEngineeringSurveyDeveloper;
         private DevExpress.XtraBars.BarButtonItem barBtnEngineeringSurveyTechnicalCustomerAdd;
         private DevExpress.XtraBars.BarButtonItem barBtnEngineeringSurveyTechnicalCustomerEdit;
         private DevExpress.XtraBars.BarButtonItem barBtnEngineeringSurveyTechnicalCustomerDel;
-        private DevExpress.XtraBars.PopupMenu popupEngineeringSurveyTechnicalCustomer;
+        private DevExpress.XtraBars.PopupMenu popupMenuEngineeringSurveyTechnicalCustomer;
+        private DevExpress.XtraBars.BarButtonItem barBtnExpertEngineeringSurveysAdd;
+        private DevExpress.XtraBars.BarButtonItem barBtnExpertEngineeringSurveysEdit;
+        private DevExpress.XtraBars.BarButtonItem barBtnExpertEngineeringSurveysDel;
+        private DevExpress.XtraBars.PopupMenu popupMenuExpertEngineeringSurveys;
     }
 }

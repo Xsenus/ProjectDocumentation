@@ -24,11 +24,10 @@ namespace ProjectDocumentation.NET.Models.ConclusionObj
     {
         public ExpertProjectDocument(tExpertProjectDocuments tExpertProjectDocuments)
         {
-            this.ExpertProjectDocuments = tExpertProjectDocuments;
+            ExpertProjectDocuments = tExpertProjectDocuments;
         }
 
         public tExpertProjectDocuments ExpertProjectDocuments { get; private set; }
-
         public string ExpertType { get; private set; }
 
         public async void SetEnumObj()
@@ -40,7 +39,7 @@ namespace ProjectDocumentation.NET.Models.ConclusionObj
                 var expertType = await new XPQuery<GeneralizedDictionaryXPO>(session)?
                 .FirstOrDefaultAsync(f => f.GeneralizedDictionary == GeneralizedDictionary.ExpertType
                     && f.Value == ExpertProjectDocuments.ExpertType.GetEnumXmlAttributeValue().ToString());
-                ExpertType = expertType?.Name; ;
+                ExpertType = expertType?.Name;
             }
         }
 

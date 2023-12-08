@@ -51,6 +51,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
         private List<tDeclarant> _tEngineeringSurveyDeveloper = new List<tDeclarant>();
         private List<tTechnicalCustomer> _tEngineeringSurveyTechnicalCustomer = new List<tTechnicalCustomer>();
         private List<tExpertProjectDocuments> _tExpertProjectDocuments = new List<tExpertProjectDocuments>();
+        private List<tExpertEngineeringSurveys> _tExpertEngineeringSurveys = new List<tExpertEngineeringSurveys>();
 
         private List<tMismatch> _mismatch = new List<tMismatch>();
 
@@ -448,6 +449,18 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
             {
                 gridExpertProjectDocumentExpertType.Caption = "Направление деятельности";
                 gridExpertProjectDocumentExpertType.Visible = true;
+            }
+
+            _tExpertEngineeringSurveys = Conclusion.ExpertEngineeringSurveys?.ToList() ?? new List<tExpertEngineeringSurveys>();
+            gridControlExpertEngineeringSurveys.DataSource = ExpertEngineeringSurveysController.GetExpertEngineeringSurveys(_tExpertEngineeringSurveys).ToArray();
+            foreach (GridColumn column in gridViewExpertEngineeringSurveys.Columns)
+            {
+                column.Visible = false;
+            }
+            if (gridViewExpertEngineeringSurveys.Columns[nameof(ExpertEngineeringSurvey.EngineeringSurveyType)] is GridColumn gridEngineeringSurveyType)
+            {
+                gridEngineeringSurveyType.Caption = "Вид инженерных изысканий";
+                gridEngineeringSurveyType.Visible = true;
             }
             #endregion
 
@@ -969,6 +982,15 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                 else
                 {
                     Conclusion.ExpertProjectDocuments = null;
+                }
+
+                if (_tExpertEngineeringSurveys?.Count() > 0)
+                {
+                    Conclusion.ExpertEngineeringSurveys = _tExpertEngineeringSurveys.ToArray();
+                }
+                else
+                {
+                    Conclusion.ExpertEngineeringSurveys = null;
                 }
                 #endregion
 
@@ -1500,7 +1522,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
         {
             if (sender is GridView gridView)
             {
-                popupEngineeringSurveyDeveloper.ShowPopup(new Point(Cursor.Position.X, Cursor.Position.Y));
+                popupMenuEngineeringSurveyDeveloper.ShowPopup(new Point(Cursor.Position.X, Cursor.Position.Y));
             }
         }
 
@@ -1554,7 +1576,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
         {
             if (sender is GridView gridView)
             {
-                popupEngineeringSurveyTechnicalCustomer.ShowPopup(new Point(Cursor.Position.X, Cursor.Position.Y));
+                popupMenuEngineeringSurveyTechnicalCustomer.ShowPopup(new Point(Cursor.Position.X, Cursor.Position.Y));
             }
         }
 
@@ -2025,6 +2047,57 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                     _tDocuments.Remove(obj.Document);
                     gridControlDocuments.DataSource = DocumentObjController.GetDocumentObjs(_tDocuments).ToArray();
                     gridControlDocuments.RefreshDataSource();
+                }
+            }
+        }
+
+        private void gridViewExpertEngineeringSurveys_PopupMenuShowing(object sender, PopupMenuShowingEventArgs e)
+        {
+            if (sender is GridView gridView)
+            {
+                popupMenuExpertEngineeringSurveys.ShowPopup(new Point(Cursor.Position.X, Cursor.Position.Y));
+            }
+        }
+
+        private void barBtnExpertEngineeringSurveysAdd_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            var form = new ExpertEngineeringSurveyEdit();
+            form.ShowDialog();
+            if (form.IsSave)
+            {
+                _tExpertEngineeringSurveys.Add(form.ExpertEngineeringSurvey);
+                gridControlExpertEngineeringSurveys.DataSource = ExpertEngineeringSurveysController.GetExpertEngineeringSurveys(_tExpertEngineeringSurveys).ToArray();
+                gridControlExpertEngineeringSurveys.RefreshDataSource();
+            }
+        }
+
+        private void barBtnExpertEngineeringSurveysEdit_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            if (gridViewExpertEngineeringSurveys.GetRow(gridViewExpertEngineeringSurveys.FocusedRowHandle) is ExpertEngineeringSurvey obj)
+            {
+                var form = new ExpertEngineeringSurveyEdit(obj.ExpertEngineeringSurveys);
+                form.ShowDialog();
+                if (form.IsSave)
+                {
+                    gridControlExpertEngineeringSurveys.DataSource = ExpertEngineeringSurveysController.GetExpertEngineeringSurveys(_tExpertEngineeringSurveys).ToArray();
+                    gridControlExpertEngineeringSurveys.RefreshDataSource();
+                }
+            }
+        }
+
+        private void barBtnExpertEngineeringSurveysDel_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            if (gridViewExpertEngineeringSurveys.GetRow(gridViewExpertEngineeringSurveys.FocusedRowHandle) is ExpertEngineeringSurvey obj)
+            {
+                if (XtraMessageBox.Show(
+                    "Вы действительно хотите удалить выделенный объект?",
+                    "Информационное сообщение",
+                    MessageBoxButtons.OKCancel,
+                    MessageBoxIcon.Question) == DialogResult.OK)
+                {
+                    _tExpertEngineeringSurveys.Remove(obj.ExpertEngineeringSurveys);
+                    gridControlExpertEngineeringSurveys.DataSource = ExpertEngineeringSurveysController.GetExpertEngineeringSurveys(_tExpertEngineeringSurveys).ToArray();
+                    gridControlExpertEngineeringSurveys.RefreshDataSource();
                 }
             }
         }
