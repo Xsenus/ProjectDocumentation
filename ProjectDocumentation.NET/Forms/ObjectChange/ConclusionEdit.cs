@@ -135,6 +135,8 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                 Conclusion = new Conclusion();
             }
 
+            txtVersion.EditValue = Conclusion.SchemaVersion;
+
             #region Page I
             cmbExaminationResult.EditValue = cmbExaminationResult.Properties.Items
                 ?.Cast<GeneralizedDictionaryXPO>()
@@ -675,8 +677,16 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
         private void btnSave_Click(object sender, EventArgs e)
         {
             FileName = txtFileName.Text;
+
             try
             {
+                var schemaVersion = txtVersion.EditValue?.ToString();
+                if (string.IsNullOrWhiteSpace(schemaVersion))
+                {
+                    schemaVersion = "01.00";
+                }
+                Conclusion.SchemaVersion = schemaVersion;
+
                 #region Page I
                 Conclusion.ExaminationObject = new tExaminationObject();
                 Conclusion.ExaminationObject.ExaminationResult = GetEnumByAttributeValue<tExaminationResult>(GetValueGeneralizedDictionary(

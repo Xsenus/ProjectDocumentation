@@ -14,7 +14,7 @@ namespace Core.NET.AutoModels
     {
         public Conclusion()
         {
-            SchemaVersion = "01.02";
+            SchemaVersion = "01.00";
         }
 
         public tOrganization ExpertOrganization { get; set; }
