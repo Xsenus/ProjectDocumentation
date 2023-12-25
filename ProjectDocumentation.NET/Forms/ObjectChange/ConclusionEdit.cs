@@ -51,6 +51,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
         private List<tDeclarant> _tEngineeringSurveyDeveloper = new List<tDeclarant>();
         private List<tTechnicalCustomer> _tEngineeringSurveyTechnicalCustomer = new List<tTechnicalCustomer>();
         private List<tExpertProjectDocuments> _tExpertProjectDocuments = new List<tExpertProjectDocuments>();
+        private List<tEngineeringSurveyAddress> _tEngineeringSurveyAddresses = new List<tEngineeringSurveyAddress>();
         private List<tExpertEngineeringSurveys> _tExpertEngineeringSurveys = new List<tExpertEngineeringSurveys>();
 
         private List<tMismatch> _mismatch = new List<tMismatch>();
@@ -451,6 +452,25 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
             {
                 gridExpertProjectDocumentExpertType.Caption = "Направление деятельности";
                 gridExpertProjectDocumentExpertType.Visible = true;
+            }
+
+            _tEngineeringSurveyAddresses = Conclusion?.EngineeringSurveyAddress?.ToList() ?? new List<tEngineeringSurveyAddress>();
+            gridControlEngineeringSurveyAddress.DataSource = EngineeringSurveyAddressController.GetEngineeringSurveyAddress(_tEngineeringSurveyAddresses);
+            foreach (GridColumn column in gridViewEngineeringSurveyAddress.Columns)
+            {
+                column.Visible = false;
+            }
+            if (gridViewEngineeringSurveyAddress.Columns[nameof(EngineeringSurveyAddress.EngineeringSurveyDistrict)] is GridColumn gridEngineeringSurveyDistrict)
+            {
+                gridEngineeringSurveyDistrict.Caption = "Описание района изысканий";
+                gridEngineeringSurveyDistrict.Visible = true;
+            }
+            if (gridViewEngineeringSurveyAddress.Columns[nameof(EngineeringSurveyAddress.EngineeringSurveyRegion)] is GridColumn gridEngineeringSurveyRegion)
+            {
+                gridEngineeringSurveyRegion.Caption = "Регион";
+                gridEngineeringSurveyRegion.Visible = true;
+                gridEngineeringSurveyRegion.Width = 150;
+                gridEngineeringSurveyRegion.OptionsColumn.FixedWidth = true;
             }
 
             _tExpertEngineeringSurveys = Conclusion.ExpertEngineeringSurveys?.ToList() ?? new List<tExpertEngineeringSurveys>();
@@ -993,6 +1013,15 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                 {
                     Conclusion.ExpertProjectDocuments = null;
                 }
+
+                if (_tEngineeringSurveyAddresses?.Count() > 0)
+                {
+                    Conclusion.EngineeringSurveyAddress = _tEngineeringSurveyAddresses.ToArray();
+                }
+                else
+                {
+                    Conclusion.EngineeringSurveyAddress = null;
+                }                
 
                 if (_tExpertEngineeringSurveys?.Count() > 0)
                 {
@@ -2108,6 +2137,57 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                     _tExpertEngineeringSurveys.Remove(obj.ExpertEngineeringSurveys);
                     gridControlExpertEngineeringSurveys.DataSource = ExpertEngineeringSurveysController.GetExpertEngineeringSurveys(_tExpertEngineeringSurveys).ToArray();
                     gridControlExpertEngineeringSurveys.RefreshDataSource();
+                }
+            }
+        }
+
+        private void gridViewEngineeringSurveyAddress_PopupMenuShowing(object sender, PopupMenuShowingEventArgs e)
+        {
+            if (sender is GridView gridView)
+            {
+                popupMenuEngineeringSurveyAddress.ShowPopup(new Point(Cursor.Position.X, Cursor.Position.Y));
+            }
+        }
+
+        private void barBtnEngineeringSurveyAddressAdd_ItemClick(object sender, ItemClickEventArgs e)
+        {           
+            var form = new EngineeringSurveyAddressEdit();
+            form.ShowDialog();
+            if (form.IsSave)
+            {
+                _tEngineeringSurveyAddresses.Add(form.EngineeringSurveyAddress);
+                gridControlEngineeringSurveyAddress.DataSource = EngineeringSurveyAddressController.GetEngineeringSurveyAddress(_tEngineeringSurveyAddresses);
+                gridControlEngineeringSurveyAddress.RefreshDataSource();
+            }
+        }
+
+        private void barBtnEngineeringSurveyAddressEdit_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            if (gridViewEngineeringSurveyAddress.GetRow(gridViewEngineeringSurveyAddress.FocusedRowHandle) is EngineeringSurveyAddress obj)
+            {
+                var form = new EngineeringSurveyAddressEdit(obj.EngineeringSurveyAddressObj);
+                form.ShowDialog();
+                if (form.IsSave)
+                {
+                    gridControlEngineeringSurveyAddress.DataSource = EngineeringSurveyAddressController.GetEngineeringSurveyAddress(_tEngineeringSurveyAddresses);
+                    gridControlEngineeringSurveyAddress.RefreshDataSource();
+                }
+            }            
+        }
+
+        private void barBtnEngineeringSurveyAddressDel_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            if (gridViewEngineeringSurveyAddress.GetRow(gridViewEngineeringSurveyAddress.FocusedRowHandle) is EngineeringSurveyAddress obj)
+            {
+                if (XtraMessageBox.Show(
+                    "Вы действительно хотите удалить выделенный объект?",
+                    "Информационное сообщение",
+                    MessageBoxButtons.OKCancel,
+                    MessageBoxIcon.Question) == DialogResult.OK)
+                {
+                    _tEngineeringSurveyAddresses.Remove(obj.EngineeringSurveyAddressObj);
+                    gridControlEngineeringSurveyAddress.DataSource = EngineeringSurveyAddressController.GetEngineeringSurveyAddress(_tEngineeringSurveyAddresses);
+                    gridControlEngineeringSurveyAddress.RefreshDataSource();
                 }
             }
         }

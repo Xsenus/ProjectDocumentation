@@ -1997,37 +1997,10 @@ namespace Core.NET.AutoModels
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     public partial class tEngineeringSurveyAddress
     {
+        public tRegionsRF EngineeringSurveyRegion { get; set; }
 
-        private tRegionsRF engineeringSurveyRegionField;
-
-        private string engineeringSurveyDistrictField;
-
-        /// <remarks/>
-        public tRegionsRF EngineeringSurveyRegion
-        {
-            get
-            {
-                return this.engineeringSurveyRegionField;
-            }
-            set
-            {
-                this.engineeringSurveyRegionField = value;
-            }
-        }
-
-        /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(DataType = "normalizedString")]
-        public string EngineeringSurveyDistrict
-        {
-            get
-            {
-                return this.engineeringSurveyDistrictField;
-            }
-            set
-            {
-                this.engineeringSurveyDistrictField = value;
-            }
-        }
+        public string EngineeringSurveyDistrict { get; set; }
     }
 
     /// <remarks/>
