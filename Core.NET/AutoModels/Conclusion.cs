@@ -1893,69 +1893,16 @@ namespace Core.NET.AutoModels
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     public partial class tProjectDocumentsMismatches
     {
-
-        private tMismatch[] engineeringSurveyMismatchField;
-
-        private tMismatch[] projectTaskMismatchField;
-
-        private tMismatch[] normsMismatchField;
-
-        private string dangerMismatchField;
-
-        /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute("EngineeringSurveyMismatch")]
-        public tMismatch[] EngineeringSurveyMismatch
-        {
-            get
-            {
-                return this.engineeringSurveyMismatchField;
-            }
-            set
-            {
-                this.engineeringSurveyMismatchField = value;
-            }
-        }
+        public tMismatch[] EngineeringSurveyMismatch { get; set; }
 
-        /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute("ProjectTaskMismatch")]
-        public tMismatch[] ProjectTaskMismatch
-        {
-            get
-            {
-                return this.projectTaskMismatchField;
-            }
-            set
-            {
-                this.projectTaskMismatchField = value;
-            }
-        }
+        public tMismatch[] ProjectTaskMismatch { get; set; }
 
-        /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute("NormsMismatch")]
-        public tMismatch[] NormsMismatch
-        {
-            get
-            {
-                return this.normsMismatchField;
-            }
-            set
-            {
-                this.normsMismatchField = value;
-            }
-        }
+        public tMismatch[] NormsMismatch { get; set; }
 
-        /// <remarks/>
-        public string DangerMismatch
-        {
-            get
-            {
-                return this.dangerMismatchField;
-            }
-            set
-            {
-                this.dangerMismatchField = value;
-            }
-        }
+        public string DangerMismatch { get; set; }
     }
 
     /// <remarks/>

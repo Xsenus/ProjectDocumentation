@@ -117,7 +117,13 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <metadata name="barManager.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>17, 17</value>
+  </metadata>
   <data name="memoDangerSolutions.EditValue" xml:space="preserve">
     <value>Сведения о решениях, которые которые в случае их реализации могли привести к риску возникновения аварийных ситуаций, гибели людей, причинения значительного материального ущерба и которые в ходе проведения государственной экспертизы были приведены в соответствие с установленными требованиями</value>
   </data>
+  <metadata name="popupMenuMismatches.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>135, 17</value>
+  </metadata>
 </root>

@@ -2,14 +2,25 @@
 using Core.NET.Controllers;
 using Core.NET.Extensions;
 using Core.NET.Models.XPO;
+using DevExpress.Utils.MVVM.Services;
 using DevExpress.Xpo;
+using DevExpress.XtraBars;
 using DevExpress.XtraEditors;
 using DevExpress.XtraEditors.Controls;
+using DevExpress.XtraEditors.Repository;
+using DevExpress.XtraGrid;
+using DevExpress.XtraGrid.Columns;
+using DevExpress.XtraGrid.Views.Grid;
 using DevExpress.XtraRichEdit;
+using ProjectDocumentation.NET.Models.ConclusionObj;
 using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Drawing;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using static ProjectDocumentation.NET.Forms.ObjectChange.ExpertProjectDocumentsEdit;
 
 namespace ProjectDocumentation.NET.Forms.ObjectChange
 {
@@ -19,6 +30,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
 
         public bool IsSave { get; private set; }
         public tExpertProjectDocuments ExpertProjectDocuments { get; private set; }
+        public List<MismatchObj> _mismatchObjs = new List<MismatchObj>();
 
         public ExpertProjectDocumentsEdit()
         {
@@ -42,6 +54,49 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                 .Where(w => w.GeneralizedDictionary == GeneralizedDictionary.ExpertType).ToList());
         }
 
+        public class MismatchObj
+        {
+            public MismatchObj() { }
+
+            public MismatchObj(MismatchObjType type)
+            {
+                Type = type;
+            }
+
+            public MismatchObj(MismatchObjType type, tMismatch tMismatch) : this(type)
+            {                
+                Summary = tMismatch.Summary;
+                Part = tMismatch.Part;
+                Link = tMismatch.Link;
+            }
+
+            public MismatchObjType Type { get; set; }
+            public string Summary { get; set; }
+            public string Part { get; set; }
+            public string Link { get; set; }
+        }
+
+        public enum MismatchObjType
+        {
+            /// <summary>
+            /// Сведения о несоответствии проектной документации результату инженерных изысканий.
+            /// </summary>
+            [Description("Сведения о несоответствии проектной документации результату инженерных изысканий")]
+            EngineeringSurveyMismatch,
+
+            /// <summary>
+            /// Сведения о несоответствии проектной документации заданию на проектирование.
+            /// </summary>
+            [Description("Сведения о несоответствии проектной документации заданию на проектирование")]
+            ProjectTaskMismatch,
+
+            /// <summary>
+            /// Сведения о несоответствии проектной документации требованиям технических регламентов.
+            /// </summary>
+            [Description("Сведения о несоответствии проектной документации требованиям технических регламентов")]
+            NormsMismatch
+        }
+
         private async void ObjPartEdit_Load(object sender, EventArgs e)
         {
             await FillFormControllersAsync();
@@ -59,6 +114,56 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
             richEditControlProjectDocumentsReview.Text = ExpertProjectDocuments.ProjectDocumentsReview;
             richEditControlProjectDocumentsChanges.Text = ExpertProjectDocuments.ProjectDocumentsChanges;
             richEditControlDangerSolutions.Text = ExpertProjectDocuments.DangerSolutions;
+
+            if (ExpertProjectDocuments.Mismatches?.EngineeringSurveyMismatch?.Count() > 0)
+            {
+                _mismatchObjs.AddRange(ExpertProjectDocuments.Mismatches?.EngineeringSurveyMismatch
+                    ?.Select(s => new MismatchObj(MismatchObjType.EngineeringSurveyMismatch, s)));
+            }
+            if (ExpertProjectDocuments.Mismatches?.ProjectTaskMismatch?.Count() > 0)
+            {
+                _mismatchObjs.AddRange(ExpertProjectDocuments.Mismatches?.ProjectTaskMismatch
+                    ?.Select(s => new MismatchObj(MismatchObjType.ProjectTaskMismatch, s)));
+            }
+            if (ExpertProjectDocuments.Mismatches?.NormsMismatch?.Count() > 0)
+            {
+                _mismatchObjs.AddRange(ExpertProjectDocuments.Mismatches?.NormsMismatch
+                    ?.Select(s => new MismatchObj(MismatchObjType.NormsMismatch, s)));
+            }
+
+            gridControlProjectDocumentsMismatches.DataSource = _mismatchObjs; 
+            var memoEdit = gridControlProjectDocumentsMismatches.RepositoryItems.Add(nameof(MemoEdit)) as RepositoryItemMemoEdit;
+            foreach (GridColumn column in gridViewProjectDocumentsMismatches.Columns)
+            {
+                column.Visible = false;
+            }            
+            if (gridViewProjectDocumentsMismatches.Columns[nameof(MismatchObj.Summary)] is GridColumn gridColumnSummary)
+            {
+                gridColumnSummary.Caption = "Вывод о несоответствии";
+                gridColumnSummary.Visible = true;
+                gridColumnSummary.ColumnEdit = memoEdit;
+            }
+            if (gridViewProjectDocumentsMismatches.Columns[nameof(MismatchObj.Part)] is GridColumn gridColumnPart)
+            {
+                gridColumnPart.Caption = "Ссылка на материалы";
+                gridColumnPart.Visible = true;
+                gridColumnPart.ColumnEdit = memoEdit;
+            }
+            if (gridViewProjectDocumentsMismatches.Columns[nameof(MismatchObj.Link)] is GridColumn gridColumnLink)
+            {
+                gridColumnLink.Caption = "Ссылка на конкретное требование";
+                gridColumnLink.Visible = true;
+                gridColumnLink.ColumnEdit = memoEdit;
+            }
+            if (gridViewProjectDocumentsMismatches.Columns[nameof(MismatchObj.Type)] is GridColumn gridColumnType)
+            {
+                gridColumnType.Caption = "Тип";
+                gridColumnType.Visible = true;
+                gridColumnType.OptionsColumn.FixedWidth = true;
+                gridColumnType.Width = 250;
+            }
+
+            memoDangerMismatch.EditValue = ExpertProjectDocuments.Mismatches?.DangerMismatch;
         }
 
         private void btnSave_Click(object sender, EventArgs e)
@@ -77,7 +182,84 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                 {
                     ExpertProjectDocuments.DangerSolutions = null;
                 }
-            
+
+                if (_mismatchObjs.Count > 0)
+                {
+                    ExpertProjectDocuments.Mismatches = new tProjectDocumentsMismatches();
+
+                    if (_mismatchObjs.Where(w => w.Type == MismatchObjType.EngineeringSurveyMismatch).Count() > 0)
+                    {
+                        ExpertProjectDocuments.Mismatches.EngineeringSurveyMismatch = _mismatchObjs
+                            .Where(w => w.Type == MismatchObjType.EngineeringSurveyMismatch)
+                            .Select(s => new tMismatch() { Summary = s.Summary, Link = s.Link, Part = s.Part })
+                            .ToArray();
+                    }
+                    else
+                    {
+                        ExpertProjectDocuments.Mismatches.EngineeringSurveyMismatch = null;
+                    }
+
+                    if (_mismatchObjs.Where(w => w.Type == MismatchObjType.ProjectTaskMismatch).Count() > 0)
+                    {
+                        ExpertProjectDocuments.Mismatches.ProjectTaskMismatch = _mismatchObjs
+                            .Where(w => w.Type == MismatchObjType.ProjectTaskMismatch)
+                            .Select(s => new tMismatch() { Summary = s.Summary, Link = s.Link, Part = s.Part })
+                            .ToArray();
+                    }
+                    else
+                    {
+                        ExpertProjectDocuments.Mismatches.ProjectTaskMismatch = null;
+                    }
+
+                    if (_mismatchObjs.Where(w => w.Type == MismatchObjType.NormsMismatch).Count() > 0)
+                    {
+                        ExpertProjectDocuments.Mismatches.NormsMismatch = _mismatchObjs
+                            .Where(w => w.Type == MismatchObjType.NormsMismatch)
+                            .Select(s => new tMismatch() { Summary = s.Summary, Link = s.Link, Part = s.Part })
+                            .ToArray();
+                    }
+                    else
+                    {
+                        ExpertProjectDocuments.Mismatches.NormsMismatch = null;
+                    }
+                }
+                else
+                {
+                    if (ExpertProjectDocuments.Mismatches != null)
+                    {
+                        ExpertProjectDocuments.Mismatches.EngineeringSurveyMismatch = null;
+                        ExpertProjectDocuments.Mismatches.ProjectTaskMismatch = null;
+                        ExpertProjectDocuments.Mismatches.NormsMismatch = null;
+                    }
+                }
+
+                var dangerMismatch = ConclusionEdit.GetStringValue(memoDangerMismatch.Text, memoDangerMismatch, "Описание решения, реализация которого может привести к риску возникновения аварийных ситуаций на объекте капитального строительства, гибели людей, причинения значительного материального ущерба.", isNullAble: true);
+                if (string.IsNullOrWhiteSpace(dangerMismatch))
+                {
+                    if (ExpertProjectDocuments.Mismatches != null)
+                    {
+                        ExpertProjectDocuments.Mismatches.DangerMismatch = null;
+                    }
+                }
+                else
+                {
+                    if (ExpertProjectDocuments.Mismatches is null)
+                    {
+                        ExpertProjectDocuments.Mismatches = new tProjectDocumentsMismatches();
+                    }
+                    ExpertProjectDocuments.Mismatches.DangerMismatch = dangerMismatch;
+                }
+
+                if (ExpertProjectDocuments.Mismatches != null)
+                {
+                    if (ExpertProjectDocuments.Mismatches.DangerMismatch is null 
+                        && ExpertProjectDocuments.Mismatches.EngineeringSurveyMismatch is null 
+                        && ExpertProjectDocuments.Mismatches.NormsMismatch is null
+                        && ExpertProjectDocuments.Mismatches.ProjectTaskMismatch is null)
+                    {
+                        ExpertProjectDocuments.Mismatches = null;
+                    }
+                }
             }
             catch (Exception ex)
             {
@@ -101,6 +283,38 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                 if (e.Button.Kind == ButtonPredefines.Delete)
                 {
                     buttonEdit.EditValue = null;
+                }
+            }
+        }
+
+        private void gridViewProjectDocumentsMismatches_PopupMenuShowing(object sender, DevExpress.XtraGrid.Views.Grid.PopupMenuShowingEventArgs e)
+        {
+            if (sender is GridView gridView)
+            {
+                popupMenuMismatches.ShowPopup(new Point(Cursor.Position.X, Cursor.Position.Y));
+            }
+        }
+
+        private void barBtnAdd_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            _mismatchObjs.Add(new MismatchObj());
+            gridControlProjectDocumentsMismatches.DataSource = _mismatchObjs.ToArray();
+            gridControlProjectDocumentsMismatches.RefreshDataSource();
+        }
+
+        private void barBtnDel_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            if (gridViewProjectDocumentsMismatches.GetRow(gridViewProjectDocumentsMismatches.FocusedRowHandle) is MismatchObj obj)
+            {
+                if (XtraMessageBox.Show(
+                    "Вы действительно хотите удалить выделенный объект?",
+                    "Информационное сообщение",
+                    MessageBoxButtons.OKCancel,
+                    MessageBoxIcon.Question) == DialogResult.OK)
+                {
+                    _mismatchObjs.Remove(obj);
+                    gridControlProjectDocumentsMismatches.DataSource = _mismatchObjs.ToArray();
+                    gridControlProjectDocumentsMismatches.RefreshDataSource();
                 }
             }
         }
