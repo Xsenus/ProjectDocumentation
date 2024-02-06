@@ -33,6 +33,7 @@
             DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject2 = new DevExpress.Utils.SerializableAppearanceObject();
             DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject3 = new DevExpress.Utils.SerializableAppearanceObject();
             DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject4 = new DevExpress.Utils.SerializableAppearanceObject();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ExpertProjectDocumentsEdit));
             this.btnSave = new DevExpress.XtraEditors.SimpleButton();
             this.layoutControlObjPart = new DevExpress.XtraLayout.LayoutControl();
             this.richEditControlProjectDocumentsReview = new DevExpress.XtraRichEdit.RichEditControl();
@@ -48,6 +49,11 @@
             this.splitterItem = new DevExpress.XtraLayout.SplitterItem();
             this.layoutControlItemProjectDocumentsReview = new DevExpress.XtraLayout.LayoutControlItem();
             this.layoutControlItemProjectDocumentsChanges = new DevExpress.XtraLayout.LayoutControlItem();
+            this.richEditControlDangerSolutions = new DevExpress.XtraRichEdit.RichEditControl();
+            this.layoutControlItemDangerSolutions = new DevExpress.XtraLayout.LayoutControlItem();
+            this.memoDangerSolutions = new DevExpress.XtraEditors.MemoEdit();
+            this.layoutControlItemDangerSolutionsMemo = new DevExpress.XtraLayout.LayoutControlItem();
+            this.splitterItem1 = new DevExpress.XtraLayout.SplitterItem();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlObjPart)).BeginInit();
             this.layoutControlObjPart.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.cmbExpertType.Properties)).BeginInit();
@@ -60,11 +66,15 @@
             ((System.ComponentModel.ISupportInitialize)(this.splitterItem)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemProjectDocumentsReview)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemProjectDocumentsChanges)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemDangerSolutions)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.memoDangerSolutions.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemDangerSolutionsMemo)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.splitterItem1)).BeginInit();
             this.SuspendLayout();
             // 
             // btnSave
             // 
-            this.btnSave.Location = new System.Drawing.Point(401, 540);
+            this.btnSave.Location = new System.Drawing.Point(401, 640);
             this.btnSave.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btnSave.Name = "btnSave";
             this.btnSave.Size = new System.Drawing.Size(193, 22);
@@ -81,26 +91,29 @@
             this.layoutControlObjPart.Controls.Add(this.btnSave);
             this.layoutControlObjPart.Controls.Add(this.cmbExpertType);
             this.layoutControlObjPart.Controls.Add(this.richEditControlProjectDocumentsChanges);
+            this.layoutControlObjPart.Controls.Add(this.richEditControlDangerSolutions);
+            this.layoutControlObjPart.Controls.Add(this.memoDangerSolutions);
             this.layoutControlObjPart.Dock = System.Windows.Forms.DockStyle.Fill;
             this.layoutControlObjPart.Location = new System.Drawing.Point(0, 0);
             this.layoutControlObjPart.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.layoutControlObjPart.Name = "layoutControlObjPart";
             this.layoutControlObjPart.Root = this.Root;
-            this.layoutControlObjPart.Size = new System.Drawing.Size(798, 568);
+            this.layoutControlObjPart.Size = new System.Drawing.Size(798, 668);
             this.layoutControlObjPart.TabIndex = 0;
             this.layoutControlObjPart.Text = "layoutControl1";
             // 
             // richEditControlProjectDocumentsReview
             // 
             this.richEditControlProjectDocumentsReview.Location = new System.Drawing.Point(6, 62);
+            this.richEditControlProjectDocumentsReview.MinimumSize = new System.Drawing.Size(0, 150);
             this.richEditControlProjectDocumentsReview.Name = "richEditControlProjectDocumentsReview";
-            this.richEditControlProjectDocumentsReview.Size = new System.Drawing.Size(786, 211);
+            this.richEditControlProjectDocumentsReview.Size = new System.Drawing.Size(786, 173);
             this.richEditControlProjectDocumentsReview.TabIndex = 14;
-            this.richEditControlProjectDocumentsReview.Text = "richEditControl1";
+            this.richEditControlProjectDocumentsReview.Text = "ProjectDocumentsReview";
             // 
             // btnClose
             // 
-            this.btnClose.Location = new System.Drawing.Point(598, 540);
+            this.btnClose.Location = new System.Drawing.Point(598, 640);
             this.btnClose.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btnClose.Name = "btnClose";
             this.btnClose.Size = new System.Drawing.Size(194, 22);
@@ -127,11 +140,12 @@
             // 
             // richEditControlProjectDocumentsChanges
             // 
-            this.richEditControlProjectDocumentsChanges.Location = new System.Drawing.Point(6, 303);
+            this.richEditControlProjectDocumentsChanges.Location = new System.Drawing.Point(6, 265);
+            this.richEditControlProjectDocumentsChanges.MinimumSize = new System.Drawing.Size(0, 150);
             this.richEditControlProjectDocumentsChanges.Name = "richEditControlProjectDocumentsChanges";
-            this.richEditControlProjectDocumentsChanges.Size = new System.Drawing.Size(786, 233);
+            this.richEditControlProjectDocumentsChanges.Size = new System.Drawing.Size(786, 163);
             this.richEditControlProjectDocumentsChanges.TabIndex = 14;
-            this.richEditControlProjectDocumentsChanges.Text = "richEditControl1";
+            this.richEditControlProjectDocumentsChanges.Text = "ProjectDocumentsChanges";
             // 
             // Root
             // 
@@ -145,16 +159,19 @@
             this.layoutControlItemExaminationResult,
             this.splitterItem,
             this.layoutControlItemProjectDocumentsReview,
-            this.layoutControlItemProjectDocumentsChanges});
+            this.layoutControlItemProjectDocumentsChanges,
+            this.layoutControlItemDangerSolutions,
+            this.layoutControlItemDangerSolutionsMemo,
+            this.splitterItem1});
             this.Root.Name = "Root";
             this.Root.Padding = new DevExpress.XtraLayout.Utils.Padding(4, 4, 4, 4);
-            this.Root.Size = new System.Drawing.Size(798, 568);
+            this.Root.Size = new System.Drawing.Size(798, 668);
             this.Root.TextVisible = false;
             // 
             // emptySpaceItemSave
             // 
             this.emptySpaceItemSave.AllowHotTrack = false;
-            this.emptySpaceItemSave.Location = new System.Drawing.Point(0, 534);
+            this.emptySpaceItemSave.Location = new System.Drawing.Point(0, 634);
             this.emptySpaceItemSave.Name = "emptySpaceItemSave";
             this.emptySpaceItemSave.Size = new System.Drawing.Size(197, 26);
             this.emptySpaceItemSave.TextSize = new System.Drawing.Size(0, 0);
@@ -162,7 +179,7 @@
             // layoutControlItem2
             // 
             this.layoutControlItem2.Control = this.btnSave;
-            this.layoutControlItem2.Location = new System.Drawing.Point(395, 534);
+            this.layoutControlItem2.Location = new System.Drawing.Point(395, 634);
             this.layoutControlItem2.Name = "layoutControlItem2";
             this.layoutControlItem2.Size = new System.Drawing.Size(197, 26);
             this.layoutControlItem2.TextSize = new System.Drawing.Size(0, 0);
@@ -171,7 +188,7 @@
             // emptySpaceItemClose
             // 
             this.emptySpaceItemClose.AllowHotTrack = false;
-            this.emptySpaceItemClose.Location = new System.Drawing.Point(197, 534);
+            this.emptySpaceItemClose.Location = new System.Drawing.Point(197, 634);
             this.emptySpaceItemClose.Name = "emptySpaceItemClose";
             this.emptySpaceItemClose.Size = new System.Drawing.Size(198, 26);
             this.emptySpaceItemClose.TextSize = new System.Drawing.Size(0, 0);
@@ -179,7 +196,7 @@
             // layoutControlItem1
             // 
             this.layoutControlItem1.Control = this.btnClose;
-            this.layoutControlItem1.Location = new System.Drawing.Point(592, 534);
+            this.layoutControlItem1.Location = new System.Drawing.Point(592, 634);
             this.layoutControlItem1.Name = "layoutControlItem1";
             this.layoutControlItem1.Size = new System.Drawing.Size(198, 26);
             this.layoutControlItem1.TextSize = new System.Drawing.Size(0, 0);
@@ -200,7 +217,7 @@
             // splitterItem
             // 
             this.splitterItem.AllowHotTrack = true;
-            this.splitterItem.Location = new System.Drawing.Point(0, 271);
+            this.splitterItem.Location = new System.Drawing.Point(0, 233);
             this.splitterItem.Name = "splitterItem";
             this.splitterItem.Size = new System.Drawing.Size(790, 10);
             // 
@@ -209,7 +226,7 @@
             this.layoutControlItemProjectDocumentsReview.Control = this.richEditControlProjectDocumentsReview;
             this.layoutControlItemProjectDocumentsReview.Location = new System.Drawing.Point(0, 40);
             this.layoutControlItemProjectDocumentsReview.Name = "layoutControlItemProjectDocumentsReview";
-            this.layoutControlItemProjectDocumentsReview.Size = new System.Drawing.Size(790, 231);
+            this.layoutControlItemProjectDocumentsReview.Size = new System.Drawing.Size(790, 193);
             this.layoutControlItemProjectDocumentsReview.Text = "Описание основных решений (мероприятий), принятых в проектной документации";
             this.layoutControlItemProjectDocumentsReview.TextLocation = DevExpress.Utils.Locations.Top;
             this.layoutControlItemProjectDocumentsReview.TextSize = new System.Drawing.Size(769, 13);
@@ -219,23 +236,74 @@
             this.layoutControlItemProjectDocumentsChanges.Control = this.richEditControlProjectDocumentsChanges;
             this.layoutControlItemProjectDocumentsChanges.ControlAlignment = System.Drawing.ContentAlignment.TopLeft;
             this.layoutControlItemProjectDocumentsChanges.CustomizationFormText = "Описание основных решений (мероприятий), принятых в проектной документации";
-            this.layoutControlItemProjectDocumentsChanges.Location = new System.Drawing.Point(0, 281);
+            this.layoutControlItemProjectDocumentsChanges.Location = new System.Drawing.Point(0, 243);
             this.layoutControlItemProjectDocumentsChanges.Name = "layoutControlItemProjectDocumentsChanges";
-            this.layoutControlItemProjectDocumentsChanges.Size = new System.Drawing.Size(790, 253);
+            this.layoutControlItemProjectDocumentsChanges.Size = new System.Drawing.Size(790, 183);
             this.layoutControlItemProjectDocumentsChanges.Text = "Сведения об оперативных изменениях, внесенных заявителем в разделы (подразделы) п" +
     "роектной документации в процессе проведения экспертизы";
             this.layoutControlItemProjectDocumentsChanges.TextLocation = DevExpress.Utils.Locations.Top;
             this.layoutControlItemProjectDocumentsChanges.TextSize = new System.Drawing.Size(769, 13);
             // 
+            // richEditControlDangerSolutions
+            // 
+            this.richEditControlDangerSolutions.Location = new System.Drawing.Point(6, 486);
+            this.richEditControlDangerSolutions.MinimumSize = new System.Drawing.Size(0, 150);
+            this.richEditControlDangerSolutions.Name = "richEditControlDangerSolutions";
+            this.richEditControlDangerSolutions.Size = new System.Drawing.Size(786, 150);
+            this.richEditControlDangerSolutions.TabIndex = 14;
+            this.richEditControlDangerSolutions.Text = "DangerSolutions";
+            // 
+            // layoutControlItemDangerSolutions
+            // 
+            this.layoutControlItemDangerSolutions.Control = this.richEditControlDangerSolutions;
+            this.layoutControlItemDangerSolutions.ControlAlignment = System.Drawing.ContentAlignment.TopLeft;
+            this.layoutControlItemDangerSolutions.CustomizationFormText = "Описание основных решений (мероприятий), принятых в проектной документации";
+            this.layoutControlItemDangerSolutions.Location = new System.Drawing.Point(0, 480);
+            this.layoutControlItemDangerSolutions.Name = "layoutControlItemDangerSolutions";
+            this.layoutControlItemDangerSolutions.Size = new System.Drawing.Size(790, 154);
+            this.layoutControlItemDangerSolutions.Text = "DangerSolutions";
+            this.layoutControlItemDangerSolutions.TextLocation = DevExpress.Utils.Locations.Top;
+            this.layoutControlItemDangerSolutions.TextSize = new System.Drawing.Size(0, 0);
+            this.layoutControlItemDangerSolutions.TextVisible = false;
+            // 
+            // memoDangerSolutions
+            // 
+            this.memoDangerSolutions.EditValue = resources.GetString("memoDangerSolutions.EditValue");
+            this.memoDangerSolutions.Location = new System.Drawing.Point(6, 442);
+            this.memoDangerSolutions.MaximumSize = new System.Drawing.Size(0, 40);
+            this.memoDangerSolutions.MinimumSize = new System.Drawing.Size(0, 40);
+            this.memoDangerSolutions.Name = "memoDangerSolutions";
+            this.memoDangerSolutions.Properties.ReadOnly = true;
+            this.memoDangerSolutions.Properties.ScrollBars = System.Windows.Forms.ScrollBars.None;
+            this.memoDangerSolutions.Size = new System.Drawing.Size(786, 40);
+            this.memoDangerSolutions.StyleController = this.layoutControlObjPart;
+            this.memoDangerSolutions.TabIndex = 16;
+            // 
+            // layoutControlItemDangerSolutionsMemo
+            // 
+            this.layoutControlItemDangerSolutionsMemo.Control = this.memoDangerSolutions;
+            this.layoutControlItemDangerSolutionsMemo.Location = new System.Drawing.Point(0, 436);
+            this.layoutControlItemDangerSolutionsMemo.Name = "layoutControlItemDangerSolutionsMemo";
+            this.layoutControlItemDangerSolutionsMemo.Size = new System.Drawing.Size(790, 44);
+            this.layoutControlItemDangerSolutionsMemo.TextSize = new System.Drawing.Size(0, 0);
+            this.layoutControlItemDangerSolutionsMemo.TextVisible = false;
+            // 
+            // splitterItem1
+            // 
+            this.splitterItem1.AllowHotTrack = true;
+            this.splitterItem1.Location = new System.Drawing.Point(0, 426);
+            this.splitterItem1.Name = "splitterItem1";
+            this.splitterItem1.Size = new System.Drawing.Size(790, 10);
+            // 
             // ExpertProjectDocumentsEdit
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(798, 568);
+            this.ClientSize = new System.Drawing.Size(798, 668);
             this.Controls.Add(this.layoutControlObjPart);
             this.IconOptions.Image = global::ProjectDocumentation.NET.Properties.Resources.icon;
             this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.MinimumSize = new System.Drawing.Size(800, 350);
+            this.MinimumSize = new System.Drawing.Size(800, 700);
             this.Name = "ExpertProjectDocumentsEdit";
             this.Text = "Сведения в части экспертизы проектной документации, подготовленные экспертом";
             this.Load += new System.EventHandler(this.ObjPartEdit_Load);
@@ -251,6 +319,10 @@
             ((System.ComponentModel.ISupportInitialize)(this.splitterItem)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemProjectDocumentsReview)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemProjectDocumentsChanges)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemDangerSolutions)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.memoDangerSolutions.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemDangerSolutionsMemo)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.splitterItem1)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -271,5 +343,10 @@
         private DevExpress.XtraLayout.LayoutControlItem layoutControlItemProjectDocumentsReview;
         private DevExpress.XtraRichEdit.RichEditControl richEditControlProjectDocumentsChanges;
         private DevExpress.XtraLayout.LayoutControlItem layoutControlItemProjectDocumentsChanges;
+        private DevExpress.XtraRichEdit.RichEditControl richEditControlDangerSolutions;
+        private DevExpress.XtraLayout.LayoutControlItem layoutControlItemDangerSolutions;
+        private DevExpress.XtraEditors.MemoEdit memoDangerSolutions;
+        private DevExpress.XtraLayout.LayoutControlItem layoutControlItemDangerSolutionsMemo;
+        private DevExpress.XtraLayout.SplitterItem splitterItem1;
     }
 }

@@ -26,6 +26,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
 
             richEditControlProjectDocumentsReview.ActiveViewType = RichEditViewType.Simple;
             richEditControlProjectDocumentsChanges.ActiveViewType = RichEditViewType.Simple;
+            richEditControlDangerSolutions.ActiveViewType = RichEditViewType.Simple;
         }
 
         public ExpertProjectDocumentsEdit(tExpertProjectDocuments tExpertProjectDocuments) : this()
@@ -57,6 +58,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
 
             richEditControlProjectDocumentsReview.Text = ExpertProjectDocuments.ProjectDocumentsReview;
             richEditControlProjectDocumentsChanges.Text = ExpertProjectDocuments.ProjectDocumentsChanges;
+            richEditControlDangerSolutions.Text = ExpertProjectDocuments.DangerSolutions;
         }
 
         private void btnSave_Click(object sender, EventArgs e)
@@ -69,6 +71,13 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
 
                 ExpertProjectDocuments.ProjectDocumentsReview = ConclusionEdit.GetStringValue(richEditControlProjectDocumentsReview.Text, richEditControlProjectDocumentsReview, "Заполните поле описание основных решений (мероприятий), принятых в проектной документации.", isNullAble: true);
                 ExpertProjectDocuments.ProjectDocumentsChanges = ConclusionEdit.GetStringValue(richEditControlProjectDocumentsChanges.Text, richEditControlProjectDocumentsChanges, "Заполните поле сведения об оперативных изменениях.", isNullAble: true);
+                ExpertProjectDocuments.DangerSolutions = ConclusionEdit.GetStringValue(richEditControlDangerSolutions.Text, richEditControlDangerSolutions, "Заполните поле сведения о решениях о решениях, которые которые в случае их реализации могли привести к риску возникновения аварийных ситуаций, гибели людей, причинения значительного материального ущерба и которые в ходе проведения государственной экспертизы были приведены в соответствие с установленными требованиями.", isNullAble: true);
+                
+                if (string.IsNullOrWhiteSpace(ExpertProjectDocuments.DangerSolutions))
+                {
+                    ExpertProjectDocuments.DangerSolutions = null;
+                }
+            
             }
             catch (Exception ex)
             {
