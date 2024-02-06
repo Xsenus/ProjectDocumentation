@@ -4952,189 +4952,32 @@ namespace Core.NET.AutoModels
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     public partial class tExaminationObject
     {
+        public tExaminationForm ExaminationForm { get; set; }
 
-        private tExaminationForm examinationFormField;
+        public tExaminationResult ExaminationResult { get; set; }
 
-        private tExaminationResult examinationResultField;
+        public tExaminationObjectType ExaminationObjectType { get; set; }
 
-        private tExaminationObjectType examinationObjectTypeField;
-
-        private tExaminationType[] examinationTypeField;
-
-        private tConstractionType constructionTypeField;
-
-        private tExaminationStage examinationStageField;
-
-        private string examinationStageNoteField;
-
-        private string nameField;
-
-        private tYesNo projectDocumentationIMField;
-
-        private bool projectDocumentationIMFieldSpecified;
-
-        private tYesNo engineeringSurveysIMField;
-
-        private bool engineeringSurveysIMFieldSpecified;
-
-        /// <remarks/>
-        public tExaminationForm ExaminationForm
-        {
-            get
-            {
-                return this.examinationFormField;
-            }
-            set
-            {
-                this.examinationFormField = value;
-            }
-        }
-
-        /// <remarks/>
-        public tExaminationResult ExaminationResult
-        {
-            get
-            {
-                return this.examinationResultField;
-            }
-            set
-            {
-                this.examinationResultField = value;
-            }
-        }
-
-        /// <remarks/>
-        public tExaminationObjectType ExaminationObjectType
-        {
-            get
-            {
-                return this.examinationObjectTypeField;
-            }
-            set
-            {
-                this.examinationObjectTypeField = value;
-            }
-        }
-
-        /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute("ExaminationType")]
-        public tExaminationType[] ExaminationType
-        {
-            get
-            {
-                return this.examinationTypeField;
-            }
-            set
-            {
-                this.examinationTypeField = value;
-            }
-        }
+        public tExaminationType[] ExaminationType { get; set; }
 
-        /// <remarks/>
-        public tConstractionType ConstructionType
-        {
-            get
-            {
-                return this.constructionTypeField;
-            }
-            set
-            {
-                this.constructionTypeField = value;
-            }
-        }
+        public tConstractionType ConstructionType { get; set; }
 
-        /// <remarks/>
-        public tExaminationStage ExaminationStage
-        {
-            get
-            {
-                return this.examinationStageField;
-            }
-            set
-            {
-                this.examinationStageField = value;
-            }
-        }
+        public tExaminationStage ExaminationStage { get; set; }
 
-        /// <remarks/>
-        public string ExaminationStageNote
-        {
-            get
-            {
-                return this.examinationStageNoteField;
-            }
-            set
-            {
-                this.examinationStageNoteField = value;
-            }
-        }
+        public string ExaminationStageNote { get; set; }
 
-        /// <remarks/>
-        public string Name
-        {
-            get
-            {
-                return this.nameField;
-            }
-            set
-            {
-                this.nameField = value;
-            }
-        }
+        public string Name { get; set; }
 
-        /// <remarks/>
-        public tYesNo ProjectDocumentationIM
-        {
-            get
-            {
-                return this.projectDocumentationIMField;
-            }
-            set
-            {
-                this.projectDocumentationIMField = value;
-            }
-        }
+        public tYesNo ProjectDocumentationIM { get; set; }
 
-        /// <remarks/>
         [System.Xml.Serialization.XmlIgnoreAttribute()]
-        public bool ProjectDocumentationIMSpecified
-        {
-            get
-            {
-                return this.projectDocumentationIMFieldSpecified;
-            }
-            set
-            {
-                this.projectDocumentationIMFieldSpecified = value;
-            }
-        }
+        public bool ProjectDocumentationIMSpecified { get; set; }
 
-        /// <remarks/>
-        public tYesNo EngineeringSurveysIM
-        {
-            get
-            {
-                return this.engineeringSurveysIMField;
-            }
-            set
-            {
-                this.engineeringSurveysIMField = value;
-            }
-        }
+        public tYesNo EngineeringSurveysIM { get; set; }
 
-        /// <remarks/>
         [System.Xml.Serialization.XmlIgnoreAttribute()]
-        public bool EngineeringSurveysIMSpecified
-        {
-            get
-            {
-                return this.engineeringSurveysIMFieldSpecified;
-            }
-            set
-            {
-                this.engineeringSurveysIMFieldSpecified = value;
-            }
-        }
+        public bool EngineeringSurveysIMSpecified { get; set; }
     }
 
     /// <remarks/>

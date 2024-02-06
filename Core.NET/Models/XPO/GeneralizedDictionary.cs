@@ -90,6 +90,11 @@
         /// <summary>
         /// Вид документа.
         /// </summary>
-        DocumentType
+        DocumentType,
+
+        /// <summary>
+        /// Логический ответ.
+        /// </summary>
+        LogicalAnswer
     }
 }

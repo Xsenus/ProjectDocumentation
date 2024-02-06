@@ -95,6 +95,13 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
 
             checkCmbExaminationType.Properties.Items.AddRange(collection
                 .Where(w => w.GeneralizedDictionary == GeneralizedDictionary.ExaminationType).ToArray());
+
+            cmbProjectDocumentationIM.Properties.Items.AddRange(collection
+                .Where(w => w.GeneralizedDictionary == GeneralizedDictionary.LogicalAnswer).ToArray());
+
+            cmbEngineeringSurveysIM.Properties.Items.AddRange(collection
+                .Where(w => w.GeneralizedDictionary == GeneralizedDictionary.LogicalAnswer).ToArray());
+
             #endregion
 
             #region Page II_1
@@ -166,6 +173,23 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
 
             SetCheckComboBoxByItems(Conclusion?.ExaminationObject?.ExaminationType, checkCmbExaminationType);
             memoName.Text = Conclusion?.ExaminationObject?.Name;
+
+            if (Conclusion?.ExaminationObject?.ProjectDocumentationIMSpecified is true)
+            {
+                cmbProjectDocumentationIM.EditValue = cmbProjectDocumentationIM.Properties.Items
+                  ?.Cast<GeneralizedDictionaryXPO>()
+                  ?.Where(w => w.GeneralizedDictionary == GeneralizedDictionary.LogicalAnswer)
+                  ?.FirstOrDefault(f => f.Value == Conclusion?.ExaminationObject?.ProjectDocumentationIM.GetEnumXmlAttributeValue().ToString());
+            }            
+
+            if (Conclusion?.ExaminationObject?.EngineeringSurveysIMSpecified is true)
+            {
+                cmbEngineeringSurveysIM.EditValue = cmbEngineeringSurveysIM.Properties.Items
+                    ?.Cast<GeneralizedDictionaryXPO>()
+                    ?.Where(w => w.GeneralizedDictionary == GeneralizedDictionary.LogicalAnswer)
+                    ?.FirstOrDefault(f => f.Value == Conclusion?.ExaminationObject?.EngineeringSurveysIM.GetEnumXmlAttributeValue().ToString());
+            }
+
             memoExaminationStageNote.Text = Conclusion?.ExaminationObject?.ExaminationStageNote;
             #endregion
 
@@ -700,7 +724,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
 
             try
             {
-                var schemaVersion = txtVersion.EditValue?.ToString();
+                var schemaVersion = txtVersion.EditValue?.ToString()?.Trim();
                 if (string.IsNullOrWhiteSpace(schemaVersion))
                 {
                     schemaVersion = "01.00";
@@ -728,6 +752,43 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                     checkCmbExaminationType,
                     "Заполните поле предмет экспертизы").ToArray();
                 Conclusion.ExaminationObject.Name = GetStringValue(memoName.Text, memoName, "Заполните поле наименование объекта экспертизы");
+
+                if (cmbProjectDocumentationIM.EditValue is GeneralizedDictionaryXPO valueProjectDocumentationIM)
+                {
+                    Conclusion.ExaminationObject.ProjectDocumentationIMSpecified = true;
+
+                    if (valueProjectDocumentationIM.Value == tYesNo.да.GetEnumDescription())
+                    {
+                        Conclusion.ExaminationObject.ProjectDocumentationIM = tYesNo.да;
+                    }
+                    else
+                    {
+                        Conclusion.ExaminationObject.ProjectDocumentationIM = tYesNo.нет;
+                    }                    
+                }
+                else
+                {
+                    Conclusion.ExaminationObject.ProjectDocumentationIMSpecified = false;
+                }
+
+                if (cmbEngineeringSurveysIM.EditValue is GeneralizedDictionaryXPO valueEngineeringSurveysIM)
+                {
+                    Conclusion.ExaminationObject.EngineeringSurveysIMSpecified = true;
+
+                    if (valueEngineeringSurveysIM.Value == tYesNo.да.GetEnumDescription())
+                    {
+                        Conclusion.ExaminationObject.EngineeringSurveysIM = tYesNo.да;
+                    }
+                    else
+                    {
+                        Conclusion.ExaminationObject.EngineeringSurveysIM = tYesNo.нет;
+                    }
+                }
+                else
+                {
+                    Conclusion.ExaminationObject.EngineeringSurveysIMSpecified = false;
+                }
+
                 Conclusion.ExaminationObject.ExaminationStageNote = GetStringValue(memoExaminationStageNote.Text, isNullAble: true);
                 #endregion
 

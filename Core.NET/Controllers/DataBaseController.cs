@@ -800,6 +800,23 @@ namespace Core.NET.Controllers
                 await _session.SaveAsync(new GeneralizedDictionaryXPO(_session) { Value = "99.03", Name = "Группа дополнительных документов. Акт (решение) собственника здания (строения, сооружения), содержащий условия реконструкции, капитального ремонта или сноса объекта капитального строительства или его части", GeneralizedDictionary = GeneralizedDictionary.DocumentType });
                 await _session.SaveAsync(new GeneralizedDictionaryXPO(_session) { Value = "99.99", Name = "Группа дополнительных документов. Иной документ", GeneralizedDictionary = GeneralizedDictionary.DocumentType });
             }
+
+            if (collection.Where(w => w.GeneralizedDictionary == GeneralizedDictionary.LogicalAnswer).Count() == 0)
+            {
+                await _session.SaveAsync(new GeneralizedDictionaryXPO(_session)
+                {
+                    GeneralizedDictionary = GeneralizedDictionary.LogicalAnswer,
+                    Value = "да",
+                    Name = "Да (истина)"
+                });
+
+                await _session.SaveAsync(new GeneralizedDictionaryXPO(_session)
+                {
+                    GeneralizedDictionary = GeneralizedDictionary.LogicalAnswer,
+                    Value = "нет",
+                    Name = "Нет (ложь)"
+                });
+            }
         }
     }
 }
