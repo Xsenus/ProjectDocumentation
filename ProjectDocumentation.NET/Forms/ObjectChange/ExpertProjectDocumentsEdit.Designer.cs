@@ -323,7 +323,7 @@
             this.tabbedControlGroup.Location = new System.Drawing.Point(0, 40);
             this.tabbedControlGroup.Name = "tabbedControlGroup";
             this.tabbedControlGroup.Padding = new DevExpress.XtraLayout.Utils.Padding(5, 5, 5, 5);
-            this.tabbedControlGroup.SelectedTabPage = this.layoutControlGroupBasicInformation;
+            this.tabbedControlGroup.SelectedTabPage = this.layoutControlGroupInformationAboutNonCompliance;
             this.tabbedControlGroup.Size = new System.Drawing.Size(790, 594);
             this.tabbedControlGroup.TabPages.AddRange(new DevExpress.XtraLayout.BaseLayoutItem[] {
             this.layoutControlGroupBasicInformation,
@@ -420,6 +420,7 @@
             this.layoutControlGroupBasicInformation.Name = "layoutControlGroupBasicInformation";
             this.layoutControlGroupBasicInformation.Size = new System.Drawing.Size(774, 555);
             this.layoutControlGroupBasicInformation.Text = "Основные сведения";
+            this.layoutControlGroupBasicInformation.Visibility = DevExpress.XtraLayout.Utils.LayoutVisibility.Never;
             // 
             // layoutControlItemProjectDocumentsReview
             // 
