@@ -1,4 +1,4 @@
-﻿using Core.NET.AutoModels;
+﻿using Core.NET.AutoModels.ConclusionObj;
 using Core.NET.Controllers;
 using Core.NET.DaDataObj;
 using Core.NET.Extensions;
@@ -16,7 +16,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
 {
     public partial class FundingInformationEdit : XtraForm
     {
-        private Session _session => SessionController.GetSession();
+        private Session Session => SessionController.GetSession();
 
         public bool IsSave { get; private set; }
         public tFinance Finance { get; private set; }
@@ -41,7 +41,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
             radioGroupTypeOrganization.Properties.Items.Remove(individualEntrepreneur);
             radioGroupTypeOrganization.Properties.Items.Remove(person);
 
-            var collection = await new XPQuery<GeneralizedDictionaryXPO>(_session).ToListAsync();
+            var collection = await new XPQuery<GeneralizedDictionaryXPO>(Session).ToListAsync();
 
             cmbFinanceType.Properties.Items.AddRange(collection
                 .Where(w => w.GeneralizedDictionary == GeneralizedDictionary.FinanceType).ToArray());
@@ -97,6 +97,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
             }
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
         private void btnSave_Click(object sender, EventArgs e)
         {
             try
@@ -121,12 +122,14 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                         switch (radioGroupTypeOrganization.SelectedIndex)
                         {
                             case (int)TypeOrganization.Entity:
-                                var entity = new tOrganization();
-                                entity.OrgFullName = ConclusionEdit.GetStringValue(txtOrgFullName.EditValue, txtOrgFullName, "Заполните наименование организации");
-                                entity.OrgOGRN = ConclusionEdit.GetStringValue(txtOrgOGRN.EditValue, txtOrgOGRN, "Заполните ОГРН организации");
-                                entity.OrgKPP = ConclusionEdit.GetStringValue(txtOrgKPP.EditValue, txtOrgKPP, "Заполните КПП организации");
-                                entity.OrgINN = ConclusionEdit.GetStringValue(txtOrgINN.EditValue, txtOrgINN, "Заполните ИНН организации");
-                                entity.Email = ConclusionEdit.GetStringValue(txtEmail.EditValue, txtEmail, isNullAble: true);
+                                var entity = new tOrganization
+                                {
+                                    OrgFullName = ConclusionEdit.GetStringValue(txtOrgFullName.EditValue, txtOrgFullName, "Заполните наименование организации"),
+                                    OrgOGRN = ConclusionEdit.GetStringValue(txtOrgOGRN.EditValue, txtOrgOGRN, "Заполните ОГРН организации"),
+                                    OrgKPP = ConclusionEdit.GetStringValue(txtOrgKPP.EditValue, txtOrgKPP, "Заполните КПП организации"),
+                                    OrgINN = ConclusionEdit.GetStringValue(txtOrgINN.EditValue, txtOrgINN, "Заполните ИНН организации"),
+                                    Email = ConclusionEdit.GetStringValue(txtEmail.EditValue, txtEmail, isNullAble: true)
+                                };
                                 if (btnAddress.EditValue is tAddress address)
                                 {
                                     entity.Address = address;
@@ -144,11 +147,13 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                                 break;
 
                             case (int)TypeOrganization.ForeignLegalEntity:
-                                var foreignLegalEntity = new tForeignOrganization();
-                                foreignLegalEntity.OrgFullName = ConclusionEdit.GetStringValue(txtFOrgFullName.EditValue, txtFOrgFullName, "Заполните наименование организации");
-                                foreignLegalEntity.OrgKPP = ConclusionEdit.GetStringValue(txtFOrgKPP.EditValue, txtFOrgKPP, "Заполните КПП организации");
-                                foreignLegalEntity.OrgINN = ConclusionEdit.GetStringValue(txtFOrgINN.EditValue, txtFOrgINN, "Заполните ИНН организации");
-                                foreignLegalEntity.Email = ConclusionEdit.GetStringValue(txtFEmail.EditValue, txtFEmail, isNullAble: true);
+                                var foreignLegalEntity = new tForeignOrganization
+                                {
+                                    OrgFullName = ConclusionEdit.GetStringValue(txtFOrgFullName.EditValue, txtFOrgFullName, "Заполните наименование организации"),
+                                    OrgKPP = ConclusionEdit.GetStringValue(txtFOrgKPP.EditValue, txtFOrgKPP, "Заполните КПП организации"),
+                                    OrgINN = ConclusionEdit.GetStringValue(txtFOrgINN.EditValue, txtFOrgINN, "Заполните ИНН организации"),
+                                    Email = ConclusionEdit.GetStringValue(txtFEmail.EditValue, txtFEmail, isNullAble: true)
+                                };
                                 if (btnFAddress.EditValue is tAddress addressF)
                                 {
                                     foreignLegalEntity.Address = addressF;
@@ -183,18 +188,20 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
             Close();
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
         private void btnClose_Click(object sender, EventArgs e)
         {
             Close();
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
         private void clearEditValue_ButtonPressed(object sender, ButtonPressedEventArgs e)
         {
             if (sender is CheckedComboBoxEdit checkedComboBoxEdit)
             {
                 if (e.Button.Kind == ButtonPredefines.Delete)
                 {
-                    foreach (CheckedListBoxItem item in checkedComboBoxEdit.Properties.Items)
+                    foreach (CheckedListBoxItem item in checkedComboBoxEdit.Properties.Items.Cast<CheckedListBoxItem>())
                     {
                         item.CheckState = CheckState.Unchecked;
                     }
@@ -210,11 +217,12 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
             }
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
         private void cmbFinanceType_SelectedValueChanged(object sender, EventArgs e)
         {
             if (sender is ComboBoxEdit comboBoxEdit)
             {
-                if (comboBoxEdit.EditValue is GeneralizedDictionaryXPO generalizedDictionaryXPO)
+                if (comboBoxEdit.EditValue is GeneralizedDictionaryXPO)
                 {
                     var financeType = ConclusionEdit.GetEnumByAttributeValue<tFinanceType>(ConclusionEdit.GetValueGeneralizedDictionary(
                        cmbFinanceType,
@@ -243,6 +251,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
             }
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
         private void radioGroupTypeOrganization_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (sender is RadioGroup radioGroup)
@@ -262,7 +271,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
             }
         }
 
-
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
         private async void btnSearch_ButtonPressed(object sender, ButtonPressedEventArgs e)
         {
             if (sender is ButtonEdit buttonEdit)
@@ -327,13 +336,14 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
             }
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
         private async void btnAddress_ButtonClick(object sender, ButtonPressedEventArgs e)
         {
             if (sender is ButtonEdit buttonEdit)
             {
                 if (e.Button.Kind == ButtonPredefines.Ellipsis)
                 {
-                    var form = default(AddressEdit);
+                    AddressEdit form;
                     if (buttonEdit.EditValue is tAddress address)
                     {
                         form = new AddressEdit(address);

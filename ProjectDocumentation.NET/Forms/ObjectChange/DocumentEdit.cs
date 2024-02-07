@@ -1,5 +1,5 @@
 ﻿using Core.NET.Algorithms;
-using Core.NET.AutoModels;
+using Core.NET.AutoModels.ConclusionObj;
 using Core.NET.Controllers;
 using Core.NET.Extensions;
 using Core.NET.Models.XPO;
@@ -22,7 +22,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
 {
     public partial class DocumentEdit : XtraForm
     {
-        private Session _session => SessionController.GetSession();
+        private Session Session => SessionController.GetSession();
 
         public bool IsSave { get; private set; }
         public tDocument Document { get; private set; }
@@ -41,7 +41,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
 
         private async Task FillFormControllersAsync()
         {
-            var collection = await new XPQuery<GeneralizedDictionaryXPO>(_session).ToListAsync();
+            var collection = await new XPQuery<GeneralizedDictionaryXPO>(Session).ToListAsync();
 
             cmbDocType.Properties.Items.AddRange(collection
                 .Where(w => w.GeneralizedDictionary == GeneralizedDictionary.DocumentType).ToList());
@@ -80,8 +80,8 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                 }
             }
 
-            gridControlDeclarant.DataSource = PersonObjController.GetPersonObjByDeclarant(_tDeclarants).ToArray();
-            foreach (GridColumn column in gridViewDeclarant.Columns)
+            gridControlDeclarant.DataSource = PersonObjController.GetPersonObjByDeclarator(_tDeclarants).ToArray();
+            foreach (GridColumn column in gridViewDeclarant.Columns.Cast<GridColumn>())
             {
                 column.Visible = false;
             }
@@ -93,7 +93,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
 
             _tFiles = Document.Items1?.Cast<tFile>()?.ToList() ?? new List<tFile>();
             gridControlItems.DataSource = _tFiles;
-            foreach (GridColumn column in gridViewItems.Columns)
+            foreach (GridColumn column in gridViewItems.Columns.Cast<GridColumn>())
             {
                 column.Visible = false;
             }
@@ -114,6 +114,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
             }
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
         private void btnSave_Click(object sender, EventArgs e)
         {
             try
@@ -173,11 +174,13 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
             Close();
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
         private void btnClose_Click(object sender, EventArgs e)
         {
             Close();
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
         private void buttonEdit_ButtonPressed(object sender, ButtonPressedEventArgs e)
         {
             if (sender is ButtonEdit buttonEdit)
@@ -189,14 +192,16 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
             }
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
         private void gridViewItems_PopupMenuShowing(object sender, PopupMenuShowingEventArgs e)
         {
-            if (sender is GridView gridView)
+            if (sender is GridView)
             {
                 popupMenuItems.ShowPopup(new Point(Cursor.Position.X, Cursor.Position.Y));
             }
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
         private void barBtnItemsAdd_ItemClick(object sender, ItemClickEventArgs e)
         {
             using (var ofd = new OpenFileDialog() { Multiselect = true })
@@ -242,6 +247,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
             return default;
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
         private void barBtnItemsDel_ItemClick(object sender, ItemClickEventArgs e)
         {
             if (gridViewItems.GetRow(gridViewItems.FocusedRowHandle) is tFile obj)
@@ -258,6 +264,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
             }
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
         private void gridControlItems_DragEnter(object sender, DragEventArgs e)
         {
             if (e.Data.GetDataPresent(DataFormats.FileDrop))
@@ -266,20 +273,23 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
             }
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
         private void gridControlItems_DragDrop(object sender, DragEventArgs e)
         {
             var files = (string[])e.Data.GetData(DataFormats.FileDrop);
             AddFiles(files);
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
         private void gridViewDeclarant_PopupMenuShowing(object sender, PopupMenuShowingEventArgs e)
         {
-            if (sender is GridView gridView)
+            if (sender is GridView)
             {
                 popupMenuDeclarant.ShowPopup(new Point(Cursor.Position.X, Cursor.Position.Y));
             }
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
         private void barBtnDeclarantAdd_ItemClick(object sender, ItemClickEventArgs e)
         {
             var form = new DeclarantEdit();
@@ -287,11 +297,12 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
             if (form.IsSave)
             {
                 _tDeclarants.Add(form.Declarant);
-                gridControlDeclarant.DataSource = PersonObjController.GetPersonObjByDeclarant(_tDeclarants).ToArray();
+                gridControlDeclarant.DataSource = PersonObjController.GetPersonObjByDeclarator(_tDeclarants).ToArray();
                 gridControlDeclarant.RefreshDataSource();
             }
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
         private void barBtnDeclarantEdit_ItemClick(object sender, ItemClickEventArgs e)
         {
             if (gridViewDeclarant.GetRow(gridViewDeclarant.FocusedRowHandle) is PersonObj obj)
@@ -300,12 +311,13 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                 form.ShowDialog();
                 if (form.IsSave)
                 {
-                    gridControlDeclarant.DataSource = PersonObjController.GetPersonObjByDeclarant(_tDeclarants).ToArray();
+                    gridControlDeclarant.DataSource = PersonObjController.GetPersonObjByDeclarator(_tDeclarants).ToArray();
                     gridControlDeclarant.RefreshDataSource();
                 }
             }
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
         private void barBtnDeclarantDel_ItemClick(object sender, ItemClickEventArgs e)
         {
             if (gridViewDeclarant.GetRow(gridViewDeclarant.FocusedRowHandle) is PersonObj obj)
@@ -319,7 +331,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                     if (obj.BaseObj is tDeclarant tDeclarant)
                     {
                         _tDeclarants.Remove(tDeclarant);
-                        gridControlDeclarant.DataSource = PersonObjController.GetPersonObjByDeclarant(_tDeclarants).ToArray();
+                        gridControlDeclarant.DataSource = PersonObjController.GetPersonObjByDeclarator(_tDeclarants).ToArray();
                         gridControlDeclarant.RefreshDataSource();
                     }
                 }

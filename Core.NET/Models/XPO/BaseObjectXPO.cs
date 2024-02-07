@@ -1,4 +1,6 @@
-﻿using DevExpress.Xpo;
+﻿// Ignore Spelling: XPO
+
+using DevExpress.Xpo;
 using System;
 
 namespace Core.NET.Models.XPO

@@ -1,4 +1,4 @@
-﻿using Core.NET.AutoModels;
+﻿using Core.NET.AutoModels.ConclusionObj;
 using System.Collections.Generic;
 
 namespace ProjectDocumentation.NET.Models.ConclusionObj
@@ -25,12 +25,12 @@ namespace ProjectDocumentation.NET.Models.ConclusionObj
             }
         }
 
-        public static IEnumerable<PersonObj> GetPersonObjByDeclarant(ICollection<tDeclarant> collection)
+        public static IEnumerable<PersonObj> GetPersonObjByDeclarator(ICollection<tDeclarant> collection)
         {
             foreach (var obj in collection)
             {
                 var result = new PersonObj(obj);
-                result.SetObjByDeclarant();
+                result.SetObjByDeclarator();
                 yield return result;
             }
         }
@@ -78,7 +78,7 @@ namespace ProjectDocumentation.NET.Models.ConclusionObj
             }
         }
 
-        public void SetObjByDeclarant()
+        public void SetObjByDeclarator()
         {
             if (Obj is tDeclarant declarant)
             {

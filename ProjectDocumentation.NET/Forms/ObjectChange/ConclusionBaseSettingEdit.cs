@@ -1,4 +1,4 @@
-﻿using Core.NET.AutoModels;
+﻿using Core.NET.AutoModels.ConclusionObj;
 using Core.NET.DaDataObj;
 using DevExpress.XtraEditors;
 using DevExpress.XtraEditors.Controls;
@@ -29,9 +29,10 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
         {
             if (Organization is null)
             {
-                Organization = new tOrganization();
-
-                Organization.OrgINN = "5405997054";
+                Organization = new tOrganization
+                {
+                    OrgINN = "5405997054"
+                };
             }
 
             btnSearch.EditValue = Organization.OrgINN;
@@ -53,6 +54,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
             txtPosition.EditValue = Person.Position;
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
         private void btnSave_Click(object sender, EventArgs e)
         {
             try
@@ -94,11 +96,13 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
             Close();
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
         private void btnCancel_Click(object sender, EventArgs e)
         {
             Close();
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
         private async void btnSearch_ButtonPressed(object sender, ButtonPressedEventArgs e)
         {
             if (sender is ButtonEdit buttonEdit)
@@ -172,6 +176,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
             }
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
         private async void btnAddress_ButtonPressed(object sender, ButtonPressedEventArgs e)
         {
             if (sender is ButtonEdit buttonEdit)
@@ -182,7 +187,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                 }
                 else if (e.Button.Kind == ButtonPredefines.Ellipsis)
                 {
-                    var form = default(AddressEdit);
+                    AddressEdit form;
                     if (buttonEdit.EditValue is tAddress address)
                     {
                         form = new AddressEdit(address);

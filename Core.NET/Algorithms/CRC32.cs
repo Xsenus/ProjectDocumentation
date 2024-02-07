@@ -1,4 +1,6 @@
-﻿using Core.NET.Interfaces;
+﻿// Ignore Spelling: CRC
+
+using Core.NET.Interfaces;
 using HashLib;
 using HashLib.Checksum;
 using System;
@@ -10,7 +12,6 @@ namespace Core.NET.Algorithms
 {
     public class CRC32 : IAlgorithm
     {
-        private const uint _polynomial = 3988292384;
         private uint[] _table;
 
         private uint ComputeChecksum(IEnumerable<byte> bytes)

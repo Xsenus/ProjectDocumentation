@@ -1,4 +1,4 @@
-﻿using Core.NET.AutoModels;
+﻿using Core.NET.AutoModels.ConclusionObj;
 using Core.NET.Controllers;
 using Core.NET.Extensions;
 using Core.NET.Models.XPO;
@@ -19,7 +19,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
 {
     public partial class ExpertEngineeringSurveyEdit : XtraForm
     {
-        private Session _session => SessionController.GetSession();
+        private Session Session => SessionController.GetSession();
 
         public bool IsSave { get; private set; }
         public tExpertEngineeringSurveys ExpertEngineeringSurvey { get; private set; }
@@ -37,7 +37,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
 
         private async Task FillFormControllersAsync()
         {
-            var collection = await new XPQuery<GeneralizedDictionaryXPO>(_session).ToListAsync();
+            var collection = await new XPQuery<GeneralizedDictionaryXPO>(Session).ToListAsync();
 
             cmbEngineeringSurveyType.Properties.Items.AddRange(collection
                 .Where(w => w.GeneralizedDictionary == GeneralizedDictionary.EngineeringSurveyType).ToList());
@@ -62,7 +62,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
             memoEngineeringSurveyChanges.EditValue = ExpertEngineeringSurvey.EngineeringSurveyChanges;
             _tMismatches = ExpertEngineeringSurvey.Mismatches?.ToList() ?? new List<tMismatch>();
             gridControlMismatches.DataSource = _tMismatches;
-            foreach (GridColumn column in gridViewMismatches.Columns)
+            foreach (GridColumn column in gridViewMismatches.Columns.Cast<GridColumn>())
             {
                 column.Visible = false;
             }
@@ -83,6 +83,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
             }
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
         private void btnSave_Click(object sender, EventArgs e)
         {
             try
@@ -118,11 +119,13 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
             Close();
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
         private void btnClose_Click(object sender, EventArgs e)
         {
             Close();
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
         private void buttonEdit_ButtonPressed(object sender, ButtonPressedEventArgs e)
         {
             if (sender is ButtonEdit buttonEdit)
@@ -134,14 +137,16 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
             }
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
         private void gridViewMismatches_PopupMenuShowing(object sender, PopupMenuShowingEventArgs e)
         {
-            if (sender is GridView gridView)
+            if (sender is GridView)
             {
                 popupMenuMismatches.ShowPopup(new Point(Cursor.Position.X, Cursor.Position.Y));
             }
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
         private void barBtnMismatchesAdd_ItemClick(object sender, ItemClickEventArgs e)
         {
             _tMismatches.Add(new tMismatch());
@@ -149,6 +154,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
             gridControlMismatches.RefreshDataSource();
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
         private void barBtnMismatchesDel_ItemClick(object sender, ItemClickEventArgs e)
         {
             if (gridViewMismatches.GetRow(gridViewMismatches.FocusedRowHandle) is tMismatch obj)

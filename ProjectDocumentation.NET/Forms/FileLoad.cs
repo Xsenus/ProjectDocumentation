@@ -16,6 +16,7 @@ namespace ProjectDocumentation.NET.Forms
             InitializeComponent();
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
         private void btnFile_ButtonPressed(object sender, ButtonPressedEventArgs e)
         {
             if (sender is ButtonEdit buttonEdit)
@@ -37,6 +38,7 @@ namespace ProjectDocumentation.NET.Forms
             }
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
         private async void btnSave_Click(object sender, EventArgs e)
         {
             var name = txtName.EditValue?.ToString();
@@ -94,6 +96,7 @@ namespace ProjectDocumentation.NET.Forms
             }
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
         private void btnCancel_Click(object sender, EventArgs e)
         {
             Close();

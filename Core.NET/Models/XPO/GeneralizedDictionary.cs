@@ -1,4 +1,6 @@
-﻿namespace Core.NET.Models.XPO
+﻿// Ignore Spelling: XPO
+
+namespace Core.NET.Models.XPO
 {
     public enum GeneralizedDictionary
     {

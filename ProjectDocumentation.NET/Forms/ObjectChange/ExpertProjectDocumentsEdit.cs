@@ -1,18 +1,15 @@
-﻿using Core.NET.AutoModels;
+﻿using Core.NET.AutoModels.ConclusionObj;
 using Core.NET.Controllers;
 using Core.NET.Extensions;
 using Core.NET.Models.XPO;
-using DevExpress.Utils.MVVM.Services;
 using DevExpress.Xpo;
 using DevExpress.XtraBars;
 using DevExpress.XtraEditors;
 using DevExpress.XtraEditors.Controls;
 using DevExpress.XtraEditors.Repository;
-using DevExpress.XtraGrid;
 using DevExpress.XtraGrid.Columns;
 using DevExpress.XtraGrid.Views.Grid;
 using DevExpress.XtraRichEdit;
-using ProjectDocumentation.NET.Models.ConclusionObj;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -20,17 +17,16 @@ using System.Drawing;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using static ProjectDocumentation.NET.Forms.ObjectChange.ExpertProjectDocumentsEdit;
 
 namespace ProjectDocumentation.NET.Forms.ObjectChange
 {
     public partial class ExpertProjectDocumentsEdit : XtraForm
     {
-        private Session _session => SessionController.GetSession();
+        private Session Session => SessionController.GetSession();
 
         public bool IsSave { get; private set; }
         public tExpertProjectDocuments ExpertProjectDocuments { get; private set; }
-        public List<MismatchObj> _mismatchObjs = new List<MismatchObj>();
+        public List<MismatchObj> _mismatchObjS = new List<MismatchObj>();
 
         public ExpertProjectDocumentsEdit()
         {
@@ -48,7 +44,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
 
         private async Task FillFormControllersAsync()
         {
-            var collection = await new XPQuery<GeneralizedDictionaryXPO>(_session).ToListAsync();
+            var collection = await new XPQuery<GeneralizedDictionaryXPO>(Session).ToListAsync();
 
             cmbExpertType.Properties.Items.AddRange(collection
                 .Where(w => w.GeneralizedDictionary == GeneralizedDictionary.ExpertType).ToList());
@@ -64,7 +60,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
             }
 
             public MismatchObj(MismatchObjType type, tMismatch tMismatch) : this(type)
-            {                
+            {
                 Summary = tMismatch.Summary;
                 Part = tMismatch.Part;
                 Link = tMismatch.Link;
@@ -117,26 +113,26 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
 
             if (ExpertProjectDocuments.Mismatches?.EngineeringSurveyMismatch?.Count() > 0)
             {
-                _mismatchObjs.AddRange(ExpertProjectDocuments.Mismatches?.EngineeringSurveyMismatch
+                _mismatchObjS.AddRange(ExpertProjectDocuments.Mismatches?.EngineeringSurveyMismatch
                     ?.Select(s => new MismatchObj(MismatchObjType.EngineeringSurveyMismatch, s)));
             }
             if (ExpertProjectDocuments.Mismatches?.ProjectTaskMismatch?.Count() > 0)
             {
-                _mismatchObjs.AddRange(ExpertProjectDocuments.Mismatches?.ProjectTaskMismatch
+                _mismatchObjS.AddRange(ExpertProjectDocuments.Mismatches?.ProjectTaskMismatch
                     ?.Select(s => new MismatchObj(MismatchObjType.ProjectTaskMismatch, s)));
             }
             if (ExpertProjectDocuments.Mismatches?.NormsMismatch?.Count() > 0)
             {
-                _mismatchObjs.AddRange(ExpertProjectDocuments.Mismatches?.NormsMismatch
+                _mismatchObjS.AddRange(ExpertProjectDocuments.Mismatches?.NormsMismatch
                     ?.Select(s => new MismatchObj(MismatchObjType.NormsMismatch, s)));
             }
 
-            gridControlProjectDocumentsMismatches.DataSource = _mismatchObjs; 
+            gridControlProjectDocumentsMismatches.DataSource = _mismatchObjS;
             var memoEdit = gridControlProjectDocumentsMismatches.RepositoryItems.Add(nameof(MemoEdit)) as RepositoryItemMemoEdit;
-            foreach (GridColumn column in gridViewProjectDocumentsMismatches.Columns)
+            foreach (GridColumn column in gridViewProjectDocumentsMismatches.Columns.Cast<GridColumn>())
             {
                 column.Visible = false;
-            }            
+            }
             if (gridViewProjectDocumentsMismatches.Columns[nameof(MismatchObj.Summary)] is GridColumn gridColumnSummary)
             {
                 gridColumnSummary.Caption = "Вывод о несоответствии";
@@ -166,6 +162,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
             memoDangerMismatch.EditValue = ExpertProjectDocuments.Mismatches?.DangerMismatch;
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
         private void btnSave_Click(object sender, EventArgs e)
         {
             try
@@ -181,19 +178,19 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                 ExpertProjectDocuments.ProjectDocumentsChanges = null;
 
                 ExpertProjectDocuments.DangerSolutions = ConclusionEdit.GetStringValue(richEditControlDangerSolutions.Text, richEditControlDangerSolutions, "Заполните поле сведения о решениях о решениях, которые которые в случае их реализации могли привести к риску возникновения аварийных ситуаций, гибели людей, причинения значительного материального ущерба и которые в ходе проведения государственной экспертизы были приведены в соответствие с установленными требованиями.", isNullAble: true);
-                
+
                 if (string.IsNullOrWhiteSpace(ExpertProjectDocuments.DangerSolutions))
                 {
                     ExpertProjectDocuments.DangerSolutions = null;
                 }
 
-                if (_mismatchObjs.Count > 0)
+                if (_mismatchObjS.Count > 0)
                 {
                     ExpertProjectDocuments.Mismatches = new tProjectDocumentsMismatches();
 
-                    if (_mismatchObjs.Where(w => w.Type == MismatchObjType.EngineeringSurveyMismatch).Count() > 0)
+                    if (_mismatchObjS.Where(w => w.Type == MismatchObjType.EngineeringSurveyMismatch).Count() > 0)
                     {
-                        ExpertProjectDocuments.Mismatches.EngineeringSurveyMismatch = _mismatchObjs
+                        ExpertProjectDocuments.Mismatches.EngineeringSurveyMismatch = _mismatchObjS
                             .Where(w => w.Type == MismatchObjType.EngineeringSurveyMismatch)
                             .Select(s => new tMismatch() { Summary = s.Summary, Link = s.Link, Part = s.Part })
                             .ToArray();
@@ -203,9 +200,9 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                         ExpertProjectDocuments.Mismatches.EngineeringSurveyMismatch = null;
                     }
 
-                    if (_mismatchObjs.Where(w => w.Type == MismatchObjType.ProjectTaskMismatch).Count() > 0)
+                    if (_mismatchObjS.Where(w => w.Type == MismatchObjType.ProjectTaskMismatch).Count() > 0)
                     {
-                        ExpertProjectDocuments.Mismatches.ProjectTaskMismatch = _mismatchObjs
+                        ExpertProjectDocuments.Mismatches.ProjectTaskMismatch = _mismatchObjS
                             .Where(w => w.Type == MismatchObjType.ProjectTaskMismatch)
                             .Select(s => new tMismatch() { Summary = s.Summary, Link = s.Link, Part = s.Part })
                             .ToArray();
@@ -215,9 +212,9 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                         ExpertProjectDocuments.Mismatches.ProjectTaskMismatch = null;
                     }
 
-                    if (_mismatchObjs.Where(w => w.Type == MismatchObjType.NormsMismatch).Count() > 0)
+                    if (_mismatchObjS.Where(w => w.Type == MismatchObjType.NormsMismatch).Count() > 0)
                     {
-                        ExpertProjectDocuments.Mismatches.NormsMismatch = _mismatchObjs
+                        ExpertProjectDocuments.Mismatches.NormsMismatch = _mismatchObjS
                             .Where(w => w.Type == MismatchObjType.NormsMismatch)
                             .Select(s => new tMismatch() { Summary = s.Summary, Link = s.Link, Part = s.Part })
                             .ToArray();
@@ -256,8 +253,8 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
 
                 if (ExpertProjectDocuments.Mismatches != null)
                 {
-                    if (ExpertProjectDocuments.Mismatches.DangerMismatch is null 
-                        && ExpertProjectDocuments.Mismatches.EngineeringSurveyMismatch is null 
+                    if (ExpertProjectDocuments.Mismatches.DangerMismatch is null
+                        && ExpertProjectDocuments.Mismatches.EngineeringSurveyMismatch is null
                         && ExpertProjectDocuments.Mismatches.NormsMismatch is null
                         && ExpertProjectDocuments.Mismatches.ProjectTaskMismatch is null)
                     {
@@ -275,11 +272,13 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
             Close();
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
         private void btnClose_Click(object sender, EventArgs e)
         {
             Close();
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
         private void buttonEdit_ButtonPressed(object sender, ButtonPressedEventArgs e)
         {
             if (sender is ButtonEdit buttonEdit)
@@ -291,21 +290,24 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
             }
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
         private void gridViewProjectDocumentsMismatches_PopupMenuShowing(object sender, DevExpress.XtraGrid.Views.Grid.PopupMenuShowingEventArgs e)
         {
-            if (sender is GridView gridView)
+            if (sender is GridView)
             {
                 popupMenuMismatches.ShowPopup(new Point(Cursor.Position.X, Cursor.Position.Y));
             }
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
         private void barBtnAdd_ItemClick(object sender, ItemClickEventArgs e)
         {
-            _mismatchObjs.Add(new MismatchObj());
-            gridControlProjectDocumentsMismatches.DataSource = _mismatchObjs.ToArray();
+            _mismatchObjS.Add(new MismatchObj());
+            gridControlProjectDocumentsMismatches.DataSource = _mismatchObjS.ToArray();
             gridControlProjectDocumentsMismatches.RefreshDataSource();
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
         private void barBtnDel_ItemClick(object sender, ItemClickEventArgs e)
         {
             if (gridViewProjectDocumentsMismatches.GetRow(gridViewProjectDocumentsMismatches.FocusedRowHandle) is MismatchObj obj)
@@ -316,8 +318,8 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                     MessageBoxButtons.OKCancel,
                     MessageBoxIcon.Question) == DialogResult.OK)
                 {
-                    _mismatchObjs.Remove(obj);
-                    gridControlProjectDocumentsMismatches.DataSource = _mismatchObjs.ToArray();
+                    _mismatchObjS.Remove(obj);
+                    gridControlProjectDocumentsMismatches.DataSource = _mismatchObjS.ToArray();
                     gridControlProjectDocumentsMismatches.RefreshDataSource();
                 }
             }

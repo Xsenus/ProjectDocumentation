@@ -1,4 +1,4 @@
-﻿using Core.NET.AutoModels;
+﻿using Core.NET.AutoModels.ConclusionObj;
 using Core.NET.Controllers;
 using Core.NET.Extensions;
 using Core.NET.Models.XPO;
@@ -14,7 +14,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
 {
     public partial class EngineeringSurveyAddressEdit : XtraForm
     {
-        private Session _session => SessionController.GetSession();
+        private Session Session => SessionController.GetSession();
         public bool IsSave { get; private set; }
         public tEngineeringSurveyAddress EngineeringSurveyAddress { get; private set; }
 
@@ -30,7 +30,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
 
         private async Task FillFormControllersAsync()
         {
-            var collection = await new XPQuery<GeneralizedDictionaryXPO>(_session).ToListAsync();
+            var collection = await new XPQuery<GeneralizedDictionaryXPO>(Session).ToListAsync();
 
             cmbEngineeringSurveyRegion.Properties.Items.AddRange(collection
                 .Where(w => w.GeneralizedDictionary == GeneralizedDictionary.Region).ToList());
@@ -55,6 +55,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
             }
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
         private void btnSave_Click(object sender, EventArgs e)
         {
             try
@@ -78,11 +79,13 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
             Close();
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
         private void btnCancel_Click(object sender, EventArgs e)
         {
             Close();
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
         private void cmbRegion_ButtonPressed(object sender, ButtonPressedEventArgs e)
         {
             if (sender is ButtonEdit buttonEdit)

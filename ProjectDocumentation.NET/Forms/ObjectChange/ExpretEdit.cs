@@ -1,4 +1,6 @@
-﻿using Core.NET.AutoModels;
+﻿// Ignore Spelling: Expret
+
+using Core.NET.AutoModels.ConclusionObj;
 using Core.NET.Controllers;
 using Core.NET.Extensions;
 using Core.NET.Models.XPO;
@@ -13,7 +15,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
 {
     public partial class ExpretEdit : XtraForm
     {
-        private Session _session => SessionController.GetSession();
+        private Session Session => SessionController.GetSession();
         public bool IsSave { get; private set; }
         public tExpert Expert { get; private set; }
 
@@ -28,7 +30,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
         }
         private async Task FillFormControllersAsync()
         {
-            var collection = await new XPQuery<GeneralizedDictionaryXPO>(_session).ToListAsync();
+            var collection = await new XPQuery<GeneralizedDictionaryXPO>(Session).ToListAsync();
 
             cmbExpertType.Properties.Items.AddRange(collection
                 .Where(w => w.GeneralizedDictionary == GeneralizedDictionary.ExpertType).ToList());
@@ -57,6 +59,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
             }
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
         private void btnSave_Click(object sender, EventArgs e)
         {
             try
@@ -109,6 +112,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
             Close();
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
         private void btnCancel_Click(object sender, EventArgs e)
         {
             Close();

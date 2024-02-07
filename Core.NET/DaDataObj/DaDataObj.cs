@@ -6,29 +6,29 @@ namespace Core.NET.DaDataObj
 {
     public static class DaDataObj
     {
-        private static string _token = "60b3fe73d105072c460248beb1ac9784bc836314";
-        private static string _secret = "56fe56f8037313f76dfc975325eb3c68eb5f2906";
+        private static readonly string _token = "60b3fe73d105072c460248beb1ac9784bc836314";
+        private static readonly string _secret = "56fe56f8037313f76dfc975325eb3c68eb5f2906";
 
-        private static SuggestClientAsync _suggestClientAsync { get; set; }
+        private static SuggestClientAsync SuggestClientAsync { get; set; }
         private static SuggestClientAsync GetSuggestClientAsync()
         {
-            if (_suggestClientAsync is null)
+            if (SuggestClientAsync is null)
             {
-                _suggestClientAsync = new SuggestClientAsync(_token);
+                SuggestClientAsync = new SuggestClientAsync(_token);
             }
 
-            return _suggestClientAsync;
+            return SuggestClientAsync;
         }
 
-        private static CleanClientAsync _cleanClientAsync { get; set; }
+        private static CleanClientAsync CleanClientAsync { get; set; }
         private static CleanClientAsync GetCleanClientAsync()
         {
-            if (_cleanClientAsync is null)
+            if (CleanClientAsync is null)
             {
-                _cleanClientAsync = new CleanClientAsync(_token, _secret);
+                CleanClientAsync = new CleanClientAsync(_token, _secret);
             }
 
-            return _cleanClientAsync;
+            return CleanClientAsync;
         }
 
         public async static Task<SuggestResponse<Party>> GetPartyAsync(string obj)

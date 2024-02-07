@@ -1,4 +1,4 @@
-﻿using Core.NET.AutoModels;
+﻿using Core.NET.AutoModels.ConclusionObj;
 using Core.NET.Controllers;
 using Core.NET.Extensions;
 using Core.NET.Models.XPO;
@@ -10,7 +10,7 @@ namespace ProjectDocumentation.NET.Models.ConclusionObj
 {
     public static class DocumentObjController
     {
-        public static IEnumerable<DocumentObj> GetDocumentObjs(ICollection<tDocument> collection)
+        public static IEnumerable<DocumentObj> GetDocumentObjS(ICollection<tDocument> collection)
         {
             foreach (var obj in collection)
             {

@@ -1,4 +1,4 @@
-﻿using Core.NET.AutoModels;
+﻿using Core.NET.AutoModels.ConclusionObj;
 using Core.NET.Controllers;
 using Core.NET.Extensions;
 using Core.NET.Models.XPO;
@@ -14,7 +14,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
 {
     public partial class PreviousConclusionEdit : XtraForm
     {
-        private Session _session => SessionController.GetSession();
+        private Session Session => SessionController.GetSession();
 
         public bool IsSave { get; private set; }
         public tPreviousConclusion PreviousConclusion { get; private set; }
@@ -31,7 +31,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
 
         private async Task FillFormControllersAsync()
         {
-            var collection = await new XPQuery<GeneralizedDictionaryXPO>(_session).ToListAsync();
+            var collection = await new XPQuery<GeneralizedDictionaryXPO>(Session).ToListAsync();
 
             radioGroupConclusionNumber.Properties.Items.AddEnum(typeof(ItemChoiceType));
 
@@ -48,8 +48,10 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
 
             if (PreviousConclusion is null)
             {
-                PreviousConclusion = new tPreviousConclusion();
-                PreviousConclusion.Number = new tConclusionNumber();
+                PreviousConclusion = new tPreviousConclusion
+                {
+                    Number = new tConclusionNumber()
+                };
             }
 
             var number = PreviousConclusion.Number;
@@ -82,6 +84,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
             memoName.EditValue = PreviousConclusion.Name;
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
         private void btnSave_Click(object sender, EventArgs e)
         {
             try
@@ -119,12 +122,14 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
             Close();
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
         private void btnClose_Click(object sender, EventArgs e)
         {
             Close();
         }
 
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
         private void radioGroupConclusionNumber_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (sender is RadioGroup radioGroup)
@@ -144,6 +149,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
             }
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
         private void dateEEPDDate_ButtonPressed(object sender, ButtonPressedEventArgs e)
         {
             if (sender is ButtonEdit buttonEdit)

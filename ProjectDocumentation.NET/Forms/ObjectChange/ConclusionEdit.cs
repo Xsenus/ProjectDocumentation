@@ -1,4 +1,4 @@
-﻿using Core.NET.AutoModels;
+﻿using Core.NET.AutoModels.ConclusionObj;
 using Core.NET.Controllers;
 using Core.NET.DaDataObj;
 using Core.NET.Extensions;
@@ -27,7 +27,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
 {
     public partial class ConclusionEdit : XtraForm
     {
-        private Session _session => SessionController.GetSession();
+        private Session Session => SessionController.GetSession();
 
         private class CadastralNumber
         {
@@ -46,15 +46,15 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
         private List<tFinance> _tFinances = new List<tFinance>();
         private List<tDesigner> _tDesigners = new List<tDesigner>();
         private List<CadastralNumber> _cadastralNumbers = new List<CadastralNumber>();
-        private List<tDeclarant> _tProjectDocumentsDevelopers = new List<tDeclarant>();
-        private List<tTechnicalCustomer> _tProjectDocumentsTechnicalCustomer = new List<tTechnicalCustomer>();
-        private List<tDeclarant> _tEngineeringSurveyDeveloper = new List<tDeclarant>();
-        private List<tTechnicalCustomer> _tEngineeringSurveyTechnicalCustomer = new List<tTechnicalCustomer>();
+        private readonly List<tDeclarant> _tProjectDocumentsDevelopers = new List<tDeclarant>();
+        private readonly List<tTechnicalCustomer> _tProjectDocumentsTechnicalCustomer = new List<tTechnicalCustomer>();
+        private readonly List<tDeclarant> _tEngineeringSurveyDeveloper = new List<tDeclarant>();
+        private readonly List<tTechnicalCustomer> _tEngineeringSurveyTechnicalCustomer = new List<tTechnicalCustomer>();
         private List<tExpertProjectDocuments> _tExpertProjectDocuments = new List<tExpertProjectDocuments>();
         private List<tEngineeringSurveyAddress> _tEngineeringSurveyAddresses = new List<tEngineeringSurveyAddress>();
         private List<tExpertEngineeringSurveys> _tExpertEngineeringSurveys = new List<tExpertEngineeringSurveys>();
 
-        private List<tMismatch> _mismatch = new List<tMismatch>();
+        private readonly List<tMismatch> _mismatch = new List<tMismatch>();
 
         private List<tExpert> _experts = new List<tExpert>();
 
@@ -75,7 +75,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
 
         private async Task FillFormControllersAsync()
         {
-            var collection = await new XPQuery<GeneralizedDictionaryXPO>(_session).ToListAsync();
+            var collection = await new XPQuery<GeneralizedDictionaryXPO>(Session).ToListAsync();
 
             #region Page I
             cmbExaminationResult.Properties.Items.AddRange(collection
@@ -180,7 +180,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                   ?.Cast<GeneralizedDictionaryXPO>()
                   ?.Where(w => w.GeneralizedDictionary == GeneralizedDictionary.LogicalAnswer)
                   ?.FirstOrDefault(f => f.Value == Conclusion?.ExaminationObject?.ProjectDocumentationIM.GetEnumXmlAttributeValue().ToString());
-            }            
+            }
 
             if (Conclusion?.ExaminationObject?.EngineeringSurveysIMSpecified is true)
             {
@@ -213,8 +213,8 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
 
             #region Page I_5
             _tDocuments = Conclusion.Documents?.ToList() ?? new List<tDocument>();
-            gridControlDocuments.DataSource = DocumentObjController.GetDocumentObjs(_tDocuments).ToArray();
-            foreach (GridColumn column in gridViewDocuments.Columns)
+            gridControlDocuments.DataSource = DocumentObjController.GetDocumentObjS(_tDocuments).ToArray();
+            foreach (GridColumn column in gridViewDocuments.Columns.Cast<GridColumn>())
             {
                 column.Visible = false;
             }
@@ -248,7 +248,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
             #region Page I_6
             _tPreviousConclusions = Conclusion?.PreviousConclusions?.ToList() ?? new List<tPreviousConclusion>();
             gridControlPreviousConclusions.DataSource = _tPreviousConclusions;
-            foreach (GridColumn column in gridViewPreviousConclusions.Columns)
+            foreach (GridColumn column in gridViewPreviousConclusions.Columns.Cast<GridColumn>())
             {
                 column.Visible = false;
             }
@@ -283,7 +283,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
             }
             _tObjectParts = Conclusion?.Object?.ObjectPart?.ToList() ?? new List<tObjectPart>();
             gridControlObjectPart.DataSource = _tObjectParts;
-            foreach (GridColumn column in gridViewObjectPart.Columns)
+            foreach (GridColumn column in gridViewObjectPart.Columns.Cast<GridColumn>())
             {
                 column.Visible = false;
             }
@@ -298,7 +298,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
             _tFinances = Conclusion?.Finance?.ToList() ?? new List<tFinance>();
             //gridControlFinances.DataSource = _tFinances;
             gridControlFinances.DataSource = FinanceObjController.GetFinanceObj(_tFinances);
-            foreach (GridColumn column in gridViewFinances.Columns)
+            foreach (GridColumn column in gridViewFinances.Columns.Cast<GridColumn>())
             {
                 column.Visible = false;
             }
@@ -339,7 +339,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
             #region Page II_4
             _tDesigners = Conclusion?.Designer?.ToList() ?? new List<tDesigner>();
             gridControlDesigners.DataSource = PersonObjController.GetPersonObjByDesigner(_tDesigners)?.ToArray();
-            foreach (GridColumn column in gridViewDesigners.Columns)
+            foreach (GridColumn column in gridViewDesigners.Columns.Cast<GridColumn>())
             {
                 column.Visible = false;
             }
@@ -408,8 +408,8 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                     }
                 }
             }
-            gridControlEngineeringSurveyDeveloper.DataSource = PersonObjController.GetPersonObjByDeclarant(_tEngineeringSurveyDeveloper).ToArray();
-            foreach (GridColumn column in gridViewEngineeringSurveyDeveloper.Columns)
+            gridControlEngineeringSurveyDeveloper.DataSource = PersonObjController.GetPersonObjByDeclarator(_tEngineeringSurveyDeveloper).ToArray();
+            foreach (GridColumn column in gridViewEngineeringSurveyDeveloper.Columns.Cast<GridColumn>())
             {
                 column.Visible = false;
             }
@@ -419,7 +419,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                 gridEngineeringSurveyDeveloperName.Visible = true;
             }
             gridControlEngineeringSurveyTechnicalCustomer.DataSource = PersonObjController.GetPersonObjByTechnicalCustomer(_tEngineeringSurveyTechnicalCustomer).ToArray();
-            foreach (GridColumn column in gridViewEngineeringSurveyTechnicalCustomer.Columns)
+            foreach (GridColumn column in gridViewEngineeringSurveyTechnicalCustomer.Columns.Cast<GridColumn>())
             {
                 column.Visible = false;
             }
@@ -443,8 +443,8 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                     }
                 }
             }
-            gridControlProjectDocumentsDeveloper.DataSource = PersonObjController.GetPersonObjByDeclarant(_tProjectDocumentsDevelopers).ToArray();
-            foreach (GridColumn column in gridViewProjectDocumentsDeveloper.Columns)
+            gridControlProjectDocumentsDeveloper.DataSource = PersonObjController.GetPersonObjByDeclarator(_tProjectDocumentsDevelopers).ToArray();
+            foreach (GridColumn column in gridViewProjectDocumentsDeveloper.Columns.Cast<GridColumn>())
             {
                 column.Visible = false;
             }
@@ -454,7 +454,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                 gridProjectDocumentsDevelopersName.Visible = true;
             }
             gridControlProjectDocumentsTechnicalCustomer.DataSource = PersonObjController.GetPersonObjByTechnicalCustomer(_tProjectDocumentsTechnicalCustomer).ToArray();
-            foreach (GridColumn column in gridViewProjectDocumentsTechnicalCustomer.Columns)
+            foreach (GridColumn column in gridViewProjectDocumentsTechnicalCustomer.Columns.Cast<GridColumn>())
             {
                 column.Visible = false;
             }
@@ -468,7 +468,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
             #region Page III
             _tExpertProjectDocuments = Conclusion?.ExpertProjectDocuments?.ToList() ?? new List<tExpertProjectDocuments>();
             gridControlExpertProjectDocuments.DataSource = ExpertProjectDocumentController.GetExpertProjectDocuments(_tExpertProjectDocuments).ToArray();
-            foreach (GridColumn column in gridViewExpertProjectDocuments.Columns)
+            foreach (GridColumn column in gridViewExpertProjectDocuments.Columns.Cast<GridColumn>())
             {
                 column.Visible = false;
             }
@@ -480,7 +480,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
 
             _tEngineeringSurveyAddresses = Conclusion?.EngineeringSurveyAddress?.ToList() ?? new List<tEngineeringSurveyAddress>();
             gridControlEngineeringSurveyAddress.DataSource = EngineeringSurveyAddressController.GetEngineeringSurveyAddress(_tEngineeringSurveyAddresses);
-            foreach (GridColumn column in gridViewEngineeringSurveyAddress.Columns)
+            foreach (GridColumn column in gridViewEngineeringSurveyAddress.Columns.Cast<GridColumn>())
             {
                 column.Visible = false;
             }
@@ -499,7 +499,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
 
             _tExpertEngineeringSurveys = Conclusion.ExpertEngineeringSurveys?.ToList() ?? new List<tExpertEngineeringSurveys>();
             gridControlExpertEngineeringSurveys.DataSource = ExpertEngineeringSurveysController.GetExpertEngineeringSurveys(_tExpertEngineeringSurveys).ToArray();
-            foreach (GridColumn column in gridViewExpertEngineeringSurveys.Columns)
+            foreach (GridColumn column in gridViewExpertEngineeringSurveys.Columns.Cast<GridColumn>())
             {
                 column.Visible = false;
             }
@@ -581,7 +581,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
             }
         }
 
-        public static ICollection<T> GetCheckComboBoxItems<T>(CheckedComboBoxEdit sender, string message = default, bool isNullable = true) where T : Enum
+        public static ICollection<T> GetCheckComboBoxItems<T>(CheckedComboBoxEdit sender, string message = default, bool isNullAble = true) where T : Enum
         {
             var result = new List<T>();
 
@@ -601,7 +601,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                 return result;
             }
 
-            if (isNullable)
+            if (isNullAble)
             {
                 return result;
             }
@@ -697,7 +697,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
             return matchingExtensions.FirstOrDefault(f => f.Name == methodName);
         }
 
-        public static string GetStringValue(object sender, object control = default, string message = default, bool isNullAble = true, object objPage = null)
+        public static string GetStringValue(object sender, object control = default, string message = default, bool isNullAble = true)
         {
             var result = sender?.ToString();
             if (!string.IsNullOrWhiteSpace(result))
@@ -718,6 +718,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
             throw new Exception(message ?? "Не заполнен один из параметров.");
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
         private void btnSave_Click(object sender, EventArgs e)
         {
             FileName = txtFileName.Text;
@@ -732,26 +733,28 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                 Conclusion.SchemaVersion = schemaVersion;
 
                 #region Page I
-                Conclusion.ExaminationObject = new tExaminationObject();
-                Conclusion.ExaminationObject.ExaminationResult = GetEnumByAttributeValue<tExaminationResult>(GetValueGeneralizedDictionary(
-                    cmbExaminationResult,
-                    message: "Заполните поле результат экспертизы")?.Value);
-                Conclusion.ExaminationObject.ExaminationForm = GetEnumByAttributeValue<tExaminationForm>(GetValueGeneralizedDictionary(
-                    cmbExaminationForm,
-                    message: "Заполните поле формы экспертизы")?.Value);
-                Conclusion.ExaminationObject.ExaminationObjectType = GetEnumByAttributeValue<tExaminationObjectType>(GetValueGeneralizedDictionary(
-                    cmbExaminationObjectType,
-                    message: "Заполните поле вида объекта экспертизы")?.Value);
-                Conclusion.ExaminationObject.ExaminationStage = GetEnumByAttributeValue<tExaminationStage>(GetValueGeneralizedDictionary(
-                   cmbExaminationStage,
-                   message: "Заполните поле вид экспертизы")?.Value);
-                Conclusion.ExaminationObject.ConstructionType = GetEnumByAttributeValue<tConstractionType>(GetValueGeneralizedDictionary(
-                   cmbConstructionType,
-                   message: "Заполните поле вид работ")?.Value);
-                Conclusion.ExaminationObject.ExaminationType = GetCheckComboBoxItems<tExaminationType>(
-                    checkCmbExaminationType,
-                    "Заполните поле предмет экспертизы").ToArray();
-                Conclusion.ExaminationObject.Name = GetStringValue(memoName.Text, memoName, "Заполните поле наименование объекта экспертизы");
+                Conclusion.ExaminationObject = new tExaminationObject
+                {
+                    ExaminationResult = GetEnumByAttributeValue<tExaminationResult>(GetValueGeneralizedDictionary(
+                        cmbExaminationResult,
+                        message: "Заполните поле результат экспертизы")?.Value),
+                    ExaminationForm = GetEnumByAttributeValue<tExaminationForm>(GetValueGeneralizedDictionary(
+                        cmbExaminationForm,
+                        message: "Заполните поле формы экспертизы")?.Value),
+                    ExaminationObjectType = GetEnumByAttributeValue<tExaminationObjectType>(GetValueGeneralizedDictionary(
+                        cmbExaminationObjectType,
+                        message: "Заполните поле вида объекта экспертизы")?.Value),
+                    ExaminationStage = GetEnumByAttributeValue<tExaminationStage>(GetValueGeneralizedDictionary(
+                        cmbExaminationStage,
+                        message: "Заполните поле вид экспертизы")?.Value),
+                    ConstructionType = GetEnumByAttributeValue<tConstractionType>(GetValueGeneralizedDictionary(
+                        cmbConstructionType,
+                        message: "Заполните поле вид работ")?.Value),
+                    ExaminationType = GetCheckComboBoxItems<tExaminationType>(
+                        checkCmbExaminationType,
+                        "Заполните поле предмет экспертизы").ToArray(),
+                    Name = GetStringValue(memoName.Text, memoName, "Заполните поле наименование объекта экспертизы")
+                };
 
                 if (cmbProjectDocumentationIM.EditValue is GeneralizedDictionaryXPO valueProjectDocumentationIM)
                 {
@@ -764,7 +767,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                     else
                     {
                         Conclusion.ExaminationObject.ProjectDocumentationIM = tYesNo.нет;
-                    }                    
+                    }
                 }
                 else
                 {
@@ -793,12 +796,14 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                 #endregion
 
                 #region Page I_2
-                Conclusion.ExpertOrganization = new tOrganization();
-                Conclusion.ExpertOrganization.OrgFullName = GetStringValue(txtOrgFullName.EditValue, txtOrgFullName, "Заполните наименование организации");
-                Conclusion.ExpertOrganization.OrgOGRN = GetStringValue(txtOrgOGRN.EditValue, txtOrgOGRN, "Заполните ОГРН организации");
-                Conclusion.ExpertOrganization.OrgKPP = GetStringValue(txtOrgKPP.EditValue, txtOrgKPP, "Заполните КПП организации");
-                Conclusion.ExpertOrganization.OrgINN = GetStringValue(txtOrgINN.EditValue, txtOrgINN, "Заполните ИНН организации");
-                Conclusion.ExpertOrganization.Email = GetStringValue(txtEmail.EditValue, txtEmail, isNullAble: true);
+                Conclusion.ExpertOrganization = new tOrganization
+                {
+                    OrgFullName = GetStringValue(txtOrgFullName.EditValue, txtOrgFullName, "Заполните наименование организации"),
+                    OrgOGRN = GetStringValue(txtOrgOGRN.EditValue, txtOrgOGRN, "Заполните ОГРН организации"),
+                    OrgKPP = GetStringValue(txtOrgKPP.EditValue, txtOrgKPP, "Заполните КПП организации"),
+                    OrgINN = GetStringValue(txtOrgINN.EditValue, txtOrgINN, "Заполните ИНН организации"),
+                    Email = GetStringValue(txtEmail.EditValue, txtEmail, isNullAble: true)
+                };
                 if (btnAddress.EditValue is tAddress address)
                 {
                     Conclusion.ExpertOrganization.Address = address;
@@ -812,11 +817,13 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                     //    MessageBoxIcon.Error);
                     //return;
                 }
-                Conclusion.Approver = new tWorkPerson();
-                Conclusion.Approver.FamilyName = GetStringValue(txtFamilyName.EditValue, txtFamilyName, "Заполните фамилию подписанта");
-                Conclusion.Approver.FirstName = GetStringValue(txtFirstName.EditValue, txtFirstName, "Заполните имя подписанта");
-                Conclusion.Approver.SecondName = GetStringValue(txtSecondName.EditValue, txtSecondName, "Заполните отчество подписанта");
-                Conclusion.Approver.Position = GetStringValue(txtPosition.EditValue, txtPosition, "Заполните должность подписанта");
+                Conclusion.Approver = new tWorkPerson
+                {
+                    FamilyName = GetStringValue(txtFamilyName.EditValue, txtFamilyName, "Заполните фамилию подписанта"),
+                    FirstName = GetStringValue(txtFirstName.EditValue, txtFirstName, "Заполните имя подписанта"),
+                    SecondName = GetStringValue(txtSecondName.EditValue, txtSecondName, "Заполните отчество подписанта"),
+                    Position = GetStringValue(txtPosition.EditValue, txtPosition, "Заполните должность подписанта")
+                };
                 #endregion
 
                 #region Page I_3
@@ -855,12 +862,14 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                 #endregion
 
                 #region Page II_1
-                Conclusion.Object = new tObject();
-                Conclusion.Object.Name = GetStringValue(memoObjectName.Text, memoObjectName, "Заполните поле наименование объекта капитального строительства");
-                Conclusion.Object.Type = GetEnumByAttributeValue<tObjectType>(GetValueGeneralizedDictionary(
-                   cmbObjectType,
-                   message: "Заполните поле вид объекта капитального строительства")?.Value);
-                Conclusion.Object.Item = GetStringValue(cmbFunctionsClass.EditValue?.ToString(), cmbFunctionsClass, "Функциональное назначение объекта капитального строительства (код по классификатору)");
+                Conclusion.Object = new tObject
+                {
+                    Name = GetStringValue(memoObjectName.Text, memoObjectName, "Заполните поле наименование объекта капитального строительства"),
+                    Type = GetEnumByAttributeValue<tObjectType>(GetValueGeneralizedDictionary(
+                        cmbObjectType,
+                        message: "Заполните поле вид объекта капитального строительства")?.Value),
+                    Item = GetStringValue(cmbFunctionsClass.EditValue?.ToString(), cmbFunctionsClass, "Функциональное назначение объекта капитального строительства (код по классификатору)")
+                };
                 if (cmbObjectAddress.EditValue is tAddress objectAddress)
                 {
                     Conclusion.Object.Address = new tAddress[] { objectAddress };
@@ -940,12 +949,14 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                 #endregion
 
                 #region Page II_3
-                Conclusion.ClimateConditions = new tClimateConditions();
-                Conclusion.ClimateConditions.ClimateDistrict = GetCheckComboBoxItems<tClimateDistrict>(checkCmbClimateDistrict, isNullable: true).ToArray();
-                Conclusion.ClimateConditions.SeismicActivity = GetCheckComboBoxItems<tSeismicActivity>(checkCmbSeismicActivity, isNullable: true).ToArray();
-                Conclusion.ClimateConditions.WindDistrict = GetCheckComboBoxItems<tWindDistrict>(checkCmbWindDistrict, isNullable: true).ToArray();
-                Conclusion.ClimateConditions.GeologicalConditions = GetCheckComboBoxItems<tGeologicalConditions>(checkCmbGeologicalConditions, isNullable: true).ToArray();
-                Conclusion.ClimateConditions.SnowDistrict = GetCheckComboBoxItems<tSnowDistrict>(checkCmbSnowDistrict, isNullable: true).ToArray();
+                Conclusion.ClimateConditions = new tClimateConditions
+                {
+                    ClimateDistrict = GetCheckComboBoxItems<tClimateDistrict>(checkCmbClimateDistrict, isNullAble: true).ToArray(),
+                    SeismicActivity = GetCheckComboBoxItems<tSeismicActivity>(checkCmbSeismicActivity, isNullAble: true).ToArray(),
+                    WindDistrict = GetCheckComboBoxItems<tWindDistrict>(checkCmbWindDistrict, isNullAble: true).ToArray(),
+                    GeologicalConditions = GetCheckComboBoxItems<tGeologicalConditions>(checkCmbGeologicalConditions, isNullAble: true).ToArray(),
+                    SnowDistrict = GetCheckComboBoxItems<tSnowDistrict>(checkCmbSnowDistrict, isNullAble: true).ToArray()
+                };
                 Conclusion.ClimateConditionsNote = GetStringValue(memoClimateConditionsNote.EditValue, memoClimateConditionsNote, "Заполните поле дополнительных сведений о природных и техногенных условиях");
                 #endregion
 
@@ -987,13 +998,18 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
 
                 if (checkEEPDUse.Checked)
                 {
-                    var eEPDUse = new tEEPDUse();
-                    eEPDUse.EEPDDate = dateEEPDDate.DateTime.Date;
-                    eEPDUse.EEPDNote = GetStringValue(memoEEPDNote.EditValue, memoEEPDNote, "Заполните поле сведения о разделах представленной на экспертизу проектной документации");
-                    eEPDUse.EEPDNumber = new tConclusionNumber();
-                    var number = new tConclusionNumber();
-                    number.ItemElementName = (ItemChoiceType)radioGroupConclusionNumber.SelectedIndex;
-                    number.Item = GetStringValue(txtEEPDNumber.EditValue, txtEEPDNumber, "Заполните поле номер заключения экспертизы *"); ;
+                    var eEPDUse = new tEEPDUse
+                    {
+                        EEPDDate = dateEEPDDate.DateTime.Date,
+                        EEPDNote = GetStringValue(memoEEPDNote.EditValue, memoEEPDNote, "Заполните поле сведения о разделах представленной на экспертизу проектной документации"),
+                        EEPDNumber = new tConclusionNumber()
+                    };
+                    var number = new tConclusionNumber
+                    {
+                        ItemElementName = (ItemChoiceType)radioGroupConclusionNumber.SelectedIndex,
+                        Item = GetStringValue(txtEEPDNumber.EditValue, txtEEPDNumber, "Заполните поле номер заключения экспертизы *")
+                    };
+                    ;
                     eEPDUse.EEPDNumber = number;
                     Conclusion.EEPDUse = new tEEPDUse[] { eEPDUse };
                 }
@@ -1082,7 +1098,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                 else
                 {
                     Conclusion.EngineeringSurveyAddress = null;
-                }                
+                }
 
                 if (_tExpertEngineeringSurveys?.Count() > 0)
                 {
@@ -1142,14 +1158,16 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
             Close();
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
         private void gridViewExpert_PopupMenuShowing(object sender, PopupMenuShowingEventArgs e)
         {
-            if (sender is GridView gridView)
+            if (sender is GridView)
             {
                 popupMenuExpert.ShowPopup(new Point(Cursor.Position.X, Cursor.Position.Y));
             }
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
         private void barBtnExpertAdd_ItemClick(object sender, ItemClickEventArgs e)
         {
             using (var form = new ExpretEdit())
@@ -1164,6 +1182,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
             gridControlExpert.RefreshDataSource();
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
         private void barBtnExpertEdit_ItemClick(object sender, ItemClickEventArgs e)
         {
             if (gridViewExpert.GetRow(gridViewExpert.FocusedRowHandle) is tExpert expert)
@@ -1177,6 +1196,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
             }
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
         private void barBtnExpertDel_ItemClick(object sender, ItemClickEventArgs e)
         {
             if (gridViewExpert.GetRow(gridViewExpert.FocusedRowHandle) is tExpert expert)
@@ -1192,15 +1212,16 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
             }
         }
 
-
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
         private void gridViewMismatches_PopupMenuShowing(object sender, PopupMenuShowingEventArgs e)
         {
-            if (sender is GridView gridView)
+            if (sender is GridView)
             {
                 popupMenuMismatches.ShowPopup(new Point(Cursor.Position.X, Cursor.Position.Y));
             }
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
         private void barBtnMismatchesAdd_ItemClick(object sender, ItemClickEventArgs e)
         {
             using (var form = new EstimateMismatchEdit())
@@ -1215,6 +1236,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
             gridControlExpert.RefreshDataSource();
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
         private void barBtnMismatchesEdit_ItemClick(object sender, ItemClickEventArgs e)
         {
             using (var form = new EstimateMismatchEdit())
@@ -1229,6 +1251,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
             gridControlExpert.RefreshDataSource();
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
         private void barBtnMismatchesDel_ItemClick(object sender, ItemClickEventArgs e)
         {
             if (gridViewExpert.GetRow(gridViewExpert.FocusedRowHandle) is tMismatch tMismatch)
@@ -1244,41 +1267,14 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
             }
         }
 
-        private void cmbObjectAddress_ButtonPressed(object sender, ButtonPressedEventArgs e)
-        {
-            if (sender is ComboBoxEdit comboBoxEdit)
-            {
-                if (e.Button.Kind == ButtonPredefines.Ellipsis)
-                {
-                    var form = default(AddressEdit);
-                    if (comboBoxEdit.EditValue is tAddress address)
-                    {
-                        form = new AddressEdit(address);
-                    }
-                    else
-                    {
-                        form = new AddressEdit();
-                    }
-
-                    form.ShowDialog();
-                    if (form.IsSave)
-                    {
-                        comboBoxEdit.EditValue = form.Address;
-                    }
-                }
-                else if (e.Button.Kind == ButtonPredefines.Delete)
-                {
-                    comboBoxEdit.EditValue = null;
-                }
-            }
-        }
-
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
         private void barBtnCadastralNumberAdd_ItemClick(object sender, ItemClickEventArgs e)
         {
             _cadastralNumbers.Add(new CadastralNumber());
             gridControlCadastralNumber.RefreshDataSource();
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
         private void barBtnCadastralNumberDel_ItemClick(object sender, ItemClickEventArgs e)
         {
             if (gridViewCadastralNumber.GetRow(gridViewExpert.FocusedRowHandle) is CadastralNumber obj)
@@ -1295,21 +1291,23 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
             }
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
         private void gridViewCadastralNumber_PopupMenuShowing(object sender, PopupMenuShowingEventArgs e)
         {
-            if (sender is GridView gridView)
+            if (sender is GridView)
             {
                 popupMenuCadastralNumber.ShowPopup(new Point(Cursor.Position.X, Cursor.Position.Y));
             }
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
         private void clearEditValue_ButtonPressed(object sender, ButtonPressedEventArgs e)
         {
             if (sender is CheckedComboBoxEdit checkedComboBoxEdit)
             {
                 if (e.Button.Kind == ButtonPredefines.Delete)
                 {
-                    foreach (CheckedListBoxItem item in checkedComboBoxEdit.Properties.Items)
+                    foreach (CheckedListBoxItem item in checkedComboBoxEdit.Properties.Items.Cast<CheckedListBoxItem>())
                     {
                         item.CheckState = CheckState.Unchecked;
                     }
@@ -1325,13 +1323,14 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
             }
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
         private async void cmbObjectAddress_ButtonClick(object sender, ButtonPressedEventArgs e)
         {
             if (sender is ButtonEdit buttonEdit)
             {
                 if (e.Button.Kind == ButtonPredefines.Ellipsis)
                 {
-                    var form = default(AddressEdit);
+                    AddressEdit form;
                     if (buttonEdit.EditValue is tAddress address)
                     {
                         form = new AddressEdit(address);
@@ -1388,20 +1387,23 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
             }
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
         private void gridViewTEI_PopupMenuShowing(object sender, PopupMenuShowingEventArgs e)
         {
-            if (sender is GridView gridView)
+            if (sender is GridView)
             {
                 popupMenuTEI.ShowPopup(new Point(Cursor.Position.X, Cursor.Position.Y));
             }
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
         private void barBtnTEIAdd_ItemClick(object sender, ItemClickEventArgs e)
         {
             _tTEIs.Add(new tTEI());
             gridControlTEI.RefreshDataSource();
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
         private void barBtnTEIDel_ItemClick(object sender, ItemClickEventArgs e)
         {
             if (gridViewTEI.GetRow(gridViewTEI.FocusedRowHandle) is tTEI obj)
@@ -1418,14 +1420,16 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
             }
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
         private void gridViewObjectPart_PopupMenuShowing(object sender, PopupMenuShowingEventArgs e)
         {
-            if (sender is GridView gridView)
+            if (sender is GridView)
             {
                 popupMenuObjectPart.ShowPopup(new Point(Cursor.Position.X, Cursor.Position.Y));
             }
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
         private void barBtnObjectPartAdd_ItemClick(object sender, ItemClickEventArgs e)
         {
             var form = new ObjPartEdit();
@@ -1437,6 +1441,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
             }
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
         private void barBtnObjectPartEdit_ItemClick(object sender, ItemClickEventArgs e)
         {
             if (gridViewObjectPart.GetRow(gridViewObjectPart.FocusedRowHandle) is tObjectPart obj)
@@ -1450,6 +1455,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
             }
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
         private void barBtnObjectPartDel_ItemClick(object sender, ItemClickEventArgs e)
         {
             if (gridViewObjectPart.GetRow(gridViewObjectPart.FocusedRowHandle) is tObjectPart obj)
@@ -1466,14 +1472,16 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
             }
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
         private void gridViewFinances_PopupMenuShowing(object sender, PopupMenuShowingEventArgs e)
         {
-            if (sender is GridView gridView)
+            if (sender is GridView)
             {
                 popupMenuFinance.ShowPopup(new Point(Cursor.Position.X, Cursor.Position.Y));
             }
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
         private void barBtnFinanceAdd_ItemClick(object sender, ItemClickEventArgs e)
         {
             var form = new FundingInformationEdit();
@@ -1486,11 +1494,12 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
             }
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
         private void barBtnFinanceEdit_ItemClick(object sender, ItemClickEventArgs e)
         {
             if (gridViewFinances.GetRow(gridViewFinances.FocusedRowHandle) is FinanceObj obj)
             {
-                var form = new FundingInformationEdit(obj.tFinance);
+                var form = new FundingInformationEdit(obj.TFinance);
                 form.ShowDialog();
                 if (form.IsSave)
                 {
@@ -1500,6 +1509,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
             }
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
         private void barBtnFinanceDel_ItemClick(object sender, ItemClickEventArgs e)
         {
             if (gridViewFinances.GetRow(gridViewFinances.FocusedRowHandle) is FinanceObj obj)
@@ -1510,26 +1520,29 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                     MessageBoxButtons.OKCancel,
                     MessageBoxIcon.Question) == DialogResult.OK)
                 {
-                    _tFinances.Remove(obj.tFinance);
+                    _tFinances.Remove(obj.TFinance);
                     gridControlFinances.DataSource = FinanceObjController.GetFinanceObj(_tFinances);
                     gridControlFinances.RefreshDataSource();
                 }
             }
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
         private void btnCancel_Click(object sender, EventArgs e)
         {
             Close();
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
         private void gridViewDesigners_PopupMenuShowing(object sender, PopupMenuShowingEventArgs e)
         {
-            if (sender is GridView gridView)
+            if (sender is GridView)
             {
                 popupMenuDesigners.ShowPopup(new Point(Cursor.Position.X, Cursor.Position.Y));
             }
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
         private void barBtnDesignersAdd_ItemClick(object sender, ItemClickEventArgs e)
         {
             var form = new DesignerEdit();
@@ -1542,6 +1555,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
             }
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
         private void barBtnDesignersEdit_ItemClick(object sender, ItemClickEventArgs e)
         {
             if (gridViewDesigners.GetRow(gridViewDesigners.FocusedRowHandle) is PersonObj obj)
@@ -1556,6 +1570,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
             }
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
         private void barBtnDesignersDel_ItemClick(object sender, ItemClickEventArgs e)
         {
             if (gridViewDesigners.GetRow(gridViewDesigners.FocusedRowHandle) is PersonObj obj)
@@ -1576,6 +1591,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
             }
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
         private void checkEEPDUse_CheckedChanged(object sender, EventArgs e)
         {
             if (sender is CheckEdit checkEdit)
@@ -1599,6 +1615,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
             }
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
         private void radioGroupConclusionNumber_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (sender is RadioGroup radioGroup)
@@ -1618,14 +1635,16 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
             }
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
         private void gridViewEngineeringSurveyDeveloper_PopupMenuShowing(object sender, PopupMenuShowingEventArgs e)
         {
-            if (sender is GridView gridView)
+            if (sender is GridView)
             {
                 popupMenuEngineeringSurveyDeveloper.ShowPopup(new Point(Cursor.Position.X, Cursor.Position.Y));
             }
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
         private void barBtnEngineeringSurveyDeveloperAdd_ItemClick(object sender, ItemClickEventArgs e)
         {
             var form = new DeclarantEdit();
@@ -1633,11 +1652,12 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
             if (form.IsSave)
             {
                 _tEngineeringSurveyDeveloper.Add(form.Declarant);
-                gridControlEngineeringSurveyDeveloper.DataSource = PersonObjController.GetPersonObjByDeclarant(_tEngineeringSurveyDeveloper).ToArray();
+                gridControlEngineeringSurveyDeveloper.DataSource = PersonObjController.GetPersonObjByDeclarator(_tEngineeringSurveyDeveloper).ToArray();
                 gridControlEngineeringSurveyDeveloper.RefreshDataSource();
             }
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
         private void barBtnEngineeringSurveyDeveloperEdit_ItemClick(object sender, ItemClickEventArgs e)
         {
             if (gridViewEngineeringSurveyDeveloper.GetRow(gridViewEngineeringSurveyDeveloper.FocusedRowHandle) is PersonObj obj)
@@ -1646,12 +1666,13 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                 form.ShowDialog();
                 if (form.IsSave)
                 {
-                    gridControlEngineeringSurveyDeveloper.DataSource = PersonObjController.GetPersonObjByDeclarant(_tEngineeringSurveyDeveloper).ToArray();
+                    gridControlEngineeringSurveyDeveloper.DataSource = PersonObjController.GetPersonObjByDeclarator(_tEngineeringSurveyDeveloper).ToArray();
                     gridControlEngineeringSurveyDeveloper.RefreshDataSource();
                 }
             }
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
         private void barBtnEngineeringSurveyDeveloperDel_ItemClick(object sender, ItemClickEventArgs e)
         {
             if (gridViewEngineeringSurveyDeveloper.GetRow(gridViewEngineeringSurveyDeveloper.FocusedRowHandle) is PersonObj obj)
@@ -1665,21 +1686,23 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                     if (obj.BaseObj is tDeclarant tDeclarant)
                     {
                         _tEngineeringSurveyDeveloper.Remove(tDeclarant);
-                        gridControlEngineeringSurveyDeveloper.DataSource = PersonObjController.GetPersonObjByDeclarant(_tEngineeringSurveyDeveloper).ToArray();
+                        gridControlEngineeringSurveyDeveloper.DataSource = PersonObjController.GetPersonObjByDeclarator(_tEngineeringSurveyDeveloper).ToArray();
                         gridControlEngineeringSurveyDeveloper.RefreshDataSource();
                     }
                 }
             }
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
         private void gridViewEngineeringSurveyTechnicalCustomer_PopupMenuShowing(object sender, PopupMenuShowingEventArgs e)
         {
-            if (sender is GridView gridView)
+            if (sender is GridView)
             {
                 popupMenuEngineeringSurveyTechnicalCustomer.ShowPopup(new Point(Cursor.Position.X, Cursor.Position.Y));
             }
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
         private void barBtnEngineeringSurveyTechnicalCustomerAdd_ItemClick(object sender, ItemClickEventArgs e)
         {
             var form = new TechnicalCustomerEdit();
@@ -1692,6 +1715,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
             }
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
         private void barBtnEngineeringSurveyTechnicalCustomerEdit_ItemClick(object sender, ItemClickEventArgs e)
         {
             if (gridViewEngineeringSurveyTechnicalCustomer.GetRow(gridViewEngineeringSurveyTechnicalCustomer.FocusedRowHandle) is PersonObj obj)
@@ -1706,6 +1730,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
             }
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
         private void barBtnEngineeringSurveyTechnicalCustomerDel_ItemClick(object sender, ItemClickEventArgs e)
         {
             if (gridViewEngineeringSurveyTechnicalCustomer.GetRow(gridViewEngineeringSurveyTechnicalCustomer.FocusedRowHandle) is PersonObj obj)
@@ -1726,14 +1751,16 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
             }
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
         private void gridViewProjectDocumentsDeveloper_PopupMenuShowing(object sender, PopupMenuShowingEventArgs e)
         {
-            if (sender is GridView gridView)
+            if (sender is GridView)
             {
                 popupMenuProjectDocumentsDeveloper.ShowPopup(new Point(Cursor.Position.X, Cursor.Position.Y));
             }
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
         private void barBtnProjectDocumentsDeveloperAdd_ItemClick(object sender, ItemClickEventArgs e)
         {
             var form = new DeclarantEdit();
@@ -1741,11 +1768,12 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
             if (form.IsSave)
             {
                 _tProjectDocumentsDevelopers.Add(form.Declarant);
-                gridControlProjectDocumentsDeveloper.DataSource = PersonObjController.GetPersonObjByDeclarant(_tProjectDocumentsDevelopers).ToArray();
+                gridControlProjectDocumentsDeveloper.DataSource = PersonObjController.GetPersonObjByDeclarator(_tProjectDocumentsDevelopers).ToArray();
                 gridControlProjectDocumentsDeveloper.RefreshDataSource();
             }
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
         private void barBtnProjectDocumentsDeveloperEdit_ItemClick(object sender, ItemClickEventArgs e)
         {
             if (gridViewProjectDocumentsDeveloper.GetRow(gridViewProjectDocumentsDeveloper.FocusedRowHandle) is PersonObj obj)
@@ -1754,12 +1782,13 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                 form.ShowDialog();
                 if (form.IsSave)
                 {
-                    gridControlProjectDocumentsDeveloper.DataSource = PersonObjController.GetPersonObjByDeclarant(_tProjectDocumentsDevelopers).ToArray();
+                    gridControlProjectDocumentsDeveloper.DataSource = PersonObjController.GetPersonObjByDeclarator(_tProjectDocumentsDevelopers).ToArray();
                     gridControlProjectDocumentsDeveloper.RefreshDataSource();
                 }
             }
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
         private void barBtnProjectDocumentsDeveloperDel_ItemClick(object sender, ItemClickEventArgs e)
         {
             if (gridViewProjectDocumentsDeveloper.GetRow(gridViewProjectDocumentsDeveloper.FocusedRowHandle) is PersonObj obj)
@@ -1773,21 +1802,23 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                     if (obj.BaseObj is tDeclarant tDeclarant)
                     {
                         _tProjectDocumentsDevelopers.Remove(tDeclarant);
-                        gridControlProjectDocumentsDeveloper.DataSource = PersonObjController.GetPersonObjByDeclarant(_tProjectDocumentsDevelopers).ToArray();
+                        gridControlProjectDocumentsDeveloper.DataSource = PersonObjController.GetPersonObjByDeclarator(_tProjectDocumentsDevelopers).ToArray();
                         gridControlProjectDocumentsDeveloper.RefreshDataSource();
                     }
                 }
             }
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
         private void gridViewProjectDocumentsTechnicalCustomer_PopupMenuShowing(object sender, PopupMenuShowingEventArgs e)
         {
-            if (sender is GridView gridView)
+            if (sender is GridView)
             {
                 popupMenuProjectDocumentsTechnicalCustomer.ShowPopup(new Point(Cursor.Position.X, Cursor.Position.Y));
             }
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
         private void barBtnProjectDocumentsTechnicalCustomerAdd_ItemClick(object sender, ItemClickEventArgs e)
         {
             var form = new TechnicalCustomerEdit();
@@ -1800,6 +1831,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
             }
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
         private void barBtnProjectDocumentsTechnicalCustomerEdit_ItemClick(object sender, ItemClickEventArgs e)
         {
             if (gridViewProjectDocumentsTechnicalCustomer.GetRow(gridViewProjectDocumentsTechnicalCustomer.FocusedRowHandle) is PersonObj obj)
@@ -1814,6 +1846,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
             }
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
         private void barBtnProjectDocumentsTechnicalCustomerDel_ItemClick(object sender, ItemClickEventArgs e)
         {
             if (gridViewProjectDocumentsTechnicalCustomer.GetRow(gridViewProjectDocumentsTechnicalCustomer.FocusedRowHandle) is PersonObj obj)
@@ -1834,6 +1867,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
             }
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
         private async void btnSearch_ButtonPressed(object sender, ButtonPressedEventArgs e)
         {
             if (sender is ButtonEdit buttonEdit)
@@ -1907,6 +1941,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
             }
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
         private async void btnAddress_ButtonPressed(object sender, ButtonPressedEventArgs e)
         {
             if (sender is ButtonEdit buttonEdit)
@@ -1917,7 +1952,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                 }
                 else if (e.Button.Kind == ButtonPredefines.Ellipsis)
                 {
-                    var form = default(AddressEdit);
+                    AddressEdit form;
                     if (buttonEdit.EditValue is tAddress address)
                     {
                         form = new AddressEdit(address);
@@ -1973,6 +2008,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
             }
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
         private void btnDeclarant_ButtonPressed(object sender, ButtonPressedEventArgs e)
         {
             if (sender is ButtonEdit buttonEdit)
@@ -1983,7 +2019,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                 }
                 else if (e.Button.Kind == ButtonPredefines.Ellipsis)
                 {
-                    var form = default(DeclarantEdit);
+                    DeclarantEdit form;
                     if (buttonEdit.EditValue is tDeclarant tDeclarant)
                     {
                         form = new DeclarantEdit(tDeclarant);
@@ -2001,14 +2037,16 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
             }
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
         private void gridViewPreviousConclusions_PopupMenuShowing(object sender, PopupMenuShowingEventArgs e)
         {
-            if (sender is GridView gridView)
+            if (sender is GridView)
             {
                 popupMenuPreviousConclusions.ShowPopup(new Point(Cursor.Position.X, Cursor.Position.Y));
             }
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
         private void barBtnPreviousConclusionsAdd_ItemClick(object sender, ItemClickEventArgs e)
         {
             var form = new PreviousConclusionEdit();
@@ -2020,6 +2058,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
             }
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
         private void barBtnPreviousConclusionsEdit_ItemClick(object sender, ItemClickEventArgs e)
         {
             if (gridViewPreviousConclusions.GetRow(gridViewPreviousConclusions.FocusedRowHandle) is tPreviousConclusion obj)
@@ -2033,6 +2072,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
             }
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
         private void barBtnPreviousConclusionsDel_ItemClick(object sender, ItemClickEventArgs e)
         {
             if (gridViewPreviousConclusions.GetRow(gridViewPreviousConclusions.FocusedRowHandle) is tPreviousConclusion obj)
@@ -2049,14 +2089,16 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
             }
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
         private void gridViewExpertProjectDocuments_PopupMenuShowing(object sender, PopupMenuShowingEventArgs e)
         {
-            if (sender is GridView gridView)
+            if (sender is GridView)
             {
                 popupMenuExpertProjectDocuments.ShowPopup(new Point(Cursor.Position.X, Cursor.Position.Y));
             }
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
         private void barBtnExpertProjectDocumentsAdd_ItemClick(object sender, ItemClickEventArgs e)
         {
             var form = new ExpertProjectDocumentsEdit();
@@ -2069,6 +2111,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
             }
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
         private void barBtnExpertProjectDocumentsEdit_ItemClick(object sender, ItemClickEventArgs e)
         {
             if (gridViewExpertProjectDocuments.GetRow(gridViewExpertProjectDocuments.FocusedRowHandle) is ExpertProjectDocument obj)
@@ -2083,6 +2126,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
             }
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
         private void barBtnExpertProjectDocumentsDel_ItemClick(object sender, ItemClickEventArgs e)
         {
             if (gridViewExpertProjectDocuments.GetRow(gridViewExpertProjectDocuments.FocusedRowHandle) is ExpertProjectDocument obj)
@@ -2100,14 +2144,16 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
             }
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
         private void gridViewDocuments_PopupMenuShowing(object sender, PopupMenuShowingEventArgs e)
         {
-            if (sender is GridView gridView)
+            if (sender is GridView)
             {
                 popupMenuDocuments.ShowPopup(new Point(Cursor.Position.X, Cursor.Position.Y));
             }
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
         private void barBtnDocumentsAdd_ItemClick(object sender, ItemClickEventArgs e)
         {
             var form = new DocumentEdit();
@@ -2115,11 +2161,12 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
             if (form.IsSave)
             {
                 _tDocuments.Add(form.Document);
-                gridControlDocuments.DataSource = DocumentObjController.GetDocumentObjs(_tDocuments).ToArray();
+                gridControlDocuments.DataSource = DocumentObjController.GetDocumentObjS(_tDocuments).ToArray();
                 gridControlDocuments.RefreshDataSource();
             }
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
         private void barBtnDocumentsEdit_ItemClick(object sender, ItemClickEventArgs e)
         {
             if (gridViewDocuments.GetRow(gridViewDocuments.FocusedRowHandle) is DocumentObj obj)
@@ -2128,12 +2175,13 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                 form.ShowDialog();
                 if (form.IsSave)
                 {
-                    gridControlDocuments.DataSource = DocumentObjController.GetDocumentObjs(_tDocuments).ToArray();
+                    gridControlDocuments.DataSource = DocumentObjController.GetDocumentObjS(_tDocuments).ToArray();
                     gridControlDocuments.RefreshDataSource();
                 }
             }
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
         private void barBtnDocumentsDel_ItemClick(object sender, ItemClickEventArgs e)
         {
             if (gridViewDocuments.GetRow(gridViewDocuments.FocusedRowHandle) is DocumentObj obj)
@@ -2145,20 +2193,22 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                     MessageBoxIcon.Question) == DialogResult.OK)
                 {
                     _tDocuments.Remove(obj.Document);
-                    gridControlDocuments.DataSource = DocumentObjController.GetDocumentObjs(_tDocuments).ToArray();
+                    gridControlDocuments.DataSource = DocumentObjController.GetDocumentObjS(_tDocuments).ToArray();
                     gridControlDocuments.RefreshDataSource();
                 }
             }
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
         private void gridViewExpertEngineeringSurveys_PopupMenuShowing(object sender, PopupMenuShowingEventArgs e)
         {
-            if (sender is GridView gridView)
+            if (sender is GridView)
             {
                 popupMenuExpertEngineeringSurveys.ShowPopup(new Point(Cursor.Position.X, Cursor.Position.Y));
             }
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
         private void barBtnExpertEngineeringSurveysAdd_ItemClick(object sender, ItemClickEventArgs e)
         {
             var form = new ExpertEngineeringSurveyEdit();
@@ -2171,6 +2221,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
             }
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
         private void barBtnExpertEngineeringSurveysEdit_ItemClick(object sender, ItemClickEventArgs e)
         {
             if (gridViewExpertEngineeringSurveys.GetRow(gridViewExpertEngineeringSurveys.FocusedRowHandle) is ExpertEngineeringSurvey obj)
@@ -2185,6 +2236,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
             }
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
         private void barBtnExpertEngineeringSurveysDel_ItemClick(object sender, ItemClickEventArgs e)
         {
             if (gridViewExpertEngineeringSurveys.GetRow(gridViewExpertEngineeringSurveys.FocusedRowHandle) is ExpertEngineeringSurvey obj)
@@ -2202,16 +2254,18 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
             }
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
         private void gridViewEngineeringSurveyAddress_PopupMenuShowing(object sender, PopupMenuShowingEventArgs e)
         {
-            if (sender is GridView gridView)
+            if (sender is GridView)
             {
                 popupMenuEngineeringSurveyAddress.ShowPopup(new Point(Cursor.Position.X, Cursor.Position.Y));
             }
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
         private void barBtnEngineeringSurveyAddressAdd_ItemClick(object sender, ItemClickEventArgs e)
-        {           
+        {
             var form = new EngineeringSurveyAddressEdit();
             form.ShowDialog();
             if (form.IsSave)
@@ -2222,6 +2276,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
             }
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
         private void barBtnEngineeringSurveyAddressEdit_ItemClick(object sender, ItemClickEventArgs e)
         {
             if (gridViewEngineeringSurveyAddress.GetRow(gridViewEngineeringSurveyAddress.FocusedRowHandle) is EngineeringSurveyAddress obj)
@@ -2233,9 +2288,10 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                     gridControlEngineeringSurveyAddress.DataSource = EngineeringSurveyAddressController.GetEngineeringSurveyAddress(_tEngineeringSurveyAddresses);
                     gridControlEngineeringSurveyAddress.RefreshDataSource();
                 }
-            }            
+            }
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
         private void barBtnEngineeringSurveyAddressDel_ItemClick(object sender, ItemClickEventArgs e)
         {
             if (gridViewEngineeringSurveyAddress.GetRow(gridViewEngineeringSurveyAddress.FocusedRowHandle) is EngineeringSurveyAddress obj)

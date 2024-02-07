@@ -1,4 +1,6 @@
-﻿using System.ComponentModel;
+﻿// Ignore Spelling: XPO
+
+using System.ComponentModel;
 
 namespace Core.NET.Models.XPO
 {

@@ -11,6 +11,7 @@ using ProjectDocumentation.NET.Forms.ObjectChange;
 using System;
 using System.Drawing;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -18,13 +19,14 @@ namespace ProjectDocumentation.NET.Forms
 {
     public partial class MainForm : XtraForm
     {
-        private Session _session => SessionController.GetSession();
+        private Session Session => SessionController.GetSession();
 
         public MainForm()
         {
             InitializeComponent();
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
         private void gridView_PopupMenuShowing(object sender, PopupMenuShowingEventArgs e)
         {
             if (sender is GridView gridView)
@@ -50,6 +52,7 @@ namespace ProjectDocumentation.NET.Forms
             }
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
         private async void barBtnLoad_ItemClick(object sender, ItemClickEventArgs e)
         {
             using (var form = new FileLoad())
@@ -66,10 +69,10 @@ namespace ProjectDocumentation.NET.Forms
         {
             try
             {
-                var path = await new XPQuery<SettingXPO>(_session).FirstOrDefaultAsync(f => f.Name == "UpdatePath");
+                var path = await new XPQuery<SettingXPO>(Session).FirstOrDefaultAsync(f => f.Name == "UpdatePath");
                 if (path is null)
                 {
-                    path = new SettingXPO(_session)
+                    path = new SettingXPO(Session)
                     {
                         Name = "UpdatePath",
                         Value = "ftp://81.28.221.114/other/ProjectDocumentation.NET/ProjectDocumentation.NET.Update.xml"
@@ -93,7 +96,7 @@ namespace ProjectDocumentation.NET.Forms
 
         private async Task UpdateGridDataSourceAsync(string columnName = default, object obj = default)
         {
-            gridControl.DataSource = await new XPQuery<XmlObjXPO>(_session).ToListAsync();
+            gridControl.DataSource = await new XPQuery<XmlObjXPO>(Session).ToListAsync();
 
             if (!string.IsNullOrWhiteSpace(columnName) && obj != null)
             {
@@ -103,13 +106,13 @@ namespace ProjectDocumentation.NET.Forms
 
         private async Task UpdateGridDataSource(int focusedRowHandle)
         {
-            gridControl.DataSource = await new XPQuery<XmlObjXPO>(_session).ToListAsync();
+            gridControl.DataSource = await new XPQuery<XmlObjXPO>(Session).ToListAsync();
             gridView.FocusedRowHandle = focusedRowHandle;
         }
 
         private void InitialSetupGridControl()
         {
-            foreach (GridColumn column in gridView.Columns)
+            foreach (GridColumn column in gridView.Columns.Cast<GridColumn>())
             {
                 column.Visible = false;
             }
@@ -147,6 +150,7 @@ namespace ProjectDocumentation.NET.Forms
             }
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
         private async void barBtnDel_ItemClick(object sender, ItemClickEventArgs e)
         {
             if (gridView.GetRow(gridView.FocusedRowHandle) is XmlObjXPO xmlObjXPO)
@@ -157,12 +161,13 @@ namespace ProjectDocumentation.NET.Forms
                     MessageBoxButtons.OKCancel,
                     MessageBoxIcon.Question) == DialogResult.OK)
                 {
-                    await _session.DeleteAsync(xmlObjXPO);
+                    await Session.DeleteAsync(xmlObjXPO);
                     await UpdateGridDataSource(gridView.FocusedRowHandle - 1);
                 }
             }
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
         private async void barBtnEdit_ItemClick(object sender, ItemClickEventArgs e)
         {
             if (gridView.GetRow(gridView.FocusedRowHandle) is ConclusionXPO conclusionXPO)
@@ -176,18 +181,19 @@ namespace ProjectDocumentation.NET.Forms
                 if (form.IsSave)
                 {
                     conclusionXPO.Name = form.FileName;
-                    conclusionXPO.SetObj(form.Conclusion.GetSerializerConclusion());
-                    await _session.SaveAsync(conclusionXPO);
+                    conclusionXPO.SetObj(form.Conclusion.GetSerializeConclusion());
+                    await Session.SaveAsync(conclusionXPO);
                 }
 
                 await UpdateGridDataSource(gridView.FocusedRowHandle);
             }
-            else if (gridView.GetRow(gridView.FocusedRowHandle) is ExplanatoryNoteXPO explanatoryNoteXPO)
+            else if (gridView.GetRow(gridView.FocusedRowHandle) is ExplanatoryNoteXPO)
             {
 
             }
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
         private void barBtnFill_ItemClick(object sender, ItemClickEventArgs e)
         {
             try
@@ -241,6 +247,7 @@ namespace ProjectDocumentation.NET.Forms
             }
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
         private async void barBtnAdd_ItemClick(object sender, ItemClickEventArgs e)
         {
             var form = new ConclusionEdit();
@@ -248,19 +255,20 @@ namespace ProjectDocumentation.NET.Forms
 
             if (form.IsSave)
             {
-                var conclusionXPO = new ConclusionXPO(_session)
+                var conclusionXPO = new ConclusionXPO(Session)
                 {
                     Name = form.FileName
                 };
 
                 form.Conclusion.ConclusionGUID = conclusionXPO.Guid?.ToString();
-                conclusionXPO.SetObj(form.Conclusion.GetSerializerConclusion());
-                await _session.SaveAsync(conclusionXPO);
+                conclusionXPO.SetObj(form.Conclusion.GetSerializeConclusion());
+                await Session.SaveAsync(conclusionXPO);
 
                 await UpdateGridDataSourceAsync(nameof(XmlObjXPO.Guid), conclusionXPO.Guid);
             }
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
         private async void gridView_DoubleClick(object sender, EventArgs e)
         {
             if (gridView.GetRow(gridView.FocusedRowHandle) is ConclusionXPO conclusionXPO)
@@ -274,14 +282,15 @@ namespace ProjectDocumentation.NET.Forms
                 if (form.IsSave)
                 {
                     conclusionXPO.Name = form.FileName;
-                    conclusionXPO.SetObj(form.Conclusion.GetSerializerConclusion());
-                    await _session.SaveAsync(conclusionXPO);
+                    conclusionXPO.SetObj(form.Conclusion.GetSerializeConclusion());
+                    await Session.SaveAsync(conclusionXPO);
                 }
 
                 await UpdateGridDataSource(gridView.FocusedRowHandle);
             }
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
         private async void barBtnBaseSetting_ItemClick(object sender, ItemClickEventArgs e)
         {
             if (gridView.GetRow(gridView.FocusedRowHandle) is ConclusionXPO conclusionXPO)
@@ -295,14 +304,15 @@ namespace ProjectDocumentation.NET.Forms
                 {
                     conclusion.ExpertOrganization = form.Organization;
                     conclusion.Approver = form.Person;
-                    conclusionXPO.SetObj(conclusion.GetSerializerConclusion());
-                    await _session.SaveAsync(conclusionXPO);
+                    conclusionXPO.SetObj(conclusion.GetSerializeConclusion());
+                    await Session.SaveAsync(conclusionXPO);
                 }
 
                 await UpdateGridDataSource(gridView.FocusedRowHandle);
             }
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
         private void barBtnView_ItemClick(object sender, ItemClickEventArgs e)
         {
             if (gridView.GetRow(gridView.FocusedRowHandle) is ConclusionXPO conclusionXPO)

@@ -1,7 +1,6 @@
-﻿using Core.NET.AutoModels;
+﻿using Core.NET.AutoModels.ConclusionObj;
 using DevExpress.XtraEditors;
 using System;
-using System.Linq;
 
 namespace ProjectDocumentation.NET.Forms.ObjectChange
 {
@@ -20,7 +19,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
             EstimateMismatch = estimateMismatches;
         }
 
-        private async void ExpretEdit_Load(object sender, EventArgs e)
+        private void ExpretEdit_Load(object sender, EventArgs e)
         {
             //var collection = await new XPQuery<ExpertTypeXPO>(SessionController.GetSession()).ToListAsync();
             //cmbExpertType.Properties.Items.AddRange(collection);
@@ -31,18 +30,14 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
             }
             else
             {
-                var projectDocumentsMismatchField = EstimateMismatch.ProjectDocumentsMismatch?.FirstOrDefault();
-
-                if (projectDocumentsMismatchField is null)
-                {
-                    projectDocumentsMismatchField = new tMismatchExtended();
-                }
+                //var projectDocumentsMismatchField = (EstimateMismatch.ProjectDocumentsMismatch?.FirstOrDefault()) ?? new tMismatchExtended();
 
                 //var expertTypeValue = EstimateMismatch.ExpertType.GetEnumXmlAttributeValue();
                 //cmbExpertType.EditValue = collection.FirstOrDefault(f => f.Value == expertTypeValue?.ToString());
             }
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
         private void btnSave_Click(object sender, EventArgs e)
         {
             //EstimateMismatch.FamilyName = txtFamilyName.Text;
@@ -68,6 +63,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
             Close();
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
         private void btnCancel_Click(object sender, EventArgs e)
         {
             Close();

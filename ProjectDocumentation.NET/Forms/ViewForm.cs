@@ -1,4 +1,4 @@
-﻿using Core.NET.AutoModels;
+﻿using Core.NET.AutoModels.ConclusionObj;
 using Core.NET.Controllers;
 using Core.NET.Extensions;
 using Core.NET.Models.XPO;
@@ -14,7 +14,7 @@ namespace ProjectDocumentation.NET.Forms
     public partial class ViewForm : XtraForm
     {
         private string _result;
-        private Session _session => SessionController.GetSession();
+        private Session Session => SessionController.GetSession();
 
         public object _obj;
         public ViewForm(object obj)
@@ -86,7 +86,6 @@ namespace ProjectDocumentation.NET.Forms
                 AddValueToString();
 
                 AddValueToString($"1.4. Сведения о положительном заключении государственной экологической экспертизы");
-                documentCount = 0;
                 foreach (var document in conclusion.Documents)
                 {
                     if (document.DocType.GetEnumXmlAttributeValue().ToString().Contains("03."))
@@ -122,7 +121,6 @@ namespace ProjectDocumentation.NET.Forms
                 AddValueToString();
 
                 AddValueToString($"1.6. Сведения о ранее выданных заключениях экспертизы проектной документации и (или) результатов инженерных изысканий в отношении объекта капитального строительства, проектная документация и (или) результаты инженерных изысканий по которому представлены для проведения повторной экспертизы");
-                documentCount = 0;
                 foreach (var document in conclusion.Documents)
                 {
                     if (document.DocType.GetEnumXmlAttributeValue().ToString().Contains("03."))
@@ -211,7 +209,7 @@ namespace ProjectDocumentation.NET.Forms
         {
             try
             {
-                var obj = await new XPQuery<GeneralizedDictionaryXPO>(_session)
+                var obj = await new XPQuery<GeneralizedDictionaryXPO>(Session)
                                 ?.Where(w => w.GeneralizedDictionary == @enumObj)
                                 ?.FirstOrDefaultAsync(f => f.Value == value.GetEnumXmlAttributeValue().ToString());
 

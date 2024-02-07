@@ -6,11 +6,11 @@ namespace Core.NET.Controllers
 {
     public static class SessionController
     {
-        private static string _nameDataBase = "xml.s3db";
-        private static string _connectionString => SQLiteConnectionProvider.GetConnectionString(_nameDataBase);
-        private static string _connectionPoolString => XpoDefault.GetConnectionPoolString(_connectionString);
-        private static IDataStore _iDataStore => XpoDefault.GetConnectionProvider(_connectionPoolString, AutoCreateOption.DatabaseAndSchema);
-        private static XPDictionary _xPDictionary = new ReflectionDictionary();
+        static readonly string _nameDataBase = "xml.s3db";
+        private static string ConnectionString => SQLiteConnectionProvider.GetConnectionString(_nameDataBase);
+        private static string ConnectionPoolString => XpoDefault.GetConnectionPoolString(ConnectionString);
+        private static IDataStore IDataStore => XpoDefault.GetConnectionProvider(ConnectionPoolString, AutoCreateOption.DatabaseAndSchema);
+        private static readonly XPDictionary _xPDictionary = new ReflectionDictionary();
 
         private static Session _session;
 
@@ -20,7 +20,7 @@ namespace Core.NET.Controllers
             {
                 CreateDataBase();
 
-                var threadSafeDataLayer = new ThreadSafeDataLayer(_xPDictionary, _iDataStore);
+                var threadSafeDataLayer = new ThreadSafeDataLayer(_xPDictionary, IDataStore);
                 _session = new Session(threadSafeDataLayer, null)
                 {
                     LockingOption = LockingOption.None,
@@ -33,7 +33,7 @@ namespace Core.NET.Controllers
 
         private async static void CreateDataBase()
         {
-            var simpleDataLayer = new SimpleDataLayer(_xPDictionary, _iDataStore);
+            var simpleDataLayer = new SimpleDataLayer(_xPDictionary, IDataStore);
             using (var session = new Session(simpleDataLayer, null)
             {
                 LockingOption = LockingOption.None,

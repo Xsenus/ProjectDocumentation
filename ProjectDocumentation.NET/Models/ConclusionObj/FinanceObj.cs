@@ -1,4 +1,4 @@
-﻿using Core.NET.AutoModels;
+﻿using Core.NET.AutoModels.ConclusionObj;
 using Core.NET.Controllers;
 using Core.NET.Extensions;
 using Core.NET.Models.XPO;
@@ -24,10 +24,10 @@ namespace ProjectDocumentation.NET.Models.ConclusionObj
     {
         public FinanceObj(tFinance tFinance)
         {
-            this.tFinance = tFinance;
+            TFinance = tFinance;
         }
 
-        public tFinance tFinance { get; private set; }
+        public tFinance TFinance { get; private set; }
 
         public string FinanceType { get; set; }
         public string BudgetType { get; set; }
@@ -37,18 +37,18 @@ namespace ProjectDocumentation.NET.Models.ConclusionObj
         {
             var session = SessionController.GetSession();
 
-            if (tFinance != null)
+            if (TFinance != null)
             {
                 var financeType = await new XPQuery<GeneralizedDictionaryXPO>(session)?
                 .FirstOrDefaultAsync(f => f.GeneralizedDictionary == GeneralizedDictionary.FinanceType
-                    && f.Value == tFinance.FinanceType.GetEnumXmlAttributeValue().ToString());
+                    && f.Value == TFinance.FinanceType.GetEnumXmlAttributeValue().ToString());
                 FinanceType = financeType?.Name;
 
-                if (tFinance.FinanceType == tFinanceType.Item1)
+                if (TFinance.FinanceType == tFinanceType.Item1)
                 {
                     var budgetType = await new XPQuery<GeneralizedDictionaryXPO>(session)?
                         .FirstOrDefaultAsync(f => f.GeneralizedDictionary == GeneralizedDictionary.BudgetType
-                            && f.Value == tFinance.BudgetType.GetEnumXmlAttributeValue().ToString());
+                            && f.Value == TFinance.BudgetType.GetEnumXmlAttributeValue().ToString());
                     BudgetType = budgetType?.Name;
                 }
                 else
@@ -56,7 +56,7 @@ namespace ProjectDocumentation.NET.Models.ConclusionObj
                     BudgetType = "Нет данных";
                 }
 
-                FinanceSize = tFinance.FinanceSize.ToString("n5");
+                FinanceSize = TFinance.FinanceSize.ToString("n5");
             }
         }
 

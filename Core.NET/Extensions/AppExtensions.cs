@@ -1,7 +1,8 @@
-﻿using System;
+﻿// Ignore Spelling: App
+
+using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 
 namespace Core.NET.Extensions
 {

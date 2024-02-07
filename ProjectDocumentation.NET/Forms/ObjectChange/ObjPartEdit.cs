@@ -1,4 +1,4 @@
-﻿using Core.NET.AutoModels;
+﻿using Core.NET.AutoModels.ConclusionObj;
 using Core.NET.Controllers;
 using Core.NET.DaDataObj;
 using Core.NET.Models.XPO;
@@ -20,7 +20,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
     public partial class ObjPartEdit : XtraForm
     {
         private List<tTEI> _tTEIs;
-        private Session _session => SessionController.GetSession();
+        private Session Session => SessionController.GetSession();
 
         public bool IsSave { get; private set; }
         public tObjectPart ObjectPart { get; private set; }
@@ -37,7 +37,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
 
         private async Task FillFormControllersAsync()
         {
-            var collection = await new XPQuery<GeneralizedDictionaryXPO>(_session).ToListAsync();
+            var collection = await new XPQuery<GeneralizedDictionaryXPO>(Session).ToListAsync();
 
             cmbObjectType.Properties.Items.AddRange(collection
                 .Where(w => w.GeneralizedDictionary == GeneralizedDictionary.ObjectType).ToArray());
@@ -75,6 +75,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
             }
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
         private void btnSave_Click(object sender, EventArgs e)
         {
             try
@@ -141,18 +142,20 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
             Close();
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
         private void btnClose_Click(object sender, EventArgs e)
         {
             Close();
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
         private void clearEditValue_ButtonPressed(object sender, ButtonPressedEventArgs e)
         {
             if (sender is CheckedComboBoxEdit checkedComboBoxEdit)
             {
                 if (e.Button.Kind == ButtonPredefines.Delete)
                 {
-                    foreach (CheckedListBoxItem item in checkedComboBoxEdit.Properties.Items)
+                    foreach (CheckedListBoxItem item in checkedComboBoxEdit.Properties.Items.Cast<CheckedListBoxItem>())
                     {
                         item.CheckState = CheckState.Unchecked;
                     }
@@ -168,13 +171,14 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
             }
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
         private async void cmbObjectAddress_ButtonClick(object sender, ButtonPressedEventArgs e)
         {
             if (sender is ButtonEdit buttonEdit)
             {
                 if (e.Button.Kind == ButtonPredefines.Ellipsis)
                 {
-                    var form = default(AddressEdit);
+                    AddressEdit form;
                     if (buttonEdit.EditValue is tAddress address)
                     {
                         form = new AddressEdit(address);
@@ -231,20 +235,23 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
             }
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
         private void gridViewTEI_PopupMenuShowing(object sender, PopupMenuShowingEventArgs e)
         {
-            if (sender is GridView gridView)
+            if (sender is GridView)
             {
                 popupMenuTEI.ShowPopup(new Point(Cursor.Position.X, Cursor.Position.Y));
             }
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
         private void barBtnTEIAdd_ItemClick(object sender, ItemClickEventArgs e)
         {
             _tTEIs.Add(new tTEI());
             gridControlTEI.RefreshDataSource();
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
         private void barBtnTEIDel_ItemClick(object sender, ItemClickEventArgs e)
         {
             if (gridViewTEI.GetRow(gridViewTEI.FocusedRowHandle) is tTEI obj)

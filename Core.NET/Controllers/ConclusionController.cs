@@ -1,4 +1,4 @@
-﻿using Core.NET.AutoModels;
+﻿using Core.NET.AutoModels.ConclusionObj;
 using Core.NET.Extensions;
 using Core.NET.Models.XPO;
 using System;
@@ -57,7 +57,7 @@ namespace Core.NET.Controllers
         {
             if (FileController.CheckFile(path))
             {
-                return Serializer.DeserializeObject<Conclusion>(path);
+                return Utf8StringSerialize.DeSerializeObject<Conclusion>(path);
             }
 
             return default;
@@ -70,12 +70,12 @@ namespace Core.NET.Controllers
                 return default;
             }
 
-            return Serializer.DeserializeObjectByString<Conclusion>(obj);
+            return Utf8StringSerialize.DeSerializeObjectByString<Conclusion>(obj);
         }
 
-        public static string GetSerializerConclusion(this Conclusion conclusion)
+        public static string GetSerializeConclusion(this Conclusion conclusion)
         {
-            return Serializer.SerializeObject(conclusion);
+            return Utf8StringSerialize.SerializeObject(conclusion);
         }
     }
 }
