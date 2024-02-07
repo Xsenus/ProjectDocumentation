@@ -1,5 +1,6 @@
 ﻿// Ignore Spelling: TEI Cadastral Geotechnical Technogenic Geodynamical Aerological Hydrogeological Perair Org OGRNIP SNILS Safity
 
+using System.Collections.Generic;
 using System.Xml.Serialization;
 
 namespace Core.NET.AutoModels.ExplanatoryNoteObj
@@ -573,11 +574,11 @@ namespace Core.NET.AutoModels.ExplanatoryNoteObj
 
     public partial class tTable
     {
-        [XmlArrayItem("Cell", typeof(tCell), IsNullable = false)]
-        public tCell[][] TitleRow { get; set; }
+        [XmlArrayItem("Cell", typeof(tCell))]
+        public List<tCell> TitleRow { get; set; }
 
-        [XmlArrayItem("Cell", typeof(tCell), IsNullable = false)]
-        public tCell[][] Row { get; set; }
+        [XmlArrayItem("Cell", typeof(tCell))]
+        public List<tCell> Row { get; set; }
     }
 
     public partial class tCell

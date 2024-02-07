@@ -149,6 +149,12 @@
     <Compile Include="Forms\ObjectChange\DocumentEdit.Designer.cs">
       <DependentUpon>DocumentEdit.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\ObjectChange\ExplanatoryNoteEdit.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\ObjectChange\ExplanatoryNoteEdit.Designer.cs">
+      <DependentUpon>ExplanatoryNoteEdit.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\ObjectChange\PreviousConclusionEdit.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -252,6 +258,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\ObjectChange\DocumentEdit.resx">
       <DependentUpon>DocumentEdit.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\ObjectChange\ExplanatoryNoteEdit.resx">
+      <DependentUpon>ExplanatoryNoteEdit.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\ObjectChange\PreviousConclusionEdit.resx">
       <DependentUpon>PreviousConclusionEdit.cs</DependentUpon>

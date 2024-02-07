@@ -9,7 +9,7 @@ namespace ProjectDocumentation.NET.Forms
 {
     public partial class FileLoad : XtraForm
     {
-        public ConclusionXPO ObjXPO { get; private set; }
+        public XmlObjXPO ObjXPO { get; private set; }
 
         public FileLoad()
         {
@@ -68,7 +68,16 @@ namespace ProjectDocumentation.NET.Forms
                     return;
                 }
 
-                ObjXPO = await ConclusionController.CreateConclusionByPath(filePath, name);
+                switch (radioGroupType.EditValue?.ToString())
+                {
+                    case "Conclusion":
+                        ObjXPO = await ConclusionController.CreateConclusionByPath(filePath, name);
+                        break;
+
+                    case "ExplanatoryNote":
+                        ObjXPO = await ExplanatoryNoteController.CreateExplanatoryNoteByPath(filePath, name);
+                        break;
+                }               
 
                 if (ObjXPO is null)
                 {

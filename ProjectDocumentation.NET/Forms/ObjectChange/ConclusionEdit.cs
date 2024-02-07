@@ -28,13 +28,6 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
     public partial class ConclusionEdit : XtraForm
     {
         private Session Session => SessionController.GetSession();
-
-        private class CadastralNumber
-        {
-            [RegExEditMask(@"\d+:\d+:\d+:\d+", AllowBlankInput = true, ShowPlaceholders = false)]
-            public string Number { get; set; }
-        }
-
         public string FileName { get; private set; }
         public bool IsSave { get; private set; }
         public Conclusion Conclusion { get; private set; }
@@ -71,6 +64,12 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
         public void SetFileName(string fileName)
         {
             FileName = fileName;
+        }
+
+        private class CadastralNumber
+        {
+            [RegExEditMask(@"\d+:\d+:\d+:\d+", AllowBlankInput = true, ShowPlaceholders = false)]
+            public string Number { get; set; }
         }
 
         private async Task FillFormControllersAsync()

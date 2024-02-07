@@ -1,5 +1,6 @@
 ﻿// Ignore Spelling: Utf
 
+using System;
 using System.IO;
 using System.Text;
 using System.Xml.Serialization;
@@ -15,39 +16,53 @@ namespace Core.NET.Extensions
     {
         public static string SerializeObject<T>(this T obj)
         {
-            var serializer = new XmlSerializer(typeof(T));
-
-            using (StringWriter textWriter = new Utf8StringWriter())
+            try
             {
-                serializer.Serialize(textWriter, obj);
-                return textWriter.ToString();
+                var serializer = new XmlSerializer(typeof(T));
+
+                using (StringWriter textWriter = new Utf8StringWriter())
+                {
+                    serializer.Serialize(textWriter, obj);
+                    return textWriter.ToString();
+                }
+            }
+            catch (Exception)
+            {
+                return default;
             }
         }
 
         public static T DeSerializeObjectByString<T>(string str)
-        {
-            var serializer = new XmlSerializer(typeof(T));
-            using (TextReader reader = new StringReader(str))
+        {            
+            try
             {
-                return (T)serializer.Deserialize(reader);
+                var serializer = new XmlSerializer(typeof(T));
+                using (TextReader reader = new StringReader(str))
+                {
+                    return (T)serializer.Deserialize(reader);
+                }
+            }
+            catch (Exception)
+            {
+                return default;
             }
         }
 
         public static T DeSerializeObject<T>(string path)
         {
-            var serializer = new XmlSerializer(typeof(T));
-            using (var fileStream = File.OpenRead(path))
+            try
             {
-                var obj = (T)serializer.Deserialize(fileStream);
-                return obj;
+                var serializer = new XmlSerializer(typeof(T));
+                using (var fileStream = File.OpenRead(path))
+                {
+                    var obj = (T)serializer.Deserialize(fileStream);
+                    return obj;
+                }
             }
-
-            //using (var reader = new StreamReader(path))
-            //{
-            //    var serializer = new XmlSerializer(typeof(T));
-            //    var obj = (T)serializer.Deserialize(reader);
-            //    return obj;
-            //}
+            catch (Exception)
+            {
+                return default;
+            }
         }
     }
 }

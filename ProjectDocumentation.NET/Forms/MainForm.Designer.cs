@@ -36,7 +36,7 @@
             this.layoutControlItem1 = new DevExpress.XtraLayout.LayoutControlItem();
             this.popupMenu = new DevExpress.XtraBars.PopupMenu(this.components);
             this.barBtnView = new DevExpress.XtraBars.BarButtonItem();
-            this.barBtnAdd = new DevExpress.XtraBars.BarButtonItem();
+            this.barBtnAddConclusion = new DevExpress.XtraBars.BarButtonItem();
             this.barBtnEdit = new DevExpress.XtraBars.BarButtonItem();
             this.barBtnDel = new DevExpress.XtraBars.BarButtonItem();
             this.barBtnLoad = new DevExpress.XtraBars.BarButtonItem();
@@ -47,6 +47,7 @@
             this.barDockControlBottom = new DevExpress.XtraBars.BarDockControl();
             this.barDockControlLeft = new DevExpress.XtraBars.BarDockControl();
             this.barDockControlRight = new DevExpress.XtraBars.BarDockControl();
+            this.barBtnAddExplanatoryNote = new DevExpress.XtraBars.BarButtonItem();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControl)).BeginInit();
             this.layoutControl.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.gridControl)).BeginInit();
@@ -119,8 +120,9 @@
             // 
             this.popupMenu.LinksPersistInfo.AddRange(new DevExpress.XtraBars.LinkPersistInfo[] {
             new DevExpress.XtraBars.LinkPersistInfo(this.barBtnView),
-            new DevExpress.XtraBars.LinkPersistInfo(this.barBtnAdd, true),
-            new DevExpress.XtraBars.LinkPersistInfo(this.barBtnEdit),
+            new DevExpress.XtraBars.LinkPersistInfo(this.barBtnAddConclusion, true),
+            new DevExpress.XtraBars.LinkPersistInfo(this.barBtnAddExplanatoryNote),
+            new DevExpress.XtraBars.LinkPersistInfo(this.barBtnEdit, true),
             new DevExpress.XtraBars.LinkPersistInfo(this.barBtnDel),
             new DevExpress.XtraBars.LinkPersistInfo(this.barBtnLoad, true),
             new DevExpress.XtraBars.LinkPersistInfo(this.barBtnFill, true),
@@ -137,14 +139,14 @@
             this.barBtnView.Name = "barBtnView";
             this.barBtnView.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.barBtnView_ItemClick);
             // 
-            // barBtnAdd
+            // barBtnAddConclusion
             // 
-            this.barBtnAdd.Caption = "Добавить";
-            this.barBtnAdd.Id = 0;
-            this.barBtnAdd.ImageOptions.Image = global::ProjectDocumentation.NET.Properties.Resources.addfile_16x16;
-            this.barBtnAdd.ImageOptions.LargeImage = global::ProjectDocumentation.NET.Properties.Resources.addfile_32x32;
-            this.barBtnAdd.Name = "barBtnAdd";
-            this.barBtnAdd.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.barBtnAdd_ItemClick);
+            this.barBtnAddConclusion.Caption = "Добавить (заключение)";
+            this.barBtnAddConclusion.Id = 0;
+            this.barBtnAddConclusion.ImageOptions.Image = global::ProjectDocumentation.NET.Properties.Resources.addfile_16x16;
+            this.barBtnAddConclusion.ImageOptions.LargeImage = global::ProjectDocumentation.NET.Properties.Resources.addfile_32x32;
+            this.barBtnAddConclusion.Name = "barBtnAddConclusion";
+            this.barBtnAddConclusion.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.barBtnAddConclusion_ItemClick);
             // 
             // barBtnEdit
             // 
@@ -199,14 +201,15 @@
             this.barManager.DockControls.Add(this.barDockControlRight);
             this.barManager.Form = this;
             this.barManager.Items.AddRange(new DevExpress.XtraBars.BarItem[] {
-            this.barBtnAdd,
+            this.barBtnAddConclusion,
             this.barBtnEdit,
             this.barBtnDel,
             this.barBtnFill,
             this.barBtnLoad,
             this.barBtnBaseSetting,
-            this.barBtnView});
-            this.barManager.MaxItemId = 7;
+            this.barBtnView,
+            this.barBtnAddExplanatoryNote});
+            this.barManager.MaxItemId = 8;
             // 
             // barDockControlTop
             // 
@@ -244,6 +247,14 @@
             this.barDockControlRight.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.barDockControlRight.Size = new System.Drawing.Size(0, 477);
             // 
+            // barBtnAddExplanatoryNote
+            // 
+            this.barBtnAddExplanatoryNote.Caption = "Добавить (пояснительная записка)";
+            this.barBtnAddExplanatoryNote.Id = 7;
+            this.barBtnAddExplanatoryNote.ImageOptions.Image = global::ProjectDocumentation.NET.Properties.Resources.addfile_16x16;
+            this.barBtnAddExplanatoryNote.Name = "barBtnAddExplanatoryNote";
+            this.barBtnAddExplanatoryNote.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.barBtnAddExplanatoryNote_ItemClick);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -279,7 +290,7 @@
         private DevExpress.XtraLayout.LayoutControlGroup Root;
         private DevExpress.XtraLayout.LayoutControlItem layoutControlItem1;
         private DevExpress.XtraBars.PopupMenu popupMenu;
-        private DevExpress.XtraBars.BarButtonItem barBtnAdd;
+        private DevExpress.XtraBars.BarButtonItem barBtnAddConclusion;
         private DevExpress.XtraBars.BarButtonItem barBtnEdit;
         private DevExpress.XtraBars.BarButtonItem barBtnDel;
         private DevExpress.XtraBars.BarButtonItem barBtnLoad;
@@ -291,6 +302,7 @@
         private DevExpress.XtraBars.BarDockControl barDockControlRight;
         private DevExpress.XtraBars.BarButtonItem barBtnBaseSetting;
         private DevExpress.XtraBars.BarButtonItem barBtnView;
+        private DevExpress.XtraBars.BarButtonItem barBtnAddExplanatoryNote;
     }
 }
 

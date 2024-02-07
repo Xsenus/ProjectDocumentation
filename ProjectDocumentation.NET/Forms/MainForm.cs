@@ -170,27 +170,7 @@ namespace ProjectDocumentation.NET.Forms
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
         private async void barBtnEdit_ItemClick(object sender, ItemClickEventArgs e)
         {
-            if (gridView.GetRow(gridView.FocusedRowHandle) is ConclusionXPO conclusionXPO)
-            {
-                var xml = conclusionXPO.GetObj();
-                var conclusion = ConclusionController.GetConclusionByString(xml);
-                var form = new ConclusionEdit(conclusion);
-                form.SetFileName(conclusionXPO.Name);
-                form.ShowDialog();
-
-                if (form.IsSave)
-                {
-                    conclusionXPO.Name = form.FileName;
-                    conclusionXPO.SetObj(form.Conclusion.GetSerializeConclusion());
-                    await Session.SaveAsync(conclusionXPO);
-                }
-
-                await UpdateGridDataSource(gridView.FocusedRowHandle);
-            }
-            else if (gridView.GetRow(gridView.FocusedRowHandle) is ExplanatoryNoteXPO)
-            {
-
-            }
+            await EditGridViewObjectAsync();
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
@@ -206,7 +186,7 @@ namespace ProjectDocumentation.NET.Forms
                 else if (gridView.GetRow(gridView.FocusedRowHandle) is ExplanatoryNoteXPO explanatoryNoteXPO)
                 {
 
-                    fileName = "explanatorynote";
+                    fileName = "explanatoryNote";
                 }
 
                 if (gridView.GetRow(gridView.FocusedRowHandle) is XmlObjXPO xmlObjXPO)
@@ -221,8 +201,20 @@ namespace ProjectDocumentation.NET.Forms
                             var outFullPath = Path.Combine(folderPath, xmlFileName);
 
                             var result = xmlObjXPO.GetObj();
-                            result = result.Replace("xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\"", $"xsi:noNamespaceSchemaLocation=\"{fileName}.xsd\"");
-                            result += "<?xml-stylesheet type=\"text/xsl\" href=\"conclusion.xsl\" ?>";
+
+                            switch (fileName)
+                            {
+                                case "conclusion":
+                                    result = result.Replace("xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\"", $"xsi:noNamespaceSchemaLocation=\"{fileName}.xsd\"");
+                                    result += "<?xml-stylesheet type=\"text/xsl\" href=\"conclusion.xsl\" ?>";
+                                    break;
+
+                                case "explanatoryNote":
+
+                                    result = result.Replace("xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\"", $"xsi:noNamespaceSchemaLocation=\"{fileName.ToLower()}-01-03.xsd\"");
+                                    result = result.Replace("?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n", "");
+                                    break;
+                            }                            
 
                             File.WriteAllText(outFullPath, result);
 
@@ -248,7 +240,7 @@ namespace ProjectDocumentation.NET.Forms
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
-        private async void barBtnAdd_ItemClick(object sender, ItemClickEventArgs e)
+        private async void barBtnAddConclusion_ItemClick(object sender, ItemClickEventArgs e)
         {
             var form = new ConclusionEdit();
             form.ShowDialog();
@@ -268,8 +260,32 @@ namespace ProjectDocumentation.NET.Forms
             }
         }
 
+        private async void barBtnAddExplanatoryNote_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            var form = new ExplanatoryNoteEdit();
+            form.ShowDialog();
+
+            if (form.IsSave)
+            {
+                var explanatoryNoteXPO = new ExplanatoryNoteXPO(Session)
+                {
+                    Name = form.FileName
+                };
+
+                explanatoryNoteXPO.SetObj(form.ExplanatoryNote.GetSerializeExplanatoryNote());
+                await Session.SaveAsync(explanatoryNoteXPO);
+
+                await UpdateGridDataSourceAsync(nameof(XmlObjXPO.Guid), explanatoryNoteXPO.Guid);
+            }
+        }
+
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
         private async void gridView_DoubleClick(object sender, EventArgs e)
+        {
+            await EditGridViewObjectAsync();
+        }
+
+        private async Task EditGridViewObjectAsync()
         {
             if (gridView.GetRow(gridView.FocusedRowHandle) is ConclusionXPO conclusionXPO)
             {
@@ -285,9 +301,23 @@ namespace ProjectDocumentation.NET.Forms
                     conclusionXPO.SetObj(form.Conclusion.GetSerializeConclusion());
                     await Session.SaveAsync(conclusionXPO);
                 }
-
-                await UpdateGridDataSource(gridView.FocusedRowHandle);
             }
+            else if (gridView.GetRow(gridView.FocusedRowHandle) is ExplanatoryNoteXPO explanatoryNoteXPO)
+            {
+                var xml = explanatoryNoteXPO.GetObj();
+                var explanatoryNote = ExplanatoryNoteController.GetExplanatoryNoteByString(xml);
+                var form = new ExplanatoryNoteEdit(explanatoryNote);
+                form.SetFileName(explanatoryNoteXPO.Name);
+                form.ShowDialog();
+
+                if (form.IsSave)
+                {
+                    explanatoryNoteXPO.Name = form.FileName;
+                    explanatoryNoteXPO.SetObj(form.ExplanatoryNote.GetSerializeExplanatoryNote());
+                    await Session.SaveAsync(explanatoryNoteXPO);
+                }
+            }
+            await UpdateGridDataSource(gridView.FocusedRowHandle);
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
