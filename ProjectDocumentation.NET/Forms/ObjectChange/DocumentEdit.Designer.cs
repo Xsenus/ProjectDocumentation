@@ -226,7 +226,7 @@
             // cmbDocType
             // 
             this.cmbDocType.EditValue = "";
-            this.cmbDocType.Location = new System.Drawing.Point(286, 6);
+            this.cmbDocType.Location = new System.Drawing.Point(96, 6);
             this.cmbDocType.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.cmbDocType.Name = "cmbDocType";
             this.cmbDocType.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
@@ -235,7 +235,7 @@
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Delete)});
             this.cmbDocType.Properties.DropDownRows = 20;
             this.cmbDocType.Properties.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.DisableTextEditor;
-            this.cmbDocType.Size = new System.Drawing.Size(506, 20);
+            this.cmbDocType.Size = new System.Drawing.Size(696, 20);
             this.cmbDocType.StyleController = this.layoutControlObjPart;
             this.cmbDocType.TabIndex = 6;
             this.cmbDocType.ButtonPressed += new DevExpress.XtraEditors.Controls.ButtonPressedEventHandler(this.buttonEdit_ButtonPressed);
@@ -264,11 +264,11 @@
             this.txtDocNumber.StyleController = this.layoutControlObjPart;
             this.txtDocNumber.TabIndex = 18;
             // 
-            // memoName
+            // memoDocChanges
             // 
             this.memoDocChanges.Location = new System.Drawing.Point(6, 302);
             this.memoDocChanges.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.memoDocChanges.Name = "memoName";
+            this.memoDocChanges.Name = "memoDocChanges";
             this.memoDocChanges.Properties.ScrollBars = System.Windows.Forms.ScrollBars.None;
             this.memoDocChanges.Size = new System.Drawing.Size(786, 73);
             this.memoDocChanges.StyleController = this.layoutControlObjPart;
@@ -365,7 +365,9 @@
             this.layoutControlItemDocType.Name = "layoutControlItemDocType";
             this.layoutControlItemDocType.Size = new System.Drawing.Size(790, 24);
             this.layoutControlItemDocType.Text = "Тип документа *";
-            this.layoutControlItemDocType.TextSize = new System.Drawing.Size(268, 13);
+            this.layoutControlItemDocType.TextAlignMode = DevExpress.XtraLayout.TextAlignModeItem.AutoSize;
+            this.layoutControlItemDocType.TextSize = new System.Drawing.Size(85, 13);
+            this.layoutControlItemDocType.TextToControlDistance = 5;
             // 
             // layoutControlItemDocName
             // 

@@ -125,6 +125,36 @@
     <Compile Include="Forms\MainForm.Designer.cs">
       <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\ObjectChange\AuthorEdit.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\ObjectChange\AuthorEdit.Designer.cs">
+      <DependentUpon>AuthorEdit.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\ObjectChange\DeveloperEdit.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\ObjectChange\DeveloperEdit.Designer.cs">
+      <DependentUpon>DeveloperEdit.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\ObjectChange\DocumentENEdit.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\ObjectChange\DocumentENEdit.Designer.cs">
+      <DependentUpon>DocumentENEdit.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\ObjectChange\TechnicalCustomerENEdit.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\ObjectChange\TechnicalCustomerENEdit.Designer.cs">
+      <DependentUpon>TechnicalCustomerENEdit.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\ObjectChange\WorkPersonEdit.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\ObjectChange\WorkPersonEdit.Designer.cs">
+      <DependentUpon>WorkPersonEdit.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\ObjectChange\EngineeringSurveyAddressEdit.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -239,6 +269,7 @@
     <Compile Include="Models\ConclusionObj\ExpertProjectDocument.cs" />
     <Compile Include="Models\ConclusionObj\FinanceObj.cs" />
     <Compile Include="Models\ConclusionObj\PersonObj.cs" />
+    <Compile Include="Models\ExplanatoryNoteObj\DocumentObj.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Forms\FileLoad.resx">
@@ -246,6 +277,21 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\ObjectChange\AuthorEdit.resx">
+      <DependentUpon>AuthorEdit.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\ObjectChange\DeveloperEdit.resx">
+      <DependentUpon>DeveloperEdit.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\ObjectChange\DocumentENEdit.resx">
+      <DependentUpon>DocumentENEdit.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\ObjectChange\TechnicalCustomerENEdit.resx">
+      <DependentUpon>TechnicalCustomerENEdit.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\ObjectChange\WorkPersonEdit.resx">
+      <DependentUpon>WorkPersonEdit.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\ObjectChange\EngineeringSurveyAddressEdit.resx">
       <DependentUpon>EngineeringSurveyAddressEdit.cs</DependentUpon>

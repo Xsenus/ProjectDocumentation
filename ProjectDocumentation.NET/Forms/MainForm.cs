@@ -212,7 +212,7 @@ namespace ProjectDocumentation.NET.Forms
                                 case "explanatoryNote":
 
                                     result = result.Replace("xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\"", $"xsi:noNamespaceSchemaLocation=\"{fileName.ToLower()}-01-03.xsd\"");
-                                    result = result.Replace("?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n", "");
+                                    //result = result.Replace("<?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n", "");
                                     break;
                             }                            
 

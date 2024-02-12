@@ -1,4 +1,5 @@
-﻿using Core.NET.AutoModels.ConclusionObj;
+﻿using Core.NET.AutoModels;
+using Core.NET.AutoModels.ConclusionObj;
 using Core.NET.Controllers;
 using Core.NET.DaDataObj;
 using Core.NET.Extensions;
@@ -40,9 +41,9 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
         private List<tDesigner> _tDesigners = new List<tDesigner>();
         private List<CadastralNumber> _cadastralNumbers = new List<CadastralNumber>();
         private readonly List<tDeclarant> _tProjectDocumentsDevelopers = new List<tDeclarant>();
-        private readonly List<tTechnicalCustomer> _tProjectDocumentsTechnicalCustomer = new List<tTechnicalCustomer>();
+        private readonly List<ITechnicalCustomer> _tProjectDocumentsTechnicalCustomer = new List<ITechnicalCustomer>();
         private readonly List<tDeclarant> _tEngineeringSurveyDeveloper = new List<tDeclarant>();
-        private readonly List<tTechnicalCustomer> _tEngineeringSurveyTechnicalCustomer = new List<tTechnicalCustomer>();
+        private readonly List<ITechnicalCustomer> _tEngineeringSurveyTechnicalCustomer = new List<ITechnicalCustomer>();
         private List<tExpertProjectDocuments> _tExpertProjectDocuments = new List<tExpertProjectDocuments>();
         private List<tEngineeringSurveyAddress> _tEngineeringSurveyAddresses = new List<tEngineeringSurveyAddress>();
         private List<tExpertEngineeringSurveys> _tExpertEngineeringSurveys = new List<tExpertEngineeringSurveys>();
@@ -1158,6 +1159,12 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
+        private void btnCancel_Click(object sender, EventArgs e)
+        {
+            Close();
+        }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
         private void gridViewExpert_PopupMenuShowing(object sender, PopupMenuShowingEventArgs e)
         {
             if (sender is GridView)
@@ -1276,7 +1283,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
         private void barBtnCadastralNumberDel_ItemClick(object sender, ItemClickEventArgs e)
         {
-            if (gridViewCadastralNumber.GetRow(gridViewExpert.FocusedRowHandle) is CadastralNumber obj)
+            if (gridViewCadastralNumber.GetRow(gridViewCadastralNumber.FocusedRowHandle) is CadastralNumber obj)
             {
                 if (XtraMessageBox.Show(
                     "Вы действительно хотите удалить выделенный объект?",
@@ -1299,8 +1306,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
             }
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
-        private void clearEditValue_ButtonPressed(object sender, ButtonPressedEventArgs e)
+        private void ClearEditValue(object sender, ButtonPressedEventArgs e)
         {
             if (sender is CheckedComboBoxEdit checkedComboBoxEdit)
             {
@@ -1524,12 +1530,6 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                     gridControlFinances.RefreshDataSource();
                 }
             }
-        }
-
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
-        private void btnCancel_Click(object sender, EventArgs e)
-        {
-            Close();
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]

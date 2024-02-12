@@ -1,4 +1,5 @@
 ﻿using Core.NET.Algorithms;
+using Core.NET.AutoModels;
 using Core.NET.AutoModels.ConclusionObj;
 using Core.NET.Controllers;
 using Core.NET.Extensions;

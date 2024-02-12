@@ -54,6 +54,16 @@
             DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject18 = new DevExpress.Utils.SerializableAppearanceObject();
             DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject19 = new DevExpress.Utils.SerializableAppearanceObject();
             DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject20 = new DevExpress.Utils.SerializableAppearanceObject();
+            DevExpress.XtraEditors.Controls.EditorButtonImageOptions editorButtonImageOptions6 = new DevExpress.XtraEditors.Controls.EditorButtonImageOptions();
+            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject21 = new DevExpress.Utils.SerializableAppearanceObject();
+            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject22 = new DevExpress.Utils.SerializableAppearanceObject();
+            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject23 = new DevExpress.Utils.SerializableAppearanceObject();
+            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject24 = new DevExpress.Utils.SerializableAppearanceObject();
+            DevExpress.XtraEditors.Controls.EditorButtonImageOptions editorButtonImageOptions7 = new DevExpress.XtraEditors.Controls.EditorButtonImageOptions();
+            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject25 = new DevExpress.Utils.SerializableAppearanceObject();
+            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject26 = new DevExpress.Utils.SerializableAppearanceObject();
+            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject27 = new DevExpress.Utils.SerializableAppearanceObject();
+            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject28 = new DevExpress.Utils.SerializableAppearanceObject();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ConclusionEdit));
             DevExpress.XtraEditors.Controls.EditorButtonImageOptions editorButtonImageOptions8 = new DevExpress.XtraEditors.Controls.EditorButtonImageOptions();
             DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject29 = new DevExpress.Utils.SerializableAppearanceObject();
@@ -70,16 +80,6 @@
             DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject38 = new DevExpress.Utils.SerializableAppearanceObject();
             DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject39 = new DevExpress.Utils.SerializableAppearanceObject();
             DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject40 = new DevExpress.Utils.SerializableAppearanceObject();
-            DevExpress.XtraEditors.Controls.EditorButtonImageOptions editorButtonImageOptions6 = new DevExpress.XtraEditors.Controls.EditorButtonImageOptions();
-            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject21 = new DevExpress.Utils.SerializableAppearanceObject();
-            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject22 = new DevExpress.Utils.SerializableAppearanceObject();
-            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject23 = new DevExpress.Utils.SerializableAppearanceObject();
-            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject24 = new DevExpress.Utils.SerializableAppearanceObject();
-            DevExpress.XtraEditors.Controls.EditorButtonImageOptions editorButtonImageOptions7 = new DevExpress.XtraEditors.Controls.EditorButtonImageOptions();
-            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject25 = new DevExpress.Utils.SerializableAppearanceObject();
-            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject26 = new DevExpress.Utils.SerializableAppearanceObject();
-            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject27 = new DevExpress.Utils.SerializableAppearanceObject();
-            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject28 = new DevExpress.Utils.SerializableAppearanceObject();
             this.xtraTabControlBase = new DevExpress.XtraTab.XtraTabControl();
             this.xtraTabPageForm1 = new DevExpress.XtraTab.XtraTabPage();
             this.layoutControl_I = new DevExpress.XtraLayout.LayoutControl();
@@ -160,6 +160,8 @@
             this.gridViewExpertProjectDocuments2 = new DevExpress.XtraGrid.Views.Grid.GridView();
             this.gridControlDocuments = new DevExpress.XtraGrid.GridControl();
             this.gridViewDocuments = new DevExpress.XtraGrid.Views.Grid.GridView();
+            this.cmbProjectDocumentationIM = new DevExpress.XtraEditors.ComboBoxEdit();
+            this.cmbEngineeringSurveysIM = new DevExpress.XtraEditors.ComboBoxEdit();
             this.layoutControlGroup_I = new DevExpress.XtraLayout.LayoutControlGroup();
             this.tabbedControlGroup1 = new DevExpress.XtraLayout.TabbedControlGroup();
             this.layoutControlGroup9 = new DevExpress.XtraLayout.LayoutControlGroup();
@@ -172,6 +174,8 @@
             this.layoutControlItemExaminationForm = new DevExpress.XtraLayout.LayoutControlItem();
             this.layoutControlItemName = new DevExpress.XtraLayout.LayoutControlItem();
             this.layoutControlItemExaminationStageNote = new DevExpress.XtraLayout.LayoutControlItem();
+            this.layoutControlItemProjectDocumentationIM = new DevExpress.XtraLayout.LayoutControlItem();
+            this.layoutControlItemEngineeringSurveysIM = new DevExpress.XtraLayout.LayoutControlItem();
             this.layoutControlGroup10 = new DevExpress.XtraLayout.LayoutControlGroup();
             this.layoutControlGroupEntity = new DevExpress.XtraLayout.LayoutControlGroup();
             this.layoutControlItemSearch = new DevExpress.XtraLayout.LayoutControlItem();
@@ -361,10 +365,6 @@
             this.popupMenuEngineeringSurveyTechnicalCustomer = new DevExpress.XtraBars.PopupMenu(this.components);
             this.popupMenuExpertEngineeringSurveys = new DevExpress.XtraBars.PopupMenu(this.components);
             this.popupMenuEngineeringSurveyAddress = new DevExpress.XtraBars.PopupMenu(this.components);
-            this.cmbProjectDocumentationIM = new DevExpress.XtraEditors.ComboBoxEdit();
-            this.layoutControlItemProjectDocumentationIM = new DevExpress.XtraLayout.LayoutControlItem();
-            this.cmbEngineeringSurveysIM = new DevExpress.XtraEditors.ComboBoxEdit();
-            this.layoutControlItemEngineeringSurveysIM = new DevExpress.XtraLayout.LayoutControlItem();
             ((System.ComponentModel.ISupportInitialize)(this.xtraTabControlBase)).BeginInit();
             this.xtraTabControlBase.SuspendLayout();
             this.xtraTabPageForm1.SuspendLayout();
@@ -397,6 +397,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.gridViewExpertProjectDocuments2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.gridControlDocuments)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.gridViewDocuments)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.cmbProjectDocumentationIM.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.cmbEngineeringSurveysIM.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlGroup_I)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.tabbedControlGroup1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlGroup9)).BeginInit();
@@ -409,6 +411,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemExaminationForm)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemName)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemExaminationStageNote)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemProjectDocumentationIM)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemEngineeringSurveysIM)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlGroup10)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlGroupEntity)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemSearch)).BeginInit();
@@ -609,10 +613,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.popupMenuEngineeringSurveyTechnicalCustomer)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.popupMenuExpertEngineeringSurveys)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.popupMenuEngineeringSurveyAddress)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.cmbProjectDocumentationIM.Properties)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemProjectDocumentationIM)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.cmbEngineeringSurveysIM.Properties)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemEngineeringSurveysIM)).BeginInit();
             this.SuspendLayout();
             // 
             // xtraTabControlBase
@@ -690,7 +690,7 @@
             this.checkCmbExaminationType.Size = new System.Drawing.Size(631, 20);
             this.checkCmbExaminationType.StyleController = this.layoutControl_I;
             this.checkCmbExaminationType.TabIndex = 8;
-            this.checkCmbExaminationType.ButtonPressed += new DevExpress.XtraEditors.Controls.ButtonPressedEventHandler(this.clearEditValue_ButtonPressed);
+            this.checkCmbExaminationType.ButtonPressed += new DevExpress.XtraEditors.Controls.ButtonPressedEventHandler(this.ClearEditValue);
             // 
             // barManager
             // 
@@ -1120,7 +1120,7 @@
             this.cmbExaminationResult.Size = new System.Drawing.Size(240, 20);
             this.cmbExaminationResult.StyleController = this.layoutControl_I;
             this.cmbExaminationResult.TabIndex = 6;
-            this.cmbExaminationResult.ButtonPressed += new DevExpress.XtraEditors.Controls.ButtonPressedEventHandler(this.clearEditValue_ButtonPressed);
+            this.cmbExaminationResult.ButtonPressed += new DevExpress.XtraEditors.Controls.ButtonPressedEventHandler(this.ClearEditValue);
             // 
             // cmbExaminationForm
             // 
@@ -1136,7 +1136,7 @@
             this.cmbExaminationForm.Size = new System.Drawing.Size(263, 20);
             this.cmbExaminationForm.StyleController = this.layoutControl_I;
             this.cmbExaminationForm.TabIndex = 6;
-            this.cmbExaminationForm.ButtonPressed += new DevExpress.XtraEditors.Controls.ButtonPressedEventHandler(this.clearEditValue_ButtonPressed);
+            this.cmbExaminationForm.ButtonPressed += new DevExpress.XtraEditors.Controls.ButtonPressedEventHandler(this.ClearEditValue);
             // 
             // cmbExaminationObjectType
             // 
@@ -1152,7 +1152,7 @@
             this.cmbExaminationObjectType.Size = new System.Drawing.Size(228, 20);
             this.cmbExaminationObjectType.StyleController = this.layoutControl_I;
             this.cmbExaminationObjectType.TabIndex = 6;
-            this.cmbExaminationObjectType.ButtonPressed += new DevExpress.XtraEditors.Controls.ButtonPressedEventHandler(this.clearEditValue_ButtonPressed);
+            this.cmbExaminationObjectType.ButtonPressed += new DevExpress.XtraEditors.Controls.ButtonPressedEventHandler(this.ClearEditValue);
             // 
             // cmbExaminationStage
             // 
@@ -1168,7 +1168,7 @@
             this.cmbExaminationStage.Size = new System.Drawing.Size(276, 20);
             this.cmbExaminationStage.StyleController = this.layoutControl_I;
             this.cmbExaminationStage.TabIndex = 6;
-            this.cmbExaminationStage.ButtonPressed += new DevExpress.XtraEditors.Controls.ButtonPressedEventHandler(this.clearEditValue_ButtonPressed);
+            this.cmbExaminationStage.ButtonPressed += new DevExpress.XtraEditors.Controls.ButtonPressedEventHandler(this.ClearEditValue);
             // 
             // cmbConstructionType
             // 
@@ -1184,7 +1184,7 @@
             this.cmbConstructionType.Size = new System.Drawing.Size(303, 20);
             this.cmbConstructionType.StyleController = this.layoutControl_I;
             this.cmbConstructionType.TabIndex = 6;
-            this.cmbConstructionType.ButtonPressed += new DevExpress.XtraEditors.Controls.ButtonPressedEventHandler(this.clearEditValue_ButtonPressed);
+            this.cmbConstructionType.ButtonPressed += new DevExpress.XtraEditors.Controls.ButtonPressedEventHandler(this.ClearEditValue);
             // 
             // memoExaminationStageNote
             // 
@@ -1391,6 +1391,38 @@
             this.gridViewDocuments.OptionsView.ShowGroupPanel = false;
             this.gridViewDocuments.PopupMenuShowing += new DevExpress.XtraGrid.Views.Grid.PopupMenuShowingEventHandler(this.gridViewDocuments_PopupMenuShowing);
             // 
+            // cmbProjectDocumentationIM
+            // 
+            this.cmbProjectDocumentationIM.EditValue = "";
+            this.cmbProjectDocumentationIM.Location = new System.Drawing.Point(453, 383);
+            this.cmbProjectDocumentationIM.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.cmbProjectDocumentationIM.Name = "cmbProjectDocumentationIM";
+            this.cmbProjectDocumentationIM.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo),
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Ellipsis, "", -1, true, false, false, editorButtonImageOptions6, new DevExpress.Utils.KeyShortcut(System.Windows.Forms.Keys.None), serializableAppearanceObject21, serializableAppearanceObject22, serializableAppearanceObject23, serializableAppearanceObject24, "", null, null, DevExpress.Utils.ToolTipAnchor.Default),
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Delete)});
+            this.cmbProjectDocumentationIM.Properties.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.DisableTextEditor;
+            this.cmbProjectDocumentationIM.Size = new System.Drawing.Size(318, 20);
+            this.cmbProjectDocumentationIM.StyleController = this.layoutControl_I;
+            this.cmbProjectDocumentationIM.TabIndex = 6;
+            this.cmbProjectDocumentationIM.ButtonPressed += new DevExpress.XtraEditors.Controls.ButtonPressedEventHandler(this.ClearEditValue);
+            // 
+            // cmbEngineeringSurveysIM
+            // 
+            this.cmbEngineeringSurveysIM.EditValue = "";
+            this.cmbEngineeringSurveysIM.Location = new System.Drawing.Point(645, 407);
+            this.cmbEngineeringSurveysIM.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.cmbEngineeringSurveysIM.Name = "cmbEngineeringSurveysIM";
+            this.cmbEngineeringSurveysIM.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo),
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Ellipsis, "", -1, true, false, false, editorButtonImageOptions7, new DevExpress.Utils.KeyShortcut(System.Windows.Forms.Keys.None), serializableAppearanceObject25, serializableAppearanceObject26, serializableAppearanceObject27, serializableAppearanceObject28, "", null, null, DevExpress.Utils.ToolTipAnchor.Default),
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Delete)});
+            this.cmbEngineeringSurveysIM.Properties.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.DisableTextEditor;
+            this.cmbEngineeringSurveysIM.Size = new System.Drawing.Size(126, 20);
+            this.cmbEngineeringSurveysIM.StyleController = this.layoutControl_I;
+            this.cmbEngineeringSurveysIM.TabIndex = 6;
+            this.cmbEngineeringSurveysIM.ButtonPressed += new DevExpress.XtraEditors.Controls.ButtonPressedEventHandler(this.ClearEditValue);
+            // 
             // layoutControlGroup_I
             // 
             this.layoutControlGroup_I.EnableIndentsWithoutBorders = DevExpress.Utils.DefaultBoolean.True;
@@ -1409,7 +1441,7 @@
             this.tabbedControlGroup1.MultiLine = DevExpress.Utils.DefaultBoolean.True;
             this.tabbedControlGroup1.Name = "tabbedControlGroup1";
             this.tabbedControlGroup1.Padding = new DevExpress.XtraLayout.Utils.Padding(4, 4, 4, 4);
-            this.tabbedControlGroup1.SelectedTabPage = this.layoutControlGroup9;
+            this.tabbedControlGroup1.SelectedTabPage = this.layoutControlGroup13;
             this.tabbedControlGroup1.Size = new System.Drawing.Size(776, 530);
             this.tabbedControlGroup1.TabPages.AddRange(new DevExpress.XtraLayout.BaseLayoutItem[] {
             this.layoutControlGroup9,
@@ -1533,6 +1565,29 @@
             this.layoutControlItemExaminationStageNote.Text = "Дополнительные сведения о виде проведения экспертизы";
             this.layoutControlItemExaminationStageNote.TextLocation = DevExpress.Utils.Locations.Top;
             this.layoutControlItemExaminationStageNote.TextSize = new System.Drawing.Size(302, 13);
+            // 
+            // layoutControlItemProjectDocumentationIM
+            // 
+            this.layoutControlItemProjectDocumentationIM.Control = this.cmbProjectDocumentationIM;
+            this.layoutControlItemProjectDocumentationIM.ControlAlignment = System.Drawing.ContentAlignment.TopLeft;
+            this.layoutControlItemProjectDocumentationIM.CustomizationFormText = "Результат экспертизы *";
+            this.layoutControlItemProjectDocumentationIM.Location = new System.Drawing.Point(0, 278);
+            this.layoutControlItemProjectDocumentationIM.Name = "layoutControlItemProjectDocumentationIM";
+            this.layoutControlItemProjectDocumentationIM.Size = new System.Drawing.Size(762, 24);
+            this.layoutControlItemProjectDocumentationIM.Text = "Сведения о подготовке проектной документации в форме информационной модели";
+            this.layoutControlItemProjectDocumentationIM.TextSize = new System.Drawing.Size(428, 13);
+            // 
+            // layoutControlItemEngineeringSurveysIM
+            // 
+            this.layoutControlItemEngineeringSurveysIM.Control = this.cmbEngineeringSurveysIM;
+            this.layoutControlItemEngineeringSurveysIM.ControlAlignment = System.Drawing.ContentAlignment.TopLeft;
+            this.layoutControlItemEngineeringSurveysIM.CustomizationFormText = "Результат экспертизы *";
+            this.layoutControlItemEngineeringSurveysIM.Location = new System.Drawing.Point(0, 302);
+            this.layoutControlItemEngineeringSurveysIM.Name = "layoutControlItemEngineeringSurveysIM";
+            this.layoutControlItemEngineeringSurveysIM.Size = new System.Drawing.Size(762, 24);
+            this.layoutControlItemEngineeringSurveysIM.Text = "Сведения о подготовке отчетной документации о выполнении инженерных изысканий в ф" +
+    "орме информационной модели";
+            this.layoutControlItemEngineeringSurveysIM.TextSize = new System.Drawing.Size(620, 13);
             // 
             // layoutControlGroup10
             // 
@@ -1921,7 +1976,7 @@
             this.cmbObjectType.Size = new System.Drawing.Size(278, 20);
             this.cmbObjectType.StyleController = this.layoutControl_Page_II_1;
             this.cmbObjectType.TabIndex = 6;
-            this.cmbObjectType.ButtonPressed += new DevExpress.XtraEditors.Controls.ButtonPressedEventHandler(this.clearEditValue_ButtonPressed);
+            this.cmbObjectType.ButtonPressed += new DevExpress.XtraEditors.Controls.ButtonPressedEventHandler(this.ClearEditValue);
             // 
             // cmbFunctionsClass
             // 
@@ -1936,7 +1991,7 @@
             this.cmbFunctionsClass.Size = new System.Drawing.Size(488, 20);
             this.cmbFunctionsClass.StyleController = this.layoutControl_Page_II_1;
             this.cmbFunctionsClass.TabIndex = 6;
-            this.cmbFunctionsClass.ButtonPressed += new DevExpress.XtraEditors.Controls.ButtonPressedEventHandler(this.clearEditValue_ButtonPressed);
+            this.cmbFunctionsClass.ButtonPressed += new DevExpress.XtraEditors.Controls.ButtonPressedEventHandler(this.ClearEditValue);
             // 
             // cmbObjectAddress
             // 
@@ -1952,7 +2007,7 @@
             this.cmbObjectAddress.StyleController = this.layoutControl_Page_II_1;
             this.cmbObjectAddress.TabIndex = 6;
             this.cmbObjectAddress.ButtonClick += new DevExpress.XtraEditors.Controls.ButtonPressedEventHandler(this.cmbObjectAddress_ButtonClick);
-            this.cmbObjectAddress.ButtonPressed += new DevExpress.XtraEditors.Controls.ButtonPressedEventHandler(this.clearEditValue_ButtonPressed);
+            this.cmbObjectAddress.ButtonPressed += new DevExpress.XtraEditors.Controls.ButtonPressedEventHandler(this.ClearEditValue);
             // 
             // layoutControlGroupPage_II_1
             // 
@@ -2180,7 +2235,7 @@
             this.checkCmbClimateDistrict.Size = new System.Drawing.Size(382, 20);
             this.checkCmbClimateDistrict.StyleController = this.layoutControl5;
             this.checkCmbClimateDistrict.TabIndex = 4;
-            this.checkCmbClimateDistrict.ButtonPressed += new DevExpress.XtraEditors.Controls.ButtonPressedEventHandler(this.clearEditValue_ButtonPressed);
+            this.checkCmbClimateDistrict.ButtonPressed += new DevExpress.XtraEditors.Controls.ButtonPressedEventHandler(this.ClearEditValue);
             // 
             // checkCmbSeismicActivity
             // 
@@ -2192,7 +2247,7 @@
             this.checkCmbSeismicActivity.Size = new System.Drawing.Size(382, 20);
             this.checkCmbSeismicActivity.StyleController = this.layoutControl5;
             this.checkCmbSeismicActivity.TabIndex = 4;
-            this.checkCmbSeismicActivity.ButtonPressed += new DevExpress.XtraEditors.Controls.ButtonPressedEventHandler(this.clearEditValue_ButtonPressed);
+            this.checkCmbSeismicActivity.ButtonPressed += new DevExpress.XtraEditors.Controls.ButtonPressedEventHandler(this.ClearEditValue);
             // 
             // checkCmbWindDistrict
             // 
@@ -2204,7 +2259,7 @@
             this.checkCmbWindDistrict.Size = new System.Drawing.Size(382, 20);
             this.checkCmbWindDistrict.StyleController = this.layoutControl5;
             this.checkCmbWindDistrict.TabIndex = 4;
-            this.checkCmbWindDistrict.ButtonPressed += new DevExpress.XtraEditors.Controls.ButtonPressedEventHandler(this.clearEditValue_ButtonPressed);
+            this.checkCmbWindDistrict.ButtonPressed += new DevExpress.XtraEditors.Controls.ButtonPressedEventHandler(this.ClearEditValue);
             // 
             // checkCmbGeologicalConditions
             // 
@@ -2216,7 +2271,7 @@
             this.checkCmbGeologicalConditions.Size = new System.Drawing.Size(382, 20);
             this.checkCmbGeologicalConditions.StyleController = this.layoutControl5;
             this.checkCmbGeologicalConditions.TabIndex = 4;
-            this.checkCmbGeologicalConditions.ButtonPressed += new DevExpress.XtraEditors.Controls.ButtonPressedEventHandler(this.clearEditValue_ButtonPressed);
+            this.checkCmbGeologicalConditions.ButtonPressed += new DevExpress.XtraEditors.Controls.ButtonPressedEventHandler(this.ClearEditValue);
             // 
             // checkCmbSnowDistrict
             // 
@@ -2228,7 +2283,7 @@
             this.checkCmbSnowDistrict.Size = new System.Drawing.Size(768, 20);
             this.checkCmbSnowDistrict.StyleController = this.layoutControl5;
             this.checkCmbSnowDistrict.TabIndex = 4;
-            this.checkCmbSnowDistrict.ButtonPressed += new DevExpress.XtraEditors.Controls.ButtonPressedEventHandler(this.clearEditValue_ButtonPressed);
+            this.checkCmbSnowDistrict.ButtonPressed += new DevExpress.XtraEditors.Controls.ButtonPressedEventHandler(this.ClearEditValue);
             // 
             // memoClimateConditionsNote
             // 
@@ -3255,7 +3310,7 @@
             this.checkCmbEngineeringSurveyType.Size = new System.Drawing.Size(770, 20);
             this.checkCmbEngineeringSurveyType.StyleController = this.layoutControl3;
             this.checkCmbEngineeringSurveyType.TabIndex = 4;
-            this.checkCmbEngineeringSurveyType.ButtonPressed += new DevExpress.XtraEditors.Controls.ButtonPressedEventHandler(this.clearEditValue_ButtonPressed);
+            this.checkCmbEngineeringSurveyType.ButtonPressed += new DevExpress.XtraEditors.Controls.ButtonPressedEventHandler(this.ClearEditValue);
             // 
             // layoutControlGroup3
             // 
@@ -3490,11 +3545,11 @@
             // 
             // txtFileName
             // 
-            this.txtFileName.Location = new System.Drawing.Point(91, 665);
+            this.txtFileName.Location = new System.Drawing.Point(84, 665);
             this.txtFileName.MenuManager = this.barManager;
             this.txtFileName.MinimumSize = new System.Drawing.Size(250, 0);
             this.txtFileName.Name = "txtFileName";
-            this.txtFileName.Size = new System.Drawing.Size(250, 20);
+            this.txtFileName.Size = new System.Drawing.Size(257, 20);
             this.txtFileName.StyleController = this.layoutControl;
             this.txtFileName.TabIndex = 6;
             // 
@@ -3562,7 +3617,9 @@
             this.layoutControlItemFileName.Name = "layoutControlItemFileName";
             this.layoutControlItemFileName.Size = new System.Drawing.Size(339, 26);
             this.layoutControlItemFileName.Text = "Наименование";
+            this.layoutControlItemFileName.TextAlignMode = DevExpress.XtraLayout.TextAlignModeItem.AutoSize;
             this.layoutControlItemFileName.TextSize = new System.Drawing.Size(73, 13);
+            this.layoutControlItemFileName.TextToControlDistance = 5;
             // 
             // layoutControlItemVersion
             // 
@@ -3718,61 +3775,6 @@
             this.popupMenuEngineeringSurveyAddress.Manager = this.barManager;
             this.popupMenuEngineeringSurveyAddress.Name = "popupMenuEngineeringSurveyAddress";
             // 
-            // cmbProjectDocumentationIM
-            // 
-            this.cmbProjectDocumentationIM.EditValue = "";
-            this.cmbProjectDocumentationIM.Location = new System.Drawing.Point(453, 383);
-            this.cmbProjectDocumentationIM.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.cmbProjectDocumentationIM.Name = "cmbProjectDocumentationIM";
-            this.cmbProjectDocumentationIM.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
-            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo),
-            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Ellipsis, "", -1, true, false, false, editorButtonImageOptions6, new DevExpress.Utils.KeyShortcut(System.Windows.Forms.Keys.None), serializableAppearanceObject21, serializableAppearanceObject22, serializableAppearanceObject23, serializableAppearanceObject24, "", null, null, DevExpress.Utils.ToolTipAnchor.Default),
-            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Delete)});
-            this.cmbProjectDocumentationIM.Properties.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.DisableTextEditor;
-            this.cmbProjectDocumentationIM.Size = new System.Drawing.Size(318, 20);
-            this.cmbProjectDocumentationIM.StyleController = this.layoutControl_I;
-            this.cmbProjectDocumentationIM.TabIndex = 6;
-            this.cmbProjectDocumentationIM.ButtonPressed += new DevExpress.XtraEditors.Controls.ButtonPressedEventHandler(this.clearEditValue_ButtonPressed);
-            // 
-            // layoutControlItemProjectDocumentationIM
-            // 
-            this.layoutControlItemProjectDocumentationIM.Control = this.cmbProjectDocumentationIM;
-            this.layoutControlItemProjectDocumentationIM.ControlAlignment = System.Drawing.ContentAlignment.TopLeft;
-            this.layoutControlItemProjectDocumentationIM.CustomizationFormText = "Результат экспертизы *";
-            this.layoutControlItemProjectDocumentationIM.Location = new System.Drawing.Point(0, 278);
-            this.layoutControlItemProjectDocumentationIM.Name = "layoutControlItemProjectDocumentationIM";
-            this.layoutControlItemProjectDocumentationIM.Size = new System.Drawing.Size(762, 24);
-            this.layoutControlItemProjectDocumentationIM.Text = "Сведения о подготовке проектной документации в форме информационной модели";
-            this.layoutControlItemProjectDocumentationIM.TextSize = new System.Drawing.Size(428, 13);
-            // 
-            // cmbEngineeringSurveysIM
-            // 
-            this.cmbEngineeringSurveysIM.EditValue = "";
-            this.cmbEngineeringSurveysIM.Location = new System.Drawing.Point(645, 407);
-            this.cmbEngineeringSurveysIM.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.cmbEngineeringSurveysIM.Name = "cmbEngineeringSurveysIM";
-            this.cmbEngineeringSurveysIM.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
-            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo),
-            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Ellipsis, "", -1, true, false, false, editorButtonImageOptions7, new DevExpress.Utils.KeyShortcut(System.Windows.Forms.Keys.None), serializableAppearanceObject25, serializableAppearanceObject26, serializableAppearanceObject27, serializableAppearanceObject28, "", null, null, DevExpress.Utils.ToolTipAnchor.Default),
-            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Delete)});
-            this.cmbEngineeringSurveysIM.Properties.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.DisableTextEditor;
-            this.cmbEngineeringSurveysIM.Size = new System.Drawing.Size(126, 20);
-            this.cmbEngineeringSurveysIM.StyleController = this.layoutControl_I;
-            this.cmbEngineeringSurveysIM.TabIndex = 6;
-            this.cmbEngineeringSurveysIM.ButtonPressed += new DevExpress.XtraEditors.Controls.ButtonPressedEventHandler(this.clearEditValue_ButtonPressed);
-            // 
-            // layoutControlItemEngineeringSurveysIM
-            // 
-            this.layoutControlItemEngineeringSurveysIM.Control = this.cmbEngineeringSurveysIM;
-            this.layoutControlItemEngineeringSurveysIM.ControlAlignment = System.Drawing.ContentAlignment.TopLeft;
-            this.layoutControlItemEngineeringSurveysIM.CustomizationFormText = "Результат экспертизы *";
-            this.layoutControlItemEngineeringSurveysIM.Location = new System.Drawing.Point(0, 302);
-            this.layoutControlItemEngineeringSurveysIM.Name = "layoutControlItemEngineeringSurveysIM";
-            this.layoutControlItemEngineeringSurveysIM.Size = new System.Drawing.Size(762, 24);
-            this.layoutControlItemEngineeringSurveysIM.Text = "Сведения о подготовке отчетной документации о выполнении инженерных изысканий в ф" +
-    "орме информационной модели";
-            this.layoutControlItemEngineeringSurveysIM.TextSize = new System.Drawing.Size(620, 13);
-            // 
             // ConclusionEdit
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -3821,6 +3823,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.gridViewExpertProjectDocuments2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.gridControlDocuments)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.gridViewDocuments)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.cmbProjectDocumentationIM.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.cmbEngineeringSurveysIM.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlGroup_I)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.tabbedControlGroup1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlGroup9)).EndInit();
@@ -3833,6 +3837,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemExaminationForm)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemName)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemExaminationStageNote)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemProjectDocumentationIM)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemEngineeringSurveysIM)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlGroup10)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlGroupEntity)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemSearch)).EndInit();
@@ -4033,10 +4039,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.popupMenuEngineeringSurveyTechnicalCustomer)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.popupMenuExpertEngineeringSurveys)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.popupMenuEngineeringSurveyAddress)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.cmbProjectDocumentationIM.Properties)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemProjectDocumentationIM)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.cmbEngineeringSurveysIM.Properties)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemEngineeringSurveysIM)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 

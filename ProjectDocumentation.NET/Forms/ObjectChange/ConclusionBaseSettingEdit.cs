@@ -1,4 +1,4 @@
-﻿using Core.NET.AutoModels.ConclusionObj;
+﻿using Core.NET.AutoModels;
 using Core.NET.DaDataObj;
 using DevExpress.XtraEditors;
 using DevExpress.XtraEditors.Controls;

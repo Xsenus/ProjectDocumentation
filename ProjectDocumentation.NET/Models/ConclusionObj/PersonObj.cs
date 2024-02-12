@@ -1,4 +1,6 @@
-﻿using Core.NET.AutoModels.ConclusionObj;
+﻿using Core.NET.AutoModels;
+using Core.NET.AutoModels.ConclusionObj;
+using Core.NET.AutoModels.ExplanatoryNoteObj;
 using System.Collections.Generic;
 
 namespace ProjectDocumentation.NET.Models.ConclusionObj
@@ -35,7 +37,17 @@ namespace ProjectDocumentation.NET.Models.ConclusionObj
             }
         }
 
-        public static IEnumerable<PersonObj> GetPersonObjByTechnicalCustomer(ICollection<tTechnicalCustomer> collection)
+        public static IEnumerable<PersonObj> GetPersonObjByDeveloper(ICollection<tDeveloper> collection)
+        {
+            foreach (var obj in collection)
+            {
+                var result = new PersonObj(obj);
+                result.SetObjByDeclarator();
+                yield return result;
+            }
+        }
+
+        public static IEnumerable<PersonObj> GetPersonObjByTechnicalCustomer(ICollection<ITechnicalCustomer> collection)
         {
             foreach (var obj in collection)
             {
@@ -83,30 +95,35 @@ namespace ProjectDocumentation.NET.Models.ConclusionObj
             if (Obj is tDeclarant declarant)
             {
                 BaseObj = declarant;
-                Obj = declarant.Item;
+                Obj = declarant.Item;                
+            }
+            else if (Obj is tDeveloper developer)
+            {
+                BaseObj = developer;
+                Obj = developer.Item;                
+            }
 
-                if (Obj is tForeignOrganization tForeignOrganization)
-                {
-                    Name = tForeignOrganization.OrgFullName;
-                }
-                else if (Obj is tIP ip)
-                {
-                    Name = $"ИП {ip.FamilyName} {ip.FirstName} {ip.SecondName}";
-                }
-                else if (Obj is tOrganization tOrganization)
-                {
-                    Name = tOrganization.OrgFullName;
-                }
-                else if (Obj is tPerson person)
-                {
-                    Name = $"ФЛ {person.FamilyName} {person.FirstName} {person.SecondName}";
-                }
+            if (Obj is tForeignOrganization tForeignOrganization)
+            {
+                Name = tForeignOrganization.OrgFullName;
+            }
+            else if (Obj is tIP ip)
+            {
+                Name = $"ИП {ip.FamilyName} {ip.FirstName} {ip.SecondName}";
+            }
+            else if (Obj is tOrganization tOrganization)
+            {
+                Name = tOrganization.OrgFullName;
+            }
+            else if (Obj is tPerson person)
+            {
+                Name = $"ФЛ {person.FamilyName} {person.FirstName} {person.SecondName}";
             }
         }
 
         public void SetObjByTechnicalCustomer()
         {
-            if (Obj is tTechnicalCustomer tTechnicalCustomer)
+            if (Obj is ITechnicalCustomer tTechnicalCustomer)
             {
                 BaseObj = tTechnicalCustomer;
                 Obj = tTechnicalCustomer.Item;
@@ -151,7 +168,7 @@ namespace ProjectDocumentation.NET.Models.ConclusionObj
                     Name = $"ФЛ {tPerson.FamilyName} {tPerson.FirstName} {tPerson.SecondName}";
                 }
             }
-            else if (Obj is tTechnicalCustomer tTechnicalCustomer)
+            else if (Obj is ITechnicalCustomer tTechnicalCustomer)
             {
                 if (tTechnicalCustomer.Item is tForeignOrganization tForeignOrganization)
                 {

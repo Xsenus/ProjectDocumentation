@@ -29,8 +29,7 @@ namespace Core.NET.Models.XPO
 
         public override string ToString()
         {
-            return Name;
-            //return $"[{Value}] {Name}";
+            return $"[{Value}] {Name}";
         }
     }
 }
