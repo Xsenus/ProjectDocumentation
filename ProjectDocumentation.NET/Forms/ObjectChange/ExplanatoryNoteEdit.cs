@@ -1,6 +1,7 @@
 ﻿using Core.NET.AutoModels;
 using Core.NET.AutoModels.ExplanatoryNoteObj;
 using Core.NET.Controllers;
+using Core.NET.Extensions;
 using Core.NET.Models.XPO;
 using DevExpress.Utils;
 using DevExpress.Xpo;
@@ -9,6 +10,7 @@ using DevExpress.XtraEditors;
 using DevExpress.XtraEditors.Controls;
 using DevExpress.XtraGrid.Columns;
 using DevExpress.XtraGrid.Views.Grid;
+using DevExpress.XtraLayout.Utils;
 using ProjectDocumentation.NET.Models.ConclusionObj;
 using ProjectDocumentation.NET.Models.ExplanatoryNoteObj;
 using System;
@@ -22,6 +24,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
 {
     public partial class ExplanatoryNoteEdit : XtraForm
     {
+        private ExplanatoryNoteObjType _explanatoryNoteObjType;
         private Session Session => SessionController.GetSession();
         public string FileName { get; private set; }
         public bool IsSave { get; private set; }
@@ -39,6 +42,11 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
         public ExplanatoryNoteEdit()
         {
             InitializeComponent();
+
+            foreach (ExplanatoryNoteObjType item in Enum.GetValues(typeof(ExplanatoryNoteObjType)))
+            {
+                cmbExplanatoryNoteObjType.Properties.Items.Add(item.GetEnumDescription());
+            }
         }
 
         public ExplanatoryNoteEdit(ExplanatoryNote explanatoryNote) : this()
@@ -51,9 +59,50 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
             FileName = fileName;
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
+        private void cmbExplanatoryNoteObjType_SelectedValueChanged(object sender, EventArgs e)
+        {
+            if (sender is ButtonEdit buttonEdit)
+            {
+                _explanatoryNoteObjType = EnumExtension.GetDefaultEnum<ExplanatoryNoteObjType>(buttonEdit.Text);
+
+                layoutControlGroupIndustrialObject.Visibility = LayoutVisibility.Never;
+
+                switch (_explanatoryNoteObjType)
+                {
+                    case ExplanatoryNoteObjType.IndustrialObject:
+                        layoutControlGroupIndustrialObject.Visibility = LayoutVisibility.Always;
+                        break;
+
+                    case ExplanatoryNoteObjType.NonIndustrialObject:
+                        break;
+
+                    case ExplanatoryNoteObjType.LinearObject:
+                        break;
+                }
+            }
+        }
+
         private async Task FillFormControllersAsync()
         {
             var collection = await new XPQuery<GeneralizedDictionaryXPO>(Session).ToListAsync();
+
+            cmbPlacement.Properties.Items.AddRange(collection
+                .Where(w => w.GeneralizedDictionary == GeneralizedDictionary.Placement).ToList());
+            cmbDangerousAndComplex.Properties.Items.AddRange(collection
+                .Where(w => w.GeneralizedDictionary == GeneralizedDictionary.DangerousAndComplex).ToList());
+            cmbUnique.Properties.Items.AddRange(collection
+                .Where(w => w.GeneralizedDictionary == GeneralizedDictionary.Unique).ToList());
+            cmbConstructionType.Properties.Items.AddRange(collection
+                .Where(w => w.GeneralizedDictionary == GeneralizedDictionary.ConstructionType).ToList());
+            cmbDangerIndustrialClass.Properties.Items.AddRange(collection
+                .Where(w => w.GeneralizedDictionary == GeneralizedDictionary.DangerIndustrialClass).ToList());
+            cmbLandCategory.Properties.Items.AddRange(collection
+                .Where(w => w.GeneralizedDictionary == GeneralizedDictionary.LandCategory).ToList());
+            cmbFireDangerCategory.Properties.Items.AddRange(collection
+                .Where(w => w.GeneralizedDictionary == GeneralizedDictionary.FireDangerCategory).ToList()); 
+            cmbResponsibilityLevel.Properties.Items.AddRange(collection
+                .Where(w => w.GeneralizedDictionary == GeneralizedDictionary.ResponsibilityLevel).ToList());
         }
         
         private async void ExplanatoryNoteEdit_Load(object sender, EventArgs e)
@@ -65,6 +114,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
             if (ExplanatoryNote is null)
             {
                 ExplanatoryNote = new ExplanatoryNote();
+                cmbExplanatoryNoteObjType.SelectedIndex = 0;
             }
 
             txtVersion.EditValue = ExplanatoryNote.SchemaVersion;
@@ -120,6 +170,66 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                 gridTechnicalCustomerName.Visible = true;
             }
             #endregion
+
+            if (ExplanatoryNote?.Item is tIndustrialObject tIndustrialObject)
+            {
+                cmbExplanatoryNoteObjType.EditValue = ExplanatoryNoteObjType.IndustrialObject.GetEnumDescription();
+
+                #region IndustrialObject
+                txtIndustrialObjectID.EditValue = tIndustrialObject.ObjectID;
+                cmbPlacement.EditValue = cmbPlacement.Properties.Items
+                    ?.Cast<GeneralizedDictionaryXPO>()
+                    ?.Where(w => w.GeneralizedDictionary == GeneralizedDictionary.Placement)
+                    ?.FirstOrDefault(f => f.ValueInt == tIndustrialObject.Placement.GetEnumXmlAttributeValueInt());
+                if (tIndustrialObject.DangerousAndComplexSpecified is true)
+                {
+                    cmbDangerousAndComplex.EditValue = cmbDangerousAndComplex.Properties.Items
+                                        ?.Cast<GeneralizedDictionaryXPO>()
+                                        ?.Where(w => w.GeneralizedDictionary == GeneralizedDictionary.DangerousAndComplex)
+                                        ?.FirstOrDefault(f => f.ValueInt == tIndustrialObject.DangerousAndComplex.GetEnumXmlAttributeValueInt());
+                }
+                else
+                {
+                    cmbDangerousAndComplex.EditValue = null;
+                }
+                if (tIndustrialObject.UniqueSpecified is true)
+                {
+                    cmbUnique.EditValue = cmbUnique.Properties.Items
+                                        ?.Cast<GeneralizedDictionaryXPO>()
+                                        ?.Where(w => w.GeneralizedDictionary == GeneralizedDictionary.Unique)
+                                        ?.FirstOrDefault(f => f.ValueInt == tIndustrialObject.Unique.GetEnumXmlAttributeValueInt());
+                }
+                else
+                {
+                    cmbUnique.EditValue = null;
+                }
+                txtIndustrialObjectName.EditValue = tIndustrialObject.Name;
+                cmbConstructionType.EditValue = cmbConstructionType.Properties.Items
+                    ?.Cast<GeneralizedDictionaryXPO>()
+                    ?.Where(w => w.GeneralizedDictionary == GeneralizedDictionary.ConstructionType)
+                    ?.FirstOrDefault(f => f.ValueInt == tIndustrialObject.ConstructionType.GetEnumXmlAttributeValueInt());
+                txtConstructionDuration.EditValue = tIndustrialObject.ConstructionDuration;
+                cmbDangerIndustrialClass.EditValue = cmbDangerIndustrialClass.Properties.Items
+                    ?.Cast<GeneralizedDictionaryXPO>()
+                    ?.Where(w => w.GeneralizedDictionary == GeneralizedDictionary.DangerIndustrialClass)
+                    ?.FirstOrDefault(f => f.Value == tIndustrialObject.DangerousIndustrialObject.GetEnumXmlAttributeValue().ToString());
+                cmbLandCategory.EditValue = cmbLandCategory.Properties.Items
+                    ?.Cast<GeneralizedDictionaryXPO>()
+                    ?.Where(w => w.GeneralizedDictionary == GeneralizedDictionary.LandCategory)
+                    ?.FirstOrDefault(f => f.ValueInt == tIndustrialObject.LandCategory.GetEnumXmlAttributeValueInt());
+                var fireDangerCategory = tIndustrialObject.Items?.Where(w => w is tFireDangerCategory)?.Cast<tFireDangerCategory>()?.FirstOrDefault();
+                cmbFireDangerCategory.EditValue = cmbFireDangerCategory.Properties.Items
+                    ?.Cast<GeneralizedDictionaryXPO>()
+                    ?.Where(w => w.GeneralizedDictionary == GeneralizedDictionary.FireDangerCategory)
+                    ?.FirstOrDefault(f => f.Value == fireDangerCategory?.GetEnumDescription());
+                var responsibilityLevel = tIndustrialObject.Items?.Where(w => w is tResponsibilityLevel)?.Cast<tResponsibilityLevel>()?.FirstOrDefault();
+                cmbResponsibilityLevel.EditValue = cmbResponsibilityLevel.Properties.Items
+                    ?.Cast<GeneralizedDictionaryXPO>()
+                    ?.Where(w => w.GeneralizedDictionary == GeneralizedDictionary.ResponsibilityLevel)
+                    ?.FirstOrDefault(f => f.Value == responsibilityLevel?.GetEnumDescription());
+                #endregion
+
+            }
 
             #region Intelligence
             _tModifications = ExplanatoryNote?.ExplanatoryNoteModifications?.ToList() ?? new List<tModification>();
@@ -288,6 +398,88 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                 }
                 #endregion
 
+                switch (_explanatoryNoteObjType)
+                {
+                    case ExplanatoryNoteObjType.IndustrialObject:
+                        #region IndustrialObject
+                        var tIndustrialObject = new tIndustrialObject();
+                        tIndustrialObject.ObjectID = ConclusionEdit.GetStringValue(txtIndustrialObjectID.EditValue, txtIndustrialObjectID, "Заполните идентификатор объекта (части объекта)");
+                        tIndustrialObject.Placement = ConclusionEdit.GetEnumByAttributeValue<tPlacement>(ConclusionEdit.GetValueGeneralizedDictionary(
+                            cmbPlacement,
+                            message: "Заполните поле сведения о месте расположения объекта капитального строительства")?.Value);
+                        ExplanatoryNote.Item = tIndustrialObject;
+                        if (cmbDangerousAndComplex.EditValue is GeneralizedDictionaryXPO)
+                        {
+                            tIndustrialObject.DangerousAndComplexSpecified = true;
+                            tIndustrialObject.DangerousAndComplex = ConclusionEdit.GetEnumByAttributeValue<tDangerousAndComplex>(ConclusionEdit.GetValueGeneralizedDictionary(
+                                cmbDangerousAndComplex,
+                                message: "Заполните поле сведения об отнесении объекта к особо опасным и технически сложным объектам (номер подпункта пункта 1 статьи 48.1 Градостроительного кодекса Российской Федерации)")?.Value);
+                        }
+                        else
+                        {
+                            tIndustrialObject.DangerousAndComplexSpecified = false;
+                        }
+                        if (cmbUnique.EditValue is GeneralizedDictionaryXPO)
+                        {
+                            tIndustrialObject.UniqueSpecified = true;
+                            tIndustrialObject.Unique = ConclusionEdit.GetEnumByAttributeValue<tUnique>(ConclusionEdit.GetValueGeneralizedDictionary(
+                                cmbUnique,
+                                message: "Заполните поле сведения об отнесении объекта к уникальным объектам (номер подпункта пункта 2 статьи 48.1 Градостроительного кодекса Российской Федерации)")?.Value);
+                        }
+                        else
+                        {
+                            tIndustrialObject.UniqueSpecified = false;
+                        }
+                        tIndustrialObject.Name = ConclusionEdit.GetStringValue(txtIndustrialObjectName.EditValue, txtIndustrialObjectName, "Заполните поле наименование объекта капитального строительства (части сложного (составного) объекта капитального строительства)");
+                        tIndustrialObject.ConstructionType = ConclusionEdit.GetEnumByAttributeValue<tConstructionType>(ConclusionEdit.GetValueGeneralizedDictionary(
+                            cmbConstructionType,
+                            message: "Заполните поле вид работ, на который разрабатывается проектная документация")?.Value);
+                        if (int.TryParse(ConclusionEdit.GetStringValue(txtConstructionDuration.EditValue, txtConstructionDuration, "Заполните поле продолжительность работ, месяц"), out int resultConstructionDuration))
+                        {
+                            tIndustrialObject.ConstructionDuration = resultConstructionDuration;
+                        }
+                        tIndustrialObject.DangerousIndustrialObject = ConclusionEdit.GetEnumByAttributeValue<tDangerIndustrialClass>(ConclusionEdit.GetValueGeneralizedDictionary(
+                            cmbDangerIndustrialClass,
+                            message: "Заполните поле класс опасности опасного производственного объекта")?.Value);
+                        tIndustrialObject.LandCategory = ConclusionEdit.GetEnumByAttributeValue<tLandCategory>(ConclusionEdit.GetValueGeneralizedDictionary(
+                            cmbLandCategory,
+                            message: "Заполните поле сведения о категории земель, на которых располагается (будет располагаться) объект капитального строительства")?.Value);
+
+                        var objItems = new List<object>();
+                        objItems.Add(ConclusionEdit.GetEnumByAttributeValue<tFireDangerCategory>(ConclusionEdit.GetValueGeneralizedDictionary(
+                            cmbFireDangerCategory,
+                            message: "Заполните поле категория пожарной и взрывопожарной опасности")?.Value));
+                        objItems.Add(ConclusionEdit.GetEnumByAttributeValue<tResponsibilityLevel>(ConclusionEdit.GetValueGeneralizedDictionary(
+                            cmbResponsibilityLevel,
+                            message: "Заполните поле уровень ответственности")?.Value));
+                        if (objItems.Count() > 0)
+                        {
+                            tIndustrialObject.Items = objItems.ToArray();
+                        }
+                        else
+                        {
+                            tIndustrialObject.Items = null;
+                        }
+
+                        ExplanatoryNote.Item = tIndustrialObject;
+                        #endregion
+                        break;
+
+                    case ExplanatoryNoteObjType.NonIndustrialObject:
+                        var nonIndustrialObject = new tNonIndustrialObject();
+                        ExplanatoryNote.Item = nonIndustrialObject;
+                        break;
+
+                    case ExplanatoryNoteObjType.LinearObject:
+                        var linearObject = new tLinearObject();
+                        ExplanatoryNote.Item = linearObject;
+                        break;
+
+                    default:
+                        ExplanatoryNote.Item = null;
+                        break;
+                }
+
                 #region Intelligence
                 if (_tModifications.Count > 0)
                 {
@@ -349,6 +541,28 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
 
             IsSave = true;
             Close();
+        }
+        
+        private void ClearEditValue(object sender, ButtonPressedEventArgs e)
+        {
+            if (sender is CheckedComboBoxEdit checkedComboBoxEdit)
+            {
+                if (e.Button.Kind == ButtonPredefines.Delete)
+                {
+                    foreach (CheckedListBoxItem item in checkedComboBoxEdit.Properties.Items.Cast<CheckedListBoxItem>())
+                    {
+                        item.CheckState = CheckState.Unchecked;
+                    }
+                }
+            }
+
+            if (sender is ButtonEdit buttonEdit)
+            {
+                if (e.Button.Kind == ButtonPredefines.Delete)
+                {
+                    buttonEdit.EditValue = null;
+                }
+            }
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]

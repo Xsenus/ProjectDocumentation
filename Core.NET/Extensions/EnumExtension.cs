@@ -56,5 +56,21 @@ namespace Core.NET.Extensions
             }
             return genericEnum.ToString();
         }
+
+        public static T GetDefaultEnum<T>(string text) where T : Enum
+        {
+            if (!string.IsNullOrWhiteSpace(text))
+            {
+                foreach (T item in Enum.GetValues(typeof(T)))
+                {
+                    if (item.GetEnumDescription().Equals(text))
+                    {
+                        return item;
+                    }
+                }
+            }
+
+            return default;
+        }
     }
 }

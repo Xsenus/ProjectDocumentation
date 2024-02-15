@@ -164,6 +164,8 @@
             this.cmbEngineeringSurveysIM = new DevExpress.XtraEditors.ComboBoxEdit();
             this.layoutControlGroup_I = new DevExpress.XtraLayout.LayoutControlGroup();
             this.tabbedControlGroup1 = new DevExpress.XtraLayout.TabbedControlGroup();
+            this.layoutControlGroup13 = new DevExpress.XtraLayout.LayoutControlGroup();
+            this.layoutControlItemDocuments = new DevExpress.XtraLayout.LayoutControlItem();
             this.layoutControlGroup9 = new DevExpress.XtraLayout.LayoutControlGroup();
             this.layoutControlItemExaminationResult = new DevExpress.XtraLayout.LayoutControlItem();
             this.layoutControlItemExaminationObjectType = new DevExpress.XtraLayout.LayoutControlItem();
@@ -193,8 +195,6 @@
             this.layoutControlGroup11 = new DevExpress.XtraLayout.LayoutControlGroup();
             this.layoutControlItemDeclarant = new DevExpress.XtraLayout.LayoutControlItem();
             this.layoutControlGroup12 = new DevExpress.XtraLayout.LayoutControlGroup();
-            this.layoutControlGroup13 = new DevExpress.XtraLayout.LayoutControlGroup();
-            this.layoutControlItemDocuments = new DevExpress.XtraLayout.LayoutControlItem();
             this.layoutControlGroup14 = new DevExpress.XtraLayout.LayoutControlGroup();
             this.layoutControlItemPreviousConclusions = new DevExpress.XtraLayout.LayoutControlItem();
             this.layoutControlItem4 = new DevExpress.XtraLayout.LayoutControlItem();
@@ -401,6 +401,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.cmbEngineeringSurveysIM.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlGroup_I)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.tabbedControlGroup1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutControlGroup13)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemDocuments)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlGroup9)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemExaminationResult)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemExaminationObjectType)).BeginInit();
@@ -430,8 +432,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlGroup11)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemDeclarant)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlGroup12)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.layoutControlGroup13)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemDocuments)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlGroup14)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemPreviousConclusions)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem4)).BeginInit();
@@ -1441,7 +1441,7 @@
             this.tabbedControlGroup1.MultiLine = DevExpress.Utils.DefaultBoolean.True;
             this.tabbedControlGroup1.Name = "tabbedControlGroup1";
             this.tabbedControlGroup1.Padding = new DevExpress.XtraLayout.Utils.Padding(4, 4, 4, 4);
-            this.tabbedControlGroup1.SelectedTabPage = this.layoutControlGroup13;
+            this.tabbedControlGroup1.SelectedTabPage = this.layoutControlGroup9;
             this.tabbedControlGroup1.Size = new System.Drawing.Size(776, 530);
             this.tabbedControlGroup1.TabPages.AddRange(new DevExpress.XtraLayout.BaseLayoutItem[] {
             this.layoutControlGroup9,
@@ -1450,6 +1450,28 @@
             this.layoutControlGroup12,
             this.layoutControlGroup13,
             this.layoutControlGroup14});
+            // 
+            // layoutControlGroup13
+            // 
+            this.layoutControlGroup13.Items.AddRange(new DevExpress.XtraLayout.BaseLayoutItem[] {
+            this.layoutControlItemDocuments});
+            this.layoutControlGroup13.Location = new System.Drawing.Point(0, 0);
+            this.layoutControlGroup13.Name = "layoutControlGroup13";
+            this.layoutControlGroup13.Size = new System.Drawing.Size(762, 424);
+            this.layoutControlGroup13.Text = "Сведения о составе документов, предоставленных для проведения экспертизы";
+            // 
+            // layoutControlItemDocuments
+            // 
+            this.layoutControlItemDocuments.Control = this.gridControlDocuments;
+            this.layoutControlItemDocuments.ControlAlignment = System.Drawing.ContentAlignment.TopLeft;
+            this.layoutControlItemDocuments.CustomizationFormText = "Сведения о раннее выданных заключениях экспертизы";
+            this.layoutControlItemDocuments.Location = new System.Drawing.Point(0, 0);
+            this.layoutControlItemDocuments.Name = "layoutControlItemDocuments";
+            this.layoutControlItemDocuments.Size = new System.Drawing.Size(762, 424);
+            this.layoutControlItemDocuments.Text = "Сведения о составе документов, предоставленных для проведения экспертизы";
+            this.layoutControlItemDocuments.TextLocation = DevExpress.Utils.Locations.Top;
+            this.layoutControlItemDocuments.TextSize = new System.Drawing.Size(0, 0);
+            this.layoutControlItemDocuments.TextVisible = false;
             // 
             // layoutControlGroup9
             // 
@@ -1789,28 +1811,6 @@
             this.layoutControlGroup12.Name = "layoutControlGroup12";
             this.layoutControlGroup12.Size = new System.Drawing.Size(762, 424);
             this.layoutControlGroup12.Text = "Сведения о положительном заключении государственной экологической экспертизы";
-            // 
-            // layoutControlGroup13
-            // 
-            this.layoutControlGroup13.Items.AddRange(new DevExpress.XtraLayout.BaseLayoutItem[] {
-            this.layoutControlItemDocuments});
-            this.layoutControlGroup13.Location = new System.Drawing.Point(0, 0);
-            this.layoutControlGroup13.Name = "layoutControlGroup13";
-            this.layoutControlGroup13.Size = new System.Drawing.Size(762, 424);
-            this.layoutControlGroup13.Text = "Сведения о составе документов, предоставленных для проведения экспертизы";
-            // 
-            // layoutControlItemDocuments
-            // 
-            this.layoutControlItemDocuments.Control = this.gridControlDocuments;
-            this.layoutControlItemDocuments.ControlAlignment = System.Drawing.ContentAlignment.TopLeft;
-            this.layoutControlItemDocuments.CustomizationFormText = "Сведения о раннее выданных заключениях экспертизы";
-            this.layoutControlItemDocuments.Location = new System.Drawing.Point(0, 0);
-            this.layoutControlItemDocuments.Name = "layoutControlItemDocuments";
-            this.layoutControlItemDocuments.Size = new System.Drawing.Size(762, 424);
-            this.layoutControlItemDocuments.Text = "Сведения о составе документов, предоставленных для проведения экспертизы";
-            this.layoutControlItemDocuments.TextLocation = DevExpress.Utils.Locations.Top;
-            this.layoutControlItemDocuments.TextSize = new System.Drawing.Size(0, 0);
-            this.layoutControlItemDocuments.TextVisible = false;
             // 
             // layoutControlGroup14
             // 
@@ -3827,6 +3827,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.cmbEngineeringSurveysIM.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlGroup_I)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.tabbedControlGroup1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutControlGroup13)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemDocuments)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlGroup9)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemExaminationResult)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemExaminationObjectType)).EndInit();
@@ -3856,8 +3858,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlGroup11)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemDeclarant)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlGroup12)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.layoutControlGroup13)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemDocuments)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlGroup14)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemPreviousConclusions)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem4)).EndInit();

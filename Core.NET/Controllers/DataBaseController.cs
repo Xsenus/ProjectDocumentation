@@ -817,6 +817,88 @@ namespace Core.NET.Controllers
                     Name = "Нет (ложь)"
                 });
             }
+
+            if (collection.Where(w => w.GeneralizedDictionary == GeneralizedDictionary.Placement).Count() == 0)
+            {
+                await Session.SaveAsync(new GeneralizedDictionaryXPO(Session)
+                {
+                    GeneralizedDictionary = GeneralizedDictionary.Placement,
+                    Value = "1",
+                    Name = "Объекты, расположенные на суше"
+                });
+
+                await Session.SaveAsync(new GeneralizedDictionaryXPO(Session)
+                {
+                    GeneralizedDictionary = GeneralizedDictionary.Placement,
+                    Value = "2",
+                    Name = "Водный объект"
+                });
+            }
+
+            if (collection.Where(w => w.GeneralizedDictionary == GeneralizedDictionary.DangerousAndComplex).Count() == 0)
+            {
+                await Session.SaveAsync(new GeneralizedDictionaryXPO(Session) { Value = "1", Name = "1) объекты использования атомной энергии в соответствии с законодательством   Российской Федерации об использовании атомной энергии, за исключением объектов, содержащих: а) только радиационные источники, в которых генерируется ионизирующее излучение, на объектах, радиационное воздействие от которых в случае аварии ограничивается помещениями, где осуществляется непосредственное обращение с источниками ионизирующего излучения; б) радиационные источники, содержащие в своем составе только радионуклидные источники четвертой и пятой категорий радиационной опасности в соответствии с законодательством Российской Федерации об использовании атомной энергии ", GeneralizedDictionary = GeneralizedDictionary.DangerousAndComplex });
+                await Session.SaveAsync(new GeneralizedDictionaryXPO(Session) { Value = "2", Name = "2) гидротехнические сооружения первого и второго классов, устанавливаемые в соответствии с законодательством о безопасности гидротехнических сооружений", GeneralizedDictionary = GeneralizedDictionary.DangerousAndComplex });
+                await Session.SaveAsync(new GeneralizedDictionaryXPO(Session) { Value = "3", Name = "3) сооружения связи, являющиеся особо опасными, технически сложными в соответствии с законодательством Российской Федерации в области связи", GeneralizedDictionary = GeneralizedDictionary.DangerousAndComplex });
+                await Session.SaveAsync(new GeneralizedDictionaryXPO(Session) { Value = "4", Name = "4) линии электропередачи и иные объекты электросетевого хозяйства напряжением 330 киловольт и более", GeneralizedDictionary = GeneralizedDictionary.DangerousAndComplex });
+                await Session.SaveAsync(new GeneralizedDictionaryXPO(Session) { Value = "5", Name = "5) объекты космической инфраструктуры", GeneralizedDictionary = GeneralizedDictionary.DangerousAndComplex });
+                await Session.SaveAsync(new GeneralizedDictionaryXPO(Session) { Value = "6", Name = "6) объекты инфраструктуры воздушного транспорта, являющиеся особо опасными, технически сложными объектами в соответствии с воздушным законодательством Российской Федерации", GeneralizedDictionary = GeneralizedDictionary.DangerousAndComplex });
+                await Session.SaveAsync(new GeneralizedDictionaryXPO(Session) { Value = "7", Name = "7) объекты капитального строительства инфраструктуры железнодорожного транспорта общего пользования, являющиеся особо опасными, технически сложными объектами в соответствии с законодательством Российской Федерации о железнодорожном транспорте", GeneralizedDictionary = GeneralizedDictionary.DangerousAndComplex });
+                await Session.SaveAsync(new GeneralizedDictionaryXPO(Session) { Value = "8", Name = "8) объекты инфраструктуры внеуличного транспорта", GeneralizedDictionary = GeneralizedDictionary.DangerousAndComplex });
+                await Session.SaveAsync(new GeneralizedDictionaryXPO(Session) { Value = "9", Name = "9) портовые гидротехнические сооружения, относящиеся к объектам инфраструктуры морского порта, за исключением объектов инфраструктуры морского порта, предназначенных для стоянок и обслуживания маломерных, спортивных парусных и прогулочных судов", GeneralizedDictionary = GeneralizedDictionary.DangerousAndComplex });
+                await Session.SaveAsync(new GeneralizedDictionaryXPO(Session) { Value = "10", Name = "10.1) тепловые электростанции мощностью 150 мегаватт и выше", GeneralizedDictionary = GeneralizedDictionary.DangerousAndComplex });
+                await Session.SaveAsync(new GeneralizedDictionaryXPO(Session) { Value = "11", Name = "10.2) подвесные канатные дороги", GeneralizedDictionary = GeneralizedDictionary.DangerousAndComplex });
+                await Session.SaveAsync(new GeneralizedDictionaryXPO(Session) { Value = "12", Name = "11. а) опасные производственные объекты I и II классов опасности, на которых получаются, используются, перерабатываются, образуются, хранятся, транспортируются, уничтожаются опасные вещества", GeneralizedDictionary = GeneralizedDictionary.DangerousAndComplex });
+                await Session.SaveAsync(new GeneralizedDictionaryXPO(Session) { Value = "13", Name = "11. б) опасные производственные объекты, на которых получаются, транспортируются, используются расплавы черных и цветных металлов, сплавы на основе этих расплавов с применением оборудования, рассчитанного на максимальное количество расплава 500 килограммов и более", GeneralizedDictionary = GeneralizedDictionary.DangerousAndComplex });
+                await Session.SaveAsync(new GeneralizedDictionaryXPO(Session) { Value = "14", Name = "11. в) опасные производственные объекты, на которых ведутся горные работы (за исключением добычи общераспространенных полезных ископаемых и разработки россыпных месторождений полезных ископаемых, осуществляемых открытым способом без применения взрывных работ), работы по обогащению полезных ископаемых", GeneralizedDictionary = GeneralizedDictionary.DangerousAndComplex });
+            }
+
+            if (collection.Where(w => w.GeneralizedDictionary == GeneralizedDictionary.Unique).Count() == 0)
+            {
+                await Session.SaveAsync(new GeneralizedDictionaryXPO(Session) { Value = "1", Name = "1) высота более чем 100 метров, для ветроэнергетических установок - более чем 250 метров", GeneralizedDictionary = GeneralizedDictionary.Unique });
+                await Session.SaveAsync(new GeneralizedDictionaryXPO(Session) { Value = "2", Name = "2) пролеты более чем 100 метров", GeneralizedDictionary = GeneralizedDictionary.Unique });
+                await Session.SaveAsync(new GeneralizedDictionaryXPO(Session) { Value = "3", Name = "3) наличие консоли более чем 20 метров", GeneralizedDictionary = GeneralizedDictionary.Unique });
+                await Session.SaveAsync(new GeneralizedDictionaryXPO(Session) { Value = "4", Name = "4) заглубление подземной части (полностью или частично) ниже планировочной отметки земли более чем на 15 метров", GeneralizedDictionary = GeneralizedDictionary.Unique });
+            }
+
+            if (collection.Where(w => w.GeneralizedDictionary == GeneralizedDictionary.DangerIndustrialClass).Count() == 0)
+            {
+                await Session.SaveAsync(new GeneralizedDictionaryXPO(Session) { Value = "Не относится к опасным производственным объектам", Name = "Не относится к опасным производственным объектам", GeneralizedDictionary = GeneralizedDictionary.DangerIndustrialClass });
+                await Session.SaveAsync(new GeneralizedDictionaryXPO(Session) { Value = "I", Name = "I класс опасности - опасные производственные объекты чрезвычайно высокой опасности", GeneralizedDictionary = GeneralizedDictionary.DangerIndustrialClass });
+                await Session.SaveAsync(new GeneralizedDictionaryXPO(Session) { Value = "II", Name = "II класс опасности - опасные производственные объекты высокой опасности", GeneralizedDictionary = GeneralizedDictionary.DangerIndustrialClass });
+                await Session.SaveAsync(new GeneralizedDictionaryXPO(Session) { Value = "III", Name = "III класс опасности - опасные производственные объекты средней опасности", GeneralizedDictionary = GeneralizedDictionary.DangerIndustrialClass });
+                await Session.SaveAsync(new GeneralizedDictionaryXPO(Session) { Value = "IV", Name = "IV класс опасности - опасные производственные объекты низкой опасности", GeneralizedDictionary = GeneralizedDictionary.DangerIndustrialClass });
+            }
+
+            if (collection.Where(w => w.GeneralizedDictionary == GeneralizedDictionary.LandCategory).Count() == 0)
+            {
+                await Session.SaveAsync(new GeneralizedDictionaryXPO(Session) { Value = "1", Name = "Земли сельскохозяйственного назначения", GeneralizedDictionary = GeneralizedDictionary.LandCategory });
+                await Session.SaveAsync(new GeneralizedDictionaryXPO(Session) { Value = "2", Name = "Земли населенных пунктов", GeneralizedDictionary = GeneralizedDictionary.LandCategory });
+                await Session.SaveAsync(new GeneralizedDictionaryXPO(Session) { Value = "3", Name = "Земли промышленности, энергетики, транспорта, связи, радиовещания, телевидения, информатики, земли для обеспечения космической деятельности, земли обороны, безопасности и земли иного специального назначения", GeneralizedDictionary = GeneralizedDictionary.LandCategory });
+                await Session.SaveAsync(new GeneralizedDictionaryXPO(Session) { Value = "4", Name = "Земли особо охраняемых территорий и объектов", GeneralizedDictionary = GeneralizedDictionary.LandCategory });
+                await Session.SaveAsync(new GeneralizedDictionaryXPO(Session) { Value = "5", Name = "Земли лесного фонда", GeneralizedDictionary = GeneralizedDictionary.LandCategory });
+                await Session.SaveAsync(new GeneralizedDictionaryXPO(Session) { Value = "6", Name = "Земли водного фонда", GeneralizedDictionary = GeneralizedDictionary.LandCategory });
+                await Session.SaveAsync(new GeneralizedDictionaryXPO(Session) { Value = "7", Name = "Земли запаса", GeneralizedDictionary = GeneralizedDictionary.LandCategory });
+            }
+
+            if (collection.Where(w => w.GeneralizedDictionary == GeneralizedDictionary.FireDangerCategory).Count() == 0)
+            {
+                await Session.SaveAsync(new GeneralizedDictionaryXPO(Session) { Value = "Категория не устанавливается", Name = "Категория не устанавливается", GeneralizedDictionary = GeneralizedDictionary.FireDangerCategory });
+                await Session.SaveAsync(new GeneralizedDictionaryXPO(Session) { Value = "А", Name = "А", GeneralizedDictionary = GeneralizedDictionary.FireDangerCategory });
+                await Session.SaveAsync(new GeneralizedDictionaryXPO(Session) { Value = "Б", Name = "Б", GeneralizedDictionary = GeneralizedDictionary.FireDangerCategory });
+                await Session.SaveAsync(new GeneralizedDictionaryXPO(Session) { Value = "В", Name = "В", GeneralizedDictionary = GeneralizedDictionary.FireDangerCategory });
+                await Session.SaveAsync(new GeneralizedDictionaryXPO(Session) { Value = "Г", Name = "Г", GeneralizedDictionary = GeneralizedDictionary.FireDangerCategory });
+                await Session.SaveAsync(new GeneralizedDictionaryXPO(Session) { Value = "Д", Name = "Д", GeneralizedDictionary = GeneralizedDictionary.FireDangerCategory });
+            }
+
+
+            if (collection.Where(w => w.GeneralizedDictionary == GeneralizedDictionary.ResponsibilityLevel).Count() == 0)
+            {
+                await Session.SaveAsync(new GeneralizedDictionaryXPO(Session) { Value = "повышенный", Name = "Повышенный", GeneralizedDictionary = GeneralizedDictionary.ResponsibilityLevel });
+                await Session.SaveAsync(new GeneralizedDictionaryXPO(Session) { Value = "нормальный", Name = "Нормальный", GeneralizedDictionary = GeneralizedDictionary.ResponsibilityLevel });
+                await Session.SaveAsync(new GeneralizedDictionaryXPO(Session) { Value = "пониженный", Name = "Пониженный", GeneralizedDictionary = GeneralizedDictionary.ResponsibilityLevel });
+
+            }
         }
     }
 }
