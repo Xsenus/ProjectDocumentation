@@ -29,12 +29,12 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ExplanatoryNoteEdit));
             DevExpress.XtraEditors.Controls.EditorButtonImageOptions editorButtonImageOptions1 = new DevExpress.XtraEditors.Controls.EditorButtonImageOptions();
             DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject1 = new DevExpress.Utils.SerializableAppearanceObject();
             DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject2 = new DevExpress.Utils.SerializableAppearanceObject();
             DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject3 = new DevExpress.Utils.SerializableAppearanceObject();
             DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject4 = new DevExpress.Utils.SerializableAppearanceObject();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ExplanatoryNoteEdit));
             DevExpress.XtraEditors.Controls.EditorButtonImageOptions editorButtonImageOptions2 = new DevExpress.XtraEditors.Controls.EditorButtonImageOptions();
             DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject5 = new DevExpress.Utils.SerializableAppearanceObject();
             DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject6 = new DevExpress.Utils.SerializableAppearanceObject();
@@ -110,7 +110,13 @@
             DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject62 = new DevExpress.Utils.SerializableAppearanceObject();
             DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject63 = new DevExpress.Utils.SerializableAppearanceObject();
             DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject64 = new DevExpress.Utils.SerializableAppearanceObject();
+            DevExpress.XtraEditors.Controls.EditorButtonImageOptions editorButtonImageOptions17 = new DevExpress.XtraEditors.Controls.EditorButtonImageOptions();
+            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject65 = new DevExpress.Utils.SerializableAppearanceObject();
+            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject66 = new DevExpress.Utils.SerializableAppearanceObject();
+            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject67 = new DevExpress.Utils.SerializableAppearanceObject();
+            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject68 = new DevExpress.Utils.SerializableAppearanceObject();
             this.layoutControlExplanatoryNote = new DevExpress.XtraLayout.LayoutControl();
+            this.btnPeoplePermanentStay = new DevExpress.XtraEditors.ButtonEdit();
             this.memoEditUnique = new DevExpress.XtraEditors.MemoEdit();
             this.barManager = new DevExpress.XtraBars.BarManager(this.components);
             this.barDockControlTop = new DevExpress.XtraBars.BarDockControl();
@@ -175,23 +181,14 @@
             this.cmbDangerIndustrialClass = new DevExpress.XtraEditors.ComboBoxEdit();
             this.cmbLandCategory = new DevExpress.XtraEditors.ComboBoxEdit();
             this.cmbExplanatoryNoteObjType = new DevExpress.XtraEditors.ComboBoxEdit();
+            this.cmbFireDangerCategory = new DevExpress.XtraEditors.ComboBoxEdit();
+            this.cmbResponsibilityLevel = new DevExpress.XtraEditors.ComboBoxEdit();
             this.Root = new DevExpress.XtraLayout.LayoutControlGroup();
             this.layoutControlItemSave = new DevExpress.XtraLayout.LayoutControlItem();
             this.layoutControlItemFileName = new DevExpress.XtraLayout.LayoutControlItem();
             this.layoutControlItemVersion = new DevExpress.XtraLayout.LayoutControlItem();
             this.layoutControlItemCancel = new DevExpress.XtraLayout.LayoutControlItem();
             this.tabbedControlGroupExplanatoryNote = new DevExpress.XtraLayout.TabbedControlGroup();
-            this.layoutControlGroupGeneralInformation = new DevExpress.XtraLayout.LayoutControlGroup();
-            this.layoutControlItemExplanatoryNoteNumber = new DevExpress.XtraLayout.LayoutControlItem();
-            this.layoutControlItemExplanatoryNoteYear = new DevExpress.XtraLayout.LayoutControlItem();
-            this.layoutControlGroupIssueAuthor = new DevExpress.XtraLayout.LayoutControlGroup();
-            this.layoutControlItemIssueAuthor = new DevExpress.XtraLayout.LayoutControlItem();
-            this.layoutControlItemSigners = new DevExpress.XtraLayout.LayoutControlItem();
-            this.layoutControlItemDeveloper = new DevExpress.XtraLayout.LayoutControlItem();
-            this.layoutControlItemTechnicalCustomer = new DevExpress.XtraLayout.LayoutControlItem();
-            this.splitterItemDeveloper = new DevExpress.XtraLayout.SplitterItem();
-            this.splitterItemSigners = new DevExpress.XtraLayout.SplitterItem();
-            this.layoutControlItemExplanatoryNoteObjType = new DevExpress.XtraLayout.LayoutControlItem();
             this.layoutControlGroupIndustrialObject = new DevExpress.XtraLayout.LayoutControlGroup();
             this.layoutControlItemIndustrialObjectID = new DevExpress.XtraLayout.LayoutControlItem();
             this.layoutControlItemPlacement = new DevExpress.XtraLayout.LayoutControlItem();
@@ -205,6 +202,20 @@
             this.layoutControlItemConstructionDuration = new DevExpress.XtraLayout.LayoutControlItem();
             this.layoutControlItemDangerIndustrialClass = new DevExpress.XtraLayout.LayoutControlItem();
             this.layoutControlItemLandCategory = new DevExpress.XtraLayout.LayoutControlItem();
+            this.layoutControlItemFireDangerCategory = new DevExpress.XtraLayout.LayoutControlItem();
+            this.layoutControlItemResponsibilityLevel = new DevExpress.XtraLayout.LayoutControlItem();
+            this.layoutControlItemPeoplePermanentStay = new DevExpress.XtraLayout.LayoutControlItem();
+            this.layoutControlGroupGeneralInformation = new DevExpress.XtraLayout.LayoutControlGroup();
+            this.layoutControlItemExplanatoryNoteNumber = new DevExpress.XtraLayout.LayoutControlItem();
+            this.layoutControlItemExplanatoryNoteYear = new DevExpress.XtraLayout.LayoutControlItem();
+            this.layoutControlGroupIssueAuthor = new DevExpress.XtraLayout.LayoutControlGroup();
+            this.layoutControlItemIssueAuthor = new DevExpress.XtraLayout.LayoutControlItem();
+            this.layoutControlItemSigners = new DevExpress.XtraLayout.LayoutControlItem();
+            this.layoutControlItemDeveloper = new DevExpress.XtraLayout.LayoutControlItem();
+            this.layoutControlItemTechnicalCustomer = new DevExpress.XtraLayout.LayoutControlItem();
+            this.splitterItemDeveloper = new DevExpress.XtraLayout.SplitterItem();
+            this.splitterItemSigners = new DevExpress.XtraLayout.SplitterItem();
+            this.layoutControlItemExplanatoryNoteObjType = new DevExpress.XtraLayout.LayoutControlItem();
             this.layoutControlGroupIntelligence = new DevExpress.XtraLayout.LayoutControlGroup();
             this.layoutControlItemModifications = new DevExpress.XtraLayout.LayoutControlItem();
             this.layoutControlItem2 = new DevExpress.XtraLayout.LayoutControlItem();
@@ -225,12 +236,9 @@
             this.popupMenuUsedNorms = new DevExpress.XtraBars.PopupMenu(this.components);
             this.popupMenuProjectDecisionDocuments = new DevExpress.XtraBars.PopupMenu(this.components);
             this.popupMenuProjectInitialDocuments = new DevExpress.XtraBars.PopupMenu(this.components);
-            this.cmbFireDangerCategory = new DevExpress.XtraEditors.ComboBoxEdit();
-            this.layoutControlItemFireDangerCategory = new DevExpress.XtraLayout.LayoutControlItem();
-            this.cmbResponsibilityLevel = new DevExpress.XtraEditors.ComboBoxEdit();
-            this.layoutControlItemResponsibilityLevel = new DevExpress.XtraLayout.LayoutControlItem();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlExplanatoryNote)).BeginInit();
             this.layoutControlExplanatoryNote.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.btnPeoplePermanentStay.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.memoEditUnique.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.barManager)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.memoEditDangerousAndComplex.Properties)).BeginInit();
@@ -267,23 +275,14 @@
             ((System.ComponentModel.ISupportInitialize)(this.cmbDangerIndustrialClass.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.cmbLandCategory.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.cmbExplanatoryNoteObjType.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.cmbFireDangerCategory.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.cmbResponsibilityLevel.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.Root)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemSave)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemFileName)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemVersion)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemCancel)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.tabbedControlGroupExplanatoryNote)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.layoutControlGroupGeneralInformation)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemExplanatoryNoteNumber)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemExplanatoryNoteYear)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.layoutControlGroupIssueAuthor)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemIssueAuthor)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemSigners)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemDeveloper)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemTechnicalCustomer)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.splitterItemDeveloper)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.splitterItemSigners)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemExplanatoryNoteObjType)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlGroupIndustrialObject)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemIndustrialObjectID)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemPlacement)).BeginInit();
@@ -297,6 +296,20 @@
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemConstructionDuration)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemDangerIndustrialClass)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemLandCategory)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemFireDangerCategory)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemResponsibilityLevel)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemPeoplePermanentStay)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutControlGroupGeneralInformation)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemExplanatoryNoteNumber)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemExplanatoryNoteYear)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutControlGroupIssueAuthor)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemIssueAuthor)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemSigners)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemDeveloper)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemTechnicalCustomer)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.splitterItemDeveloper)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.splitterItemSigners)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemExplanatoryNoteObjType)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlGroupIntelligence)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemModifications)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem2)).BeginInit();
@@ -317,15 +330,12 @@
             ((System.ComponentModel.ISupportInitialize)(this.popupMenuUsedNorms)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.popupMenuProjectDecisionDocuments)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.popupMenuProjectInitialDocuments)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.cmbFireDangerCategory.Properties)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemFireDangerCategory)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.cmbResponsibilityLevel.Properties)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemResponsibilityLevel)).BeginInit();
             this.SuspendLayout();
             // 
             // layoutControlExplanatoryNote
             // 
             this.layoutControlExplanatoryNote.AllowCustomization = false;
+            this.layoutControlExplanatoryNote.Controls.Add(this.btnPeoplePermanentStay);
             this.layoutControlExplanatoryNote.Controls.Add(this.memoEditUnique);
             this.layoutControlExplanatoryNote.Controls.Add(this.memoEditDangerousAndComplex);
             this.layoutControlExplanatoryNote.Controls.Add(this.gridControlUsedNorms);
@@ -364,6 +374,20 @@
             this.layoutControlExplanatoryNote.Size = new System.Drawing.Size(798, 693);
             this.layoutControlExplanatoryNote.TabIndex = 0;
             this.layoutControlExplanatoryNote.Text = "layoutControlExplanatoryNote";
+            // 
+            // btnPeoplePermanentStay
+            // 
+            this.btnPeoplePermanentStay.Location = new System.Drawing.Point(15, 597);
+            this.btnPeoplePermanentStay.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.btnPeoplePermanentStay.Name = "btnPeoplePermanentStay";
+            this.btnPeoplePermanentStay.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
+            new DevExpress.XtraEditors.Controls.EditorButton(),
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Delete, "", -1, true, false, false, editorButtonImageOptions1, new DevExpress.Utils.KeyShortcut(System.Windows.Forms.Keys.None), serializableAppearanceObject1, serializableAppearanceObject2, serializableAppearanceObject3, serializableAppearanceObject4, "", null, null, DevExpress.Utils.ToolTipAnchor.Default)});
+            this.btnPeoplePermanentStay.Properties.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.DisableTextEditor;
+            this.btnPeoplePermanentStay.Size = new System.Drawing.Size(768, 20);
+            this.btnPeoplePermanentStay.StyleController = this.layoutControlExplanatoryNote;
+            this.btnPeoplePermanentStay.TabIndex = 28;
+            this.btnPeoplePermanentStay.ButtonPressed += new DevExpress.XtraEditors.Controls.ButtonPressedEventHandler(this.btnPeoplePermanentStay_ButtonPressed);
             // 
             // memoEditUnique
             // 
@@ -699,7 +723,7 @@
             this.gridControlSigners.MainView = this.gridViewSigners;
             this.gridControlSigners.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.gridControlSigners.Name = "gridControlSigners";
-            this.gridControlSigners.Size = new System.Drawing.Size(768, 233);
+            this.gridControlSigners.Size = new System.Drawing.Size(768, 234);
             this.gridControlSigners.TabIndex = 20;
             this.gridControlSigners.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
             this.gridViewSigners});
@@ -722,7 +746,7 @@
             this.btnSave.Location = new System.Drawing.Point(400, 664);
             this.btnSave.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btnSave.Name = "btnSave";
-            this.btnSave.Size = new System.Drawing.Size(145, 22);
+            this.btnSave.Size = new System.Drawing.Size(193, 22);
             this.btnSave.StyleController = this.layoutControlExplanatoryNote;
             this.btnSave.TabIndex = 4;
             this.btnSave.Text = "Сохранить";
@@ -730,10 +754,10 @@
             // 
             // btnCancel
             // 
-            this.btnCancel.Location = new System.Drawing.Point(549, 664);
+            this.btnCancel.Location = new System.Drawing.Point(597, 664);
             this.btnCancel.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btnCancel.Name = "btnCancel";
-            this.btnCancel.Size = new System.Drawing.Size(242, 22);
+            this.btnCancel.Size = new System.Drawing.Size(194, 22);
             this.btnCancel.StyleController = this.layoutControlExplanatoryNote;
             this.btnCancel.TabIndex = 5;
             this.btnCancel.Text = "Отмена";
@@ -764,9 +788,9 @@
             // 
             // txtExplanatoryNoteNumber
             // 
-            this.txtExplanatoryNoteNumber.Location = new System.Drawing.Point(189, 62);
+            this.txtExplanatoryNoteNumber.Location = new System.Drawing.Point(371, 62);
             this.txtExplanatoryNoteNumber.Name = "txtExplanatoryNoteNumber";
-            this.txtExplanatoryNoteNumber.Size = new System.Drawing.Size(450, 20);
+            this.txtExplanatoryNoteNumber.Size = new System.Drawing.Size(268, 20);
             this.txtExplanatoryNoteNumber.StyleController = this.layoutControlExplanatoryNote;
             this.txtExplanatoryNoteNumber.TabIndex = 8;
             // 
@@ -821,11 +845,11 @@
             // gridControlDeveloper
             // 
             this.gridControlDeveloper.EmbeddedNavigator.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.gridControlDeveloper.Location = new System.Drawing.Point(15, 429);
+            this.gridControlDeveloper.Location = new System.Drawing.Point(15, 430);
             this.gridControlDeveloper.MainView = this.gridViewDeveloper;
             this.gridControlDeveloper.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.gridControlDeveloper.Name = "gridControlDeveloper";
-            this.gridControlDeveloper.Size = new System.Drawing.Size(768, 95);
+            this.gridControlDeveloper.Size = new System.Drawing.Size(768, 94);
             this.gridControlDeveloper.TabIndex = 20;
             this.gridControlDeveloper.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
             this.gridViewDeveloper});
@@ -933,8 +957,8 @@
             this.cmbPlacement.Name = "cmbPlacement";
             this.cmbPlacement.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo),
-            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Ellipsis, "", -1, true, false, false, editorButtonImageOptions1, new DevExpress.Utils.KeyShortcut(System.Windows.Forms.Keys.None), serializableAppearanceObject1, serializableAppearanceObject2, serializableAppearanceObject3, serializableAppearanceObject4, "", null, null, DevExpress.Utils.ToolTipAnchor.Default),
-            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Delete, "", -1, true, false, false, editorButtonImageOptions2, new DevExpress.Utils.KeyShortcut(System.Windows.Forms.Keys.None), serializableAppearanceObject5, serializableAppearanceObject6, serializableAppearanceObject7, serializableAppearanceObject8, "", null, null, DevExpress.Utils.ToolTipAnchor.Default)});
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Ellipsis, "", -1, true, false, false, editorButtonImageOptions2, new DevExpress.Utils.KeyShortcut(System.Windows.Forms.Keys.None), serializableAppearanceObject5, serializableAppearanceObject6, serializableAppearanceObject7, serializableAppearanceObject8, "", null, null, DevExpress.Utils.ToolTipAnchor.Default),
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Delete, "", -1, true, false, false, editorButtonImageOptions3, new DevExpress.Utils.KeyShortcut(System.Windows.Forms.Keys.None), serializableAppearanceObject9, serializableAppearanceObject10, serializableAppearanceObject11, serializableAppearanceObject12, "", null, null, DevExpress.Utils.ToolTipAnchor.Default)});
             this.cmbPlacement.Properties.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.DisableTextEditor;
             this.cmbPlacement.Size = new System.Drawing.Size(768, 20);
             this.cmbPlacement.StyleController = this.layoutControlExplanatoryNote;
@@ -948,7 +972,7 @@
             this.cmbDangerousAndComplex.Name = "cmbDangerousAndComplex";
             this.cmbDangerousAndComplex.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo),
-            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Ellipsis, "", -1, true, false, false, editorButtonImageOptions3, new DevExpress.Utils.KeyShortcut(System.Windows.Forms.Keys.None), serializableAppearanceObject9, serializableAppearanceObject10, serializableAppearanceObject11, serializableAppearanceObject12, "", null, null, DevExpress.Utils.ToolTipAnchor.Default),
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Ellipsis, "", -1, true, false, false, editorButtonImageOptions4, new DevExpress.Utils.KeyShortcut(System.Windows.Forms.Keys.None), serializableAppearanceObject13, serializableAppearanceObject14, serializableAppearanceObject15, serializableAppearanceObject16, "", null, null, DevExpress.Utils.ToolTipAnchor.Default),
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Delete)});
             this.cmbDangerousAndComplex.Properties.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.DisableTextEditor;
             this.cmbDangerousAndComplex.Size = new System.Drawing.Size(768, 20);
@@ -964,7 +988,7 @@
             this.cmbUnique.Name = "cmbUnique";
             this.cmbUnique.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo),
-            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Ellipsis, "", -1, true, false, false, editorButtonImageOptions4, new DevExpress.Utils.KeyShortcut(System.Windows.Forms.Keys.None), serializableAppearanceObject13, serializableAppearanceObject14, serializableAppearanceObject15, serializableAppearanceObject16, "", null, null, DevExpress.Utils.ToolTipAnchor.Default),
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Ellipsis, "", -1, true, false, false, editorButtonImageOptions5, new DevExpress.Utils.KeyShortcut(System.Windows.Forms.Keys.None), serializableAppearanceObject17, serializableAppearanceObject18, serializableAppearanceObject19, serializableAppearanceObject20, "", null, null, DevExpress.Utils.ToolTipAnchor.Default),
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Delete)});
             this.cmbUnique.Properties.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.DisableTextEditor;
             this.cmbUnique.Size = new System.Drawing.Size(768, 20);
@@ -988,8 +1012,8 @@
             this.cmbConstructionType.Name = "cmbConstructionType";
             this.cmbConstructionType.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo),
-            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Ellipsis, "", -1, true, false, false, editorButtonImageOptions5, new DevExpress.Utils.KeyShortcut(System.Windows.Forms.Keys.None), serializableAppearanceObject17, serializableAppearanceObject18, serializableAppearanceObject19, serializableAppearanceObject20, "", null, null, DevExpress.Utils.ToolTipAnchor.Default),
-            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Delete, "", -1, true, false, false, editorButtonImageOptions6, new DevExpress.Utils.KeyShortcut(System.Windows.Forms.Keys.None), serializableAppearanceObject21, serializableAppearanceObject22, serializableAppearanceObject23, serializableAppearanceObject24, "", null, null, DevExpress.Utils.ToolTipAnchor.Default)});
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Ellipsis, "", -1, true, false, false, editorButtonImageOptions6, new DevExpress.Utils.KeyShortcut(System.Windows.Forms.Keys.None), serializableAppearanceObject21, serializableAppearanceObject22, serializableAppearanceObject23, serializableAppearanceObject24, "", null, null, DevExpress.Utils.ToolTipAnchor.Default),
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Delete, "", -1, true, false, false, editorButtonImageOptions7, new DevExpress.Utils.KeyShortcut(System.Windows.Forms.Keys.None), serializableAppearanceObject25, serializableAppearanceObject26, serializableAppearanceObject27, serializableAppearanceObject28, "", null, null, DevExpress.Utils.ToolTipAnchor.Default)});
             this.cmbConstructionType.Properties.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.DisableTextEditor;
             this.cmbConstructionType.Size = new System.Drawing.Size(768, 20);
             this.cmbConstructionType.StyleController = this.layoutControlExplanatoryNote;
@@ -1011,8 +1035,8 @@
             this.cmbDangerIndustrialClass.Name = "cmbDangerIndustrialClass";
             this.cmbDangerIndustrialClass.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo),
-            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Ellipsis, "", -1, true, false, false, editorButtonImageOptions7, new DevExpress.Utils.KeyShortcut(System.Windows.Forms.Keys.None), serializableAppearanceObject25, serializableAppearanceObject26, serializableAppearanceObject27, serializableAppearanceObject28, "", null, null, DevExpress.Utils.ToolTipAnchor.Default),
-            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Delete, "", -1, true, false, false, editorButtonImageOptions8, new DevExpress.Utils.KeyShortcut(System.Windows.Forms.Keys.None), serializableAppearanceObject29, serializableAppearanceObject30, serializableAppearanceObject31, serializableAppearanceObject32, "", null, null, DevExpress.Utils.ToolTipAnchor.Default)});
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Ellipsis, "", -1, true, false, false, editorButtonImageOptions8, new DevExpress.Utils.KeyShortcut(System.Windows.Forms.Keys.None), serializableAppearanceObject29, serializableAppearanceObject30, serializableAppearanceObject31, serializableAppearanceObject32, "", null, null, DevExpress.Utils.ToolTipAnchor.Default),
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Delete, "", -1, true, false, false, editorButtonImageOptions9, new DevExpress.Utils.KeyShortcut(System.Windows.Forms.Keys.None), serializableAppearanceObject33, serializableAppearanceObject34, serializableAppearanceObject35, serializableAppearanceObject36, "", null, null, DevExpress.Utils.ToolTipAnchor.Default)});
             this.cmbDangerIndustrialClass.Properties.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.DisableTextEditor;
             this.cmbDangerIndustrialClass.Size = new System.Drawing.Size(768, 20);
             this.cmbDangerIndustrialClass.StyleController = this.layoutControlExplanatoryNote;
@@ -1026,8 +1050,8 @@
             this.cmbLandCategory.Name = "cmbLandCategory";
             this.cmbLandCategory.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo),
-            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Ellipsis, "", -1, true, false, false, editorButtonImageOptions9, new DevExpress.Utils.KeyShortcut(System.Windows.Forms.Keys.None), serializableAppearanceObject33, serializableAppearanceObject34, serializableAppearanceObject35, serializableAppearanceObject36, "", null, null, DevExpress.Utils.ToolTipAnchor.Default),
-            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Delete, "", -1, true, false, false, editorButtonImageOptions10, new DevExpress.Utils.KeyShortcut(System.Windows.Forms.Keys.None), serializableAppearanceObject37, serializableAppearanceObject38, serializableAppearanceObject39, serializableAppearanceObject40, "", null, null, DevExpress.Utils.ToolTipAnchor.Default)});
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Ellipsis, "", -1, true, false, false, editorButtonImageOptions10, new DevExpress.Utils.KeyShortcut(System.Windows.Forms.Keys.None), serializableAppearanceObject37, serializableAppearanceObject38, serializableAppearanceObject39, serializableAppearanceObject40, "", null, null, DevExpress.Utils.ToolTipAnchor.Default),
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Delete, "", -1, true, false, false, editorButtonImageOptions11, new DevExpress.Utils.KeyShortcut(System.Windows.Forms.Keys.None), serializableAppearanceObject41, serializableAppearanceObject42, serializableAppearanceObject43, serializableAppearanceObject44, "", null, null, DevExpress.Utils.ToolTipAnchor.Default)});
             this.cmbLandCategory.Properties.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.DisableTextEditor;
             this.cmbLandCategory.Size = new System.Drawing.Size(768, 20);
             this.cmbLandCategory.StyleController = this.layoutControlExplanatoryNote;
@@ -1041,13 +1065,43 @@
             this.cmbExplanatoryNoteObjType.Name = "cmbExplanatoryNoteObjType";
             this.cmbExplanatoryNoteObjType.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo),
-            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Ellipsis, "", -1, true, false, false, editorButtonImageOptions11, new DevExpress.Utils.KeyShortcut(System.Windows.Forms.Keys.None), serializableAppearanceObject41, serializableAppearanceObject42, serializableAppearanceObject43, serializableAppearanceObject44, "", null, null, DevExpress.Utils.ToolTipAnchor.Default),
-            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Delete, "", -1, true, false, false, editorButtonImageOptions12, new DevExpress.Utils.KeyShortcut(System.Windows.Forms.Keys.None), serializableAppearanceObject45, serializableAppearanceObject46, serializableAppearanceObject47, serializableAppearanceObject48, "", null, null, DevExpress.Utils.ToolTipAnchor.Default)});
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Ellipsis, "", -1, true, false, false, editorButtonImageOptions12, new DevExpress.Utils.KeyShortcut(System.Windows.Forms.Keys.None), serializableAppearanceObject45, serializableAppearanceObject46, serializableAppearanceObject47, serializableAppearanceObject48, "", null, null, DevExpress.Utils.ToolTipAnchor.Default),
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Delete, "", -1, true, false, false, editorButtonImageOptions13, new DevExpress.Utils.KeyShortcut(System.Windows.Forms.Keys.None), serializableAppearanceObject49, serializableAppearanceObject50, serializableAppearanceObject51, serializableAppearanceObject52, "", null, null, DevExpress.Utils.ToolTipAnchor.Default)});
             this.cmbExplanatoryNoteObjType.Properties.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.DisableTextEditor;
             this.cmbExplanatoryNoteObjType.Size = new System.Drawing.Size(561, 20);
             this.cmbExplanatoryNoteObjType.StyleController = this.layoutControlExplanatoryNote;
             this.cmbExplanatoryNoteObjType.TabIndex = 6;
             this.cmbExplanatoryNoteObjType.SelectedValueChanged += new System.EventHandler(this.cmbExplanatoryNoteObjType_SelectedValueChanged);
+            // 
+            // cmbFireDangerCategory
+            // 
+            this.cmbFireDangerCategory.EditValue = "";
+            this.cmbFireDangerCategory.Location = new System.Drawing.Point(15, 508);
+            this.cmbFireDangerCategory.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.cmbFireDangerCategory.Name = "cmbFireDangerCategory";
+            this.cmbFireDangerCategory.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo),
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Ellipsis, "", -1, true, false, false, editorButtonImageOptions14, new DevExpress.Utils.KeyShortcut(System.Windows.Forms.Keys.None), serializableAppearanceObject53, serializableAppearanceObject54, serializableAppearanceObject55, serializableAppearanceObject56, "", null, null, DevExpress.Utils.ToolTipAnchor.Default),
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Delete, "", -1, true, false, false, editorButtonImageOptions15, new DevExpress.Utils.KeyShortcut(System.Windows.Forms.Keys.None), serializableAppearanceObject57, serializableAppearanceObject58, serializableAppearanceObject59, serializableAppearanceObject60, "", null, null, DevExpress.Utils.ToolTipAnchor.Default)});
+            this.cmbFireDangerCategory.Properties.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.DisableTextEditor;
+            this.cmbFireDangerCategory.Size = new System.Drawing.Size(768, 20);
+            this.cmbFireDangerCategory.StyleController = this.layoutControlExplanatoryNote;
+            this.cmbFireDangerCategory.TabIndex = 6;
+            // 
+            // cmbResponsibilityLevel
+            // 
+            this.cmbResponsibilityLevel.EditValue = "";
+            this.cmbResponsibilityLevel.Location = new System.Drawing.Point(15, 557);
+            this.cmbResponsibilityLevel.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.cmbResponsibilityLevel.Name = "cmbResponsibilityLevel";
+            this.cmbResponsibilityLevel.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo),
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Ellipsis, "", -1, true, false, false, editorButtonImageOptions16, new DevExpress.Utils.KeyShortcut(System.Windows.Forms.Keys.None), serializableAppearanceObject61, serializableAppearanceObject62, serializableAppearanceObject63, serializableAppearanceObject64, "", null, null, DevExpress.Utils.ToolTipAnchor.Default),
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Delete, "", -1, true, false, false, editorButtonImageOptions17, new DevExpress.Utils.KeyShortcut(System.Windows.Forms.Keys.None), serializableAppearanceObject65, serializableAppearanceObject66, serializableAppearanceObject67, serializableAppearanceObject68, "", null, null, DevExpress.Utils.ToolTipAnchor.Default)});
+            this.cmbResponsibilityLevel.Properties.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.DisableTextEditor;
+            this.cmbResponsibilityLevel.Size = new System.Drawing.Size(768, 20);
+            this.cmbResponsibilityLevel.StyleController = this.layoutControlExplanatoryNote;
+            this.cmbResponsibilityLevel.TabIndex = 6;
             // 
             // Root
             // 
@@ -1071,7 +1125,7 @@
             this.layoutControlItemSave.CustomizationFormText = "layoutControlItemSave";
             this.layoutControlItemSave.Location = new System.Drawing.Point(393, 657);
             this.layoutControlItemSave.Name = "layoutControlItemSave";
-            this.layoutControlItemSave.Size = new System.Drawing.Size(149, 26);
+            this.layoutControlItemSave.Size = new System.Drawing.Size(197, 26);
             this.layoutControlItemSave.TextSize = new System.Drawing.Size(0, 0);
             this.layoutControlItemSave.TextVisible = false;
             // 
@@ -1107,9 +1161,9 @@
             this.layoutControlItemCancel.Control = this.btnCancel;
             this.layoutControlItemCancel.ControlAlignment = System.Drawing.ContentAlignment.TopLeft;
             this.layoutControlItemCancel.CustomizationFormText = "layoutControlItemCancel";
-            this.layoutControlItemCancel.Location = new System.Drawing.Point(542, 657);
+            this.layoutControlItemCancel.Location = new System.Drawing.Point(590, 657);
             this.layoutControlItemCancel.Name = "layoutControlItemCancel";
-            this.layoutControlItemCancel.Size = new System.Drawing.Size(246, 26);
+            this.layoutControlItemCancel.Size = new System.Drawing.Size(198, 26);
             this.layoutControlItemCancel.TextSize = new System.Drawing.Size(0, 0);
             this.layoutControlItemCancel.TextVisible = false;
             // 
@@ -1118,145 +1172,13 @@
             this.tabbedControlGroupExplanatoryNote.Location = new System.Drawing.Point(0, 0);
             this.tabbedControlGroupExplanatoryNote.Name = "tabbedControlGroupExplanatoryNote";
             this.tabbedControlGroupExplanatoryNote.Padding = new DevExpress.XtraLayout.Utils.Padding(5, 5, 5, 5);
-            this.tabbedControlGroupExplanatoryNote.SelectedTabPage = this.layoutControlGroupIndustrialObject;
+            this.tabbedControlGroupExplanatoryNote.SelectedTabPage = this.layoutControlGroupGeneralInformation;
             this.tabbedControlGroupExplanatoryNote.Size = new System.Drawing.Size(788, 657);
             this.tabbedControlGroupExplanatoryNote.TabPages.AddRange(new DevExpress.XtraLayout.BaseLayoutItem[] {
             this.layoutControlGroupGeneralInformation,
             this.layoutControlGroupIndustrialObject,
             this.layoutControlGroupIntelligence,
             this.layoutControlGroup1});
-            // 
-            // layoutControlGroupGeneralInformation
-            // 
-            this.layoutControlGroupGeneralInformation.Items.AddRange(new DevExpress.XtraLayout.BaseLayoutItem[] {
-            this.layoutControlItemExplanatoryNoteNumber,
-            this.layoutControlItemExplanatoryNoteYear,
-            this.layoutControlGroupIssueAuthor,
-            this.layoutControlItemSigners,
-            this.layoutControlItemDeveloper,
-            this.layoutControlItemTechnicalCustomer,
-            this.splitterItemDeveloper,
-            this.splitterItemSigners,
-            this.layoutControlItemExplanatoryNoteObjType});
-            this.layoutControlGroupGeneralInformation.Location = new System.Drawing.Point(0, 0);
-            this.layoutControlGroupGeneralInformation.Name = "layoutControlGroupGeneralInformation";
-            this.layoutControlGroupGeneralInformation.Size = new System.Drawing.Size(772, 618);
-            this.layoutControlGroupGeneralInformation.Text = "Общая информация";
-            // 
-            // layoutControlItemExplanatoryNoteNumber
-            // 
-            this.layoutControlItemExplanatoryNoteNumber.Control = this.txtExplanatoryNoteNumber;
-            this.layoutControlItemExplanatoryNoteNumber.Location = new System.Drawing.Point(0, 24);
-            this.layoutControlItemExplanatoryNoteNumber.Name = "layoutControlItemExplanatoryNoteNumber";
-            this.layoutControlItemExplanatoryNoteNumber.Size = new System.Drawing.Size(628, 24);
-            this.layoutControlItemExplanatoryNoteNumber.Text = "Шифр пояснительной записки *";
-            this.layoutControlItemExplanatoryNoteNumber.TextSize = new System.Drawing.Size(162, 13);
-            // 
-            // layoutControlItemExplanatoryNoteYear
-            // 
-            this.layoutControlItemExplanatoryNoteYear.Control = this.txtExplanatoryNoteYear;
-            this.layoutControlItemExplanatoryNoteYear.ControlAlignment = System.Drawing.ContentAlignment.TopLeft;
-            this.layoutControlItemExplanatoryNoteYear.CustomizationFormText = "Шифр пояснительной записки *";
-            this.layoutControlItemExplanatoryNoteYear.Location = new System.Drawing.Point(628, 24);
-            this.layoutControlItemExplanatoryNoteYear.Name = "layoutControlItemExplanatoryNoteYear";
-            this.layoutControlItemExplanatoryNoteYear.Size = new System.Drawing.Size(144, 24);
-            this.layoutControlItemExplanatoryNoteYear.Text = "Год *";
-            this.layoutControlItemExplanatoryNoteYear.TextAlignMode = DevExpress.XtraLayout.TextAlignModeItem.AutoSize;
-            this.layoutControlItemExplanatoryNoteYear.TextSize = new System.Drawing.Size(28, 13);
-            this.layoutControlItemExplanatoryNoteYear.TextToControlDistance = 12;
-            // 
-            // layoutControlGroupIssueAuthor
-            // 
-            this.layoutControlGroupIssueAuthor.GroupStyle = DevExpress.Utils.GroupStyle.Title;
-            this.layoutControlGroupIssueAuthor.Items.AddRange(new DevExpress.XtraLayout.BaseLayoutItem[] {
-            this.layoutControlItemIssueAuthor});
-            this.layoutControlGroupIssueAuthor.Location = new System.Drawing.Point(0, 48);
-            this.layoutControlGroupIssueAuthor.Name = "layoutControlGroupIssueAuthor";
-            this.layoutControlGroupIssueAuthor.Padding = new DevExpress.XtraLayout.Utils.Padding(5, 5, 5, 5);
-            this.layoutControlGroupIssueAuthor.Size = new System.Drawing.Size(772, 60);
-            this.layoutControlGroupIssueAuthor.Text = "Сведения о лице, подготовившем пояснительную записку - генеральном проектировщике" +
-    " *";
-            // 
-            // layoutControlItemIssueAuthor
-            // 
-            this.layoutControlItemIssueAuthor.Control = this.btnIssueAuthor;
-            this.layoutControlItemIssueAuthor.ControlAlignment = System.Drawing.ContentAlignment.TopLeft;
-            this.layoutControlItemIssueAuthor.CustomizationFormText = "Заявитель";
-            this.layoutControlItemIssueAuthor.Location = new System.Drawing.Point(0, 0);
-            this.layoutControlItemIssueAuthor.Name = "layoutControlItemIssueAuthor";
-            this.layoutControlItemIssueAuthor.Size = new System.Drawing.Size(758, 24);
-            this.layoutControlItemIssueAuthor.Text = "Сведения о лице, подготовившем пояснительную записку - генеральном проектировщике" +
-    "";
-            this.layoutControlItemIssueAuthor.TextLocation = DevExpress.Utils.Locations.Top;
-            this.layoutControlItemIssueAuthor.TextSize = new System.Drawing.Size(0, 0);
-            this.layoutControlItemIssueAuthor.TextVisible = false;
-            // 
-            // layoutControlItemSigners
-            // 
-            this.layoutControlItemSigners.Control = this.gridControlSigners;
-            this.layoutControlItemSigners.Location = new System.Drawing.Point(0, 108);
-            this.layoutControlItemSigners.Name = "layoutControlItemSigners";
-            this.layoutControlItemSigners.Size = new System.Drawing.Size(772, 255);
-            this.layoutControlItemSigners.Text = "Сведения о лицах, подписавших документацию";
-            this.layoutControlItemSigners.TextAlignMode = DevExpress.XtraLayout.TextAlignModeItem.AutoSize;
-            this.layoutControlItemSigners.TextLocation = DevExpress.Utils.Locations.Top;
-            this.layoutControlItemSigners.TextSize = new System.Drawing.Size(246, 13);
-            this.layoutControlItemSigners.TextToControlDistance = 5;
-            // 
-            // layoutControlItemDeveloper
-            // 
-            this.layoutControlItemDeveloper.Control = this.gridControlDeveloper;
-            this.layoutControlItemDeveloper.ControlAlignment = System.Drawing.ContentAlignment.TopLeft;
-            this.layoutControlItemDeveloper.CustomizationFormText = "Сведения о лицах, подписавших документацию";
-            this.layoutControlItemDeveloper.Location = new System.Drawing.Point(0, 373);
-            this.layoutControlItemDeveloper.Name = "layoutControlItemDeveloper";
-            this.layoutControlItemDeveloper.Size = new System.Drawing.Size(772, 117);
-            this.layoutControlItemDeveloper.Text = "Сведения о застройщике";
-            this.layoutControlItemDeveloper.TextAlignMode = DevExpress.XtraLayout.TextAlignModeItem.AutoSize;
-            this.layoutControlItemDeveloper.TextLocation = DevExpress.Utils.Locations.Top;
-            this.layoutControlItemDeveloper.TextSize = new System.Drawing.Size(129, 13);
-            this.layoutControlItemDeveloper.TextToControlDistance = 5;
-            // 
-            // layoutControlItemTechnicalCustomer
-            // 
-            this.layoutControlItemTechnicalCustomer.Control = this.gridControlTechnicalCustomer;
-            this.layoutControlItemTechnicalCustomer.ControlAlignment = System.Drawing.ContentAlignment.TopLeft;
-            this.layoutControlItemTechnicalCustomer.CustomizationFormText = "Сведения о лицах, подписавших документацию";
-            this.layoutControlItemTechnicalCustomer.Location = new System.Drawing.Point(0, 500);
-            this.layoutControlItemTechnicalCustomer.Name = "layoutControlItemTechnicalCustomer";
-            this.layoutControlItemTechnicalCustomer.Size = new System.Drawing.Size(772, 118);
-            this.layoutControlItemTechnicalCustomer.Text = "Сведения о техническом заказчике";
-            this.layoutControlItemTechnicalCustomer.TextAlignMode = DevExpress.XtraLayout.TextAlignModeItem.AutoSize;
-            this.layoutControlItemTechnicalCustomer.TextLocation = DevExpress.Utils.Locations.Top;
-            this.layoutControlItemTechnicalCustomer.TextSize = new System.Drawing.Size(182, 13);
-            this.layoutControlItemTechnicalCustomer.TextToControlDistance = 5;
-            // 
-            // splitterItemDeveloper
-            // 
-            this.splitterItemDeveloper.AllowHotTrack = true;
-            this.splitterItemDeveloper.Location = new System.Drawing.Point(0, 490);
-            this.splitterItemDeveloper.Name = "splitterItemDeveloper";
-            this.splitterItemDeveloper.Size = new System.Drawing.Size(772, 10);
-            // 
-            // splitterItemSigners
-            // 
-            this.splitterItemSigners.AllowHotTrack = true;
-            this.splitterItemSigners.Location = new System.Drawing.Point(0, 363);
-            this.splitterItemSigners.Name = "splitterItemSigners";
-            this.splitterItemSigners.Size = new System.Drawing.Size(772, 10);
-            // 
-            // layoutControlItemExplanatoryNoteObjType
-            // 
-            this.layoutControlItemExplanatoryNoteObjType.Control = this.cmbExplanatoryNoteObjType;
-            this.layoutControlItemExplanatoryNoteObjType.ControlAlignment = System.Drawing.ContentAlignment.TopLeft;
-            this.layoutControlItemExplanatoryNoteObjType.CustomizationFormText = "layoutControlItem3";
-            this.layoutControlItemExplanatoryNoteObjType.Location = new System.Drawing.Point(0, 0);
-            this.layoutControlItemExplanatoryNoteObjType.Name = "layoutControlItemExplanatoryNoteObjType";
-            this.layoutControlItemExplanatoryNoteObjType.Size = new System.Drawing.Size(772, 24);
-            this.layoutControlItemExplanatoryNoteObjType.Text = "Тип проекта пояснительной записки *";
-            this.layoutControlItemExplanatoryNoteObjType.TextAlignMode = DevExpress.XtraLayout.TextAlignModeItem.AutoSize;
-            this.layoutControlItemExplanatoryNoteObjType.TextSize = new System.Drawing.Size(195, 13);
-            this.layoutControlItemExplanatoryNoteObjType.TextToControlDistance = 12;
             // 
             // layoutControlGroupIndustrialObject
             // 
@@ -1274,7 +1196,8 @@
             this.layoutControlItemDangerIndustrialClass,
             this.layoutControlItemLandCategory,
             this.layoutControlItemFireDangerCategory,
-            this.layoutControlItemResponsibilityLevel});
+            this.layoutControlItemResponsibilityLevel,
+            this.layoutControlItemPeoplePermanentStay});
             this.layoutControlGroupIndustrialObject.Location = new System.Drawing.Point(0, 0);
             this.layoutControlGroupIndustrialObject.Name = "layoutControlGroupIndustrialObject";
             this.layoutControlGroupIndustrialObject.Size = new System.Drawing.Size(772, 618);
@@ -1354,9 +1277,9 @@
             // emptySpaceItem1
             // 
             this.emptySpaceItem1.AllowHotTrack = false;
-            this.emptySpaceItem1.Location = new System.Drawing.Point(0, 543);
+            this.emptySpaceItem1.Location = new System.Drawing.Point(0, 583);
             this.emptySpaceItem1.Name = "emptySpaceItem1";
-            this.emptySpaceItem1.Size = new System.Drawing.Size(772, 75);
+            this.emptySpaceItem1.Size = new System.Drawing.Size(772, 35);
             this.emptySpaceItem1.TextSize = new System.Drawing.Size(0, 0);
             // 
             // layoutControlItemDangerousAndComplexMemo
@@ -1437,6 +1360,176 @@
             this.layoutControlItemLandCategory.TextLocation = DevExpress.Utils.Locations.Top;
             this.layoutControlItemLandCategory.TextSize = new System.Drawing.Size(616, 13);
             this.layoutControlItemLandCategory.TextToControlDistance = 12;
+            // 
+            // layoutControlItemFireDangerCategory
+            // 
+            this.layoutControlItemFireDangerCategory.Control = this.cmbFireDangerCategory;
+            this.layoutControlItemFireDangerCategory.ControlAlignment = System.Drawing.ContentAlignment.TopLeft;
+            this.layoutControlItemFireDangerCategory.CustomizationFormText = "layoutControlItem3";
+            this.layoutControlItemFireDangerCategory.Location = new System.Drawing.Point(0, 445);
+            this.layoutControlItemFireDangerCategory.Name = "layoutControlItemFireDangerCategory";
+            this.layoutControlItemFireDangerCategory.Size = new System.Drawing.Size(772, 49);
+            this.layoutControlItemFireDangerCategory.Text = "Категория пожарной и взрывопожарной опасности *";
+            this.layoutControlItemFireDangerCategory.TextAlignMode = DevExpress.XtraLayout.TextAlignModeItem.AutoSize;
+            this.layoutControlItemFireDangerCategory.TextLocation = DevExpress.Utils.Locations.Top;
+            this.layoutControlItemFireDangerCategory.TextSize = new System.Drawing.Size(270, 13);
+            this.layoutControlItemFireDangerCategory.TextToControlDistance = 12;
+            // 
+            // layoutControlItemResponsibilityLevel
+            // 
+            this.layoutControlItemResponsibilityLevel.Control = this.cmbResponsibilityLevel;
+            this.layoutControlItemResponsibilityLevel.ControlAlignment = System.Drawing.ContentAlignment.TopLeft;
+            this.layoutControlItemResponsibilityLevel.CustomizationFormText = "layoutControlItem3";
+            this.layoutControlItemResponsibilityLevel.Location = new System.Drawing.Point(0, 494);
+            this.layoutControlItemResponsibilityLevel.Name = "layoutControlItemResponsibilityLevel";
+            this.layoutControlItemResponsibilityLevel.Size = new System.Drawing.Size(772, 49);
+            this.layoutControlItemResponsibilityLevel.Text = "Уровень ответственности *";
+            this.layoutControlItemResponsibilityLevel.TextAlignMode = DevExpress.XtraLayout.TextAlignModeItem.AutoSize;
+            this.layoutControlItemResponsibilityLevel.TextLocation = DevExpress.Utils.Locations.Top;
+            this.layoutControlItemResponsibilityLevel.TextSize = new System.Drawing.Size(143, 13);
+            this.layoutControlItemResponsibilityLevel.TextToControlDistance = 12;
+            // 
+            // layoutControlItemPeoplePermanentStay
+            // 
+            this.layoutControlItemPeoplePermanentStay.Control = this.btnPeoplePermanentStay;
+            this.layoutControlItemPeoplePermanentStay.Location = new System.Drawing.Point(0, 543);
+            this.layoutControlItemPeoplePermanentStay.Name = "layoutControlItemPeoplePermanentStay";
+            this.layoutControlItemPeoplePermanentStay.Size = new System.Drawing.Size(772, 40);
+            this.layoutControlItemPeoplePermanentStay.Text = "Сведения о наличии помещений с постоянным пребыванием людей";
+            this.layoutControlItemPeoplePermanentStay.TextLocation = DevExpress.Utils.Locations.Top;
+            this.layoutControlItemPeoplePermanentStay.TextSize = new System.Drawing.Size(344, 13);
+            // 
+            // layoutControlGroupGeneralInformation
+            // 
+            this.layoutControlGroupGeneralInformation.Items.AddRange(new DevExpress.XtraLayout.BaseLayoutItem[] {
+            this.layoutControlItemExplanatoryNoteNumber,
+            this.layoutControlItemExplanatoryNoteYear,
+            this.layoutControlGroupIssueAuthor,
+            this.layoutControlItemSigners,
+            this.layoutControlItemDeveloper,
+            this.layoutControlItemTechnicalCustomer,
+            this.splitterItemDeveloper,
+            this.splitterItemSigners,
+            this.layoutControlItemExplanatoryNoteObjType});
+            this.layoutControlGroupGeneralInformation.Location = new System.Drawing.Point(0, 0);
+            this.layoutControlGroupGeneralInformation.Name = "layoutControlGroupGeneralInformation";
+            this.layoutControlGroupGeneralInformation.Size = new System.Drawing.Size(772, 618);
+            this.layoutControlGroupGeneralInformation.Text = "Общая информация";
+            // 
+            // layoutControlItemExplanatoryNoteNumber
+            // 
+            this.layoutControlItemExplanatoryNoteNumber.Control = this.txtExplanatoryNoteNumber;
+            this.layoutControlItemExplanatoryNoteNumber.Location = new System.Drawing.Point(0, 24);
+            this.layoutControlItemExplanatoryNoteNumber.Name = "layoutControlItemExplanatoryNoteNumber";
+            this.layoutControlItemExplanatoryNoteNumber.Size = new System.Drawing.Size(628, 24);
+            this.layoutControlItemExplanatoryNoteNumber.Text = "Шифр пояснительной записки *";
+            this.layoutControlItemExplanatoryNoteNumber.TextSize = new System.Drawing.Size(344, 13);
+            // 
+            // layoutControlItemExplanatoryNoteYear
+            // 
+            this.layoutControlItemExplanatoryNoteYear.Control = this.txtExplanatoryNoteYear;
+            this.layoutControlItemExplanatoryNoteYear.ControlAlignment = System.Drawing.ContentAlignment.TopLeft;
+            this.layoutControlItemExplanatoryNoteYear.CustomizationFormText = "Шифр пояснительной записки *";
+            this.layoutControlItemExplanatoryNoteYear.Location = new System.Drawing.Point(628, 24);
+            this.layoutControlItemExplanatoryNoteYear.Name = "layoutControlItemExplanatoryNoteYear";
+            this.layoutControlItemExplanatoryNoteYear.Size = new System.Drawing.Size(144, 24);
+            this.layoutControlItemExplanatoryNoteYear.Text = "Год *";
+            this.layoutControlItemExplanatoryNoteYear.TextAlignMode = DevExpress.XtraLayout.TextAlignModeItem.AutoSize;
+            this.layoutControlItemExplanatoryNoteYear.TextSize = new System.Drawing.Size(28, 13);
+            this.layoutControlItemExplanatoryNoteYear.TextToControlDistance = 12;
+            // 
+            // layoutControlGroupIssueAuthor
+            // 
+            this.layoutControlGroupIssueAuthor.GroupStyle = DevExpress.Utils.GroupStyle.Title;
+            this.layoutControlGroupIssueAuthor.Items.AddRange(new DevExpress.XtraLayout.BaseLayoutItem[] {
+            this.layoutControlItemIssueAuthor});
+            this.layoutControlGroupIssueAuthor.Location = new System.Drawing.Point(0, 48);
+            this.layoutControlGroupIssueAuthor.Name = "layoutControlGroupIssueAuthor";
+            this.layoutControlGroupIssueAuthor.Padding = new DevExpress.XtraLayout.Utils.Padding(5, 5, 5, 5);
+            this.layoutControlGroupIssueAuthor.Size = new System.Drawing.Size(772, 60);
+            this.layoutControlGroupIssueAuthor.Text = "Сведения о лице, подготовившем пояснительную записку - генеральном проектировщике" +
+    " *";
+            // 
+            // layoutControlItemIssueAuthor
+            // 
+            this.layoutControlItemIssueAuthor.Control = this.btnIssueAuthor;
+            this.layoutControlItemIssueAuthor.ControlAlignment = System.Drawing.ContentAlignment.TopLeft;
+            this.layoutControlItemIssueAuthor.CustomizationFormText = "Заявитель";
+            this.layoutControlItemIssueAuthor.Location = new System.Drawing.Point(0, 0);
+            this.layoutControlItemIssueAuthor.Name = "layoutControlItemIssueAuthor";
+            this.layoutControlItemIssueAuthor.Size = new System.Drawing.Size(758, 24);
+            this.layoutControlItemIssueAuthor.Text = "Сведения о лице, подготовившем пояснительную записку - генеральном проектировщике" +
+    "";
+            this.layoutControlItemIssueAuthor.TextLocation = DevExpress.Utils.Locations.Top;
+            this.layoutControlItemIssueAuthor.TextSize = new System.Drawing.Size(0, 0);
+            this.layoutControlItemIssueAuthor.TextVisible = false;
+            // 
+            // layoutControlItemSigners
+            // 
+            this.layoutControlItemSigners.Control = this.gridControlSigners;
+            this.layoutControlItemSigners.Location = new System.Drawing.Point(0, 108);
+            this.layoutControlItemSigners.Name = "layoutControlItemSigners";
+            this.layoutControlItemSigners.Size = new System.Drawing.Size(772, 256);
+            this.layoutControlItemSigners.Text = "Сведения о лицах, подписавших документацию";
+            this.layoutControlItemSigners.TextAlignMode = DevExpress.XtraLayout.TextAlignModeItem.AutoSize;
+            this.layoutControlItemSigners.TextLocation = DevExpress.Utils.Locations.Top;
+            this.layoutControlItemSigners.TextSize = new System.Drawing.Size(246, 13);
+            this.layoutControlItemSigners.TextToControlDistance = 5;
+            // 
+            // layoutControlItemDeveloper
+            // 
+            this.layoutControlItemDeveloper.Control = this.gridControlDeveloper;
+            this.layoutControlItemDeveloper.ControlAlignment = System.Drawing.ContentAlignment.TopLeft;
+            this.layoutControlItemDeveloper.CustomizationFormText = "Сведения о лицах, подписавших документацию";
+            this.layoutControlItemDeveloper.Location = new System.Drawing.Point(0, 374);
+            this.layoutControlItemDeveloper.Name = "layoutControlItemDeveloper";
+            this.layoutControlItemDeveloper.Size = new System.Drawing.Size(772, 116);
+            this.layoutControlItemDeveloper.Text = "Сведения о застройщике";
+            this.layoutControlItemDeveloper.TextAlignMode = DevExpress.XtraLayout.TextAlignModeItem.AutoSize;
+            this.layoutControlItemDeveloper.TextLocation = DevExpress.Utils.Locations.Top;
+            this.layoutControlItemDeveloper.TextSize = new System.Drawing.Size(129, 13);
+            this.layoutControlItemDeveloper.TextToControlDistance = 5;
+            // 
+            // layoutControlItemTechnicalCustomer
+            // 
+            this.layoutControlItemTechnicalCustomer.Control = this.gridControlTechnicalCustomer;
+            this.layoutControlItemTechnicalCustomer.ControlAlignment = System.Drawing.ContentAlignment.TopLeft;
+            this.layoutControlItemTechnicalCustomer.CustomizationFormText = "Сведения о лицах, подписавших документацию";
+            this.layoutControlItemTechnicalCustomer.Location = new System.Drawing.Point(0, 500);
+            this.layoutControlItemTechnicalCustomer.Name = "layoutControlItemTechnicalCustomer";
+            this.layoutControlItemTechnicalCustomer.Size = new System.Drawing.Size(772, 118);
+            this.layoutControlItemTechnicalCustomer.Text = "Сведения о техническом заказчике";
+            this.layoutControlItemTechnicalCustomer.TextAlignMode = DevExpress.XtraLayout.TextAlignModeItem.AutoSize;
+            this.layoutControlItemTechnicalCustomer.TextLocation = DevExpress.Utils.Locations.Top;
+            this.layoutControlItemTechnicalCustomer.TextSize = new System.Drawing.Size(182, 13);
+            this.layoutControlItemTechnicalCustomer.TextToControlDistance = 5;
+            // 
+            // splitterItemDeveloper
+            // 
+            this.splitterItemDeveloper.AllowHotTrack = true;
+            this.splitterItemDeveloper.Location = new System.Drawing.Point(0, 490);
+            this.splitterItemDeveloper.Name = "splitterItemDeveloper";
+            this.splitterItemDeveloper.Size = new System.Drawing.Size(772, 10);
+            // 
+            // splitterItemSigners
+            // 
+            this.splitterItemSigners.AllowHotTrack = true;
+            this.splitterItemSigners.Location = new System.Drawing.Point(0, 364);
+            this.splitterItemSigners.Name = "splitterItemSigners";
+            this.splitterItemSigners.Size = new System.Drawing.Size(772, 10);
+            // 
+            // layoutControlItemExplanatoryNoteObjType
+            // 
+            this.layoutControlItemExplanatoryNoteObjType.Control = this.cmbExplanatoryNoteObjType;
+            this.layoutControlItemExplanatoryNoteObjType.ControlAlignment = System.Drawing.ContentAlignment.TopLeft;
+            this.layoutControlItemExplanatoryNoteObjType.CustomizationFormText = "layoutControlItem3";
+            this.layoutControlItemExplanatoryNoteObjType.Location = new System.Drawing.Point(0, 0);
+            this.layoutControlItemExplanatoryNoteObjType.Name = "layoutControlItemExplanatoryNoteObjType";
+            this.layoutControlItemExplanatoryNoteObjType.Size = new System.Drawing.Size(772, 24);
+            this.layoutControlItemExplanatoryNoteObjType.Text = "Тип проекта пояснительной записки *";
+            this.layoutControlItemExplanatoryNoteObjType.TextAlignMode = DevExpress.XtraLayout.TextAlignModeItem.AutoSize;
+            this.layoutControlItemExplanatoryNoteObjType.TextSize = new System.Drawing.Size(195, 13);
+            this.layoutControlItemExplanatoryNoteObjType.TextToControlDistance = 12;
             // 
             // layoutControlGroupIntelligence
             // 
@@ -1637,64 +1730,6 @@
             this.popupMenuProjectInitialDocuments.Manager = this.barManager;
             this.popupMenuProjectInitialDocuments.Name = "popupMenuProjectInitialDocuments";
             // 
-            // cmbFireDangerCategory
-            // 
-            this.cmbFireDangerCategory.EditValue = "";
-            this.cmbFireDangerCategory.Location = new System.Drawing.Point(15, 508);
-            this.cmbFireDangerCategory.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.cmbFireDangerCategory.Name = "cmbFireDangerCategory";
-            this.cmbFireDangerCategory.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
-            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo),
-            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Ellipsis, "", -1, true, false, false, editorButtonImageOptions13, new DevExpress.Utils.KeyShortcut(System.Windows.Forms.Keys.None), serializableAppearanceObject49, serializableAppearanceObject50, serializableAppearanceObject51, serializableAppearanceObject52, "", null, null, DevExpress.Utils.ToolTipAnchor.Default),
-            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Delete, "", -1, true, false, false, editorButtonImageOptions14, new DevExpress.Utils.KeyShortcut(System.Windows.Forms.Keys.None), serializableAppearanceObject53, serializableAppearanceObject54, serializableAppearanceObject55, serializableAppearanceObject56, "", null, null, DevExpress.Utils.ToolTipAnchor.Default)});
-            this.cmbFireDangerCategory.Properties.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.DisableTextEditor;
-            this.cmbFireDangerCategory.Size = new System.Drawing.Size(768, 20);
-            this.cmbFireDangerCategory.StyleController = this.layoutControlExplanatoryNote;
-            this.cmbFireDangerCategory.TabIndex = 6;
-            // 
-            // layoutControlItemFireDangerCategory
-            // 
-            this.layoutControlItemFireDangerCategory.Control = this.cmbFireDangerCategory;
-            this.layoutControlItemFireDangerCategory.ControlAlignment = System.Drawing.ContentAlignment.TopLeft;
-            this.layoutControlItemFireDangerCategory.CustomizationFormText = "layoutControlItem3";
-            this.layoutControlItemFireDangerCategory.Location = new System.Drawing.Point(0, 445);
-            this.layoutControlItemFireDangerCategory.Name = "layoutControlItemFireDangerCategory";
-            this.layoutControlItemFireDangerCategory.Size = new System.Drawing.Size(772, 49);
-            this.layoutControlItemFireDangerCategory.Text = "Категория пожарной и взрывопожарной опасности *";
-            this.layoutControlItemFireDangerCategory.TextAlignMode = DevExpress.XtraLayout.TextAlignModeItem.AutoSize;
-            this.layoutControlItemFireDangerCategory.TextLocation = DevExpress.Utils.Locations.Top;
-            this.layoutControlItemFireDangerCategory.TextSize = new System.Drawing.Size(270, 13);
-            this.layoutControlItemFireDangerCategory.TextToControlDistance = 12;
-            // 
-            // cmbResponsibilityLevel
-            // 
-            this.cmbResponsibilityLevel.EditValue = "";
-            this.cmbResponsibilityLevel.Location = new System.Drawing.Point(15, 557);
-            this.cmbResponsibilityLevel.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.cmbResponsibilityLevel.Name = "cmbResponsibilityLevel";
-            this.cmbResponsibilityLevel.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
-            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo),
-            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Ellipsis, "", -1, true, false, false, editorButtonImageOptions15, new DevExpress.Utils.KeyShortcut(System.Windows.Forms.Keys.None), serializableAppearanceObject57, serializableAppearanceObject58, serializableAppearanceObject59, serializableAppearanceObject60, "", null, null, DevExpress.Utils.ToolTipAnchor.Default),
-            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Delete, "", -1, true, false, false, editorButtonImageOptions16, new DevExpress.Utils.KeyShortcut(System.Windows.Forms.Keys.None), serializableAppearanceObject61, serializableAppearanceObject62, serializableAppearanceObject63, serializableAppearanceObject64, "", null, null, DevExpress.Utils.ToolTipAnchor.Default)});
-            this.cmbResponsibilityLevel.Properties.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.DisableTextEditor;
-            this.cmbResponsibilityLevel.Size = new System.Drawing.Size(768, 20);
-            this.cmbResponsibilityLevel.StyleController = this.layoutControlExplanatoryNote;
-            this.cmbResponsibilityLevel.TabIndex = 6;
-            // 
-            // layoutControlItemResponsibilityLevel
-            // 
-            this.layoutControlItemResponsibilityLevel.Control = this.cmbResponsibilityLevel;
-            this.layoutControlItemResponsibilityLevel.ControlAlignment = System.Drawing.ContentAlignment.TopLeft;
-            this.layoutControlItemResponsibilityLevel.CustomizationFormText = "layoutControlItem3";
-            this.layoutControlItemResponsibilityLevel.Location = new System.Drawing.Point(0, 494);
-            this.layoutControlItemResponsibilityLevel.Name = "layoutControlItemResponsibilityLevel";
-            this.layoutControlItemResponsibilityLevel.Size = new System.Drawing.Size(772, 49);
-            this.layoutControlItemResponsibilityLevel.Text = "Уровень ответственности *";
-            this.layoutControlItemResponsibilityLevel.TextAlignMode = DevExpress.XtraLayout.TextAlignModeItem.AutoSize;
-            this.layoutControlItemResponsibilityLevel.TextLocation = DevExpress.Utils.Locations.Top;
-            this.layoutControlItemResponsibilityLevel.TextSize = new System.Drawing.Size(143, 13);
-            this.layoutControlItemResponsibilityLevel.TextToControlDistance = 12;
-            // 
             // ExplanatoryNoteEdit
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1711,6 +1746,7 @@
             this.Load += new System.EventHandler(this.ExplanatoryNoteEdit_Load);
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlExplanatoryNote)).EndInit();
             this.layoutControlExplanatoryNote.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.btnPeoplePermanentStay.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.memoEditUnique.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.barManager)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.memoEditDangerousAndComplex.Properties)).EndInit();
@@ -1747,23 +1783,14 @@
             ((System.ComponentModel.ISupportInitialize)(this.cmbDangerIndustrialClass.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.cmbLandCategory.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.cmbExplanatoryNoteObjType.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.cmbFireDangerCategory.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.cmbResponsibilityLevel.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.Root)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemSave)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemFileName)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemVersion)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemCancel)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.tabbedControlGroupExplanatoryNote)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.layoutControlGroupGeneralInformation)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemExplanatoryNoteNumber)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemExplanatoryNoteYear)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.layoutControlGroupIssueAuthor)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemIssueAuthor)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemSigners)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemDeveloper)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemTechnicalCustomer)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.splitterItemDeveloper)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.splitterItemSigners)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemExplanatoryNoteObjType)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlGroupIndustrialObject)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemIndustrialObjectID)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemPlacement)).EndInit();
@@ -1777,6 +1804,20 @@
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemConstructionDuration)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemDangerIndustrialClass)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemLandCategory)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemFireDangerCategory)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemResponsibilityLevel)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemPeoplePermanentStay)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutControlGroupGeneralInformation)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemExplanatoryNoteNumber)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemExplanatoryNoteYear)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutControlGroupIssueAuthor)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemIssueAuthor)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemSigners)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemDeveloper)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemTechnicalCustomer)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.splitterItemDeveloper)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.splitterItemSigners)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemExplanatoryNoteObjType)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlGroupIntelligence)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemModifications)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem2)).EndInit();
@@ -1797,10 +1838,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.popupMenuUsedNorms)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.popupMenuProjectDecisionDocuments)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.popupMenuProjectInitialDocuments)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.cmbFireDangerCategory.Properties)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemFireDangerCategory)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.cmbResponsibilityLevel.Properties)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemResponsibilityLevel)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1927,5 +1964,7 @@
         private DevExpress.XtraEditors.ComboBoxEdit cmbResponsibilityLevel;
         private DevExpress.XtraLayout.LayoutControlItem layoutControlItemFireDangerCategory;
         private DevExpress.XtraLayout.LayoutControlItem layoutControlItemResponsibilityLevel;
+        private DevExpress.XtraEditors.ButtonEdit btnPeoplePermanentStay;
+        private DevExpress.XtraLayout.LayoutControlItem layoutControlItemPeoplePermanentStay;
     }
 }

@@ -46,8 +46,10 @@
       <HintPath>..\packages\Dadata.23.6.1\lib\netstandard2.0\Dadata.dll</HintPath>
     </Reference>
     <Reference Include="DevExpress.BonusSkins.v22.2" />
+    <Reference Include="DevExpress.CodeParser.v22.2, Version=22.2.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
     <Reference Include="DevExpress.Data.Desktop.v22.2" />
     <Reference Include="DevExpress.Data.v22.2" />
+    <Reference Include="DevExpress.DataAccess.v22.2, Version=22.2.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
     <Reference Include="DevExpress.Images.v22.2, Version=22.2.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
     <Reference Include="DevExpress.Office.v22.2.Core, Version=22.2.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
     <Reference Include="DevExpress.Pdf.v22.2.Core, Version=22.2.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
@@ -92,6 +94,7 @@
     <Reference Include="System.Core" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Data.Entity" />
     <Reference Include="System.Data.Linq" />
     <Reference Include="System.Data.SQLite, Version=1.0.118.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
       <HintPath>..\packages\Stub.System.Data.SQLite.Core.NetFramework.1.0.118.0\lib\net46\System.Data.SQLite.dll</HintPath>
@@ -104,9 +107,11 @@
     </Reference>
     <Reference Include="System.Deployment" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Net.Http" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Runtime.Serialization.Formatters.Soap" />
     <Reference Include="System.Security" />
+    <Reference Include="System.ServiceModel" />
     <Reference Include="System.Transactions" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
@@ -142,6 +147,24 @@
     </Compile>
     <Compile Include="Forms\ObjectChange\DocumentENEdit.Designer.cs">
       <DependentUpon>DocumentENEdit.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\ObjectChange\TableEdit.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\ObjectChange\TableEdit.Designer.cs">
+      <DependentUpon>TableEdit.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\ObjectChange\ImageEdit.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\ObjectChange\ImageEdit.Designer.cs">
+      <DependentUpon>ImageEdit.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\ObjectChange\TextBlockEdit.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\ObjectChange\TextBlockEdit.Designer.cs">
+      <DependentUpon>TextBlockEdit.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\ObjectChange\TechnicalCustomerENEdit.cs">
       <SubType>Form</SubType>
@@ -287,6 +310,15 @@
     <EmbeddedResource Include="Forms\ObjectChange\DocumentENEdit.resx">
       <DependentUpon>DocumentENEdit.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Forms\ObjectChange\TableEdit.resx">
+      <DependentUpon>TableEdit.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\ObjectChange\ImageEdit.resx">
+      <DependentUpon>ImageEdit.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\ObjectChange\TextBlockEdit.resx">
+      <DependentUpon>TextBlockEdit.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\ObjectChange\TechnicalCustomerENEdit.resx">
       <DependentUpon>TechnicalCustomerENEdit.cs</DependentUpon>
     </EmbeddedResource>
@@ -420,6 +452,12 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="icon.ico" />
+    <None Include="Resources\movedown_16x16.png" />
+    <None Include="Resources\cancel_16x16.png" />
+    <None Include="Resources\moveup_16x16.png" />
+    <None Include="Resources\cancel_32x32.png" />
+    <None Include="Resources\movedown_32x32.png" />
+    <None Include="Resources\moveup_32x32.png" />
     <None Include="Resources\icon.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

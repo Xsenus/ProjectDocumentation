@@ -227,8 +227,9 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                     ?.Cast<GeneralizedDictionaryXPO>()
                     ?.Where(w => w.GeneralizedDictionary == GeneralizedDictionary.ResponsibilityLevel)
                     ?.FirstOrDefault(f => f.Value == responsibilityLevel?.GetEnumDescription());
+                var peoplePermanentStay = tIndustrialObject.Items?.Where(w => w is tTextBlock)?.Cast<tTextBlock>()?.FirstOrDefault();
+                btnPeoplePermanentStay.EditValue = peoplePermanentStay;
                 #endregion
-
             }
 
             #region Intelligence
@@ -445,13 +446,21 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                             cmbLandCategory,
                             message: "Заполните поле сведения о категории земель, на которых располагается (будет располагаться) объект капитального строительства")?.Value);
 
-                        var objItems = new List<object>();
-                        objItems.Add(ConclusionEdit.GetEnumByAttributeValue<tFireDangerCategory>(ConclusionEdit.GetValueGeneralizedDictionary(
-                            cmbFireDangerCategory,
-                            message: "Заполните поле категория пожарной и взрывопожарной опасности")?.Value));
-                        objItems.Add(ConclusionEdit.GetEnumByAttributeValue<tResponsibilityLevel>(ConclusionEdit.GetValueGeneralizedDictionary(
-                            cmbResponsibilityLevel,
-                            message: "Заполните поле уровень ответственности")?.Value));
+                        var objItems = new List<object>
+                        {
+                            ConclusionEdit.GetEnumByAttributeValue<tFireDangerCategory>(ConclusionEdit.GetValueGeneralizedDictionary(
+                                cmbFireDangerCategory,
+                                message: "Заполните поле категория пожарной и взрывопожарной опасности")?.Value),
+                            ConclusionEdit.GetEnumByAttributeValue<tResponsibilityLevel>(ConclusionEdit.GetValueGeneralizedDictionary(
+                                cmbResponsibilityLevel,
+                                message: "Заполните поле уровень ответственности")?.Value)
+                        };
+
+                        if (btnPeoplePermanentStay.EditValue is tTextBlock peoplePermanentStayTextBlock)
+                        {
+                            objItems.Add(peoplePermanentStayTextBlock);
+                        }
+
                         if (objItems.Count() > 0)
                         {
                             tIndustrialObject.Items = objItems.ToArray();
@@ -966,6 +975,23 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                     gridControlProjectInitialDocuments.DataSource = DocumentObjEnController.GetDocumentObjS(_tProjectInitialDocuments).ToArray();
                     gridControlProjectInitialDocuments.RefreshDataSource();
                 }
+            }
+        }
+
+        private void btnPeoplePermanentStay_ButtonPressed(object sender, ButtonPressedEventArgs e)
+        {
+            if (sender is ButtonEdit buttonEdit)
+            {
+                TextBlockEdit form;
+                if (buttonEdit.EditValue is tTextBlock tTextBlock)
+                {
+                    form = new TextBlockEdit(tTextBlock);
+                }
+                else
+                {
+                    form = new TextBlockEdit();
+                }
+                form.ShowDialog();
             }
         }
     }

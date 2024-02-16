@@ -252,6 +252,11 @@ namespace Core.NET.AutoModels.ExplanatoryNoteObj
 
         [XmlAttribute()]
         public string Title { get; set; }
+
+        public override string ToString()
+        {
+            return Title ?? base.ToString();
+        }
     }
 
     public partial class tImage
@@ -309,13 +314,17 @@ namespace Core.NET.AutoModels.ExplanatoryNoteObj
     [XmlType(IncludeInSchema = false)]
     public enum ItemsChoiceType
     {
+        [Description("Изображение")]
         Image,
 
+        [Description("Подзаголовок")]
         SubTitle,
 
+        [Description("Таблица")]
         Table,
 
-        Text,
+        [Description("Текст")]
+        Text
     }
 
     public partial class tTEI
