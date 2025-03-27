@@ -8,7 +8,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("ilel@list.ru")]
 [assembly: AssemblyProduct("ProjectDocumentation.NET")]
-[assembly: AssemblyCopyright("ilel@list.ru © 2023")]
+[assembly: AssemblyCopyright("ilel@list.ru © 2025")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 // Setting ComVisible to false makes the types in this assembly not visible 
@@ -27,5 +27,5 @@ using System.Runtime.InteropServices;
 // You can specify all the values or you can default the Build and Revision Numbers 
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("2.0.0.27")]
-[assembly: AssemblyFileVersion("2.0.0.27")]
+[assembly: AssemblyVersion("2.0.0.28")]
+[assembly: AssemblyFileVersion("2.0.0.28")]

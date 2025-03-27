@@ -75,7 +75,7 @@ namespace ProjectDocumentation.NET.Forms
                     path = new SettingXPO(Session)
                     {
                         Name = "UpdatePath",
-                        Value = "ftp://81.28.221.114/other/ProjectDocumentation.NET/ProjectDocumentation.NET.Update.xml"
+                        Value = "ftp://90.189.149.59/other/ProjectDocumentation.NET/ProjectDocumentation.NET.Update.xml"
                     };
                     path.Save();
                 }

@@ -9,7 +9,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("ilel@list.ru")]
 [assembly: AssemblyProduct("Core.NET")]
-[assembly: AssemblyCopyright("ilel@list.ru © 2023")]
+[assembly: AssemblyCopyright("ilel@list.ru © 2025")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -31,5 +31,5 @@ using System.Runtime.InteropServices;
 // Можно задать все значения или принять номера сборки и редакции по умолчанию 
 // используя "*", как показано ниже:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("2.0.0.15")]
-[assembly: AssemblyFileVersion("2.0.0.15")]
+[assembly: AssemblyVersion("2.0.0.16")]
+[assembly: AssemblyFileVersion("2.0.0.16")]
