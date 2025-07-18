@@ -19,7 +19,7 @@ namespace Core.NET.AutoModels.ConclusionObj
     {
         public Conclusion()
         {
-            SchemaVersion = "01.02";
+            SchemaVersion = "01.03";
         }
 
         public tOrganization ExpertOrganization { get; set; }

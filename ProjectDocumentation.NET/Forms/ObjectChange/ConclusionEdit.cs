@@ -728,11 +728,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                 var schemaVersion = txtVersion.EditValue?.ToString()?.Trim();
                 if (string.IsNullOrWhiteSpace(schemaVersion))
                 {
-                    schemaVersion = "01.02";
-                }
-                if (schemaVersion == "01.03")
-                {
-                    schemaVersion = "01.02";
+                    schemaVersion = "01.03";
                 }
                 Conclusion.SchemaVersion = schemaVersion;
 
