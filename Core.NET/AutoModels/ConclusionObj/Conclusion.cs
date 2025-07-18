@@ -90,6 +90,9 @@ namespace Core.NET.AutoModels.ConclusionObj
 
         [XmlElement("EcologyExpertise", IsNullable = false)]
         public tEcologyExpertise EcologyExpertise { get; set; }
+
+        public string FunctionsClass { get; set; }
+        public string ExpertiseResultNote { get; set; }
     }
 
     [GeneratedCode("xsd", "4.6.1055.0")]

@@ -102,6 +102,8 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
             cmbEngineeringSurveysIM.Properties.Items.AddRange(collection
                 .Where(w => w.GeneralizedDictionary == GeneralizedDictionary.LogicalAnswer).ToArray());
 
+            cmbEcologyExpertiseNeedExpertise.Properties.Items.AddRange(collection
+                .Where(w => w.GeneralizedDictionary == GeneralizedDictionary.LogicalAnswer).ToArray());
             #endregion
 
             #region Page II_1
@@ -143,7 +145,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                 Conclusion = new Conclusion();
             }
             
-            txtVersion.EditValue = "01.03" /*Conclusion.SchemaVersion*/;
+            txtVersion.EditValue = Conclusion.SchemaVersion;
 
             #region Page I
             cmbExaminationResult.EditValue = cmbExaminationResult.Properties.Items
@@ -189,7 +191,6 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                     ?.Where(w => w.GeneralizedDictionary == GeneralizedDictionary.LogicalAnswer)
                     ?.FirstOrDefault(f => f.Value == Conclusion?.ExaminationObject?.EngineeringSurveysIM.GetEnumXmlAttributeValue().ToString());
             }
-
             memoExaminationStageNote.Text = Conclusion?.ExaminationObject?.ExaminationStageNote;
             #endregion
 
@@ -259,13 +260,27 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
             }
             #endregion
 
+            #region Page I_7
+            cmbEcologyExpertiseNeedExpertise.EditValue = cmbEcologyExpertiseNeedExpertise.Properties.Items
+                    ?.Cast<GeneralizedDictionaryXPO>()
+                    ?.Where(w => w.GeneralizedDictionary == GeneralizedDictionary.LogicalAnswer)
+                    ?.FirstOrDefault(f => f.Value == Conclusion?.EcologyExpertise?.Required.GetEnumXmlAttributeValue().ToString());
+
+            if (cmbEcologyExpertiseNeedExpertise.EditValue is null)
+                cmbEcologyExpertiseNeedExpertise.SelectedIndex = cmbEcologyExpertiseNeedExpertise.Properties.Items.Count - 1;
+
+            memoEcologyExpertiseNote.Text = Conclusion?.EcologyExpertise?.Note;
+            #endregion
+
+            memoExpertiseResultNote.Text = Conclusion?.ExpertiseResultNote;
+
             #region Page II_1
             memoObjectName.EditValue = Conclusion?.Object?.Name;
             cmbObjectType.EditValue = cmbObjectType.Properties.Items
               ?.Cast<GeneralizedDictionaryXPO>()
               ?.Where(w => w.GeneralizedDictionary == GeneralizedDictionary.ObjectType)
               ?.FirstOrDefault(f => f.ValueInt == Conclusion?.Object?.Type.GetEnumXmlAttributeValueInt());
-            cmbFunctionsClass.EditValue = Conclusion?.Object?.Item;
+            cmbFunctionsClass.EditValue = Conclusion?.Object?.Item ?? Conclusion?.FunctionsClass;
             cmbObjectAddress.EditValue = Conclusion?.Object?.Address?.FirstOrDefault();
             _tTEIs = Conclusion?.Object?.TEI?.ToList() ?? new List<tTEI>();
             gridControlTEI.DataSource = _tTEIs;
@@ -793,6 +808,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                 }
 
                 Conclusion.ExaminationObject.ExaminationStageNote = GetStringValue(memoExaminationStageNote.Text, isNullAble: true);
+                Conclusion.ExpertiseResultNote = GetStringValue(memoExpertiseResultNote.Text, isNullAble: true) ?? string.Empty;
                 #endregion
 
                 #region Page I_2
@@ -861,6 +877,14 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                 }
                 #endregion
 
+                #region Page 1_7
+                Conclusion.EcologyExpertise = new tEcologyExpertise();
+                Conclusion.EcologyExpertise.Required = GetEnumByAttributeValue<tYesNo>(GetValueGeneralizedDictionary(cmbEcologyExpertiseNeedExpertise,
+                    message: "Заполните поле требуется ли экологическая экспертиза")?.Value);
+                Conclusion.EcologyExpertise.Note = GetStringValue(memoEcologyExpertiseNote.EditValue,
+                    memoEcologyExpertiseNote, "Заполните поле обоснование необходимости экологической экспертизы", isNullAble: true) ?? string.Empty;
+                #endregion
+
                 #region Page II_1
                 Conclusion.Object = new tObject
                 {
@@ -870,6 +894,9 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                         message: "Заполните поле вид объекта капитального строительства")?.Value),
                     Item = GetStringValue(cmbFunctionsClass.EditValue?.ToString(), cmbFunctionsClass, "Функциональное назначение объекта капитального строительства (код по классификатору)")
                 };
+
+                Conclusion.FunctionsClass = GetStringValue(cmbFunctionsClass.EditValue?.ToString(), cmbFunctionsClass, "Функциональное назначение объекта капитального строительства (код по классификатору)");
+
                 if (cmbObjectAddress.EditValue is tAddress objectAddress)
                 {
                     Conclusion.Object.Address = new tAddress[] { objectAddress };
@@ -1143,6 +1170,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                 }
                 #endregion
 
+                ValidateConclusion(Conclusion);
             }
             catch (Exception ex)
             {
@@ -1156,6 +1184,38 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
 
             IsSave = true;
             Close();
+        }
+
+        private void ValidateConclusion(Conclusion c)
+        {
+            if (c.SchemaVersion == "01.03")
+            {
+                if (string.IsNullOrWhiteSpace(c.ClimateConditionsNote))
+                    throw new ValidationException("Поле 'Дополнительные сведения о природных и техногенных условиях' не может быть пустым.");
+
+                if (string.IsNullOrWhiteSpace(c.FunctionsClass))
+                    throw new ValidationException("Поле 'Функционально назначение объекта' не может быть пустым.");
+
+                //if (string.IsNullOrWhiteSpace(c.ExpertiseResultNote))
+                //    throw new ValidationException("Поле 'Примечание к результату экспертизы' не может быть пустым.");
+
+                //if (c.EcologyExpertise == null || string.IsNullOrWhiteSpace(c.EcologyExpertise.Note))
+                //    throw new ValidationException("Поле 'Примечание к экологической экспертизе' не может быть пустым.");
+
+                if (c.PreviousConclusions != null)
+                {
+                    foreach (var pc in c.PreviousConclusions)
+                    {
+                        if (pc.Number == null || string.IsNullOrWhiteSpace(pc.Number.Item))
+                            throw new ValidationException("Поле 'Номер предыдущего заключения' не может быть пустым.");
+                        if (string.IsNullOrWhiteSpace(pc.Name))
+                            throw new ValidationException("Поле 'Организация предыдущего заключения' не может быть пустым.");
+                    }
+                }
+
+                if (string.IsNullOrWhiteSpace(c.ConclusionGUID))
+                    throw new ValidationException("GUID заключения не задан.");
+            }            
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]

@@ -91,53 +91,63 @@ namespace ProjectDocumentation.NET.Forms
                 AddValueToString();
 
                 AddValueToString($"1.4. Сведения о положительном заключении государственной экологической экспертизы");
-                foreach (var document in conclusion.Documents)
+
+                if (conclusion?.Documents != null)
                 {
-                    if (document.DocType.GetEnumXmlAttributeValue().ToString().Contains("03."))
+                    foreach (var document in conclusion.Documents)
                     {
-                        //documentCount++;
-                        //var documentValue = $"{documentCount}. {document.DocName} от {document.DocDate.ToShortDateString()} № {document.DocNumber}";
-                        //var documentOrganizationName = document.Items?.FirstOrDefault()?.ToString();
-                        //if (!string.IsNullOrWhiteSpace(documentOrganizationName))
-                        //{
-                        //    documentValue += $", {documentOrganizationName}";
-                        //}
-                        //AddValueToString(documentValue);
+                        if (document.DocType.GetEnumXmlAttributeValue().ToString().Contains("03."))
+                        {
+                            //documentCount++;
+                            //var documentValue = $"{documentCount}. {document.DocName} от {document.DocDate.ToShortDateString()} № {document.DocNumber}";
+                            //var documentOrganizationName = document.Items?.FirstOrDefault()?.ToString();
+                            //if (!string.IsNullOrWhiteSpace(documentOrganizationName))
+                            //{
+                            //    documentValue += $", {documentOrganizationName}";
+                            //}
+                            //AddValueToString(documentValue);
+                        }
                     }
                 }
                 AddValueToString();
 
                 AddValueToString($"1.5. Сведения о составе документов, представленных для проведения повторной экспертизы");
                 documentCount = 0;
-                foreach (var document in conclusion.Documents)
+                if (conclusion?.Documents != null)
                 {
-                    if (document.DocType.GetEnumXmlAttributeValue().ToString().Contains("03."))
+                    foreach (var document in conclusion.Documents)
                     {
-                        documentCount++;
-                        var documentValue = $"{documentCount}. {document.DocName} от {document.DocDate.ToShortDateString()} № {document.DocNumber}";
-                        var documentOrganizationName = document.Items?.FirstOrDefault()?.ToString();
-                        if (!string.IsNullOrWhiteSpace(documentOrganizationName))
+                        if (document.DocType.GetEnumXmlAttributeValue().ToString().Contains("03."))
                         {
-                            documentValue += $", {documentOrganizationName}";
+                            documentCount++;
+                            var documentValue = $"{documentCount}. {document.DocName} от {document.DocDate.ToShortDateString()} № {document.DocNumber}";
+                            var documentOrganizationName = document.Items?.FirstOrDefault()?.ToString();
+                            if (!string.IsNullOrWhiteSpace(documentOrganizationName))
+                            {
+                                documentValue += $", {documentOrganizationName}";
+                            }
+                            AddValueToString(documentValue);
                         }
-                        AddValueToString(documentValue);
                     }
                 }
                 AddValueToString();
 
                 AddValueToString($"1.6. Сведения о ранее выданных заключениях экспертизы проектной документации и (или) результатов инженерных изысканий в отношении объекта капитального строительства, проектная документация и (или) результаты инженерных изысканий по которому представлены для проведения повторной экспертизы");
-                foreach (var document in conclusion.Documents)
+                if (conclusion?.Documents != null)
                 {
-                    if (document.DocType.GetEnumXmlAttributeValue().ToString().Contains("03."))
+                    foreach (var document in conclusion.Documents)
                     {
-                        //documentCount++;
-                        //var documentValue = $"{documentCount}. {document.DocName} от {document.DocDate.ToShortDateString()} № {document.DocNumber}";
-                        //var documentOrganizationName = document.Items?.FirstOrDefault()?.ToString();
-                        //if (!string.IsNullOrWhiteSpace(documentOrganizationName))
-                        //{
-                        //    documentValue += $", {documentOrganizationName}";
-                        //}
-                        //AddValueToString(documentValue);
+                        if (document.DocType.GetEnumXmlAttributeValue().ToString().Contains("03."))
+                        {
+                            //documentCount++;
+                            //var documentValue = $"{documentCount}. {document.DocName} от {document.DocDate.ToShortDateString()} № {document.DocNumber}";
+                            //var documentOrganizationName = document.Items?.FirstOrDefault()?.ToString();
+                            //if (!string.IsNullOrWhiteSpace(documentOrganizationName))
+                            //{
+                            //    documentValue += $", {documentOrganizationName}";
+                            //}
+                            //AddValueToString(documentValue);
+                        }
                     }
                 }
                 AddValueToString();
