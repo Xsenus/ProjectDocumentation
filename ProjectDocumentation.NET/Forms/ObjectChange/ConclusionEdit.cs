@@ -1213,8 +1213,8 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                     }
                 }
 
-                if (string.IsNullOrWhiteSpace(c.ConclusionGUID))
-                    throw new ValidationException("GUID заключения не задан.");
+                //if (string.IsNullOrWhiteSpace(c.ConclusionGUID))
+                //    throw new ValidationException("GUID заключения не задан.");
             }            
         }
 
