@@ -88,6 +88,7 @@ namespace Core.NET.AutoModels.ConclusionObj
         [XmlAttribute()]
         public string SchemaLink { get; set; }
 
+        [XmlElement("EcologyExpertise", IsNullable = false)]
         public tEcologyExpertise EcologyExpertise { get; set; }
     }
 
@@ -1231,7 +1232,6 @@ namespace Core.NET.AutoModels.ConclusionObj
         [XmlElement("Address")]
         public tAddress[] Address { get; set; }
 
-        [XmlElement("Functions", typeof(string), DataType = "normalizedString")]
         [XmlElement("FunctionsClass", typeof(string))]
         [XmlChoiceIdentifier("ItemElementName")]
         public string Item { get; set; }
@@ -1282,7 +1282,6 @@ namespace Core.NET.AutoModels.ConclusionObj
 
         public tObjectType Type { get; set; }
 
-        [XmlElement("Functions", typeof(string), DataType = "normalizedString")]
         [XmlElement("FunctionsClass", typeof(string))]
         [XmlChoiceIdentifier("ItemElementName")]
         public string Item { get; set; }
