@@ -87,6 +87,8 @@ namespace Core.NET.AutoModels.ConclusionObj
 
         [XmlAttribute()]
         public string SchemaLink { get; set; }
+
+        public tEcologyExpertise EcologyExpertise { get; set; }
     }
 
     [GeneratedCode("xsd", "4.6.1055.0")]

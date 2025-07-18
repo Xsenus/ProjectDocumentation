@@ -59,6 +59,7 @@
     <Compile Include="AutoModels\ExplanatoryNoteObj\ExplanatoryNoteObjType.cs" />
     <Compile Include="AutoModels\tDocumentType.cs" />
     <Compile Include="AutoModels\ITechnicalCustomer.cs" />
+    <Compile Include="AutoModels\tEcologyExpertise.cs" />
     <Compile Include="AutoModels\tWorkPerson.cs" />
     <Compile Include="AutoModels\tForeignOrganization.cs" />
     <Compile Include="AutoModels\tIP.cs" />
