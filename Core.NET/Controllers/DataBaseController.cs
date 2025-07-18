@@ -801,6 +801,39 @@ namespace Core.NET.Controllers
                 await Session.SaveAsync(new GeneralizedDictionaryXPO(Session) { Value = "99.99", Name = "Группа дополнительных документов. Иной документ", GeneralizedDictionary = GeneralizedDictionary.DocumentType });
             }
 
+            if (collection
+                .Where(w => w.GeneralizedDictionary == GeneralizedDictionary.DocumentType)
+                .Where(w => w.Value == "26.04").Count() == 0)
+            {
+                await Session.SaveAsync(new GeneralizedDictionaryXPO(Session)
+                {
+                    Value = "26.01",
+                    Name = "Акт (решение) собственника здания (строения, сооружения), содержащий условия реконструкции, капитального ремонта или сноса объекта капитального строительства или его части",
+                    GeneralizedDictionary = GeneralizedDictionary.DocumentType
+                });
+
+                await Session.SaveAsync(new GeneralizedDictionaryXPO(Session)
+                {
+                    Value = "26.02",
+                    Name = "Градостроительный план земельного участка",
+                    GeneralizedDictionary = GeneralizedDictionary.DocumentType
+                });
+
+                await Session.SaveAsync(new GeneralizedDictionaryXPO(Session)
+                {
+                    Value = "26.03",
+                    Name = "Правоустанавливающие документы на земельный участок",
+                    GeneralizedDictionary = GeneralizedDictionary.DocumentType
+                });
+
+                await Session.SaveAsync(new GeneralizedDictionaryXPO(Session)
+                {
+                    Value = "26.04",
+                    Name = "Правоустанавливающие документы на объект капитального строительства",
+                    GeneralizedDictionary = GeneralizedDictionary.DocumentType
+                });
+            }
+
             if (collection.Where(w => w.GeneralizedDictionary == GeneralizedDictionary.LogicalAnswer).Count() == 0)
             {
                 await Session.SaveAsync(new GeneralizedDictionaryXPO(Session)

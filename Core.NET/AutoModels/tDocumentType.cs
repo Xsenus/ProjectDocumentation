@@ -564,5 +564,17 @@ namespace Core.NET.AutoModels
 
         [XmlEnum("99.99")]
         Item9999,
+
+        [XmlEnum("26.01")]
+        Item2601,
+
+        [XmlEnum("26.02")]
+        Item2602,
+
+        [XmlEnum("26.03")]
+        Item2603,
+
+        [XmlEnum("26.04")]
+        Item2604,
     }
 }
