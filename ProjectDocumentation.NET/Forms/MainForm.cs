@@ -108,7 +108,9 @@ namespace ProjectDocumentation.NET.Forms
 
         private async Task UpdateGridDataSource(int focusedRowHandle)
         {
-            gridControl.DataSource = await new XPQuery<XmlObjXPO>(Session).ToListAsync();
+            gridControl.DataSource = await new XPQuery<XmlObjXPO>(Session)
+                .OrderByDescending(o => o.DateCreate)
+                .ToListAsync();
             gridView.FocusedRowHandle = focusedRowHandle;
         }
 
