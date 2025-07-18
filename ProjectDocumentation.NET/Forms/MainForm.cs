@@ -96,7 +96,9 @@ namespace ProjectDocumentation.NET.Forms
 
         private async Task UpdateGridDataSourceAsync(string columnName = default, object obj = default)
         {
-            gridControl.DataSource = await new XPQuery<XmlObjXPO>(Session).ToListAsync();
+            gridControl.DataSource = await new XPQuery<XmlObjXPO>(Session)
+                .OrderByDescending(o => o.DateCreate)
+                .ToListAsync();
 
             if (!string.IsNullOrWhiteSpace(columnName) && obj != null)
             {
