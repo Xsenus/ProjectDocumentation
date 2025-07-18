@@ -69,20 +69,25 @@ namespace ProjectDocumentation.NET.Forms
 
                 AddValueToString($"1.3. Основания для проведения повторной экспертизы");
                 var documentCount = 0;
-                foreach (var document in conclusion.Documents)
+
+                if (conclusion.Documents != null)
                 {
-                    if (document.DocType.GetEnumXmlAttributeValue().ToString().Contains("01."))
+                    foreach (var document in conclusion.Documents)
                     {
-                        documentCount++;
-                        var documentValue = $"{documentCount}. {document.DocName} от {document.DocDate.ToShortDateString()} № {document.DocNumber}";
-                        var documentOrganizationName = document.Items?.FirstOrDefault()?.ToString();
-                        if (!string.IsNullOrWhiteSpace(documentOrganizationName))
+                        if (document.DocType.GetEnumXmlAttributeValue().ToString().Contains("01."))
                         {
-                            documentValue += $", {documentOrganizationName}";
+                            documentCount++;
+                            var documentValue = $"{documentCount}. {document.DocName} от {document.DocDate.ToShortDateString()} № {document.DocNumber}";
+                            var documentOrganizationName = document.Items?.FirstOrDefault()?.ToString();
+                            if (!string.IsNullOrWhiteSpace(documentOrganizationName))
+                            {
+                                documentValue += $", {documentOrganizationName}";
+                            }
+                            AddValueToString(documentValue);
                         }
-                        AddValueToString(documentValue);
                     }
                 }
+                
                 AddValueToString();
 
                 AddValueToString($"1.4. Сведения о положительном заключении государственной экологической экспертизы");
