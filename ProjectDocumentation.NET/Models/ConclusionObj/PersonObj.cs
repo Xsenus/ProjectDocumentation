@@ -1,5 +1,4 @@
-﻿using Core.NET.AutoModels;
-using Core.NET.AutoModels.ConclusionObj;
+﻿using Core.NET.AutoModels.ConclusionObj;
 using Core.NET.AutoModels.ExplanatoryNoteObj;
 using System.Collections.Generic;
 
@@ -17,22 +16,22 @@ namespace ProjectDocumentation.NET.Models.ConclusionObj
             }
         }
 
-        public static IEnumerable<PersonObj> GetPersonObjByDesigner(ICollection<tDesigner> collection)
-        {
-            foreach (var obj in collection)
-            {
-                var result = new PersonObj(obj);
-                result.SetObjByDesigner();
-                yield return result;
-            }
-        }
-
-        public static IEnumerable<PersonObj> GetPersonObjByDeclarator(ICollection<tDeclarant> collection)
+        public static IEnumerable<PersonObj> GetPersonObjByDeclarator(ICollection<TDeclarant> collection)
         {
             foreach (var obj in collection)
             {
                 var result = new PersonObj(obj);
                 result.SetObjByDeclarator();
+                yield return result;
+            }
+        }
+
+        public static IEnumerable<PersonObj> GetPersonObjByDesigner(ICollection<TDesigner> collection)
+        {
+            foreach (var obj in collection)
+            {
+                var result = new PersonObj(obj);
+                result.SetObjByDesigner();
                 yield return result;
             }
         }
@@ -47,7 +46,17 @@ namespace ProjectDocumentation.NET.Models.ConclusionObj
             }
         }
 
-        public static IEnumerable<PersonObj> GetPersonObjByTechnicalCustomer(ICollection<ITechnicalCustomer> collection)
+        public static IEnumerable<PersonObj> GetPersonObjByTechnicalCustomer(ICollection<Core.NET.AutoModels.ConclusionObj.TTechnicalCustomer> collection)
+        {
+            foreach (var obj in collection)
+            {
+                var result = new PersonObj(obj);
+                result.SetObjByTechnicalCustomer();
+                yield return result;
+            }
+        }
+
+        public static IEnumerable<PersonObj> GetPersonObjByTechnicalCustomer(ICollection<Core.NET.AutoModels.ExplanatoryNoteObj.TTechnicalCustomer> collection)
         {
             foreach (var obj in collection)
             {
@@ -60,30 +69,61 @@ namespace ProjectDocumentation.NET.Models.ConclusionObj
 
     public class PersonObj
     {
-        public object BaseObj { get; private set; }
-        public object Obj { get; private set; }
 
         public PersonObj(object obj)
         {
             Obj = obj;
         }
 
-        public void SetObjByDesigner()
+        public void SetObj()
         {
-            if (Obj is tDesigner designer)
+            if (Obj is TDeclarant declarant)
             {
-                BaseObj = designer;
-                Obj = designer.Item;
+                BaseObj = declarant;
+                var entity = (object)declarant.Organization
+                             ?? declarant.ForeignOrganization
+                             ?? declarant.Ip
+                             ?? (object)declarant.Person;
 
-                if (Obj is tForeignOrganization tForeignOrganization)
+                if (entity is TForeignOrganization fo)
+                    Name = fo.OrgFullName;
+                else if (entity is Tip ip)
+                    Name = $"ИП {ip.FamilyName} {ip.FirstName} {ip.SecondName}";
+                else if (entity is TOrganization org)
+                    Name = org.OrgFullName;
+                else if (entity is TPerson person)
+                    Name = $"ФЛ {person.FamilyName} {person.FirstName} {person.SecondName}";
+
+                if (entity != null)
+                    Obj = entity;
+            }
+            else if (Obj is Core.NET.AutoModels.ConclusionObj.TTechnicalCustomer tc)
+            {
+                BaseObj = tc;
+                var entity = (object)tc.Organization ?? tc.ForeignOrganization;
+
+                if (entity is TForeignOrganization fo)
+                    Name = fo.OrgFullName;
+                else if (entity is TOrganization org)
+                    Name = org.OrgFullName;
+
+                if (entity != null)
+                    Obj = entity;
+            }
+            else if (Obj is Core.NET.AutoModels.ExplanatoryNoteObj.TTechnicalCustomer tce)
+            {
+                BaseObj = tce;
+                Obj = tce.Item;
+
+                if (Obj is TForeignOrganization tForeignOrganization)
                 {
                     Name = tForeignOrganization.OrgFullName;
                 }
-                else if (Obj is tIP ip)
+                else if (Obj is Tip ip)
                 {
                     Name = $"ИП {ip.FamilyName} {ip.FirstName} {ip.SecondName}";
                 }
-                else if (Obj is tOrganization tOrganization)
+                else if (Obj is TOrganization tOrganization)
                 {
                     Name = tOrganization.OrgFullName;
                 }
@@ -92,100 +132,88 @@ namespace ProjectDocumentation.NET.Models.ConclusionObj
 
         public void SetObjByDeclarator()
         {
-            if (Obj is tDeclarant declarant)
+            if (Obj is TDeclarant declarant)
             {
                 BaseObj = declarant;
-                Obj = declarant.Item;                
-            }
-            else if (Obj is tDeveloper developer)
-            {
-                BaseObj = developer;
-                Obj = developer.Item;                
+                Obj = (object)declarant.Organization
+                      ?? declarant.ForeignOrganization
+                      ?? declarant.Ip
+                      ?? (object)declarant.Person;
             }
 
-            if (Obj is tForeignOrganization tForeignOrganization)
+            if (Obj is TForeignOrganization fo)
             {
-                Name = tForeignOrganization.OrgFullName;
+                Name = fo.OrgFullName;
             }
-            else if (Obj is tIP ip)
+            else if (Obj is Tip ip)
             {
                 Name = $"ИП {ip.FamilyName} {ip.FirstName} {ip.SecondName}";
             }
-            else if (Obj is tOrganization tOrganization)
+            else if (Obj is TOrganization org)
             {
-                Name = tOrganization.OrgFullName;
+                Name = org.OrgFullName;
             }
-            else if (Obj is tPerson person)
+            else if (Obj is TPerson person)
             {
                 Name = $"ФЛ {person.FamilyName} {person.FirstName} {person.SecondName}";
             }
         }
 
+        public void SetObjByDesigner()
+        {
+            if (Obj is TDesigner designer)
+            {
+                BaseObj = designer;
+                Obj = (object)designer.Organization ?? (object)designer.ForeignOrganization ?? (object)designer.Ip;
+
+                if (Obj is TForeignOrganization fo)
+                    Name = fo.OrgFullName;
+                else if (Obj is Tip ip)
+                    Name = $"ИП {ip.FamilyName} {ip.FirstName} {ip.SecondName}";
+                else if (Obj is TOrganization org)
+                    Name = org.OrgFullName;
+            }
+        }
+
         public void SetObjByTechnicalCustomer()
         {
-            if (Obj is ITechnicalCustomer tTechnicalCustomer)
+            if (Obj is Core.NET.AutoModels.ConclusionObj.TTechnicalCustomer tc)
             {
-                BaseObj = tTechnicalCustomer;
-                Obj = tTechnicalCustomer.Item;
+                BaseObj = tc;
+                Obj = (object)tc.Organization ?? tc.ForeignOrganization;
 
-                if (Obj is tForeignOrganization tForeignOrganization)
+                if (Obj is TForeignOrganization fo)
+                    Name = fo.OrgFullName;
+                else if (Obj is TOrganization org)
+                    Name = org.OrgFullName;
+            }
+            else if (Obj is Core.NET.AutoModels.ExplanatoryNoteObj.TTechnicalCustomer tce)
+            {
+                BaseObj = tce;
+                Obj = tce.Item;
+
+                if (Obj is TForeignOrganization tForeignOrganization)
                 {
                     Name = tForeignOrganization.OrgFullName;
                 }
-                else if (Obj is tIP ip)
+                else if (Obj is Tip ip)
                 {
                     Name = $"ИП {ip.FamilyName} {ip.FirstName} {ip.SecondName}";
                 }
-                else if (Obj is tOrganization tOrganization)
-                {
-                    Name = tOrganization.OrgFullName;
-                }
-                else if (Obj is tPerson person)
-                {
-                    Name = $"ФЛ {person.FamilyName} {person.FirstName} {person.SecondName}";
-                }
-            }
-        }
-
-        public void SetObj()
-        {
-            if (Obj is tDeclarant declarant)
-            {
-                if (declarant.Item is tForeignOrganization tForeignOrganization)
-                {
-                    Name = tForeignOrganization.OrgFullName;
-                }
-                else if (declarant.Item is tIP ip)
-                {
-                    Name = $"ИП {ip.FamilyName} {ip.FirstName} {ip.SecondName}";
-                }
-                else if (declarant.Item is tOrganization tOrganization)
-                {
-                    Name = tOrganization.OrgFullName;
-                }
-                else if (declarant.Item is tPerson tPerson)
-                {
-                    Name = $"ФЛ {tPerson.FamilyName} {tPerson.FirstName} {tPerson.SecondName}";
-                }
-            }
-            else if (Obj is ITechnicalCustomer tTechnicalCustomer)
-            {
-                if (tTechnicalCustomer.Item is tForeignOrganization tForeignOrganization)
-                {
-                    Name = tForeignOrganization.OrgFullName;
-                }
-                else if (tTechnicalCustomer.Item is tOrganization tOrganization)
+                else if (Obj is TOrganization tOrganization)
                 {
                     Name = tOrganization.OrgFullName;
                 }
             }
         }
-
-        public string Name { get; set; }
 
         public override string ToString()
         {
             return Name;
         }
+
+        public object BaseObj { get; private set; }
+        public string Name { get; set; }
+        public object Obj { get; private set; }
     }
 }

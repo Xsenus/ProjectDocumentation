@@ -1,4 +1,5 @@
 ﻿using Core.NET.AutoModels;
+using Core.NET.AutoModels.ConclusionObj;
 using Core.NET.AutoModels.ExplanatoryNoteObj;
 using Core.NET.Controllers;
 using Core.NET.DaDataObj;
@@ -21,11 +22,6 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
 {
     public partial class AuthorEdit : XtraForm
     {
-        private Session Session => SessionController.GetSession();
-
-        public bool IsSave { get; private set; }
-        public tAuthor Author { get; private set; }
-
         private List<tSRO> _tSROs = new List<tSRO>();
 
         public AuthorEdit()
@@ -38,76 +34,158 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
             Author = obj;
         }
 
-        private async Task FillFormControllersAsync()
+        private void barBtnSROMembershipAdd_ItemClick(object sender, ItemClickEventArgs e)
         {
-            radioGroupTypeOrganization.Properties.Items.AddEnum(typeof(TypeOrganization));
-            var person = radioGroupTypeOrganization.Properties.Items?.FirstOrDefault(f => f.Value is TypeOrganization typeOrganization && typeOrganization == TypeOrganization.Person);
-            person.Enabled = false;
-            radioGroupTypeOrganization.Properties.Items.Remove(person);
-
-            var collection = await new XPQuery<GeneralizedDictionaryXPO>(Session).ToListAsync();
+            _tSROs.Add(new tSRO());
+            gridControlSROMembership.RefreshDataSource();
         }
 
-        private async void ObjPartEdit_Load(object sender, EventArgs e)
+        private void barBtnSROMembershipDel_ItemClick(object sender, ItemClickEventArgs e)
         {
-            await FillFormControllersAsync();
+            if (gridViewSROMembership.GetRow(gridViewSROMembership.FocusedRowHandle) is tSRO obj)
+            {
+                if (XtraMessageBox.Show(
+                    "Вы действительно хотите удалить выделенный объект?",
+                    "Информационное сообщение",
+                    MessageBoxButtons.OKCancel,
+                    MessageBoxIcon.Question) == DialogResult.OK)
+                {
+                    _tSROs.Remove(obj);
+                    gridControlSROMembership.RefreshDataSource();
+                }
+            }
+        }
 
-            if (Author is null)
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
+        private async void btnAddress_ButtonClick(object sender, ButtonPressedEventArgs e)
+        {
+            if (sender is ButtonEdit buttonEdit)
             {
-                Author = new tAuthor();
-            }
+                if (e.Button.Kind == ButtonPredefines.Ellipsis)
+                {
+                    AddressEdit form;
+                    if (buttonEdit.EditValue is TAddress address)
+                    {
+                        form = new AddressEdit(address);
+                    }
+                    else
+                    {
+                        form = new AddressEdit();
+                    }
 
-            if (Author?.Item is tForeignOrganization tForeignOrganization)
-            {
-                radioGroupTypeOrganization.SelectedIndex = (int)TypeOrganization.ForeignLegalEntity;
-                txtFOrgFullName.EditValue = tForeignOrganization.OrgFullName;
-                txtFOrgKPP.EditValue = tForeignOrganization.OrgKPP;
-                txtFOrgINN.EditValue = tForeignOrganization.OrgINN;
-                txtFEmail.EditValue = tForeignOrganization.Email;
-                btnFAddress.EditValue = tForeignOrganization.Address;
-            }
-            else if (Author?.Item is tOrganization tOrganization)
-            {
-                radioGroupTypeOrganization.SelectedIndex = (int)TypeOrganization.Entity;
-                btnSearch.EditValue = tOrganization.OrgINN;
-                txtOrgFullName.EditValue = tOrganization.OrgFullName;
-                txtOrgOGRN.EditValue = tOrganization.OrgOGRN;
-                txtOrgKPP.EditValue = tOrganization.OrgKPP;
-                txtOrgINN.EditValue = tOrganization.OrgINN;
-                txtEmail.EditValue = tOrganization.Email;
-                btnAddress.EditValue = tOrganization.Address;
-            }
-            else if (Author?.Item is tIP tIP)
-            {
-                radioGroupTypeOrganization.SelectedIndex = (int)TypeOrganization.IndividualEntrepreneur;
-                btnSearchIp.EditValue = tIP.OGRNIP;
-                txtFamilyName.EditValue = tIP.FamilyName;
-                txtFirstName.EditValue = tIP.FirstName;
-                txtSecondName.EditValue = tIP.SecondName;
-                txtOGRNIP.EditValue = tIP.OGRNIP;
-                txtEmailIp.EditValue = tIP.Email;
-                btnPostAddress.EditValue = tIP.PostAddress;
-            }
-            else
-            {
-                radioGroupTypeOrganization.SelectedIndex = (int)TypeOrganization.Entity;
-            }
+                    form.ShowDialog();
+                    if (form.IsSave)
+                    {
+                        buttonEdit.EditValue = form.Address;
+                    }
+                }
+                else if (e.Button.Kind == ButtonPredefines.Search)
+                {
+                    var obj = buttonEdit.EditValue?.ToString();
+                    if (!string.IsNullOrWhiteSpace(obj))
+                    {
+                        var addressData = await DaDataObj.GetAddressAsync(obj);
+                        if (addressData != null)
+                        {
+                            var address = new TAddress()
+                            {
+                                Country = addressData.country,
+                                District = addressData.city_district,
+                                City = addressData.city,
+                                Settlement = addressData.settlement,
+                                Street = addressData.street,
+                                Building = addressData.house,
+                                Room = addressData.flat,
+                                Note = addressData.result,
+                            };
 
-            _tSROs = Author?.SROMembership?.ToList() ?? new List<tSRO>();
-            gridControlSROMembership.DataSource = _tSROs;
-            foreach (GridColumn column in gridViewSROMembership.Columns.Cast<GridColumn>())
-            {
-                column.Visible = false;
+                            try
+                            {
+                                var region = ConclusionEdit.GetEnumByAttributeValue<TRegionsRf>(addressData.region_kladr_id?.Replace("0", string.Empty));
+                                address.Region = region;
+                            }
+                            catch (Exception)
+                            {
+                                XtraMessageBox.Show("Регион не определен, введите вручную",
+                                    "Информационное сообщение",
+                                    MessageBoxButtons.OK,
+                                    MessageBoxIcon.Exclamation);
+                            }
+
+                            buttonEdit.EditValue = address;
+                        }
+                    }
+                }
             }
-            if (gridViewSROMembership.Columns[nameof(tSRO.Value)] is GridColumn gridModificationDate)
+        }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
+        private void btnClose_Click(object sender, EventArgs e)
+        {
+            Close();
+        }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
+        private async void btnPostAddress_ButtonClick(object sender, ButtonPressedEventArgs e)
+        {
+            if (sender is ButtonEdit buttonEdit)
             {
-                gridModificationDate.Caption = "Значение";
-                gridModificationDate.Visible = true;
-            }
-            if (gridViewSROMembership.Columns[nameof(tSRO.SROType)] is GridColumn gridModificationNote)
-            {
-                gridModificationNote.Caption = "Тип";
-                gridModificationNote.Visible = true;
+                if (e.Button.Kind == ButtonPredefines.Ellipsis)
+                {
+                    PostAddressEdit form;
+                    if (buttonEdit.EditValue is TPostAddress postAddress)
+                    {
+                        form = new PostAddressEdit(postAddress);
+                    }
+                    else
+                    {
+                        form = new PostAddressEdit();
+                    }
+
+                    form.ShowDialog();
+                    if (form.IsSave)
+                    {
+                        buttonEdit.EditValue = form.PostAddress;
+                    }
+                }
+                else if (e.Button.Kind == ButtonPredefines.Search)
+                {
+                    var obj = buttonEdit.EditValue?.ToString();
+                    if (!string.IsNullOrWhiteSpace(obj))
+                    {
+                        var addressData = await DaDataObj.GetAddressAsync(obj);
+                        if (addressData != null)
+                        {
+                            var postAddress = new TPostAddress()
+                            {
+                                PostIndex = addressData.postal_code,
+                                Country = addressData.country,
+                                District = addressData.city_district,
+                                City = addressData.city,
+                                Settlement = addressData.settlement,
+                                Street = addressData.street,
+                                Building = addressData.house,
+                                Room = addressData.flat,
+                                Note = addressData.result,
+                            };
+
+                            try
+                            {
+                                var region = ConclusionEdit.GetEnumByAttributeValue<TRegionsRf>(addressData.region_kladr_id?.Replace("0", string.Empty));
+                                postAddress.Region = region;
+                            }
+                            catch (Exception)
+                            {
+                                XtraMessageBox.Show("Регион не определен, введите вручную",
+                                    "Информационное сообщение",
+                                    MessageBoxButtons.OK,
+                                    MessageBoxIcon.Exclamation);
+                            }
+
+                            buttonEdit.EditValue = postAddress;
+                        }
+                    }
+                }
             }
         }
 
@@ -119,15 +197,15 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                 switch (radioGroupTypeOrganization.SelectedIndex)
                 {
                     case (int)TypeOrganization.Entity:
-                        var entity = new tOrganization
+                        var entity = new TOrganization
                         {
                             OrgFullName = ConclusionEdit.GetStringValue(txtOrgFullName.EditValue, txtOrgFullName, "Заполните наименование организации"),
-                            OrgOGRN = ConclusionEdit.GetStringValue(txtOrgOGRN.EditValue, txtOrgOGRN, "Заполните ОГРН организации"),
-                            OrgKPP = ConclusionEdit.GetStringValue(txtOrgKPP.EditValue, txtOrgKPP, "Заполните КПП организации"),
-                            OrgINN = ConclusionEdit.GetStringValue(txtOrgINN.EditValue, txtOrgINN, "Заполните ИНН организации"),
+                            OrgOgrn = ConclusionEdit.GetStringValue(txtOrgOGRN.EditValue, txtOrgOGRN, "Заполните ОГРН организации"),
+                            OrgKpp = ConclusionEdit.GetStringValue(txtOrgKPP.EditValue, txtOrgKPP, "Заполните КПП организации"),
+                            OrgInn = ConclusionEdit.GetStringValue(txtOrgINN.EditValue, txtOrgINN, "Заполните ИНН организации"),
                             Email = ConclusionEdit.GetStringValue(txtEmail.EditValue, txtEmail, isNullAble: true)
                         };
-                        if (btnAddress.EditValue is tAddress address)
+                        if (btnAddress.EditValue is TAddress address)
                         {
                             entity.Address = address;
                         }
@@ -144,14 +222,14 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                         break;
 
                     case (int)TypeOrganization.ForeignLegalEntity:
-                        var foreignLegalEntity = new tForeignOrganization
+                        var foreignLegalEntity = new TForeignOrganization
                         {
                             OrgFullName = ConclusionEdit.GetStringValue(txtFOrgFullName.EditValue, txtFOrgFullName, "Заполните наименование организации"),
-                            OrgKPP = ConclusionEdit.GetStringValue(txtFOrgKPP.EditValue, txtFOrgKPP, "Заполните КПП организации"),
-                            OrgINN = ConclusionEdit.GetStringValue(txtFOrgINN.EditValue, txtFOrgINN, "Заполните ИНН организации"),
+                            OrgKpp = ConclusionEdit.GetStringValue(txtFOrgKPP.EditValue, txtFOrgKPP, "Заполните КПП организации"),
+                            OrgInn = ConclusionEdit.GetStringValue(txtFOrgINN.EditValue, txtFOrgINN, "Заполните ИНН организации"),
                             Email = ConclusionEdit.GetStringValue(txtFEmail.EditValue, txtFEmail, isNullAble: true)
                         };
-                        if (btnFAddress.EditValue is tAddress addressF)
+                        if (btnFAddress.EditValue is TAddress addressF)
                         {
                             foreignLegalEntity.Address = addressF;
                         }
@@ -168,17 +246,17 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                         break;
 
                     case (int)TypeOrganization.IndividualEntrepreneur:
-                        var tIP = new tIP
+                        var Tip = new Tip
                         {
                             FamilyName = ConclusionEdit.GetStringValue(txtFamilyName.EditValue, txtFamilyName, "Заполните фамилию"),
                             FirstName = ConclusionEdit.GetStringValue(txtFirstName.EditValue, txtFirstName, "Заполните имя"),
                             SecondName = ConclusionEdit.GetStringValue(txtSecondName.EditValue, txtSecondName, isNullAble: true),
-                            OGRNIP = ConclusionEdit.GetStringValue(txtOGRNIP.EditValue, txtOrgINN, "Заполните ОГРНИП"),
+                            Ogrnip = ConclusionEdit.GetStringValue(txtOGRNIP.EditValue, txtOrgINN, "Заполните ОГРНИП"),
                             Email = ConclusionEdit.GetStringValue(txtEmailIp.EditValue, txtEmailIp, isNullAble: true)
                         };
-                        if (btnPostAddress.EditValue is tPostAddress tPostAddress)
+                        if (btnPostAddress.EditValue is TPostAddress TPostAddress)
                         {
-                            tIP.PostAddress = tPostAddress;
+                            Tip.PostAddress = TPostAddress;
                         }
                         else
                         {
@@ -189,7 +267,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                                 MessageBoxIcon.Error);
                             return;
                         }
-                        Author.Item = tIP;
+                        Author.Item = Tip;
                         break;
                 }
 
@@ -216,63 +294,6 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
-        private void btnClose_Click(object sender, EventArgs e)
-        {
-            Close();
-        }
-
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
-        private void clearEditValue_ButtonPressed(object sender, ButtonPressedEventArgs e)
-        {
-            if (sender is CheckedComboBoxEdit checkedComboBoxEdit)
-            {
-                if (e.Button.Kind == ButtonPredefines.Delete)
-                {
-                    foreach (CheckedListBoxItem item in checkedComboBoxEdit.Properties.Items.Cast<CheckedListBoxItem>())
-                    {
-                        item.CheckState = CheckState.Unchecked;
-                    }
-                }
-            }
-
-            if (sender is ButtonEdit buttonEdit)
-            {
-                if (e.Button.Kind == ButtonPredefines.Delete)
-                {
-                    buttonEdit.EditValue = null;
-                }
-            }
-        }
-
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
-        private void radioGroupTypeOrganization_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (sender is RadioGroup radioGroup)
-            {
-                switch (radioGroup.SelectedIndex)
-                {
-                    case (int)TypeOrganization.Entity:
-                        layoutControlGroupEntity.Visibility = LayoutVisibility.Always;
-                        layoutControlGroupForeignLegalEntity.Visibility = LayoutVisibility.Never;
-                        layoutControlGroupIndividualEntrepreneur.Visibility = LayoutVisibility.Never;
-                        break;
-
-                    case (int)TypeOrganization.ForeignLegalEntity:
-                        layoutControlGroupEntity.Visibility = LayoutVisibility.Never;
-                        layoutControlGroupForeignLegalEntity.Visibility = LayoutVisibility.Always;
-                        layoutControlGroupIndividualEntrepreneur.Visibility = LayoutVisibility.Never;
-                        break;
-
-                    case (int)TypeOrganization.IndividualEntrepreneur:
-                        layoutControlGroupEntity.Visibility = LayoutVisibility.Never;
-                        layoutControlGroupForeignLegalEntity.Visibility = LayoutVisibility.Never;
-                        layoutControlGroupIndividualEntrepreneur.Visibility = LayoutVisibility.Always;
-                        break;
-                }
-            }
-        }
-
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
         private async void btnSearch_ButtonPressed(object sender, ButtonPressedEventArgs e)
         {
             if (sender is ButtonEdit buttonEdit)
@@ -295,7 +316,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                             var addressData = data.address?.data;
                             if (addressData != null)
                             {
-                                var address = new tAddress()
+                                var address = new TAddress()
                                 {
                                     Country = addressData.country,
                                     District = addressData.city_district,
@@ -309,7 +330,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
 
                                 try
                                 {
-                                    var region = ConclusionEdit.GetEnumByAttributeValue<tRegionsRF>(addressData.region_kladr_id?.Replace("0", string.Empty));
+                                    var region = ConclusionEdit.GetEnumByAttributeValue<TRegionsRf>(addressData.region_kladr_id?.Replace("0", string.Empty));
                                     address.Region = region;
                                 }
                                 catch (Exception)
@@ -332,133 +353,6 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                             MessageBoxButtons.OK,
                             MessageBoxIcon.Exclamation);
                         return;
-                    }
-                }
-            }
-        }
-
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
-        private async void btnAddress_ButtonClick(object sender, ButtonPressedEventArgs e)
-        {
-            if (sender is ButtonEdit buttonEdit)
-            {
-                if (e.Button.Kind == ButtonPredefines.Ellipsis)
-                {
-                    AddressEdit form;
-                    if (buttonEdit.EditValue is tAddress address)
-                    {
-                        form = new AddressEdit(address);
-                    }
-                    else
-                    {
-                        form = new AddressEdit();
-                    }
-
-                    form.ShowDialog();
-                    if (form.IsSave)
-                    {
-                        buttonEdit.EditValue = form.Address;
-                    }
-                }
-                else if (e.Button.Kind == ButtonPredefines.Search)
-                {
-                    var obj = buttonEdit.EditValue?.ToString();
-                    if (!string.IsNullOrWhiteSpace(obj))
-                    {
-                        var addressData = await DaDataObj.GetAddressAsync(obj);
-                        if (addressData != null)
-                        {
-                            var address = new tAddress()
-                            {
-                                Country = addressData.country,
-                                District = addressData.city_district,
-                                City = addressData.city,
-                                Settlement = addressData.settlement,
-                                Street = addressData.street,
-                                Building = addressData.house,
-                                Room = addressData.flat,
-                                Note = addressData.result,
-                            };
-
-                            try
-                            {
-                                var region = ConclusionEdit.GetEnumByAttributeValue<tRegionsRF>(addressData.region_kladr_id?.Replace("0", string.Empty));
-                                address.Region = region;
-                            }
-                            catch (Exception)
-                            {
-                                XtraMessageBox.Show("Регион не определен, введите вручную",
-                                    "Информационное сообщение",
-                                    MessageBoxButtons.OK,
-                                    MessageBoxIcon.Exclamation);
-                            }
-
-                            buttonEdit.EditValue = address;
-                        }
-                    }
-                }
-            }
-        }
-
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
-        private async void btnPostAddress_ButtonClick(object sender, ButtonPressedEventArgs e)
-        {
-            if (sender is ButtonEdit buttonEdit)
-            {
-                if (e.Button.Kind == ButtonPredefines.Ellipsis)
-                {
-                    PostAddressEdit form;
-                    if (buttonEdit.EditValue is tPostAddress postAddress)
-                    {
-                        form = new PostAddressEdit(postAddress);
-                    }
-                    else
-                    {
-                        form = new PostAddressEdit();
-                    }
-
-                    form.ShowDialog();
-                    if (form.IsSave)
-                    {
-                        buttonEdit.EditValue = form.PostAddress;
-                    }
-                }
-                else if (e.Button.Kind == ButtonPredefines.Search)
-                {
-                    var obj = buttonEdit.EditValue?.ToString();
-                    if (!string.IsNullOrWhiteSpace(obj))
-                    {
-                        var addressData = await DaDataObj.GetAddressAsync(obj);
-                        if (addressData != null)
-                        {
-                            var postAddress = new tPostAddress()
-                            {
-                                PostIndex = addressData.postal_code,
-                                Country = addressData.country,
-                                District = addressData.city_district,
-                                City = addressData.city,
-                                Settlement = addressData.settlement,
-                                Street = addressData.street,
-                                Building = addressData.house,
-                                Room = addressData.flat,
-                                Note = addressData.result,
-                            };
-
-                            try
-                            {
-                                var region = ConclusionEdit.GetEnumByAttributeValue<tRegionsRF>(addressData.region_kladr_id?.Replace("0", string.Empty));
-                                postAddress.Region = region;
-                            }
-                            catch (Exception)
-                            {
-                                XtraMessageBox.Show("Регион не определен, введите вручную",
-                                    "Информационное сообщение",
-                                    MessageBoxButtons.OK,
-                                    MessageBoxIcon.Exclamation);
-                            }
-
-                            buttonEdit.EditValue = postAddress;
-                        }
                     }
                 }
             }
@@ -491,7 +385,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                             var addressData = data.address?.data;
                             if (addressData != null)
                             {
-                                var postAddress = new tPostAddress()
+                                var postAddress = new TPostAddress()
                                 {
                                     PostIndex = addressData.postal_code,
                                     Country = addressData.country,
@@ -506,7 +400,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
 
                                 try
                                 {
-                                    var region = ConclusionEdit.GetEnumByAttributeValue<tRegionsRF>(addressData.region_kladr_id?.Replace("0", string.Empty));
+                                    var region = ConclusionEdit.GetEnumByAttributeValue<TRegionsRf>(addressData.region_kladr_id?.Replace("0", string.Empty));
                                     postAddress.Region = region;
                                 }
                                 catch (Exception)
@@ -534,6 +428,39 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
             }
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
+        private void clearEditValue_ButtonPressed(object sender, ButtonPressedEventArgs e)
+        {
+            if (sender is CheckedComboBoxEdit checkedComboBoxEdit)
+            {
+                if (e.Button.Kind == ButtonPredefines.Delete)
+                {
+                    foreach (CheckedListBoxItem item in checkedComboBoxEdit.Properties.Items.Cast<CheckedListBoxItem>())
+                    {
+                        item.CheckState = CheckState.Unchecked;
+                    }
+                }
+            }
+
+            if (sender is ButtonEdit buttonEdit)
+            {
+                if (e.Button.Kind == ButtonPredefines.Delete)
+                {
+                    buttonEdit.EditValue = null;
+                }
+            }
+        }
+
+        private async Task FillFormControllersAsync()
+        {
+            radioGroupTypeOrganization.Properties.Items.AddEnum(typeof(TypeOrganization));
+            var person = radioGroupTypeOrganization.Properties.Items?.FirstOrDefault(f => f.Value is TypeOrganization typeOrganization && typeOrganization == TypeOrganization.Person);
+            person.Enabled = false;
+            radioGroupTypeOrganization.Properties.Items.Remove(person);
+
+            var collection = await new XPQuery<GeneralizedDictionaryXPO>(Session).ToListAsync();
+        }
+
         private void gridViewSROMembership_PopupMenuShowing(object sender, PopupMenuShowingEventArgs e)
         {
             if (sender is GridView)
@@ -542,26 +469,99 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
             }
         }
 
-        private void barBtnSROMembershipAdd_ItemClick(object sender, ItemClickEventArgs e)
+        private async void ObjPartEdit_Load(object sender, EventArgs e)
         {
-            _tSROs.Add(new tSRO());
-            gridControlSROMembership.RefreshDataSource();
+            await FillFormControllersAsync();
+
+            if (Author is null)
+            {
+                Author = new tAuthor();
+            }
+
+            if (Author?.Item is TForeignOrganization TForeignOrganization)
+            {
+                radioGroupTypeOrganization.SelectedIndex = (int)TypeOrganization.ForeignLegalEntity;
+                txtFOrgFullName.EditValue = TForeignOrganization.OrgFullName;
+                txtFOrgKPP.EditValue = TForeignOrganization.OrgKpp;
+                txtFOrgINN.EditValue = TForeignOrganization.OrgInn;
+                txtFEmail.EditValue = TForeignOrganization.Email;
+                btnFAddress.EditValue = TForeignOrganization.Address;
+            }
+            else if (Author?.Item is TOrganization TOrganization)
+            {
+                radioGroupTypeOrganization.SelectedIndex = (int)TypeOrganization.Entity;
+                btnSearch.EditValue = TOrganization.OrgInn;
+                txtOrgFullName.EditValue = TOrganization.OrgFullName;
+                txtOrgOGRN.EditValue = TOrganization.OrgOgrn;
+                txtOrgKPP.EditValue = TOrganization.OrgKpp;
+                txtOrgINN.EditValue = TOrganization.OrgInn;
+                txtEmail.EditValue = TOrganization.Email;
+                btnAddress.EditValue = TOrganization.Address;
+            }
+            else if (Author?.Item is Tip Tip)
+            {
+                radioGroupTypeOrganization.SelectedIndex = (int)TypeOrganization.IndividualEntrepreneur;
+                btnSearchIp.EditValue = Tip.Ogrnip;
+                txtFamilyName.EditValue = Tip.FamilyName;
+                txtFirstName.EditValue = Tip.FirstName;
+                txtSecondName.EditValue = Tip.SecondName;
+                txtOGRNIP.EditValue = Tip.Ogrnip;
+                txtEmailIp.EditValue = Tip.Email;
+                btnPostAddress.EditValue = Tip.PostAddress;
+            }
+            else
+            {
+                radioGroupTypeOrganization.SelectedIndex = (int)TypeOrganization.Entity;
+            }
+
+            _tSROs = Author?.SROMembership?.ToList() ?? new List<tSRO>();
+            gridControlSROMembership.DataSource = _tSROs;
+            foreach (GridColumn column in gridViewSROMembership.Columns.Cast<GridColumn>())
+            {
+                column.Visible = false;
+            }
+            if (gridViewSROMembership.Columns[nameof(tSRO.Value)] is GridColumn gridModificationDate)
+            {
+                gridModificationDate.Caption = "Значение";
+                gridModificationDate.Visible = true;
+            }
+            if (gridViewSROMembership.Columns[nameof(tSRO.SROType)] is GridColumn gridModificationNote)
+            {
+                gridModificationNote.Caption = "Тип";
+                gridModificationNote.Visible = true;
+            }
         }
 
-        private void barBtnSROMembershipDel_ItemClick(object sender, ItemClickEventArgs e)
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
+        private void radioGroupTypeOrganization_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (gridViewSROMembership.GetRow(gridViewSROMembership.FocusedRowHandle) is tSRO obj)
+            if (sender is RadioGroup radioGroup)
             {
-                if (XtraMessageBox.Show(
-                    "Вы действительно хотите удалить выделенный объект?",
-                    "Информационное сообщение",
-                    MessageBoxButtons.OKCancel,
-                    MessageBoxIcon.Question) == DialogResult.OK)
+                switch (radioGroup.SelectedIndex)
                 {
-                    _tSROs.Remove(obj);
-                    gridControlSROMembership.RefreshDataSource();
+                    case (int)TypeOrganization.Entity:
+                        layoutControlGroupEntity.Visibility = LayoutVisibility.Always;
+                        layoutControlGroupForeignLegalEntity.Visibility = LayoutVisibility.Never;
+                        layoutControlGroupIndividualEntrepreneur.Visibility = LayoutVisibility.Never;
+                        break;
+
+                    case (int)TypeOrganization.ForeignLegalEntity:
+                        layoutControlGroupEntity.Visibility = LayoutVisibility.Never;
+                        layoutControlGroupForeignLegalEntity.Visibility = LayoutVisibility.Always;
+                        layoutControlGroupIndividualEntrepreneur.Visibility = LayoutVisibility.Never;
+                        break;
+
+                    case (int)TypeOrganization.IndividualEntrepreneur:
+                        layoutControlGroupEntity.Visibility = LayoutVisibility.Never;
+                        layoutControlGroupForeignLegalEntity.Visibility = LayoutVisibility.Never;
+                        layoutControlGroupIndividualEntrepreneur.Visibility = LayoutVisibility.Always;
+                        break;
                 }
             }
         }
+
+        private Session Session => SessionController.GetSession();
+        public tAuthor Author { get; private set; }
+        public bool IsSave { get; private set; }
     }
 }

@@ -255,7 +255,7 @@ namespace ProjectDocumentation.NET.Forms
                     Name = form.FileName
                 };
 
-                form.Conclusion.ConclusionGUID = conclusionXPO.Guid?.ToString();
+                form.Conclusion.ConclusionGuid = conclusionXPO.Guid?.ToString();
                 conclusionXPO.SetObj(form.Conclusion.GetSerializeConclusion());
                 await Session.SaveAsync(conclusionXPO);
 

@@ -10,7 +10,7 @@ namespace ProjectDocumentation.NET.Models.ConclusionObj
 {
     public static class DocumentObjController
     {
-        public static IEnumerable<DocumentObj> GetDocumentObjS(ICollection<tDocument> collection)
+        public static IEnumerable<DocumentObj> GetDocumentObjS(ICollection<TDocument> collection)
         {
             foreach (var obj in collection)
             {
@@ -23,18 +23,10 @@ namespace ProjectDocumentation.NET.Models.ConclusionObj
 
     public class DocumentObj
     {
-        public DocumentObj(tDocument tDocument)
+        public DocumentObj(TDocument TDocument)
         {
-            this.Document = tDocument;
+            this.Document = TDocument;
         }
-
-        public tDocument Document { get; private set; }
-
-        public string DocTypeName { get; private set; }
-        public string DocName { get; private set; }
-        public string DocNumber { get; private set; }
-        public string DocDate { get; private set; }
-        public string DocChanges { get; private set; }
 
         public async void SetEnumObj()
         {
@@ -61,5 +53,12 @@ namespace ProjectDocumentation.NET.Models.ConclusionObj
         {
             return base.ToString();
         }
+
+        public string DocChanges { get; private set; }
+        public string DocDate { get; private set; }
+        public string DocName { get; private set; }
+        public string DocNumber { get; private set; }
+        public string DocTypeName { get; private set; }
+        public TDocument Document { get; private set; }
     }
 }

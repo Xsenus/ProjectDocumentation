@@ -1,6 +1,6 @@
 ﻿namespace ProjectDocumentation.NET.Forms.ObjectChange
 {
-    partial class ExpretEdit
+    partial class ExpertEdit
     {
         /// <summary>
         /// Required designer variable.

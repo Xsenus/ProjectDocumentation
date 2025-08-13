@@ -6,35 +6,20 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
 {
     public partial class EstimateMismatchEdit : XtraForm
     {
-        public bool IsSave { get; private set; }
-        public tEstimateMismatches EstimateMismatch { get; private set; }
-
         public EstimateMismatchEdit()
         {
             InitializeComponent();
         }
 
-        public EstimateMismatchEdit(tEstimateMismatches estimateMismatches) : this()
+        public EstimateMismatchEdit(TEstimateMismatches estimateMismatches) : this()
         {
             EstimateMismatch = estimateMismatches;
         }
 
-        private void ExpretEdit_Load(object sender, EventArgs e)
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
+        private void btnCancel_Click(object sender, EventArgs e)
         {
-            //var collection = await new XPQuery<ExpertTypeXPO>(SessionController.GetSession()).ToListAsync();
-            //cmbExpertType.Properties.Items.AddRange(collection);
-
-            if (EstimateMismatch is null)
-            {
-                EstimateMismatch = new tEstimateMismatches();
-            }
-            else
-            {
-                //var projectDocumentsMismatchField = (EstimateMismatch.ProjectDocumentsMismatch?.FirstOrDefault()) ?? new tMismatchExtended();
-
-                //var expertTypeValue = EstimateMismatch.ExpertType.GetEnumXmlAttributeValue();
-                //cmbExpertType.EditValue = collection.FirstOrDefault(f => f.Value == expertTypeValue?.ToString());
-            }
+            Close();
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
@@ -63,10 +48,25 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
             Close();
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
-        private void btnCancel_Click(object sender, EventArgs e)
+        private void ExpretEdit_Load(object sender, EventArgs e)
         {
-            Close();
+            //var collection = await new XPQuery<ExpertTypeXPO>(SessionController.GetSession()).ToListAsync();
+            //cmbExpertType.Properties.Items.AddRange(collection);
+
+            if (EstimateMismatch is null)
+            {
+                EstimateMismatch = new TEstimateMismatches();
+            }
+            else
+            {
+                //var projectDocumentsMismatchField = (EstimateMismatch.ProjectDocumentsMismatch?.FirstOrDefault()) ?? new tMismatchExtended();
+
+                //var expertTypeValue = EstimateMismatch.ExpertType.GetEnumXmlAttributeValue();
+                //cmbExpertType.EditValue = collection.FirstOrDefault(f => f.Value == expertTypeValue?.ToString());
+            }
         }
+
+        public TEstimateMismatches EstimateMismatch { get; private set; }
+        public bool IsSave { get; private set; }
     }
 }

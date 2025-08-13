@@ -19,28 +19,6 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
     {
         private List<ItemsObj> _items = new List<ItemsObj>();
 
-        public bool IsSave { get; private set; }
-        public tTextBlock TextBlock { get; private set; }
-
-        private class ItemsObj
-        {
-            public ItemsObj(ItemsChoiceType itemsChoiceType, int position = 1)
-            {
-                ItemsChoiceType = itemsChoiceType;
-                Position = position;
-            }
-
-            public ItemsObj(object value, ItemsChoiceType itemsChoiceType, int position = 1) : this(itemsChoiceType, position)
-            {
-                Value = value;
-            }
-
-            public int Position { get; set; }
-            public ItemsChoiceType ItemsChoiceType { get; private set; }
-            public string ItemsChoiceTypeString => ItemsChoiceType.GetEnumDescription();
-            public object Value { get; set; }
-        }
-
         public TextBlockEdit()
         {
             InitializeComponent();
@@ -49,6 +27,177 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
         public TextBlockEdit(tTextBlock tTextBlock) : this()
         {
             TextBlock = tTextBlock;
+        }
+
+        private void AddItemsObj(ItemsChoiceType itemsChoiceType)
+        {
+            _items.Add(new ItemsObj(itemsChoiceType, _items.Count + 1));
+            gridViewItems.RefreshData();
+        }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
+        private void barBtnItemsObjDel_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            if (gridViewItems.GetRow(gridViewItems.FocusedRowHandle) is ItemsObj obj)
+            {
+                if (XtraMessageBox.Show(
+                    "Вы действительно хотите удалить выделенный объект?",
+                    "Информационное сообщение",
+                    MessageBoxButtons.OKCancel,
+                    MessageBoxIcon.Question) == DialogResult.OK)
+                {
+                    DeleteItemsObj(obj);
+                }
+            }
+        }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
+        private void btnAddImage_Click(object sender, EventArgs e)
+        {
+            AddItemsObj(ItemsChoiceType.Image);
+        }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
+        private void btnAddSubTitle_Click(object sender, EventArgs e)
+        {
+            AddItemsObj(ItemsChoiceType.SubTitle);
+        }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
+        private void btnAddTable_Click(object sender, EventArgs e)
+        {
+            AddItemsObj(ItemsChoiceType.Table);
+        }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
+        private void btnAddText_Click(object sender, EventArgs e)
+        {
+            AddItemsObj(ItemsChoiceType.Text);
+        }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
+        private void btnClose_Click(object sender, EventArgs e)
+        {
+            Close();
+        }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
+        private void btnSave_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                TextBlock.Title = ConclusionEdit.GetStringValue(memoEditTitle.EditValue, memoEditTitle, "Заполните заголовок");
+
+                if (_items.Count > 0)
+                {
+                    TextBlock.Items = _items.Select(s => s.Value).ToArray();
+                    TextBlock.ItemsElementName = _items.Select(s => s.ItemsChoiceType).ToArray();
+                }
+                else
+                {
+                    TextBlock.Items = null;
+                    TextBlock.ItemsElementName = null;
+                }
+            }
+            catch (Exception ex)
+            {
+                XtraMessageBox.Show(ex.Message, "Информационное сообщение", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            IsSave = true;
+            Close();
+        }
+
+        private void CreateRepositoryItemButtonEdit(object sender, CustomRowCellEditEventArgs e, ItemsObj itemsObj)
+        {
+            var buttonEdit = new RepositoryItemButtonEdit();
+            buttonEdit.TextEditStyle = TextEditStyles.HideTextEditor;
+            buttonEdit.Buttons[0].Kind = ButtonPredefines.Glyph;
+            buttonEdit.Buttons[0].Caption = "Редактировать...";
+            buttonEdit.ButtonPressed += (senderObj, eObj) => ImageButtonPressed(senderObj, eObj, itemsObj);
+            e.RepositoryItem = buttonEdit;
+        }
+
+        private void DeleteItemsObj(ItemsObj itemsObj)
+        {
+            _items.Remove(itemsObj);
+
+            var position = 1;
+            foreach (var item in _items.OrderBy(o => o.Position))
+            {
+                item.Position = position;
+                position++;
+            }
+            gridViewItems.RefreshData();
+        }
+
+        private void gridViewItems_CustomRowCellEdit(object sender, CustomRowCellEditEventArgs e)
+        {
+            if (e.Column.FieldName == nameof(ItemsObj.Value))
+            {
+                if (sender is GridView gridView)
+                {
+                    if (gridView.GetRow(e.RowHandle) is ItemsObj itemsObj)
+                    {
+                        if (itemsObj.ItemsChoiceType == ItemsChoiceType.Image)
+                        {
+                            CreateRepositoryItemButtonEdit(sender, e, itemsObj);
+                        }
+                        else if (itemsObj.ItemsChoiceType == ItemsChoiceType.Table)
+                        {
+                            CreateRepositoryItemButtonEdit(sender, e, itemsObj);
+                        }
+                    }
+                }
+            }
+        }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
+        private void gridViewItems_PopupMenuShowing(object sender, PopupMenuShowingEventArgs e)
+        {
+            if (sender is GridView)
+            {
+                popupMenuItemsObj.ShowPopup(new Point(Cursor.Position.X, Cursor.Position.Y));
+            }
+        }
+
+        private void ImageButtonPressed(object sender, ButtonPressedEventArgs e, ItemsObj itemsObj)
+        {
+            if (itemsObj.ItemsChoiceType == ItemsChoiceType.Image)
+            {
+                ImageEdit form;
+                if (itemsObj.Value is tImage tImage)
+                {
+                    form = new ImageEdit(tImage);
+                }
+                else
+                {
+                    form = new ImageEdit();
+                }
+                form.ShowDialog();
+                if (form.IsSave)
+                {
+                    itemsObj.Value = form.Image;
+                }
+            }
+            else if (itemsObj.ItemsChoiceType == ItemsChoiceType.Table)
+            {
+                TableEdit form;
+                if (itemsObj.Value is tTable tTable)
+                {
+                    form = new TableEdit(tTable);
+                }
+                else
+                {
+                    form = new TableEdit();
+                }
+                form.ShowDialog();
+                if (form.IsSave)
+                {
+                    itemsObj.Value = form.Table;
+                }
+            }
         }
 
         private void TextBlockEdit_Load(object sender, EventArgs e)
@@ -106,175 +255,27 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
             }
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
-        private void btnSave_Click(object sender, EventArgs e)
+        public bool IsSave { get; private set; }
+        public tTextBlock TextBlock { get; private set; }
+
+        private class ItemsObj
         {
-            try
+            public ItemsObj(ItemsChoiceType itemsChoiceType, int position = 1)
             {
-                TextBlock.Title = ConclusionEdit.GetStringValue(memoEditTitle.EditValue, memoEditTitle, "Заполните заголовок");
-                
-                if (_items.Count > 0)
-                {
-                    TextBlock.Items = _items.Select(s => s.Value).ToArray();
-                    TextBlock.ItemsElementName = _items.Select(s => s.ItemsChoiceType).ToArray();
-                }
-                else
-                {
-                    TextBlock.Items = null;
-                    TextBlock.ItemsElementName = null;
-                }
-            }
-            catch (Exception ex)
-            {
-                XtraMessageBox.Show(ex.Message, "Информационное сообщение", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
+                ItemsChoiceType = itemsChoiceType;
+                Position = position;
             }
 
-            IsSave = true;
-            Close();
-        }
-
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
-        private void btnClose_Click(object sender, EventArgs e)
-        {
-            Close();
-        }
-
-        private void AddItemsObj(ItemsChoiceType itemsChoiceType)
-        {
-            _items.Add(new ItemsObj(itemsChoiceType, _items.Count + 1));
-            gridViewItems.RefreshData();
-        }
-
-        private void DeleteItemsObj(ItemsObj itemsObj)
-        {
-            _items.Remove(itemsObj);
-
-            var position = 1;
-            foreach (var item in _items.OrderBy(o => o.Position))
+            public ItemsObj(object value, ItemsChoiceType itemsChoiceType, int position = 1) : this(itemsChoiceType, position)
             {
-                item.Position = position;
-                position++;
+                Value = value;
             }
-            gridViewItems.RefreshData();
-        }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
-        private void btnAddText_Click(object sender, EventArgs e)
-        {
-            AddItemsObj(ItemsChoiceType.Text);
-        }
+            public ItemsChoiceType ItemsChoiceType { get; private set; }
+            public string ItemsChoiceTypeString => ItemsChoiceType.GetEnumDescription();
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
-        private void btnAddSubTitle_Click(object sender, EventArgs e)
-        {
-            AddItemsObj(ItemsChoiceType.SubTitle);
-        }
-
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
-        private void btnAddImage_Click(object sender, EventArgs e)
-        {
-            AddItemsObj(ItemsChoiceType.Image);
-        }
-
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
-        private void btnAddTable_Click(object sender, EventArgs e)
-        {
-            AddItemsObj(ItemsChoiceType.Table);
-        }
-
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
-        private void gridViewItems_PopupMenuShowing(object sender, PopupMenuShowingEventArgs e)
-        {
-            if (sender is GridView)
-            {
-                popupMenuItemsObj.ShowPopup(new Point(Cursor.Position.X, Cursor.Position.Y));
-            }
-        }
-
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
-        private void barBtnItemsObjDel_ItemClick(object sender, ItemClickEventArgs e)
-        {
-            if (gridViewItems.GetRow(gridViewItems.FocusedRowHandle) is ItemsObj obj)
-            {
-                if (XtraMessageBox.Show(
-                    "Вы действительно хотите удалить выделенный объект?",
-                    "Информационное сообщение",
-                    MessageBoxButtons.OKCancel,
-                    MessageBoxIcon.Question) == DialogResult.OK)
-                {
-                    DeleteItemsObj(obj);
-                }
-            }
-        }
-
-        private void gridViewItems_CustomRowCellEdit(object sender, CustomRowCellEditEventArgs e)
-        {
-            if (e.Column.FieldName == nameof(ItemsObj.Value))
-            {
-                if (sender is GridView gridView)
-                {
-                    if (gridView.GetRow(e.RowHandle) is ItemsObj itemsObj)
-                    {
-                        if (itemsObj.ItemsChoiceType == ItemsChoiceType.Image)
-                        {
-                            CreateRepositoryItemButtonEdit(sender, e, itemsObj);
-                        }
-                        else if (itemsObj.ItemsChoiceType == ItemsChoiceType.Table)
-                        {
-                            CreateRepositoryItemButtonEdit(sender, e, itemsObj);
-                        }
-                    }
-                }
-            }            
-        }
-
-        private void CreateRepositoryItemButtonEdit(object sender, CustomRowCellEditEventArgs e, ItemsObj itemsObj)
-        {
-            var buttonEdit = new RepositoryItemButtonEdit();
-            buttonEdit.TextEditStyle = TextEditStyles.HideTextEditor;
-            buttonEdit.Buttons[0].Kind = ButtonPredefines.Glyph;
-            buttonEdit.Buttons[0].Caption = "Редактировать...";
-            buttonEdit.ButtonPressed += (senderObj, eObj) => ImageButtonPressed(senderObj, eObj, itemsObj);
-            e.RepositoryItem = buttonEdit;
-        }
-
-        private void ImageButtonPressed(object sender, ButtonPressedEventArgs e, ItemsObj itemsObj)
-        {
-            if (itemsObj.ItemsChoiceType == ItemsChoiceType.Image)
-            {
-                ImageEdit form;
-                if (itemsObj.Value is tImage tImage)
-                {
-                    form = new ImageEdit(tImage);
-                }
-                else
-                {
-                    form = new ImageEdit();
-                }
-                form.ShowDialog();
-                if (form.IsSave)
-                {
-                    itemsObj.Value = form.Image;
-                }
-            }
-            else if (itemsObj.ItemsChoiceType == ItemsChoiceType.Table)
-            {
-                TableEdit form;
-                if (itemsObj.Value is tTable tTable)
-                {
-                    form = new TableEdit(tTable);
-                }
-                else
-                {
-                    form = new TableEdit();
-                }
-                form.ShowDialog();
-                if (form.IsSave)
-                {
-                    itemsObj.Value = form.Table;
-                }
-            }
+            public int Position { get; set; }
+            public object Value { get; set; }
         }
     }
 }

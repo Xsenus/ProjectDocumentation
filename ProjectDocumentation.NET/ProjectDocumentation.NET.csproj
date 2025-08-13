@@ -261,11 +261,11 @@
     <Compile Include="Forms\ObjectChange\AddressEdit.Designer.cs">
       <DependentUpon>AddressEdit.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\ObjectChange\ExpretEdit.cs">
+    <Compile Include="Forms\ObjectChange\ExpertEdit.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\ObjectChange\ExpretEdit.Designer.cs">
-      <DependentUpon>ExpretEdit.cs</DependentUpon>
+    <Compile Include="Forms\ObjectChange\ExpertEdit.Designer.cs">
+      <DependentUpon>ExpertEdit.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\ObjectChange\DesignerEdit.cs">
       <SubType>Form</SubType>
@@ -369,8 +369,8 @@
     <EmbeddedResource Include="Forms\ObjectChange\AddressEdit.resx">
       <DependentUpon>AddressEdit.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\ObjectChange\ExpretEdit.resx">
-      <DependentUpon>ExpretEdit.cs</DependentUpon>
+    <EmbeddedResource Include="Forms\ObjectChange\ExpertEdit.resx">
+      <DependentUpon>ExpertEdit.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\ObjectChange\DesignerEdit.resx">
       <DependentUpon>DesignerEdit.cs</DependentUpon>

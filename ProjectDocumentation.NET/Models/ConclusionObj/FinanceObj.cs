@@ -9,7 +9,7 @@ namespace ProjectDocumentation.NET.Models.ConclusionObj
 {
     public static class FinanceObjController
     {
-        public static IEnumerable<FinanceObj> GetFinanceObj(ICollection<tFinance> collection)
+        public static IEnumerable<FinanceObj> GetFinanceObj(ICollection<TFinance> collection)
         {
             foreach (var obj in collection)
             {
@@ -22,16 +22,10 @@ namespace ProjectDocumentation.NET.Models.ConclusionObj
 
     public class FinanceObj
     {
-        public FinanceObj(tFinance tFinance)
+        public FinanceObj(TFinance tFinance)
         {
             TFinance = tFinance;
         }
-
-        public tFinance TFinance { get; private set; }
-
-        public string FinanceType { get; set; }
-        public string BudgetType { get; set; }
-        public string FinanceSize { get; set; }
 
         public async void SetEnumObj()
         {
@@ -44,7 +38,7 @@ namespace ProjectDocumentation.NET.Models.ConclusionObj
                     && f.Value == TFinance.FinanceType.GetEnumXmlAttributeValue().ToString());
                 FinanceType = financeType?.Name;
 
-                if (TFinance.FinanceType == tFinanceType.Item1)
+                if (TFinance.FinanceType == TFinanceType.Item1)
                 {
                     var budgetType = await new XPQuery<GeneralizedDictionaryXPO>(session)?
                         .FirstOrDefaultAsync(f => f.GeneralizedDictionary == GeneralizedDictionary.BudgetType
@@ -64,5 +58,10 @@ namespace ProjectDocumentation.NET.Models.ConclusionObj
         {
             return base.ToString();
         }
+
+        public string BudgetType { get; set; }
+        public string FinanceSize { get; set; }
+        public string FinanceType { get; set; }
+        public TFinance TFinance { get; private set; }
     }
 }

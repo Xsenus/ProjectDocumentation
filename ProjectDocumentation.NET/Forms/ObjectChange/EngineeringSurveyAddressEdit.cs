@@ -1,5 +1,4 @@
-﻿using Core.NET.AutoModels;
-using Core.NET.AutoModels.ConclusionObj;
+﻿using Core.NET.AutoModels.ConclusionObj;
 using Core.NET.Controllers;
 using Core.NET.Extensions;
 using Core.NET.Models.XPO;
@@ -15,45 +14,20 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
 {
     public partial class EngineeringSurveyAddressEdit : XtraForm
     {
-        private Session Session => SessionController.GetSession();
-        public bool IsSave { get; private set; }
-        public tEngineeringSurveyAddress EngineeringSurveyAddress { get; private set; }
-
         public EngineeringSurveyAddressEdit()
         {
             InitializeComponent();
         }
 
-        public EngineeringSurveyAddressEdit(tEngineeringSurveyAddress address) : this()
+        public EngineeringSurveyAddressEdit(TEngineeringSurveyAddress address) : this()
         {
             EngineeringSurveyAddress = address;
         }
 
-        private async Task FillFormControllersAsync()
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
+        private void btnCancel_Click(object sender, EventArgs e)
         {
-            var collection = await new XPQuery<GeneralizedDictionaryXPO>(Session).ToListAsync();
-
-            cmbEngineeringSurveyRegion.Properties.Items.AddRange(collection
-                .Where(w => w.GeneralizedDictionary == GeneralizedDictionary.Region).ToList());
-        }
-
-        private async void Form_Load(object sender, EventArgs e)
-        {
-            await FillFormControllersAsync();
-
-            if (EngineeringSurveyAddress is null)
-            {
-                EngineeringSurveyAddress = new tEngineeringSurveyAddress();
-            }
-            else
-            {
-                cmbEngineeringSurveyRegion.EditValue = cmbEngineeringSurveyRegion.Properties.Items
-                    ?.Cast<GeneralizedDictionaryXPO>()
-                    ?.Where(w => w.GeneralizedDictionary == GeneralizedDictionary.Region)
-                    ?.FirstOrDefault(f => f.ValueInt == EngineeringSurveyAddress?.EngineeringSurveyRegion.GetEnumXmlAttributeValueInt());
-
-                memoEngineeringSurveyDistrict.EditValue = EngineeringSurveyAddress.EngineeringSurveyDistrict;
-            }
+            Close();
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
@@ -62,7 +36,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
             try
             {
                 EngineeringSurveyAddress.EngineeringSurveyDistrict = memoEngineeringSurveyDistrict.Text;
-                EngineeringSurveyAddress.EngineeringSurveyRegion = ConclusionEdit.GetEnumByAttributeValue<tRegionsRF>(ConclusionEdit.GetValueGeneralizedDictionary(
+                EngineeringSurveyAddress.EngineeringSurveyRegion = ConclusionEdit.GetEnumByAttributeValue<TRegionsRf>(ConclusionEdit.GetValueGeneralizedDictionary(
                     cmbEngineeringSurveyRegion,
                     message: "Заполните поле региона Субъекта Российской Федерации")?.Value);
             }
@@ -81,12 +55,6 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
-        private void btnCancel_Click(object sender, EventArgs e)
-        {
-            Close();
-        }
-
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
         private void cmbRegion_ButtonPressed(object sender, ButtonPressedEventArgs e)
         {
             if (sender is ButtonEdit buttonEdit)
@@ -97,5 +65,36 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                 }
             }
         }
+
+        private async Task FillFormControllersAsync()
+        {
+            var collection = await new XPQuery<GeneralizedDictionaryXPO>(Session).ToListAsync();
+
+            cmbEngineeringSurveyRegion.Properties.Items.AddRange(collection
+                .Where(w => w.GeneralizedDictionary == GeneralizedDictionary.Region).ToList());
+        }
+
+        private async void Form_Load(object sender, EventArgs e)
+        {
+            await FillFormControllersAsync();
+
+            if (EngineeringSurveyAddress is null)
+            {
+                EngineeringSurveyAddress = new TEngineeringSurveyAddress();
+            }
+            else
+            {
+                cmbEngineeringSurveyRegion.EditValue = cmbEngineeringSurveyRegion.Properties.Items
+                    ?.Cast<GeneralizedDictionaryXPO>()
+                    ?.Where(w => w.GeneralizedDictionary == GeneralizedDictionary.Region)
+                    ?.FirstOrDefault(f => f.ValueInt == EngineeringSurveyAddress?.EngineeringSurveyRegion.GetEnumXmlAttributeValueInt());
+
+                memoEngineeringSurveyDistrict.EditValue = EngineeringSurveyAddress.EngineeringSurveyDistrict;
+            }
+        }
+
+        private Session Session => SessionController.GetSession();
+        public TEngineeringSurveyAddress EngineeringSurveyAddress { get; private set; }
+        public bool IsSave { get; private set; }
     }
 }

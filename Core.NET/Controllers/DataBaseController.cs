@@ -924,13 +924,160 @@ namespace Core.NET.Controllers
                 await Session.SaveAsync(new GeneralizedDictionaryXPO(Session) { Value = "Д", Name = "Д", GeneralizedDictionary = GeneralizedDictionary.FireDangerCategory });
             }
 
-
             if (collection.Where(w => w.GeneralizedDictionary == GeneralizedDictionary.ResponsibilityLevel).Count() == 0)
             {
                 await Session.SaveAsync(new GeneralizedDictionaryXPO(Session) { Value = "повышенный", Name = "Повышенный", GeneralizedDictionary = GeneralizedDictionary.ResponsibilityLevel });
                 await Session.SaveAsync(new GeneralizedDictionaryXPO(Session) { Value = "нормальный", Name = "Нормальный", GeneralizedDictionary = GeneralizedDictionary.ResponsibilityLevel });
                 await Session.SaveAsync(new GeneralizedDictionaryXPO(Session) { Value = "пониженный", Name = "Пониженный", GeneralizedDictionary = GeneralizedDictionary.ResponsibilityLevel });
+            }
 
+            if (collection.Where(w => w.GeneralizedDictionary == GeneralizedDictionary.EngineeringSurveysSummary).Count() == 0)
+            {
+                await Session.SaveAsync(new GeneralizedDictionaryXPO(Session)
+                {
+                    GeneralizedDictionary = GeneralizedDictionary.EngineeringSurveysSummary,
+                    Value = "Результаты инженерных изысканий соответствуют требованиям технических регламентов.",
+                    Name = "Соответствуют (ИИ)"
+                });
+                await Session.SaveAsync(new GeneralizedDictionaryXPO(Session)
+                {
+                    GeneralizedDictionary = GeneralizedDictionary.EngineeringSurveysSummary,
+                    Value = "Изменения, внесенные в результаты инженерных изысканий, соответствуют требованиям технических регламентов.",
+                    Name = "Изменения соответствуют (ИИ)"
+                });
+            }
+
+            if (collection.Where(w => w.GeneralizedDictionary == GeneralizedDictionary.ProjectDocumentationSummary).Count() == 0)
+            {
+                await Session.SaveAsync(new GeneralizedDictionaryXPO(Session)
+                {
+                    GeneralizedDictionary = GeneralizedDictionary.ProjectDocumentationSummary,
+                    Value = "Проектная документация соответствует требованиям технических регламентов и иным установленным требованиям, а также результатам инженерных изысканий, выполненных для подготовки проектной документации, и заданию на проектирование.",
+                    Name = "ПД соответствует (перв./повтор.)"
+                });
+                await Session.SaveAsync(new GeneralizedDictionaryXPO(Session)
+                {
+                    GeneralizedDictionary = GeneralizedDictionary.ProjectDocumentationSummary,
+                    Value = "Изменения, внесенные в проектную документацию, соответствуют требованиям технических регламентов и иным установленным требованиям, результатам инженерных изысканий, выполненных для подготовки проектной документации, и заданию на проектирование, а также совместимы с частью проектной документации, в которую указанные изменения не вносились.",
+                    Name = "Изменения соответствуют (ПД)"
+                });
+            }
+
+            if (collection.Where(w => w.GeneralizedDictionary == GeneralizedDictionary.EstimateNormsAndWorksSummary).Count() == 0)
+            {
+                await Session.SaveAsync(new GeneralizedDictionaryXPO(Session)
+                {
+                    GeneralizedDictionary = GeneralizedDictionary.EstimateNormsAndWorksSummary,
+                    Value = "Расчеты, содержащиеся в сметной документации, соответствуют утвержденным сметным нормативам, сведения о которых включены в федеральный реестр сметных нормативов, физическим объемам работ, конструктивным, организационно-технологическим и другим решениям, предусмотренным проектной документацией.",
+                    Name = "Соответствуют нормам/объёмам (ПП РФ 145)"
+                });
+                await Session.SaveAsync(new GeneralizedDictionaryXPO(Session)
+                {
+                    GeneralizedDictionary = GeneralizedDictionary.EstimateNormsAndWorksSummary,
+                    Value = "Расчеты, содержащиеся в сметной документации, соответствуют физическим объемам работ, включенным в ведомость объемов работ.",
+                    Name = "Соответствуют ведомости объёмов"
+                });
+            }
+
+            if (collection.Where(w => w.GeneralizedDictionary == GeneralizedDictionary.EstimateSummary).Count() == 0)
+            {
+                await Session.SaveAsync(new GeneralizedDictionaryXPO(Session)
+                {
+                    GeneralizedDictionary = GeneralizedDictionary.EstimateSummary,
+                    Value = "Сметная стоимость определена достоверно.",
+                    Name = "Достоверно"
+                });
+                await Session.SaveAsync(new GeneralizedDictionaryXPO(Session)
+                {
+                    GeneralizedDictionary = GeneralizedDictionary.EstimateSummary,
+                    Value = "Сметная стоимость определена недостоверно.",
+                    Name = "Недостоверно"
+                });
+            }
+            
+            if (collection.Count(w => w.GeneralizedDictionary == GeneralizedDictionary.EngineeringSurveysResultsSummary) == 0)
+            {
+                await Session.SaveAsync(new GeneralizedDictionaryXPO(Session)
+                {
+                    GeneralizedDictionary = GeneralizedDictionary.EngineeringSurveysResultsSummary,
+                    Value = "Результаты инженерных изысканий, выполненных для подготовки проектной документации, соответствуют требованиям технических регламентов.",
+                    Name = "ИИ соответствуют (итог)"
+                });
+
+                await Session.SaveAsync(new GeneralizedDictionaryXPO(Session)
+                {
+                    GeneralizedDictionary = GeneralizedDictionary.EngineeringSurveysResultsSummary,
+                    Value = "Результаты инженерных изысканий, выполненных для подготовки проектной документации, не соответствуют требованиям технических регламентов.",
+                    Name = "ИИ не соответствуют (итог)"
+                });
+            }
+            
+            if (collection.Count(w => w.GeneralizedDictionary == GeneralizedDictionary.ProjectDocumentationEngineeringSurveysResultsSummary) == 0)
+            {
+                await Session.SaveAsync(new GeneralizedDictionaryXPO(Session)
+                {
+                    GeneralizedDictionary = GeneralizedDictionary.ProjectDocumentationEngineeringSurveysResultsSummary,
+                    Value = "Проектная документация соответствует результатам инженерных изысканий.",
+                    Name = "ПД соответствует ИИ"
+                });
+
+                await Session.SaveAsync(new GeneralizedDictionaryXPO(Session)
+                {
+                    GeneralizedDictionary = GeneralizedDictionary.ProjectDocumentationEngineeringSurveysResultsSummary,
+                    Value = "Проектная документация не соответствует результатам инженерных изысканий.",
+                    Name = "ПД не соответствует ИИ"
+                });
+            }
+
+            if (collection.Count(w => w.GeneralizedDictionary == GeneralizedDictionary.ProjectDocumentationDesignAssignmentSummary) == 0)
+            {
+                await Session.SaveAsync(new GeneralizedDictionaryXPO(Session)
+                {
+                    GeneralizedDictionary = GeneralizedDictionary.ProjectDocumentationDesignAssignmentSummary,
+                    Value = "Проектная документация соответствует заданию на проектирование.",
+                    Name = "ПД соответствует заданию"
+                });
+
+                await Session.SaveAsync(new GeneralizedDictionaryXPO(Session)
+                {
+                    GeneralizedDictionary = GeneralizedDictionary.ProjectDocumentationDesignAssignmentSummary,
+                    Value = "Проектная документация не соответствует заданию на проектирование.",
+                    Name = "ПД не соответствует заданию"
+                });
+            }
+
+            if (collection.Count(w => w.GeneralizedDictionary == GeneralizedDictionary.ProjectDocumentationTechnicalRequirementsSummary) == 0)
+            {
+                await Session.SaveAsync(new GeneralizedDictionaryXPO(Session)
+                {
+                    GeneralizedDictionary = GeneralizedDictionary.ProjectDocumentationTechnicalRequirementsSummary,
+                    Value = "Проектная документация соответствует требованиям технических регламентов и иным установленным требованиям.",
+                    Name = "ПД соответствует ТР/иным"
+                });
+
+                await Session.SaveAsync(new GeneralizedDictionaryXPO(Session)
+                {
+                    GeneralizedDictionary = GeneralizedDictionary.ProjectDocumentationTechnicalRequirementsSummary,
+                    Value = "Проектная документация не соответствует требованиям технических регламентов и иным установленным требованиям.",
+                    Name = "ПД не соответствует ТР/иным"
+                });
+            }
+
+            if (collection.Count(w => w.GeneralizedDictionary == GeneralizedDictionary.EstimateValidationSummary) == 0)
+            {
+                await Session.SaveAsync(new GeneralizedDictionaryXPO(Session)
+                {
+                    GeneralizedDictionary = GeneralizedDictionary.EstimateValidationSummary,
+                    Value = "Сметная стоимость определена достоверно.",
+                    Name = "Достоверно"
+                });
+
+                await Session.SaveAsync(new GeneralizedDictionaryXPO(Session)
+                {
+                    GeneralizedDictionary = GeneralizedDictionary.EstimateValidationSummary,
+                    Value = "Сметная стоимость определена недостоверно.",
+                    Name = "Недостоверно"
+                });
             }
         }
     }

@@ -1,4 +1,5 @@
 ﻿using Core.NET.AutoModels;
+using Core.NET.AutoModels.ConclusionObj;
 using Core.NET.AutoModels.ExplanatoryNoteObj;
 using Core.NET.Controllers;
 using Core.NET.Extensions;
@@ -19,6 +20,7 @@ using System.Drawing;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using TTechnicalCustomer = Core.NET.AutoModels.ExplanatoryNoteObj.TTechnicalCustomer;
 
 namespace ProjectDocumentation.NET.Forms.ObjectChange
 {
@@ -34,7 +36,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
         private List<tAuthor> _tProjectDocumentationAuthors = new List<tAuthor>();
         private List<tWorkPerson> _tSigners = new List<tWorkPerson>();
         private List<tDeveloper> _tDevelopers = new List<tDeveloper>();
-        private List<ITechnicalCustomer> _tTechnicalCustomers = new List<ITechnicalCustomer>();
+        private List<TTechnicalCustomer> _tTechnicalCustomers = new List<TTechnicalCustomer>();
         private List<tUsedNorm> _tUsedNorms = new List<tUsedNorm>();
         private List<tDocument> _tProjectDecisionDocuments = new List<tDocument>();
         private List<tDocument> _tProjectInitialDocuments = new List<tDocument>();
@@ -143,7 +145,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                     {
                         _tDevelopers.Add(tDeveloper);
                     }
-                    else if (item is tTechnicalCustomer tTechnicalCustomer)
+                    else if (item is TTechnicalCustomer tTechnicalCustomer)
                     {
                         _tTechnicalCustomers.Add(tTechnicalCustomer);
                     }
@@ -836,7 +838,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                     MessageBoxButtons.OKCancel,
                     MessageBoxIcon.Question) == DialogResult.OK)
                 {
-                    if (obj.BaseObj is tTechnicalCustomer tTechnicalCustomer)
+                    if (obj.BaseObj is TTechnicalCustomer tTechnicalCustomer)
                     {
                         _tTechnicalCustomers.Remove(tTechnicalCustomer);
                         gridControlTechnicalCustomer.DataSource = PersonObjController.GetPersonObjByTechnicalCustomer(_tTechnicalCustomers).ToArray();

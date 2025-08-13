@@ -1,5 +1,5 @@
 ﻿using Core.NET.Algorithms;
-using Core.NET.AutoModels;
+using Core.NET.AutoModels.ConclusionObj;
 using Core.NET.AutoModels.ExplanatoryNoteObj;
 using Core.NET.Controllers;
 using Core.NET.Extensions;
@@ -22,10 +22,6 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
 {
     public partial class DocumentENEdit : XtraForm
     {
-        private Session Session => SessionController.GetSession();
-
-        public bool IsSave { get; private set; }
-        public tDocument Document { get; private set; }
         public List<tFile> _tFiles = new List<tFile>();
 
         public DocumentENEdit()
@@ -38,56 +34,62 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
             Document = tDocument;
         }
 
-        private async Task FillFormControllersAsync()
+        private void AddFiles(string[] files)
         {
-            var collection = await new XPQuery<GeneralizedDictionaryXPO>(Session).ToListAsync();
+            if (files != null && files.Count() > 0)
+            {
+                foreach (var file in files)
+                {
+                    var fileInfo = new FileInfo(file);
 
-            cmbDocType.Properties.Items.AddRange(collection
-                .Where(w => w.GeneralizedDictionary == GeneralizedDictionary.DocumentType).ToList());
+                    var fileObj = new tFile()
+                    {
+                        FileName = fileInfo.Name,
+                        FileFormat = fileInfo.Extension?.Replace(".", string.Empty),
+                        FileChecksum = GetCheckSum(fileInfo)?.ToLower()
+                    };
+
+                    _tFiles.Add(fileObj);
+                }
+
+                gridControlItems.RefreshDataSource();
+            }
         }
 
-        private async void ObjPartEdit_Load(object sender, EventArgs e)
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
+        private void barBtnItemsAdd_ItemClick(object sender, ItemClickEventArgs e)
         {
-            await FillFormControllersAsync();
+            using (var ofd = new OpenFileDialog() { Multiselect = true })
+            {
+                if (ofd.ShowDialog() == DialogResult.OK)
+                {
+                    var files = ofd.FileNames;
+                    AddFiles(files);
+                }
+            }
+        }
 
-            if (Document is null)
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
+        private void barBtnItemsDel_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            if (gridViewItems.GetRow(gridViewItems.FocusedRowHandle) is tFile obj)
             {
-                Document = new tDocument();
+                if (XtraMessageBox.Show(
+                    "Вы действительно хотите удалить выделенный объект?",
+                    "Информационное сообщение",
+                    MessageBoxButtons.OKCancel,
+                    MessageBoxIcon.Question) == DialogResult.OK)
+                {
+                    _tFiles.Remove(obj);
+                    gridControlItems.RefreshDataSource();
+                }
             }
+        }
 
-            cmbDocType.EditValue = cmbDocType.Properties.Items
-                    ?.Cast<GeneralizedDictionaryXPO>()
-                    ?.Where(w => w.GeneralizedDictionary == GeneralizedDictionary.DocumentType)
-                    ?.FirstOrDefault(f => f.Value == Document?.DocType.GetEnumXmlAttributeValue().ToString());
-            txtDocName.EditValue = Document.DocName;
-            txtDocNumber.EditValue = Document.DocNumber;
-            if (Document.DocDate != DateTime.MinValue)
-            {
-                dateDocDate.EditValue = Document.DocDate;
-            }
-            memoDocChanges.EditValue = Document.DocChanges;
-
-            _tFiles = Document.Items?.Cast<tFile>()?.ToList() ?? new List<tFile>();
-            gridControlItems.DataSource = _tFiles;
-            foreach (GridColumn column in gridViewItems.Columns.Cast<GridColumn>())
-            {
-                column.Visible = false;
-            }
-            if (gridViewItems.Columns[nameof(tFile.FileChecksum)] is GridColumn gridColumntFileFileChecksum)
-            {
-                gridColumntFileFileChecksum.Caption = "Контрольная сумма";
-                gridColumntFileFileChecksum.Visible = true;
-            }
-            if (gridViewItems.Columns[nameof(tFile.FileFormat)] is GridColumn gridColumntFileFileFormat)
-            {
-                gridColumntFileFileFormat.Caption = "Формат";
-                gridColumntFileFileFormat.Visible = true;
-            }
-            if (gridViewItems.Columns[nameof(tFile.FileName)] is GridColumn gridColumntFileFileName)
-            {
-                gridColumntFileFileName.Caption = "Наименование";
-                gridColumntFileFileName.Visible = true;
-            }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
+        private void btnClose_Click(object sender, EventArgs e)
+        {
+            Close();
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
@@ -95,7 +97,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
         {
             try
             {
-                Document.DocType = ConclusionEdit.GetEnumByAttributeValue<tDocumentType>(ConclusionEdit.GetValueGeneralizedDictionary(
+                Document.DocType = ConclusionEdit.GetEnumByAttributeValue<TDocumentType>(ConclusionEdit.GetValueGeneralizedDictionary(
                     cmbDocType,
                     message: "Заполните поле тип документа")?.Value);
                 Document.DocName = ConclusionEdit.GetStringValue(txtDocName.EditValue, txtDocName, "Заполните поле наименование документа.");
@@ -146,12 +148,6 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
-        private void btnClose_Click(object sender, EventArgs e)
-        {
-            Close();
-        }
-
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
         private void buttonEdit_ButtonPressed(object sender, ButtonPressedEventArgs e)
         {
             if (sender is ButtonEdit buttonEdit)
@@ -163,48 +159,12 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
             }
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
-        private void gridViewItems_PopupMenuShowing(object sender, PopupMenuShowingEventArgs e)
+        private async Task FillFormControllersAsync()
         {
-            if (sender is GridView)
-            {
-                popupMenuItems.ShowPopup(new Point(Cursor.Position.X, Cursor.Position.Y));
-            }
-        }
+            var collection = await new XPQuery<GeneralizedDictionaryXPO>(Session).ToListAsync();
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
-        private void barBtnItemsAdd_ItemClick(object sender, ItemClickEventArgs e)
-        {
-            using (var ofd = new OpenFileDialog() { Multiselect = true })
-            {
-                if (ofd.ShowDialog() == DialogResult.OK)
-                {
-                    var files = ofd.FileNames;
-                    AddFiles(files);
-                }
-            }
-        }
-
-        private void AddFiles(string[] files)
-        {
-            if (files != null && files.Count() > 0)
-            {
-                foreach (var file in files)
-                {
-                    var fileInfo = new FileInfo(file);
-
-                    var fileObj = new tFile()
-                    {
-                        FileName = fileInfo.Name,
-                        FileFormat = fileInfo.Extension?.Replace(".", string.Empty),
-                        FileChecksum = GetCheckSum(fileInfo)?.ToLower()
-                    };
-
-                    _tFiles.Add(fileObj);
-                }
-
-                gridControlItems.RefreshDataSource();
-            }
+            cmbDocType.Properties.Items.AddRange(collection
+                .Where(w => w.GeneralizedDictionary == GeneralizedDictionary.DocumentType).ToList());
         }
 
         private string GetCheckSum(FileInfo fileInfo)
@@ -219,20 +179,10 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
-        private void barBtnItemsDel_ItemClick(object sender, ItemClickEventArgs e)
+        private void gridControlItems_DragDrop(object sender, DragEventArgs e)
         {
-            if (gridViewItems.GetRow(gridViewItems.FocusedRowHandle) is tFile obj)
-            {
-                if (XtraMessageBox.Show(
-                    "Вы действительно хотите удалить выделенный объект?",
-                    "Информационное сообщение",
-                    MessageBoxButtons.OKCancel,
-                    MessageBoxIcon.Question) == DialogResult.OK)
-                {
-                    _tFiles.Remove(obj);
-                    gridControlItems.RefreshDataSource();
-                }
-            }
+            var files = (string[])e.Data.GetData(DataFormats.FileDrop);
+            AddFiles(files);
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
@@ -245,10 +195,60 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
-        private void gridControlItems_DragDrop(object sender, DragEventArgs e)
+        private void gridViewItems_PopupMenuShowing(object sender, PopupMenuShowingEventArgs e)
         {
-            var files = (string[])e.Data.GetData(DataFormats.FileDrop);
-            AddFiles(files);
+            if (sender is GridView)
+            {
+                popupMenuItems.ShowPopup(new Point(Cursor.Position.X, Cursor.Position.Y));
+            }
         }
+
+        private async void ObjPartEdit_Load(object sender, EventArgs e)
+        {
+            await FillFormControllersAsync();
+
+            if (Document is null)
+            {
+                Document = new tDocument();
+            }
+
+            cmbDocType.EditValue = cmbDocType.Properties.Items
+                    ?.Cast<GeneralizedDictionaryXPO>()
+                    ?.Where(w => w.GeneralizedDictionary == GeneralizedDictionary.DocumentType)
+                    ?.FirstOrDefault(f => f.Value == Document?.DocType.GetEnumXmlAttributeValue().ToString());
+            txtDocName.EditValue = Document.DocName;
+            txtDocNumber.EditValue = Document.DocNumber;
+            if (Document.DocDate != DateTime.MinValue)
+            {
+                dateDocDate.EditValue = Document.DocDate;
+            }
+            memoDocChanges.EditValue = Document.DocChanges;
+
+            _tFiles = Document.Items?.Cast<tFile>()?.ToList() ?? new List<tFile>();
+            gridControlItems.DataSource = _tFiles;
+            foreach (GridColumn column in gridViewItems.Columns.Cast<GridColumn>())
+            {
+                column.Visible = false;
+            }
+            if (gridViewItems.Columns[nameof(tFile.FileChecksum)] is GridColumn gridColumntFileFileChecksum)
+            {
+                gridColumntFileFileChecksum.Caption = "Контрольная сумма";
+                gridColumntFileFileChecksum.Visible = true;
+            }
+            if (gridViewItems.Columns[nameof(tFile.FileFormat)] is GridColumn gridColumntFileFileFormat)
+            {
+                gridColumntFileFileFormat.Caption = "Формат";
+                gridColumntFileFileFormat.Visible = true;
+            }
+            if (gridViewItems.Columns[nameof(tFile.FileName)] is GridColumn gridColumntFileFileName)
+            {
+                gridColumntFileFileName.Caption = "Наименование";
+                gridColumntFileFileName.Visible = true;
+            }
+        }
+
+        private Session Session => SessionController.GetSession();
+        public tDocument Document { get; private set; }
+        public bool IsSave { get; private set; }
     }
 }

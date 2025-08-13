@@ -10,9 +10,6 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
 {
     public partial class TableEdit : XtraForm
     {
-        public bool IsSave { get; private set; }
-        public tTable Table { get; private set; }
-
         public TableEdit()
         {
             InitializeComponent();
@@ -21,6 +18,29 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
         public TableEdit(tTable tTable) : this()
         {
             Table = tTable;
+        }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
+        private void btnClose_Click(object sender, EventArgs e)
+        {
+            Close();
+        }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
+        private void btnSave_Click(object sender, EventArgs e)
+        {
+            try
+            {
+
+            }
+            catch (Exception ex)
+            {
+                XtraMessageBox.Show(ex.Message, "Информационное сообщение", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            IsSave = true;
+            Close();
         }
 
         private List<List<T>> GetDivideList<T>(List<T> source, int chunkSize)
@@ -57,7 +77,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                     }
 
                     dataTable.Columns.Add(column);
-                }                
+                }
             }
 
             var divideList = GetDivideList(Table.Row, Table.TitleRow.Count);
@@ -74,30 +94,10 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
             }
 
             gridControl.DataSource = dataTable;
-            gridView.RefreshData();            
+            gridView.RefreshData();
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
-        private void btnSave_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                
-            }
-            catch (Exception ex)
-            {
-                XtraMessageBox.Show(ex.Message, "Информационное сообщение", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            }
-
-            IsSave = true;
-            Close();
-        }
-
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
-        private void btnClose_Click(object sender, EventArgs e)
-        {
-            Close();
-        }
+        public bool IsSave { get; private set; }
+        public tTable Table { get; private set; }
     }
 }

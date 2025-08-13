@@ -132,6 +132,51 @@ namespace Core.NET.Models.XPO
         /// <summary>
         /// Уровень ответственности.
         /// </summary>
-        ResponsibilityLevel
+        ResponsibilityLevel,
+
+        /// <summary>
+        /// Вид экспертизы проектной документации.
+        /// </summary>
+        EngineeringSurveysSummary,
+
+        /// <summary>
+        /// Вывод по проектной документации (общий, положительный).
+        /// </summary>
+        ProjectDocumentationSummary,
+
+        /// <summary>
+        /// Вывод по проектной документации (отрицательный).
+        /// </summary>
+        EstimateNormsAndWorksSummary,
+
+        /// <summary>
+        /// Достоверность сметной стоимости.
+        /// </summary>
+        EstimateSummary,
+
+        /// <summary>
+        /// Вывод по проектной документации (инженерные изыскания).
+        /// </summary>
+        EngineeringSurveysResultsSummary,
+
+        /// <summary>
+        /// Вывод по проектной документации (результаты инженерных изысканий).
+        /// </summary>
+        ProjectDocumentationEngineeringSurveysResultsSummary,
+
+        /// <summary>
+        /// Вывод по проектной документации (результаты инженерных изысканий, положительный).
+        /// </summary>
+        ProjectDocumentationDesignAssignmentSummary,
+
+        /// <summary>
+        /// Вывод по проектной документации (технические требования).
+        /// </summary>
+        ProjectDocumentationTechnicalRequirementsSummary,
+
+        /// <summary>
+        /// Вывод по проектной документации (технические требования, положительный).
+        /// </summary>
+        EstimateValidationSummary
     }
 }

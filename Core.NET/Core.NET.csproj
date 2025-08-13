@@ -46,30 +46,22 @@
       <HintPath>..\packages\Newtonsoft.Json.13.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Algorithms\ComputeHash.cs" />
     <Compile Include="Algorithms\CRC32.cs" />
     <Compile Include="AutoModels\ConclusionObj\Conclusion.cs" />
     <Compile Include="AutoModels\ExplanatoryNoteObj\ExplanatoryNoteObjType.cs" />
-    <Compile Include="AutoModels\tDocumentType.cs" />
-    <Compile Include="AutoModels\ITechnicalCustomer.cs" />
-    <Compile Include="AutoModels\tEcologyExpertise.cs" />
-    <Compile Include="AutoModels\tWorkPerson.cs" />
-    <Compile Include="AutoModels\tForeignOrganization.cs" />
-    <Compile Include="AutoModels\tIP.cs" />
-    <Compile Include="AutoModels\tOrganization.cs" />
-    <Compile Include="AutoModels\tPerson.cs" />
-    <Compile Include="AutoModels\tYesNo.cs" />
-    <Compile Include="AutoModels\tPostAddress.cs" />
-    <Compile Include="AutoModels\tAddress.cs" />
-    <Compile Include="AutoModels\tRegionsRF.cs" />
     <Compile Include="AutoModels\ExplanatoryNoteObj\ExplanatoryNote.cs" />
+    <Compile Include="AutoModels\ExplanatoryNoteObj\tWorkPerson.cs" />
+    <Compile Include="AutoModels\ItemChoiceType.cs" />
     <Compile Include="Controllers\ConclusionController.cs" />
     <Compile Include="Controllers\DataBaseController.cs" />
     <Compile Include="Controllers\ExplanatoryNoteController.cs" />

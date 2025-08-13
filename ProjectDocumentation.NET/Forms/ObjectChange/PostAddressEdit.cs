@@ -1,4 +1,4 @@
-﻿using Core.NET.AutoModels;
+﻿using Core.NET.AutoModels.ConclusionObj;
 using Core.NET.Controllers;
 using Core.NET.Extensions;
 using Core.NET.Models.XPO;
@@ -14,18 +14,64 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
 {
     public partial class PostAddressEdit : XtraForm
     {
-        private Session Session => SessionController.GetSession();
-        public bool IsSave { get; private set; }
-        public tPostAddress PostAddress { get; private set; }
-
         public PostAddressEdit()
         {
             InitializeComponent();
         }
 
-        public PostAddressEdit(tPostAddress address) : this()
+        public PostAddressEdit(TPostAddress address) : this()
         {
             PostAddress = address;
+        }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
+        private void btnCancel_Click(object sender, EventArgs e)
+        {
+            Close();
+        }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
+        private void btnSave_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                PostAddress.Country = txtCountry.Text;
+                PostAddress.PostIndex = txtPostIndex.Text;
+                PostAddress.District = txtDistrict.Text;
+                PostAddress.City = txtCity.Text;
+                PostAddress.Settlement = txtSettlement.Text;
+                PostAddress.Street = txtStreet.Text;
+                PostAddress.Building = txtBuilding.Text;
+                PostAddress.Room = txtRoom.Text;
+                PostAddress.Note = txtNote.Text;
+                PostAddress.Region = ConclusionEdit.GetEnumByAttributeValue<TRegionsRf>(ConclusionEdit.GetValueGeneralizedDictionary(
+                    cmbRegion,
+                    message: "Заполните поле региона Субъекта Российской Федерации")?.Value);
+            }
+            catch (Exception ex)
+            {
+                XtraMessageBox.Show(
+                    ex.Message,
+                    "Информационное сообщение",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
+                return;
+            }
+
+            IsSave = true;
+            Close();
+        }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
+        private void cmbRegion_ButtonPressed(object sender, ButtonPressedEventArgs e)
+        {
+            if (sender is ButtonEdit buttonEdit)
+            {
+                if (e.Button.Kind == ButtonPredefines.Delete)
+                {
+                    buttonEdit.EditValue = null;
+                }
+            }
         }
 
         private async Task FillFormControllersAsync()
@@ -42,7 +88,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
 
             if (PostAddress is null)
             {
-                PostAddress = new tPostAddress();
+                PostAddress = new TPostAddress();
             }
             else
             {
@@ -64,54 +110,8 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
             }
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
-        private void btnSave_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                PostAddress.Country = txtCountry.Text;
-                PostAddress.PostIndex = txtPostIndex.Text;
-                PostAddress.District = txtDistrict.Text;
-                PostAddress.City = txtCity.Text;
-                PostAddress.Settlement = txtSettlement.Text;
-                PostAddress.Street = txtStreet.Text;
-                PostAddress.Building = txtBuilding.Text;
-                PostAddress.Room = txtRoom.Text;
-                PostAddress.Note = txtNote.Text;
-                PostAddress.Region = ConclusionEdit.GetEnumByAttributeValue<tRegionsRF>(ConclusionEdit.GetValueGeneralizedDictionary(
-                    cmbRegion,
-                    message: "Заполните поле региона Субъекта Российской Федерации")?.Value);
-            }
-            catch (Exception ex)
-            {
-                XtraMessageBox.Show(
-                    ex.Message,
-                    "Информационное сообщение",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Error);
-                return;
-            }
-
-            IsSave = true;
-            Close();
-        }
-
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
-        private void btnCancel_Click(object sender, EventArgs e)
-        {
-            Close();
-        }
-
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
-        private void cmbRegion_ButtonPressed(object sender, ButtonPressedEventArgs e)
-        {
-            if (sender is ButtonEdit buttonEdit)
-            {
-                if (e.Button.Kind == ButtonPredefines.Delete)
-                {
-                    buttonEdit.EditValue = null;
-                }
-            }
-        }
+        private Session Session => SessionController.GetSession();
+        public bool IsSave { get; private set; }
+        public TPostAddress PostAddress { get; private set; }
     }
 }

@@ -1,4 +1,4 @@
-﻿using Core.NET.AutoModels;
+﻿using Core.NET.AutoModels.ConclusionObj;
 using Core.NET.Controllers;
 using Core.NET.Extensions;
 using Core.NET.Models.XPO;
@@ -14,18 +14,62 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
 {
     public partial class AddressEdit : XtraForm
     {
-        private Session Session => SessionController.GetSession();
-        public bool IsSave { get; private set; }
-        public tAddress Address { get; private set; }
-
         public AddressEdit()
         {
             InitializeComponent();
         }
 
-        public AddressEdit(tAddress address) : this()
+        public AddressEdit(TAddress address) : this()
         {
             Address = address;
+        }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
+        private void btnCancel_Click(object sender, EventArgs e)
+        {
+            Close();
+        }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
+        private void btnSave_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                Address.Country = txtCountry.Text;
+                Address.District = txtDistrict.Text;
+                Address.City = txtCity.Text;
+                Address.Settlement = txtSettlement.Text;
+                Address.Street = txtStreet.Text;
+                Address.Building = txtBuilding.Text;
+                Address.Room = txtRoom.Text;
+                Address.Note = txtNote.Text;
+                Address.Region = ConclusionEdit.GetEnumByAttributeValue<TRegionsRf>(ConclusionEdit.GetValueGeneralizedDictionary(
+                    cmbRegion,
+                    message: "Заполните поле региона Субъекта Российской Федерации")?.Value);
+            }
+            catch (Exception ex)
+            {
+                XtraMessageBox.Show(
+                    ex.Message,
+                    "Информационное сообщение",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
+                return;
+            }
+
+            IsSave = true;
+            Close();
+        }
+
+        private void cmbRegion_ButtonPressed(object sender, ButtonPressedEventArgs e)
+        {
+            if (sender is ButtonEdit buttonEdit)
+            {
+                if (e.Button.Kind == ButtonPredefines.Delete)
+                {
+                    buttonEdit.EditValue = null;
+                }
+            }
         }
 
         private async Task FillFormControllersAsync()
@@ -42,7 +86,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
 
             if (Address is null)
             {
-                Address = new tAddress();
+                Address = new TAddress();
             }
             else
             {
@@ -63,53 +107,9 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
             }
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
-        private void btnSave_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                Address.Country = txtCountry.Text;
-                Address.District = txtDistrict.Text;
-                Address.City = txtCity.Text;
-                Address.Settlement = txtSettlement.Text;
-                Address.Street = txtStreet.Text;
-                Address.Building = txtBuilding.Text;
-                Address.Room = txtRoom.Text;
-                Address.Note = txtNote.Text;
-                Address.Region = ConclusionEdit.GetEnumByAttributeValue<tRegionsRF>(ConclusionEdit.GetValueGeneralizedDictionary(
-                    cmbRegion,
-                    message: "Заполните поле региона Субъекта Российской Федерации")?.Value);
-            }
-            catch (Exception ex)
-            {
-                XtraMessageBox.Show(
-                    ex.Message,
-                    "Информационное сообщение",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Error);
-                return;
-            }
+        private Session Session => SessionController.GetSession();
 
-            IsSave = true;
-            Close();
-        }
-
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
-        private void btnCancel_Click(object sender, EventArgs e)
-        {
-            Close();
-        }
-
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
-        private void cmbRegion_ButtonPressed(object sender, ButtonPressedEventArgs e)
-        {
-            if (sender is ButtonEdit buttonEdit)
-            {
-                if (e.Button.Kind == ButtonPredefines.Delete)
-                {
-                    buttonEdit.EditValue = null;
-                }
-            }
-        }
+        public TAddress Address { get; private set; }
+        public bool IsSave { get; private set; }
     }
 }

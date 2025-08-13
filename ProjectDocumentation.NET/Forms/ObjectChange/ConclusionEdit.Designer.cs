@@ -64,6 +64,11 @@
             DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject26 = new DevExpress.Utils.SerializableAppearanceObject();
             DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject27 = new DevExpress.Utils.SerializableAppearanceObject();
             DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject28 = new DevExpress.Utils.SerializableAppearanceObject();
+            DevExpress.XtraEditors.Controls.EditorButtonImageOptions editorButtonImageOptions8 = new DevExpress.XtraEditors.Controls.EditorButtonImageOptions();
+            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject29 = new DevExpress.Utils.SerializableAppearanceObject();
+            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject30 = new DevExpress.Utils.SerializableAppearanceObject();
+            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject31 = new DevExpress.Utils.SerializableAppearanceObject();
+            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject32 = new DevExpress.Utils.SerializableAppearanceObject();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ConclusionEdit));
             DevExpress.XtraEditors.Controls.EditorButtonImageOptions editorButtonImageOptions9 = new DevExpress.XtraEditors.Controls.EditorButtonImageOptions();
             DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject33 = new DevExpress.Utils.SerializableAppearanceObject();
@@ -80,11 +85,51 @@
             DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject42 = new DevExpress.Utils.SerializableAppearanceObject();
             DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject43 = new DevExpress.Utils.SerializableAppearanceObject();
             DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject44 = new DevExpress.Utils.SerializableAppearanceObject();
-            DevExpress.XtraEditors.Controls.EditorButtonImageOptions editorButtonImageOptions8 = new DevExpress.XtraEditors.Controls.EditorButtonImageOptions();
-            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject29 = new DevExpress.Utils.SerializableAppearanceObject();
-            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject30 = new DevExpress.Utils.SerializableAppearanceObject();
-            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject31 = new DevExpress.Utils.SerializableAppearanceObject();
-            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject32 = new DevExpress.Utils.SerializableAppearanceObject();
+            DevExpress.XtraEditors.Controls.EditorButtonImageOptions editorButtonImageOptions12 = new DevExpress.XtraEditors.Controls.EditorButtonImageOptions();
+            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject45 = new DevExpress.Utils.SerializableAppearanceObject();
+            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject46 = new DevExpress.Utils.SerializableAppearanceObject();
+            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject47 = new DevExpress.Utils.SerializableAppearanceObject();
+            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject48 = new DevExpress.Utils.SerializableAppearanceObject();
+            DevExpress.XtraEditors.Controls.EditorButtonImageOptions editorButtonImageOptions13 = new DevExpress.XtraEditors.Controls.EditorButtonImageOptions();
+            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject49 = new DevExpress.Utils.SerializableAppearanceObject();
+            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject50 = new DevExpress.Utils.SerializableAppearanceObject();
+            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject51 = new DevExpress.Utils.SerializableAppearanceObject();
+            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject52 = new DevExpress.Utils.SerializableAppearanceObject();
+            DevExpress.XtraEditors.Controls.EditorButtonImageOptions editorButtonImageOptions14 = new DevExpress.XtraEditors.Controls.EditorButtonImageOptions();
+            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject53 = new DevExpress.Utils.SerializableAppearanceObject();
+            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject54 = new DevExpress.Utils.SerializableAppearanceObject();
+            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject55 = new DevExpress.Utils.SerializableAppearanceObject();
+            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject56 = new DevExpress.Utils.SerializableAppearanceObject();
+            DevExpress.XtraEditors.Controls.EditorButtonImageOptions editorButtonImageOptions15 = new DevExpress.XtraEditors.Controls.EditorButtonImageOptions();
+            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject57 = new DevExpress.Utils.SerializableAppearanceObject();
+            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject58 = new DevExpress.Utils.SerializableAppearanceObject();
+            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject59 = new DevExpress.Utils.SerializableAppearanceObject();
+            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject60 = new DevExpress.Utils.SerializableAppearanceObject();
+            DevExpress.XtraEditors.Controls.EditorButtonImageOptions editorButtonImageOptions16 = new DevExpress.XtraEditors.Controls.EditorButtonImageOptions();
+            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject61 = new DevExpress.Utils.SerializableAppearanceObject();
+            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject62 = new DevExpress.Utils.SerializableAppearanceObject();
+            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject63 = new DevExpress.Utils.SerializableAppearanceObject();
+            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject64 = new DevExpress.Utils.SerializableAppearanceObject();
+            DevExpress.XtraEditors.Controls.EditorButtonImageOptions editorButtonImageOptions17 = new DevExpress.XtraEditors.Controls.EditorButtonImageOptions();
+            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject65 = new DevExpress.Utils.SerializableAppearanceObject();
+            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject66 = new DevExpress.Utils.SerializableAppearanceObject();
+            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject67 = new DevExpress.Utils.SerializableAppearanceObject();
+            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject68 = new DevExpress.Utils.SerializableAppearanceObject();
+            DevExpress.XtraEditors.Controls.EditorButtonImageOptions editorButtonImageOptions18 = new DevExpress.XtraEditors.Controls.EditorButtonImageOptions();
+            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject69 = new DevExpress.Utils.SerializableAppearanceObject();
+            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject70 = new DevExpress.Utils.SerializableAppearanceObject();
+            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject71 = new DevExpress.Utils.SerializableAppearanceObject();
+            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject72 = new DevExpress.Utils.SerializableAppearanceObject();
+            DevExpress.XtraEditors.Controls.EditorButtonImageOptions editorButtonImageOptions19 = new DevExpress.XtraEditors.Controls.EditorButtonImageOptions();
+            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject73 = new DevExpress.Utils.SerializableAppearanceObject();
+            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject74 = new DevExpress.Utils.SerializableAppearanceObject();
+            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject75 = new DevExpress.Utils.SerializableAppearanceObject();
+            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject76 = new DevExpress.Utils.SerializableAppearanceObject();
+            DevExpress.XtraEditors.Controls.EditorButtonImageOptions editorButtonImageOptions20 = new DevExpress.XtraEditors.Controls.EditorButtonImageOptions();
+            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject77 = new DevExpress.Utils.SerializableAppearanceObject();
+            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject78 = new DevExpress.Utils.SerializableAppearanceObject();
+            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject79 = new DevExpress.Utils.SerializableAppearanceObject();
+            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject80 = new DevExpress.Utils.SerializableAppearanceObject();
             this.xtraTabControlBase = new DevExpress.XtraTab.XtraTabControl();
             this.xtraTabPageForm1 = new DevExpress.XtraTab.XtraTabPage();
             this.layoutControl_I = new DevExpress.XtraLayout.LayoutControl();
@@ -167,6 +212,9 @@
             this.gridViewDocuments = new DevExpress.XtraGrid.Views.Grid.GridView();
             this.cmbProjectDocumentationIM = new DevExpress.XtraEditors.ComboBoxEdit();
             this.cmbEngineeringSurveysIM = new DevExpress.XtraEditors.ComboBoxEdit();
+            this.memoExpertiseResultNote = new DevExpress.XtraEditors.MemoEdit();
+            this.cmbEcologyExpertiseNeedExpertise = new DevExpress.XtraEditors.ComboBoxEdit();
+            this.memoEcologyExpertiseNote = new DevExpress.XtraEditors.MemoEdit();
             this.layoutControlGroup_I = new DevExpress.XtraLayout.LayoutControlGroup();
             this.tabbedControlGroup1 = new DevExpress.XtraLayout.TabbedControlGroup();
             this.layoutControlGroup9 = new DevExpress.XtraLayout.LayoutControlGroup();
@@ -181,6 +229,7 @@
             this.layoutControlItemExaminationStageNote = new DevExpress.XtraLayout.LayoutControlItem();
             this.layoutControlItemProjectDocumentationIM = new DevExpress.XtraLayout.LayoutControlItem();
             this.layoutControlItemEngineeringSurveysIM = new DevExpress.XtraLayout.LayoutControlItem();
+            this.layoutControlItemExpertiseResultNote = new DevExpress.XtraLayout.LayoutControlItem();
             this.layoutControlGroup10 = new DevExpress.XtraLayout.LayoutControlGroup();
             this.layoutControlGroupEntity = new DevExpress.XtraLayout.LayoutControlGroup();
             this.layoutControlItemSearch = new DevExpress.XtraLayout.LayoutControlItem();
@@ -198,6 +247,8 @@
             this.layoutControlGroup11 = new DevExpress.XtraLayout.LayoutControlGroup();
             this.layoutControlItemDeclarant = new DevExpress.XtraLayout.LayoutControlItem();
             this.layoutControlGroup12 = new DevExpress.XtraLayout.LayoutControlGroup();
+            this.layoutControlItemEcologyExpertiseNeedExpertise = new DevExpress.XtraLayout.LayoutControlItem();
+            this.layoutControlItemEcologyExpertiseNote = new DevExpress.XtraLayout.LayoutControlItem();
             this.layoutControlGroup13 = new DevExpress.XtraLayout.LayoutControlGroup();
             this.layoutControlItemDocuments = new DevExpress.XtraLayout.LayoutControlItem();
             this.layoutControlGroup14 = new DevExpress.XtraLayout.LayoutControlGroup();
@@ -320,26 +371,26 @@
             this.layoutControlItemMismatches = new DevExpress.XtraLayout.LayoutControlItem();
             this.xtraTabPageForm5 = new DevExpress.XtraTab.XtraTabPage();
             this.layoutControl3 = new DevExpress.XtraLayout.LayoutControl();
-            this.memoEngineeringSurveySummary = new DevExpress.XtraEditors.MemoEdit();
             this.memoEngineeringSurveySummaryDate = new DevExpress.XtraEditors.MemoEdit();
-            this.memoProjectDocumentsSummary = new DevExpress.XtraEditors.MemoEdit();
-            this.memoProjectDocumentsSummaryDate = new DevExpress.XtraEditors.MemoEdit();
-            this.memoEstimateNormsAndWorksSummary = new DevExpress.XtraEditors.MemoEdit();
-            this.memoEstimateSummary = new DevExpress.XtraEditors.MemoEdit();
             this.checkCmbEngineeringSurveyType = new DevExpress.XtraEditors.CheckedComboBoxEdit();
+            this.cmbEngineeringSurveysSummary = new DevExpress.XtraEditors.ComboBoxEdit();
+            this.cmbProjectDocumentationSummary = new DevExpress.XtraEditors.ComboBoxEdit();
+            this.cmbEstimateNormsAndWorksSummary = new DevExpress.XtraEditors.ComboBoxEdit();
+            this.cmbEstimateSummary = new DevExpress.XtraEditors.ComboBoxEdit();
+            this.memoProjectDocumentsSummaryDate = new DevExpress.XtraEditors.MemoEdit();
             this.layoutControlGroup3 = new DevExpress.XtraLayout.LayoutControlGroup();
-            this.layoutControlItemEngineeringSurveySummary = new DevExpress.XtraLayout.LayoutControlItem();
-            this.layoutControlItemEngineeringSurveySummaryDate = new DevExpress.XtraLayout.LayoutControlItem();
-            this.layoutControlItemProjectDocumentsSummary = new DevExpress.XtraLayout.LayoutControlItem();
-            this.layoutControlItemProjectDocumentsSummaryDate = new DevExpress.XtraLayout.LayoutControlItem();
+            this.layoutControlItemEngineeringSurveyType = new DevExpress.XtraLayout.LayoutControlItem();
             this.layoutControlItemEstimateNormsAndWorksSummary = new DevExpress.XtraLayout.LayoutControlItem();
             this.layoutControlItemEstimateSummary = new DevExpress.XtraLayout.LayoutControlItem();
-            this.layoutControlItemEngineeringSurveyType = new DevExpress.XtraLayout.LayoutControlItem();
+            this.layoutControlItemEngineeringSurveysSummary = new DevExpress.XtraLayout.LayoutControlItem();
+            this.layoutControlItemProjectDocumentationSummary = new DevExpress.XtraLayout.LayoutControlItem();
+            this.layoutControlItemEngineeringSurveySummaryDate = new DevExpress.XtraLayout.LayoutControlItem();
+            this.layoutControlItemProjectDocumentsSummaryDate = new DevExpress.XtraLayout.LayoutControlItem();
             this.xtraTabPageForm6 = new DevExpress.XtraTab.XtraTabPage();
             this.layoutControl4 = new DevExpress.XtraLayout.LayoutControl();
-            this.memoExaminationSummary = new DevExpress.XtraEditors.MemoEdit();
+            this.memoEstimateSummary1315 = new DevExpress.XtraEditors.MemoEdit();
             this.layoutControlGroup4 = new DevExpress.XtraLayout.LayoutControlGroup();
-            this.layoutControlItemExaminationSummary = new DevExpress.XtraLayout.LayoutControlItem();
+            this.layoutControlItemEstimateSummary1315 = new DevExpress.XtraLayout.LayoutControlItem();
             this.xtraTabPageForm7 = new DevExpress.XtraTab.XtraTabPage();
             this.gridControlExpert = new DevExpress.XtraGrid.GridControl();
             this.gridViewExpert = new DevExpress.XtraGrid.Views.Grid.GridView();
@@ -370,12 +421,16 @@
             this.popupMenuEngineeringSurveyTechnicalCustomer = new DevExpress.XtraBars.PopupMenu(this.components);
             this.popupMenuExpertEngineeringSurveys = new DevExpress.XtraBars.PopupMenu(this.components);
             this.popupMenuEngineeringSurveyAddress = new DevExpress.XtraBars.PopupMenu(this.components);
-            this.memoExpertiseResultNote = new DevExpress.XtraEditors.MemoEdit();
-            this.layoutControlItemExpertiseResultNote = new DevExpress.XtraLayout.LayoutControlItem();
-            this.cmbEcologyExpertiseNeedExpertise = new DevExpress.XtraEditors.ComboBoxEdit();
-            this.layoutControlItemEcologyExpertiseNeedExpertise = new DevExpress.XtraLayout.LayoutControlItem();
-            this.memoEcologyExpertiseNote = new DevExpress.XtraEditors.MemoEdit();
-            this.layoutControlItemEcologyExpertiseNote = new DevExpress.XtraLayout.LayoutControlItem();
+            this.cmbEngineeringSurveysResultsSummary = new DevExpress.XtraEditors.ComboBoxEdit();
+            this.layoutControlItemEngineeringSurveysResultsSummary = new DevExpress.XtraLayout.LayoutControlItem();
+            this.cmbEstimateValidationSummary = new DevExpress.XtraEditors.ComboBoxEdit();
+            this.layoutControlItemEstimateValidationSummary = new DevExpress.XtraLayout.LayoutControlItem();
+            this.cmbProjectDocumentationEngineeringSurveysResultsSummary = new DevExpress.XtraEditors.ComboBoxEdit();
+            this.layoutControlItemProjectDocumentationEngineeringSurveysResultsSummary = new DevExpress.XtraLayout.LayoutControlItem();
+            this.cmbProjectDocumentationDesignAssignmentSummary = new DevExpress.XtraEditors.ComboBoxEdit();
+            this.layoutControlItemProjectDocumentationDesignAssignmentSummary = new DevExpress.XtraLayout.LayoutControlItem();
+            this.cmbProjectDocumentationTechnicalRequirementsSummary = new DevExpress.XtraEditors.ComboBoxEdit();
+            this.layoutControlItemProjectDocumentationTechnicalRequirementsSummary = new DevExpress.XtraLayout.LayoutControlItem();
             ((System.ComponentModel.ISupportInitialize)(this.xtraTabControlBase)).BeginInit();
             this.xtraTabControlBase.SuspendLayout();
             this.xtraTabPageForm1.SuspendLayout();
@@ -410,6 +465,9 @@
             ((System.ComponentModel.ISupportInitialize)(this.gridViewDocuments)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.cmbProjectDocumentationIM.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.cmbEngineeringSurveysIM.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.memoExpertiseResultNote.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.cmbEcologyExpertiseNeedExpertise.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.memoEcologyExpertiseNote.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlGroup_I)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.tabbedControlGroup1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlGroup9)).BeginInit();
@@ -424,6 +482,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemExaminationStageNote)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemProjectDocumentationIM)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemEngineeringSurveysIM)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemExpertiseResultNote)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlGroup10)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlGroupEntity)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemSearch)).BeginInit();
@@ -441,6 +500,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlGroup11)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemDeclarant)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlGroup12)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemEcologyExpertiseNeedExpertise)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemEcologyExpertiseNote)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlGroup13)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemDocuments)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlGroup14)).BeginInit();
@@ -574,27 +635,27 @@
             this.xtraTabPageForm5.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControl3)).BeginInit();
             this.layoutControl3.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.memoEngineeringSurveySummary.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.memoEngineeringSurveySummaryDate.Properties)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.memoProjectDocumentsSummary.Properties)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.memoProjectDocumentsSummaryDate.Properties)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.memoEstimateNormsAndWorksSummary.Properties)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.memoEstimateSummary.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.checkCmbEngineeringSurveyType.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.cmbEngineeringSurveysSummary.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.cmbProjectDocumentationSummary.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.cmbEstimateNormsAndWorksSummary.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.cmbEstimateSummary.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.memoProjectDocumentsSummaryDate.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlGroup3)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemEngineeringSurveySummary)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemEngineeringSurveySummaryDate)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemProjectDocumentsSummary)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemProjectDocumentsSummaryDate)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemEngineeringSurveyType)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemEstimateNormsAndWorksSummary)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemEstimateSummary)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemEngineeringSurveyType)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemEngineeringSurveysSummary)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemProjectDocumentationSummary)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemEngineeringSurveySummaryDate)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemProjectDocumentsSummaryDate)).BeginInit();
             this.xtraTabPageForm6.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControl4)).BeginInit();
             this.layoutControl4.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.memoExaminationSummary.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.memoEstimateSummary1315.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlGroup4)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemExaminationSummary)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemEstimateSummary1315)).BeginInit();
             this.xtraTabPageForm7.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.gridControlExpert)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.gridViewExpert)).BeginInit();
@@ -624,12 +685,16 @@
             ((System.ComponentModel.ISupportInitialize)(this.popupMenuEngineeringSurveyTechnicalCustomer)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.popupMenuExpertEngineeringSurveys)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.popupMenuEngineeringSurveyAddress)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.memoExpertiseResultNote.Properties)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemExpertiseResultNote)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.cmbEcologyExpertiseNeedExpertise.Properties)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemEcologyExpertiseNeedExpertise)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.memoEcologyExpertiseNote.Properties)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemEcologyExpertiseNote)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.cmbEngineeringSurveysResultsSummary.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemEngineeringSurveysResultsSummary)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.cmbEstimateValidationSummary.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemEstimateValidationSummary)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.cmbProjectDocumentationEngineeringSurveysResultsSummary.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemProjectDocumentationEngineeringSurveysResultsSummary)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.cmbProjectDocumentationDesignAssignmentSummary.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemProjectDocumentationDesignAssignmentSummary)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.cmbProjectDocumentationTechnicalRequirementsSummary.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemProjectDocumentationTechnicalRequirementsSummary)).BeginInit();
             this.SuspendLayout();
             // 
             // xtraTabControlBase
@@ -1443,6 +1508,43 @@
             this.cmbEngineeringSurveysIM.TabIndex = 6;
             this.cmbEngineeringSurveysIM.ButtonPressed += new DevExpress.XtraEditors.Controls.ButtonPressedEventHandler(this.ClearEditValue);
             // 
+            // memoExpertiseResultNote
+            // 
+            this.memoExpertiseResultNote.EditValue = "Замечания отсутствуют";
+            this.memoExpertiseResultNote.Location = new System.Drawing.Point(393, 338);
+            this.memoExpertiseResultNote.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.memoExpertiseResultNote.Name = "memoExpertiseResultNote";
+            this.memoExpertiseResultNote.Properties.ScrollBars = System.Windows.Forms.ScrollBars.None;
+            this.memoExpertiseResultNote.Size = new System.Drawing.Size(378, 187);
+            this.memoExpertiseResultNote.StyleController = this.layoutControl_I;
+            this.memoExpertiseResultNote.TabIndex = 7;
+            // 
+            // cmbEcologyExpertiseNeedExpertise
+            // 
+            this.cmbEcologyExpertiseNeedExpertise.EditValue = "";
+            this.cmbEcologyExpertiseNeedExpertise.Location = new System.Drawing.Point(308, 105);
+            this.cmbEcologyExpertiseNeedExpertise.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.cmbEcologyExpertiseNeedExpertise.Name = "cmbEcologyExpertiseNeedExpertise";
+            this.cmbEcologyExpertiseNeedExpertise.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo),
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Ellipsis, "", -1, true, false, false, editorButtonImageOptions8, new DevExpress.Utils.KeyShortcut(System.Windows.Forms.Keys.None), serializableAppearanceObject29, serializableAppearanceObject30, serializableAppearanceObject31, serializableAppearanceObject32, "", null, null, DevExpress.Utils.ToolTipAnchor.Default),
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Delete)});
+            this.cmbEcologyExpertiseNeedExpertise.Properties.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.DisableTextEditor;
+            this.cmbEcologyExpertiseNeedExpertise.Size = new System.Drawing.Size(463, 20);
+            this.cmbEcologyExpertiseNeedExpertise.StyleController = this.layoutControl_I;
+            this.cmbEcologyExpertiseNeedExpertise.TabIndex = 6;
+            this.cmbEcologyExpertiseNeedExpertise.ButtonPressed += new DevExpress.XtraEditors.Controls.ButtonPressedEventHandler(this.ClearEditValue);
+            // 
+            // memoEcologyExpertiseNote
+            // 
+            this.memoEcologyExpertiseNote.Location = new System.Drawing.Point(13, 145);
+            this.memoEcologyExpertiseNote.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.memoEcologyExpertiseNote.Name = "memoEcologyExpertiseNote";
+            this.memoEcologyExpertiseNote.Properties.ScrollBars = System.Windows.Forms.ScrollBars.None;
+            this.memoEcologyExpertiseNote.Size = new System.Drawing.Size(758, 380);
+            this.memoEcologyExpertiseNote.StyleController = this.layoutControl_I;
+            this.memoEcologyExpertiseNote.TabIndex = 7;
+            // 
             // layoutControlGroup_I
             // 
             this.layoutControlGroup_I.EnableIndentsWithoutBorders = DevExpress.Utils.DefaultBoolean.True;
@@ -1607,6 +1709,18 @@
             this.layoutControlItemEngineeringSurveysIM.Text = "Сведения о подготовке отчетной документации о выполнении инженерных изысканий в ф" +
     "орме информационной модели";
             this.layoutControlItemEngineeringSurveysIM.TextSize = new System.Drawing.Size(620, 13);
+            // 
+            // layoutControlItemExpertiseResultNote
+            // 
+            this.layoutControlItemExpertiseResultNote.Control = this.memoExpertiseResultNote;
+            this.layoutControlItemExpertiseResultNote.ControlAlignment = System.Drawing.ContentAlignment.TopLeft;
+            this.layoutControlItemExpertiseResultNote.CustomizationFormText = "layoutControlItem9";
+            this.layoutControlItemExpertiseResultNote.Location = new System.Drawing.Point(380, 217);
+            this.layoutControlItemExpertiseResultNote.Name = "layoutControlItemExpertiseResultNote";
+            this.layoutControlItemExpertiseResultNote.Size = new System.Drawing.Size(382, 207);
+            this.layoutControlItemExpertiseResultNote.Text = "Примечание к результату экспертизы";
+            this.layoutControlItemExpertiseResultNote.TextLocation = DevExpress.Utils.Locations.Top;
+            this.layoutControlItemExpertiseResultNote.TextSize = new System.Drawing.Size(194, 13);
             // 
             // layoutControlGroup10
             // 
@@ -1811,6 +1925,29 @@
             this.layoutControlGroup12.Name = "layoutControlGroup12";
             this.layoutControlGroup12.Size = new System.Drawing.Size(762, 424);
             this.layoutControlGroup12.Text = "Сведения о положительном заключении государственной экологической экспертизы";
+            // 
+            // layoutControlItemEcologyExpertiseNeedExpertise
+            // 
+            this.layoutControlItemEcologyExpertiseNeedExpertise.Control = this.cmbEcologyExpertiseNeedExpertise;
+            this.layoutControlItemEcologyExpertiseNeedExpertise.ControlAlignment = System.Drawing.ContentAlignment.TopLeft;
+            this.layoutControlItemEcologyExpertiseNeedExpertise.CustomizationFormText = "Результат экспертизы *";
+            this.layoutControlItemEcologyExpertiseNeedExpertise.Location = new System.Drawing.Point(0, 0);
+            this.layoutControlItemEcologyExpertiseNeedExpertise.Name = "layoutControlItemEcologyExpertiseNeedExpertise";
+            this.layoutControlItemEcologyExpertiseNeedExpertise.Size = new System.Drawing.Size(762, 24);
+            this.layoutControlItemEcologyExpertiseNeedExpertise.Text = "Необходимость проведения экологической экспертизы";
+            this.layoutControlItemEcologyExpertiseNeedExpertise.TextSize = new System.Drawing.Size(283, 13);
+            // 
+            // layoutControlItemEcologyExpertiseNote
+            // 
+            this.layoutControlItemEcologyExpertiseNote.Control = this.memoEcologyExpertiseNote;
+            this.layoutControlItemEcologyExpertiseNote.ControlAlignment = System.Drawing.ContentAlignment.TopLeft;
+            this.layoutControlItemEcologyExpertiseNote.CustomizationFormText = "layoutControlItem9";
+            this.layoutControlItemEcologyExpertiseNote.Location = new System.Drawing.Point(0, 24);
+            this.layoutControlItemEcologyExpertiseNote.Name = "layoutControlItemEcologyExpertiseNote";
+            this.layoutControlItemEcologyExpertiseNote.Size = new System.Drawing.Size(762, 400);
+            this.layoutControlItemEcologyExpertiseNote.Text = "Обоснование необходимости";
+            this.layoutControlItemEcologyExpertiseNote.TextLocation = DevExpress.Utils.Locations.Top;
+            this.layoutControlItemEcologyExpertiseNote.TextSize = new System.Drawing.Size(148, 13);
             // 
             // layoutControlGroup13
             // 
@@ -3128,11 +3265,11 @@
             // gridControlMismatches
             // 
             this.gridControlMismatches.EmbeddedNavigator.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.gridControlMismatches.Location = new System.Drawing.Point(6, 244);
+            this.gridControlMismatches.Location = new System.Drawing.Point(6, 239);
             this.gridControlMismatches.MainView = this.gridViewMismatches;
             this.gridControlMismatches.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.gridControlMismatches.Name = "gridControlMismatches";
-            this.gridControlMismatches.Size = new System.Drawing.Size(790, 288);
+            this.gridControlMismatches.Size = new System.Drawing.Size(790, 276);
             this.gridControlMismatches.TabIndex = 8;
             this.gridControlMismatches.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
             this.gridViewMismatches});
@@ -3157,13 +3294,13 @@
             this.memoEstimateNorms.MenuManager = this.barManager;
             this.memoEstimateNorms.Name = "memoEstimateNorms";
             this.memoEstimateNorms.Properties.ScrollBars = System.Windows.Forms.ScrollBars.None;
-            this.memoEstimateNorms.Size = new System.Drawing.Size(790, 138);
+            this.memoEstimateNorms.Size = new System.Drawing.Size(790, 133);
             this.memoEstimateNorms.StyleController = this.layoutControl1;
             this.memoEstimateNorms.TabIndex = 4;
             // 
             // txtEstimatedCost
             // 
-            this.txtEstimatedCost.Location = new System.Drawing.Point(57, 164);
+            this.txtEstimatedCost.Location = new System.Drawing.Point(57, 159);
             this.txtEstimatedCost.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.txtEstimatedCost.MenuManager = this.barManager;
             this.txtEstimatedCost.Name = "txtEstimatedCost";
@@ -3173,7 +3310,7 @@
             // 
             // txtEstimatedCompleteCostBefore
             // 
-            this.txtEstimatedCompleteCostBefore.Location = new System.Drawing.Point(6, 204);
+            this.txtEstimatedCompleteCostBefore.Location = new System.Drawing.Point(6, 199);
             this.txtEstimatedCompleteCostBefore.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.txtEstimatedCompleteCostBefore.MenuManager = this.barManager;
             this.txtEstimatedCompleteCostBefore.Name = "txtEstimatedCompleteCostBefore";
@@ -3183,7 +3320,7 @@
             // 
             // txtEstimatedCompleteCostPost
             // 
-            this.txtEstimatedCompleteCostPost.Location = new System.Drawing.Point(456, 204);
+            this.txtEstimatedCompleteCostPost.Location = new System.Drawing.Point(456, 199);
             this.txtEstimatedCompleteCostPost.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.txtEstimatedCompleteCostPost.MenuManager = this.barManager;
             this.txtEstimatedCompleteCostPost.Name = "txtEstimatedCompleteCostPost";
@@ -3204,7 +3341,7 @@
             this.layoutControlGroup1.Name = "layoutControlGroup1";
             this.layoutControlGroup1.OptionsItemText.TextAlignMode = DevExpress.XtraLayout.TextAlignModeGroup.AutoSize;
             this.layoutControlGroup1.Padding = new DevExpress.XtraLayout.Utils.Padding(4, 4, 4, 4);
-            this.layoutControlGroup1.Size = new System.Drawing.Size(802, 538);
+            this.layoutControlGroup1.Size = new System.Drawing.Size(802, 521);
             this.layoutControlGroup1.TextVisible = false;
             // 
             // layoutControlItemEstimateNorms
@@ -3212,7 +3349,7 @@
             this.layoutControlItemEstimateNorms.Control = this.memoEstimateNorms;
             this.layoutControlItemEstimateNorms.Location = new System.Drawing.Point(0, 0);
             this.layoutControlItemEstimateNorms.Name = "layoutControlItemEstimateNorms";
-            this.layoutControlItemEstimateNorms.Size = new System.Drawing.Size(794, 158);
+            this.layoutControlItemEstimateNorms.Size = new System.Drawing.Size(794, 153);
             this.layoutControlItemEstimateNorms.Text = "Информация об использовании сметных нормативов";
             this.layoutControlItemEstimateNorms.TextLocation = DevExpress.Utils.Locations.Top;
             this.layoutControlItemEstimateNorms.TextSize = new System.Drawing.Size(266, 13);
@@ -3220,7 +3357,7 @@
             // layoutControlItemEstimatedCost
             // 
             this.layoutControlItemEstimatedCost.Control = this.txtEstimatedCost;
-            this.layoutControlItemEstimatedCost.Location = new System.Drawing.Point(0, 158);
+            this.layoutControlItemEstimatedCost.Location = new System.Drawing.Point(0, 153);
             this.layoutControlItemEstimatedCost.Name = "layoutControlItemEstimatedCost";
             this.layoutControlItemEstimatedCost.Size = new System.Drawing.Size(794, 24);
             this.layoutControlItemEstimatedCost.Text = "Валюта";
@@ -3229,7 +3366,7 @@
             // layoutControlItemEstimatedCompleteCostBefore
             // 
             this.layoutControlItemEstimatedCompleteCostBefore.Control = this.txtEstimatedCompleteCostBefore;
-            this.layoutControlItemEstimatedCompleteCostBefore.Location = new System.Drawing.Point(0, 182);
+            this.layoutControlItemEstimatedCompleteCostBefore.Location = new System.Drawing.Point(0, 177);
             this.layoutControlItemEstimatedCompleteCostBefore.Name = "layoutControlItemEstimatedCompleteCostBefore";
             this.layoutControlItemEstimatedCompleteCostBefore.Size = new System.Drawing.Size(450, 40);
             this.layoutControlItemEstimatedCompleteCostBefore.Text = "Сметная стоимость на дату представления документации для проведения экспертизы";
@@ -3239,7 +3376,7 @@
             // layoutControlItemEstimatedCompleteCostPost
             // 
             this.layoutControlItemEstimatedCompleteCostPost.Control = this.txtEstimatedCompleteCostPost;
-            this.layoutControlItemEstimatedCompleteCostPost.Location = new System.Drawing.Point(450, 182);
+            this.layoutControlItemEstimatedCompleteCostPost.Location = new System.Drawing.Point(450, 177);
             this.layoutControlItemEstimatedCompleteCostPost.Name = "layoutControlItemEstimatedCompleteCostPost";
             this.layoutControlItemEstimatedCompleteCostPost.Size = new System.Drawing.Size(344, 40);
             this.layoutControlItemEstimatedCompleteCostPost.Text = "Сметная стоимость на дату утверждения заключения экспертизы";
@@ -3249,9 +3386,9 @@
             // layoutControlItemMismatches
             // 
             this.layoutControlItemMismatches.Control = this.gridControlMismatches;
-            this.layoutControlItemMismatches.Location = new System.Drawing.Point(0, 222);
+            this.layoutControlItemMismatches.Location = new System.Drawing.Point(0, 217);
             this.layoutControlItemMismatches.Name = "layoutControlItemMismatches";
-            this.layoutControlItemMismatches.Size = new System.Drawing.Size(794, 308);
+            this.layoutControlItemMismatches.Size = new System.Drawing.Size(794, 296);
             this.layoutControlItemMismatches.Text = "Сведения о несоответствии сметной части проектной документации установленным треб" +
     "ованиям";
             this.layoutControlItemMismatches.TextLocation = DevExpress.Utils.Locations.Top;
@@ -3268,13 +3405,13 @@
             // layoutControl3
             // 
             this.layoutControl3.AllowCustomization = false;
-            this.layoutControl3.Controls.Add(this.memoEngineeringSurveySummary);
             this.layoutControl3.Controls.Add(this.memoEngineeringSurveySummaryDate);
-            this.layoutControl3.Controls.Add(this.memoProjectDocumentsSummary);
-            this.layoutControl3.Controls.Add(this.memoProjectDocumentsSummaryDate);
-            this.layoutControl3.Controls.Add(this.memoEstimateNormsAndWorksSummary);
-            this.layoutControl3.Controls.Add(this.memoEstimateSummary);
             this.layoutControl3.Controls.Add(this.checkCmbEngineeringSurveyType);
+            this.layoutControl3.Controls.Add(this.cmbEngineeringSurveysSummary);
+            this.layoutControl3.Controls.Add(this.cmbProjectDocumentationSummary);
+            this.layoutControl3.Controls.Add(this.cmbEstimateNormsAndWorksSummary);
+            this.layoutControl3.Controls.Add(this.cmbEstimateSummary);
+            this.layoutControl3.Controls.Add(this.memoProjectDocumentsSummaryDate);
             this.layoutControl3.Dock = System.Windows.Forms.DockStyle.Fill;
             this.layoutControl3.Location = new System.Drawing.Point(0, 0);
             this.layoutControl3.Name = "layoutControl3";
@@ -3283,69 +3420,19 @@
             this.layoutControl3.TabIndex = 0;
             this.layoutControl3.Text = "layoutControl3";
             // 
-            // memoEngineeringSurveySummary
-            // 
-            this.memoEngineeringSurveySummary.Location = new System.Drawing.Point(7, 23);
-            this.memoEngineeringSurveySummary.MenuManager = this.barManager;
-            this.memoEngineeringSurveySummary.Name = "memoEngineeringSurveySummary";
-            this.memoEngineeringSurveySummary.Properties.ScrollBars = System.Windows.Forms.ScrollBars.None;
-            this.memoEngineeringSurveySummary.Size = new System.Drawing.Size(770, 56);
-            this.memoEngineeringSurveySummary.StyleController = this.layoutControl3;
-            this.memoEngineeringSurveySummary.TabIndex = 4;
-            // 
             // memoEngineeringSurveySummaryDate
             // 
-            this.memoEngineeringSurveySummaryDate.Location = new System.Drawing.Point(7, 108);
+            this.memoEngineeringSurveySummaryDate.Location = new System.Drawing.Point(7, 72);
             this.memoEngineeringSurveySummaryDate.MenuManager = this.barManager;
             this.memoEngineeringSurveySummaryDate.Name = "memoEngineeringSurveySummaryDate";
             this.memoEngineeringSurveySummaryDate.Properties.ScrollBars = System.Windows.Forms.ScrollBars.None;
-            this.memoEngineeringSurveySummaryDate.Size = new System.Drawing.Size(770, 46);
+            this.memoEngineeringSurveySummaryDate.Size = new System.Drawing.Size(770, 52);
             this.memoEngineeringSurveySummaryDate.StyleController = this.layoutControl3;
             this.memoEngineeringSurveySummaryDate.TabIndex = 5;
             // 
-            // memoProjectDocumentsSummary
-            // 
-            this.memoProjectDocumentsSummary.Location = new System.Drawing.Point(7, 223);
-            this.memoProjectDocumentsSummary.MenuManager = this.barManager;
-            this.memoProjectDocumentsSummary.Name = "memoProjectDocumentsSummary";
-            this.memoProjectDocumentsSummary.Properties.ScrollBars = System.Windows.Forms.ScrollBars.None;
-            this.memoProjectDocumentsSummary.Size = new System.Drawing.Size(770, 55);
-            this.memoProjectDocumentsSummary.StyleController = this.layoutControl3;
-            this.memoProjectDocumentsSummary.TabIndex = 7;
-            // 
-            // memoProjectDocumentsSummaryDate
-            // 
-            this.memoProjectDocumentsSummaryDate.Location = new System.Drawing.Point(7, 307);
-            this.memoProjectDocumentsSummaryDate.MenuManager = this.barManager;
-            this.memoProjectDocumentsSummaryDate.Name = "memoProjectDocumentsSummaryDate";
-            this.memoProjectDocumentsSummaryDate.Properties.ScrollBars = System.Windows.Forms.ScrollBars.None;
-            this.memoProjectDocumentsSummaryDate.Size = new System.Drawing.Size(770, 55);
-            this.memoProjectDocumentsSummaryDate.StyleController = this.layoutControl3;
-            this.memoProjectDocumentsSummaryDate.TabIndex = 8;
-            // 
-            // memoEstimateNormsAndWorksSummary
-            // 
-            this.memoEstimateNormsAndWorksSummary.Location = new System.Drawing.Point(7, 391);
-            this.memoEstimateNormsAndWorksSummary.MenuManager = this.barManager;
-            this.memoEstimateNormsAndWorksSummary.Name = "memoEstimateNormsAndWorksSummary";
-            this.memoEstimateNormsAndWorksSummary.Properties.ScrollBars = System.Windows.Forms.ScrollBars.None;
-            this.memoEstimateNormsAndWorksSummary.Size = new System.Drawing.Size(770, 54);
-            this.memoEstimateNormsAndWorksSummary.StyleController = this.layoutControl3;
-            this.memoEstimateNormsAndWorksSummary.TabIndex = 9;
-            // 
-            // memoEstimateSummary
-            // 
-            this.memoEstimateSummary.Location = new System.Drawing.Point(7, 474);
-            this.memoEstimateSummary.MenuManager = this.barManager;
-            this.memoEstimateSummary.Name = "memoEstimateSummary";
-            this.memoEstimateSummary.Properties.ScrollBars = System.Windows.Forms.ScrollBars.None;
-            this.memoEstimateSummary.Size = new System.Drawing.Size(770, 57);
-            this.memoEstimateSummary.StyleController = this.layoutControl3;
-            this.memoEstimateSummary.TabIndex = 10;
-            // 
             // checkCmbEngineeringSurveyType
             // 
-            this.checkCmbEngineeringSurveyType.Location = new System.Drawing.Point(7, 174);
+            this.checkCmbEngineeringSurveyType.Location = new System.Drawing.Point(7, 144);
             this.checkCmbEngineeringSurveyType.Name = "checkCmbEngineeringSurveyType";
             this.checkCmbEngineeringSurveyType.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo),
@@ -3355,108 +3442,187 @@
             this.checkCmbEngineeringSurveyType.TabIndex = 4;
             this.checkCmbEngineeringSurveyType.ButtonPressed += new DevExpress.XtraEditors.Controls.ButtonPressedEventHandler(this.ClearEditValue);
             // 
+            // cmbEngineeringSurveysSummary
+            // 
+            this.cmbEngineeringSurveysSummary.EditValue = "";
+            this.cmbEngineeringSurveysSummary.Location = new System.Drawing.Point(7, 23);
+            this.cmbEngineeringSurveysSummary.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.cmbEngineeringSurveysSummary.Name = "cmbEngineeringSurveysSummary";
+            this.cmbEngineeringSurveysSummary.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo),
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Ellipsis, "", -1, true, false, false, editorButtonImageOptions12, new DevExpress.Utils.KeyShortcut(System.Windows.Forms.Keys.None), serializableAppearanceObject45, serializableAppearanceObject46, serializableAppearanceObject47, serializableAppearanceObject48, "", null, null, DevExpress.Utils.ToolTipAnchor.Default),
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Delete)});
+            this.cmbEngineeringSurveysSummary.Properties.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.DisableTextEditor;
+            this.cmbEngineeringSurveysSummary.Size = new System.Drawing.Size(770, 20);
+            this.cmbEngineeringSurveysSummary.StyleController = this.layoutControl3;
+            this.cmbEngineeringSurveysSummary.TabIndex = 6;
+            // 
+            // cmbProjectDocumentationSummary
+            // 
+            this.cmbProjectDocumentationSummary.EditValue = "";
+            this.cmbProjectDocumentationSummary.Location = new System.Drawing.Point(7, 193);
+            this.cmbProjectDocumentationSummary.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.cmbProjectDocumentationSummary.Name = "cmbProjectDocumentationSummary";
+            this.cmbProjectDocumentationSummary.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo),
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Ellipsis, "", -1, true, false, false, editorButtonImageOptions13, new DevExpress.Utils.KeyShortcut(System.Windows.Forms.Keys.None), serializableAppearanceObject49, serializableAppearanceObject50, serializableAppearanceObject51, serializableAppearanceObject52, "", null, null, DevExpress.Utils.ToolTipAnchor.Default),
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Delete)});
+            this.cmbProjectDocumentationSummary.Properties.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.DisableTextEditor;
+            this.cmbProjectDocumentationSummary.Size = new System.Drawing.Size(770, 20);
+            this.cmbProjectDocumentationSummary.StyleController = this.layoutControl3;
+            this.cmbProjectDocumentationSummary.TabIndex = 6;
+            // 
+            // cmbEstimateNormsAndWorksSummary
+            // 
+            this.cmbEstimateNormsAndWorksSummary.EditValue = "";
+            this.cmbEstimateNormsAndWorksSummary.Location = new System.Drawing.Point(7, 462);
+            this.cmbEstimateNormsAndWorksSummary.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.cmbEstimateNormsAndWorksSummary.Name = "cmbEstimateNormsAndWorksSummary";
+            this.cmbEstimateNormsAndWorksSummary.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo),
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Ellipsis, "", -1, true, false, false, editorButtonImageOptions14, new DevExpress.Utils.KeyShortcut(System.Windows.Forms.Keys.None), serializableAppearanceObject53, serializableAppearanceObject54, serializableAppearanceObject55, serializableAppearanceObject56, "", null, null, DevExpress.Utils.ToolTipAnchor.Default),
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Delete)});
+            this.cmbEstimateNormsAndWorksSummary.Properties.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.DisableTextEditor;
+            this.cmbEstimateNormsAndWorksSummary.Size = new System.Drawing.Size(770, 20);
+            this.cmbEstimateNormsAndWorksSummary.StyleController = this.layoutControl3;
+            this.cmbEstimateNormsAndWorksSummary.TabIndex = 6;
+            // 
+            // cmbEstimateSummary
+            // 
+            this.cmbEstimateSummary.EditValue = "";
+            this.cmbEstimateSummary.Location = new System.Drawing.Point(7, 511);
+            this.cmbEstimateSummary.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.cmbEstimateSummary.Name = "cmbEstimateSummary";
+            this.cmbEstimateSummary.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo),
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Ellipsis, "", -1, true, false, false, editorButtonImageOptions15, new DevExpress.Utils.KeyShortcut(System.Windows.Forms.Keys.None), serializableAppearanceObject57, serializableAppearanceObject58, serializableAppearanceObject59, serializableAppearanceObject60, "", null, null, DevExpress.Utils.ToolTipAnchor.Default),
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Delete)});
+            this.cmbEstimateSummary.Properties.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.DisableTextEditor;
+            this.cmbEstimateSummary.Size = new System.Drawing.Size(770, 20);
+            this.cmbEstimateSummary.StyleController = this.layoutControl3;
+            this.cmbEstimateSummary.TabIndex = 6;
+            // 
+            // memoProjectDocumentsSummaryDate
+            // 
+            this.memoProjectDocumentsSummaryDate.Location = new System.Drawing.Point(7, 242);
+            this.memoProjectDocumentsSummaryDate.Name = "memoProjectDocumentsSummaryDate";
+            this.memoProjectDocumentsSummaryDate.Properties.ScrollBars = System.Windows.Forms.ScrollBars.None;
+            this.memoProjectDocumentsSummaryDate.Size = new System.Drawing.Size(770, 191);
+            this.memoProjectDocumentsSummaryDate.StyleController = this.layoutControl3;
+            this.memoProjectDocumentsSummaryDate.TabIndex = 5;
+            // 
             // layoutControlGroup3
             // 
             this.layoutControlGroup3.EnableIndentsWithoutBorders = DevExpress.Utils.DefaultBoolean.True;
             this.layoutControlGroup3.GroupBordersVisible = false;
             this.layoutControlGroup3.Items.AddRange(new DevExpress.XtraLayout.BaseLayoutItem[] {
-            this.layoutControlItemEngineeringSurveySummary,
-            this.layoutControlItemEngineeringSurveySummaryDate,
-            this.layoutControlItemProjectDocumentsSummary,
-            this.layoutControlItemProjectDocumentsSummaryDate,
+            this.layoutControlItemEngineeringSurveyType,
             this.layoutControlItemEstimateNormsAndWorksSummary,
             this.layoutControlItemEstimateSummary,
-            this.layoutControlItemEngineeringSurveyType});
+            this.layoutControlItemEngineeringSurveysSummary,
+            this.layoutControlItemProjectDocumentationSummary,
+            this.layoutControlItemEngineeringSurveySummaryDate,
+            this.layoutControlItemProjectDocumentsSummaryDate});
             this.layoutControlGroup3.Name = "Root";
             this.layoutControlGroup3.Padding = new DevExpress.XtraLayout.Utils.Padding(5, 5, 5, 5);
             this.layoutControlGroup3.Size = new System.Drawing.Size(784, 538);
             this.layoutControlGroup3.TextVisible = false;
-            // 
-            // layoutControlItemEngineeringSurveySummary
-            // 
-            this.layoutControlItemEngineeringSurveySummary.Control = this.memoEngineeringSurveySummary;
-            this.layoutControlItemEngineeringSurveySummary.Location = new System.Drawing.Point(0, 0);
-            this.layoutControlItemEngineeringSurveySummary.Name = "layoutControlItemEngineeringSurveySummary";
-            this.layoutControlItemEngineeringSurveySummary.Size = new System.Drawing.Size(774, 76);
-            this.layoutControlItemEngineeringSurveySummary.Text = "Вывод о соответствии результатов инженерных изысканий требованиям технических рег" +
-    "ламентов";
-            this.layoutControlItemEngineeringSurveySummary.TextLocation = DevExpress.Utils.Locations.Top;
-            this.layoutControlItemEngineeringSurveySummary.TextSize = new System.Drawing.Size(553, 13);
-            // 
-            // layoutControlItemEngineeringSurveySummaryDate
-            // 
-            this.layoutControlItemEngineeringSurveySummaryDate.Control = this.memoEngineeringSurveySummaryDate;
-            this.layoutControlItemEngineeringSurveySummaryDate.Location = new System.Drawing.Point(0, 76);
-            this.layoutControlItemEngineeringSurveySummaryDate.Name = "layoutControlItemEngineeringSurveySummaryDate";
-            this.layoutControlItemEngineeringSurveySummaryDate.Size = new System.Drawing.Size(774, 75);
-            this.layoutControlItemEngineeringSurveySummaryDate.Text = resources.GetString("layoutControlItemEngineeringSurveySummaryDate.Text");
-            this.layoutControlItemEngineeringSurveySummaryDate.TextAlignMode = DevExpress.XtraLayout.TextAlignModeItem.CustomSize;
-            this.layoutControlItemEngineeringSurveySummaryDate.TextLocation = DevExpress.Utils.Locations.Top;
-            this.layoutControlItemEngineeringSurveySummaryDate.TextSize = new System.Drawing.Size(50, 20);
-            this.layoutControlItemEngineeringSurveySummaryDate.TextToControlDistance = 5;
-            // 
-            // layoutControlItemProjectDocumentsSummary
-            // 
-            this.layoutControlItemProjectDocumentsSummary.Control = this.memoProjectDocumentsSummary;
-            this.layoutControlItemProjectDocumentsSummary.Location = new System.Drawing.Point(0, 191);
-            this.layoutControlItemProjectDocumentsSummary.Name = "layoutControlItemProjectDocumentsSummary";
-            this.layoutControlItemProjectDocumentsSummary.Size = new System.Drawing.Size(774, 84);
-            this.layoutControlItemProjectDocumentsSummary.Text = "Вывод о соответствии технической части проектной документации результатам инженер" +
-    "ных изысканий, заданию застройщика или технического заказчика на проектирование " +
-    "и требованиям технических регламентов";
-            this.layoutControlItemProjectDocumentsSummary.TextAlignMode = DevExpress.XtraLayout.TextAlignModeItem.CustomSize;
-            this.layoutControlItemProjectDocumentsSummary.TextLocation = DevExpress.Utils.Locations.Top;
-            this.layoutControlItemProjectDocumentsSummary.TextSize = new System.Drawing.Size(50, 20);
-            this.layoutControlItemProjectDocumentsSummary.TextToControlDistance = 5;
-            // 
-            // layoutControlItemProjectDocumentsSummaryDate
-            // 
-            this.layoutControlItemProjectDocumentsSummaryDate.Control = this.memoProjectDocumentsSummaryDate;
-            this.layoutControlItemProjectDocumentsSummaryDate.Location = new System.Drawing.Point(0, 275);
-            this.layoutControlItemProjectDocumentsSummaryDate.Name = "layoutControlItemProjectDocumentsSummaryDate";
-            this.layoutControlItemProjectDocumentsSummaryDate.Size = new System.Drawing.Size(774, 84);
-            this.layoutControlItemProjectDocumentsSummaryDate.Text = resources.GetString("layoutControlItemProjectDocumentsSummaryDate.Text");
-            this.layoutControlItemProjectDocumentsSummaryDate.TextAlignMode = DevExpress.XtraLayout.TextAlignModeItem.CustomSize;
-            this.layoutControlItemProjectDocumentsSummaryDate.TextLocation = DevExpress.Utils.Locations.Top;
-            this.layoutControlItemProjectDocumentsSummaryDate.TextSize = new System.Drawing.Size(50, 20);
-            this.layoutControlItemProjectDocumentsSummaryDate.TextToControlDistance = 5;
-            // 
-            // layoutControlItemEstimateNormsAndWorksSummary
-            // 
-            this.layoutControlItemEstimateNormsAndWorksSummary.Control = this.memoEstimateNormsAndWorksSummary;
-            this.layoutControlItemEstimateNormsAndWorksSummary.Location = new System.Drawing.Point(0, 359);
-            this.layoutControlItemEstimateNormsAndWorksSummary.Name = "layoutControlItemEstimateNormsAndWorksSummary";
-            this.layoutControlItemEstimateNormsAndWorksSummary.Size = new System.Drawing.Size(774, 83);
-            this.layoutControlItemEstimateNormsAndWorksSummary.Text = resources.GetString("layoutControlItemEstimateNormsAndWorksSummary.Text");
-            this.layoutControlItemEstimateNormsAndWorksSummary.TextAlignMode = DevExpress.XtraLayout.TextAlignModeItem.CustomSize;
-            this.layoutControlItemEstimateNormsAndWorksSummary.TextLocation = DevExpress.Utils.Locations.Top;
-            this.layoutControlItemEstimateNormsAndWorksSummary.TextSize = new System.Drawing.Size(50, 20);
-            this.layoutControlItemEstimateNormsAndWorksSummary.TextToControlDistance = 5;
-            // 
-            // layoutControlItemEstimateSummary
-            // 
-            this.layoutControlItemEstimateSummary.Control = this.memoEstimateSummary;
-            this.layoutControlItemEstimateSummary.Location = new System.Drawing.Point(0, 442);
-            this.layoutControlItemEstimateSummary.Name = "layoutControlItemEstimateSummary";
-            this.layoutControlItemEstimateSummary.Size = new System.Drawing.Size(774, 86);
-            this.layoutControlItemEstimateSummary.Text = resources.GetString("layoutControlItemEstimateSummary.Text");
-            this.layoutControlItemEstimateSummary.TextAlignMode = DevExpress.XtraLayout.TextAlignModeItem.CustomSize;
-            this.layoutControlItemEstimateSummary.TextLocation = DevExpress.Utils.Locations.Top;
-            this.layoutControlItemEstimateSummary.TextSize = new System.Drawing.Size(50, 20);
-            this.layoutControlItemEstimateSummary.TextToControlDistance = 5;
             // 
             // layoutControlItemEngineeringSurveyType
             // 
             this.layoutControlItemEngineeringSurveyType.Control = this.checkCmbEngineeringSurveyType;
             this.layoutControlItemEngineeringSurveyType.ControlAlignment = System.Drawing.ContentAlignment.TopLeft;
             this.layoutControlItemEngineeringSurveyType.CustomizationFormText = "Климатический район (подрайон)";
-            this.layoutControlItemEngineeringSurveyType.Location = new System.Drawing.Point(0, 151);
+            this.layoutControlItemEngineeringSurveyType.Location = new System.Drawing.Point(0, 121);
             this.layoutControlItemEngineeringSurveyType.Name = "layoutControlItemEngineeringSurveyType";
             this.layoutControlItemEngineeringSurveyType.Size = new System.Drawing.Size(774, 40);
             this.layoutControlItemEngineeringSurveyType.Text = "Вид инженерных изысканий, на соответствие которым проводилась экспертиза проектно" +
     "й документации *";
             this.layoutControlItemEngineeringSurveyType.TextLocation = DevExpress.Utils.Locations.Top;
             this.layoutControlItemEngineeringSurveyType.TextSize = new System.Drawing.Size(553, 13);
+            // 
+            // layoutControlItemEstimateNormsAndWorksSummary
+            // 
+            this.layoutControlItemEstimateNormsAndWorksSummary.Control = this.cmbEstimateNormsAndWorksSummary;
+            this.layoutControlItemEstimateNormsAndWorksSummary.ControlAlignment = System.Drawing.ContentAlignment.TopLeft;
+            this.layoutControlItemEstimateNormsAndWorksSummary.CustomizationFormText = "Результат экспертизы *";
+            this.layoutControlItemEstimateNormsAndWorksSummary.Location = new System.Drawing.Point(0, 430);
+            this.layoutControlItemEstimateNormsAndWorksSummary.Name = "layoutControlItemEstimateNormsAndWorksSummary";
+            this.layoutControlItemEstimateNormsAndWorksSummary.Size = new System.Drawing.Size(774, 49);
+            this.layoutControlItemEstimateNormsAndWorksSummary.Text = resources.GetString("layoutControlItemEstimateNormsAndWorksSummary.Text");
+            this.layoutControlItemEstimateNormsAndWorksSummary.TextAlignMode = DevExpress.XtraLayout.TextAlignModeItem.CustomSize;
+            this.layoutControlItemEstimateNormsAndWorksSummary.TextLocation = DevExpress.Utils.Locations.Top;
+            this.layoutControlItemEstimateNormsAndWorksSummary.TextSize = new System.Drawing.Size(124, 13);
+            this.layoutControlItemEstimateNormsAndWorksSummary.TextToControlDistance = 12;
+            // 
+            // layoutControlItemEstimateSummary
+            // 
+            this.layoutControlItemEstimateSummary.Control = this.cmbEstimateSummary;
+            this.layoutControlItemEstimateSummary.ControlAlignment = System.Drawing.ContentAlignment.TopLeft;
+            this.layoutControlItemEstimateSummary.CustomizationFormText = "Результат экспертизы *";
+            this.layoutControlItemEstimateSummary.Location = new System.Drawing.Point(0, 479);
+            this.layoutControlItemEstimateSummary.Name = "layoutControlItemEstimateSummary";
+            this.layoutControlItemEstimateSummary.Size = new System.Drawing.Size(774, 49);
+            this.layoutControlItemEstimateSummary.Text = resources.GetString("layoutControlItemEstimateSummary.Text");
+            this.layoutControlItemEstimateSummary.TextAlignMode = DevExpress.XtraLayout.TextAlignModeItem.CustomSize;
+            this.layoutControlItemEstimateSummary.TextLocation = DevExpress.Utils.Locations.Top;
+            this.layoutControlItemEstimateSummary.TextSize = new System.Drawing.Size(124, 13);
+            this.layoutControlItemEstimateSummary.TextToControlDistance = 12;
+            // 
+            // layoutControlItemEngineeringSurveysSummary
+            // 
+            this.layoutControlItemEngineeringSurveysSummary.Control = this.cmbEngineeringSurveysSummary;
+            this.layoutControlItemEngineeringSurveysSummary.ControlAlignment = System.Drawing.ContentAlignment.TopLeft;
+            this.layoutControlItemEngineeringSurveysSummary.CustomizationFormText = "Результат экспертизы *";
+            this.layoutControlItemEngineeringSurveysSummary.Location = new System.Drawing.Point(0, 0);
+            this.layoutControlItemEngineeringSurveysSummary.Name = "layoutControlItemEngineeringSurveysSummary";
+            this.layoutControlItemEngineeringSurveysSummary.Size = new System.Drawing.Size(774, 40);
+            this.layoutControlItemEngineeringSurveysSummary.Text = "Вывод о соответствии результатов инженерных изысканий требованиям технических рег" +
+    "ламентов *";
+            this.layoutControlItemEngineeringSurveysSummary.TextLocation = DevExpress.Utils.Locations.Top;
+            this.layoutControlItemEngineeringSurveysSummary.TextSize = new System.Drawing.Size(553, 13);
+            // 
+            // layoutControlItemProjectDocumentationSummary
+            // 
+            this.layoutControlItemProjectDocumentationSummary.Control = this.cmbProjectDocumentationSummary;
+            this.layoutControlItemProjectDocumentationSummary.ControlAlignment = System.Drawing.ContentAlignment.TopLeft;
+            this.layoutControlItemProjectDocumentationSummary.CustomizationFormText = "Результат экспертизы *";
+            this.layoutControlItemProjectDocumentationSummary.Location = new System.Drawing.Point(0, 161);
+            this.layoutControlItemProjectDocumentationSummary.Name = "layoutControlItemProjectDocumentationSummary";
+            this.layoutControlItemProjectDocumentationSummary.Size = new System.Drawing.Size(774, 49);
+            this.layoutControlItemProjectDocumentationSummary.Text = "Вывод о соответствии технической части проектной документации результатам инженер" +
+    "ных изысканий, заданию застройщика или технического заказчика на проектирование " +
+    "и требованиям технических регламентов *";
+            this.layoutControlItemProjectDocumentationSummary.TextAlignMode = DevExpress.XtraLayout.TextAlignModeItem.CustomSize;
+            this.layoutControlItemProjectDocumentationSummary.TextLocation = DevExpress.Utils.Locations.Top;
+            this.layoutControlItemProjectDocumentationSummary.TextSize = new System.Drawing.Size(124, 13);
+            this.layoutControlItemProjectDocumentationSummary.TextToControlDistance = 12;
+            // 
+            // layoutControlItemEngineeringSurveySummaryDate
+            // 
+            this.layoutControlItemEngineeringSurveySummaryDate.Control = this.memoEngineeringSurveySummaryDate;
+            this.layoutControlItemEngineeringSurveySummaryDate.Location = new System.Drawing.Point(0, 40);
+            this.layoutControlItemEngineeringSurveySummaryDate.Name = "layoutControlItemEngineeringSurveySummaryDate";
+            this.layoutControlItemEngineeringSurveySummaryDate.Size = new System.Drawing.Size(774, 81);
+            this.layoutControlItemEngineeringSurveySummaryDate.Text = resources.GetString("layoutControlItemEngineeringSurveySummaryDate.Text");
+            this.layoutControlItemEngineeringSurveySummaryDate.TextAlignMode = DevExpress.XtraLayout.TextAlignModeItem.CustomSize;
+            this.layoutControlItemEngineeringSurveySummaryDate.TextLocation = DevExpress.Utils.Locations.Top;
+            this.layoutControlItemEngineeringSurveySummaryDate.TextSize = new System.Drawing.Size(50, 20);
+            this.layoutControlItemEngineeringSurveySummaryDate.TextToControlDistance = 5;
+            // 
+            // layoutControlItemProjectDocumentsSummaryDate
+            // 
+            this.layoutControlItemProjectDocumentsSummaryDate.Control = this.memoProjectDocumentsSummaryDate;
+            this.layoutControlItemProjectDocumentsSummaryDate.ControlAlignment = System.Drawing.ContentAlignment.TopLeft;
+            this.layoutControlItemProjectDocumentsSummaryDate.CustomizationFormText = resources.GetString("layoutControlItemProjectDocumentsSummaryDate.CustomizationFormText");
+            this.layoutControlItemProjectDocumentsSummaryDate.Location = new System.Drawing.Point(0, 210);
+            this.layoutControlItemProjectDocumentsSummaryDate.Name = "layoutControlItemProjectDocumentsSummaryDate";
+            this.layoutControlItemProjectDocumentsSummaryDate.Size = new System.Drawing.Size(774, 220);
+            this.layoutControlItemProjectDocumentsSummaryDate.Text = resources.GetString("layoutControlItemProjectDocumentsSummaryDate.Text");
+            this.layoutControlItemProjectDocumentsSummaryDate.TextAlignMode = DevExpress.XtraLayout.TextAlignModeItem.CustomSize;
+            this.layoutControlItemProjectDocumentsSummaryDate.TextLocation = DevExpress.Utils.Locations.Top;
+            this.layoutControlItemProjectDocumentsSummaryDate.TextSize = new System.Drawing.Size(50, 20);
+            this.layoutControlItemProjectDocumentsSummaryDate.TextToControlDistance = 5;
             // 
             // xtraTabPageForm6
             // 
@@ -3469,7 +3635,12 @@
             // layoutControl4
             // 
             this.layoutControl4.AllowCustomization = false;
-            this.layoutControl4.Controls.Add(this.memoExaminationSummary);
+            this.layoutControl4.Controls.Add(this.memoEstimateSummary1315);
+            this.layoutControl4.Controls.Add(this.cmbEngineeringSurveysResultsSummary);
+            this.layoutControl4.Controls.Add(this.cmbEstimateValidationSummary);
+            this.layoutControl4.Controls.Add(this.cmbProjectDocumentationEngineeringSurveysResultsSummary);
+            this.layoutControl4.Controls.Add(this.cmbProjectDocumentationDesignAssignmentSummary);
+            this.layoutControl4.Controls.Add(this.cmbProjectDocumentationTechnicalRequirementsSummary);
             this.layoutControl4.Dock = System.Windows.Forms.DockStyle.Fill;
             this.layoutControl4.Location = new System.Drawing.Point(0, 0);
             this.layoutControl4.Name = "layoutControl4";
@@ -3478,39 +3649,45 @@
             this.layoutControl4.TabIndex = 0;
             this.layoutControl4.Text = "layoutControl4";
             // 
-            // memoExaminationSummary
+            // memoEstimateSummary1315
             // 
-            this.memoExaminationSummary.Location = new System.Drawing.Point(7, 32);
-            this.memoExaminationSummary.Name = "memoExaminationSummary";
-            this.memoExaminationSummary.Properties.ScrollBars = System.Windows.Forms.ScrollBars.None;
-            this.memoExaminationSummary.Size = new System.Drawing.Size(770, 499);
-            this.memoExaminationSummary.StyleController = this.layoutControl4;
-            this.memoExaminationSummary.TabIndex = 11;
+            this.memoEstimateSummary1315.Location = new System.Drawing.Point(7, 130);
+            this.memoEstimateSummary1315.Name = "memoEstimateSummary1315";
+            this.memoEstimateSummary1315.Properties.ScrollBars = System.Windows.Forms.ScrollBars.None;
+            this.memoEstimateSummary1315.Size = new System.Drawing.Size(770, 254);
+            this.memoEstimateSummary1315.StyleController = this.layoutControl4;
+            this.memoEstimateSummary1315.TabIndex = 11;
             // 
             // layoutControlGroup4
             // 
             this.layoutControlGroup4.EnableIndentsWithoutBorders = DevExpress.Utils.DefaultBoolean.True;
             this.layoutControlGroup4.GroupBordersVisible = false;
             this.layoutControlGroup4.Items.AddRange(new DevExpress.XtraLayout.BaseLayoutItem[] {
-            this.layoutControlItemExaminationSummary});
+            this.layoutControlItemEstimateSummary1315,
+            this.layoutControlItemProjectDocumentationEngineeringSurveysResultsSummary,
+            this.layoutControlItemProjectDocumentationDesignAssignmentSummary,
+            this.layoutControlItemProjectDocumentationTechnicalRequirementsSummary,
+            this.layoutControlItemEngineeringSurveysResultsSummary,
+            this.layoutControlItemEstimateValidationSummary});
             this.layoutControlGroup4.Name = "layoutControlGroup4";
             this.layoutControlGroup4.Padding = new DevExpress.XtraLayout.Utils.Padding(5, 5, 5, 5);
             this.layoutControlGroup4.Size = new System.Drawing.Size(784, 538);
             this.layoutControlGroup4.TextVisible = false;
             // 
-            // layoutControlItemExaminationSummary
+            // layoutControlItemEstimateSummary1315
             // 
-            this.layoutControlItemExaminationSummary.Control = this.memoExaminationSummary;
-            this.layoutControlItemExaminationSummary.ControlAlignment = System.Drawing.ContentAlignment.TopLeft;
-            this.layoutControlItemExaminationSummary.CustomizationFormText = "Общие выводы (итоговые выводы по результатам проведенной экспертизы)";
-            this.layoutControlItemExaminationSummary.Location = new System.Drawing.Point(0, 0);
-            this.layoutControlItemExaminationSummary.Name = "layoutControlItemExaminationSummary";
-            this.layoutControlItemExaminationSummary.Size = new System.Drawing.Size(774, 528);
-            this.layoutControlItemExaminationSummary.Text = "Общие выводы (итоговые выводы по результатам проведенной экспертизы) *";
-            this.layoutControlItemExaminationSummary.TextAlignMode = DevExpress.XtraLayout.TextAlignModeItem.CustomSize;
-            this.layoutControlItemExaminationSummary.TextLocation = DevExpress.Utils.Locations.Top;
-            this.layoutControlItemExaminationSummary.TextSize = new System.Drawing.Size(50, 20);
-            this.layoutControlItemExaminationSummary.TextToControlDistance = 5;
+            this.layoutControlItemEstimateSummary1315.Control = this.memoEstimateSummary1315;
+            this.layoutControlItemEstimateSummary1315.ControlAlignment = System.Drawing.ContentAlignment.TopLeft;
+            this.layoutControlItemEstimateSummary1315.CustomizationFormText = "Общие выводы (итоговые выводы по результатам проведенной экспертизы)";
+            this.layoutControlItemEstimateSummary1315.Location = new System.Drawing.Point(0, 98);
+            this.layoutControlItemEstimateSummary1315.Name = "layoutControlItemEstimateSummary1315";
+            this.layoutControlItemEstimateSummary1315.Size = new System.Drawing.Size(774, 283);
+            this.layoutControlItemEstimateSummary1315.Text = "Вывод об оценке достоверности определения сметной стоимости. (при оценке в соотве" +
+    "тствии с постановлением Правительства Российской Федерации от 09.08.2021 №1315";
+            this.layoutControlItemEstimateSummary1315.TextAlignMode = DevExpress.XtraLayout.TextAlignModeItem.CustomSize;
+            this.layoutControlItemEstimateSummary1315.TextLocation = DevExpress.Utils.Locations.Top;
+            this.layoutControlItemEstimateSummary1315.TextSize = new System.Drawing.Size(50, 20);
+            this.layoutControlItemEstimateSummary1315.TextToControlDistance = 5;
             // 
             // xtraTabPageForm7
             // 
@@ -3814,77 +3991,152 @@
             this.popupMenuEngineeringSurveyAddress.Manager = this.barManager;
             this.popupMenuEngineeringSurveyAddress.Name = "popupMenuEngineeringSurveyAddress";
             // 
-            // memoExpertiseResultNote
+            // cmbEngineeringSurveysResultsSummary
             // 
-            this.memoExpertiseResultNote.EditValue = "Замечания отсутствуют";
-            this.memoExpertiseResultNote.Location = new System.Drawing.Point(393, 338);
-            this.memoExpertiseResultNote.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.memoExpertiseResultNote.Name = "memoExpertiseResultNote";
-            this.memoExpertiseResultNote.Properties.ScrollBars = System.Windows.Forms.ScrollBars.None;
-            this.memoExpertiseResultNote.Size = new System.Drawing.Size(378, 187);
-            this.memoExpertiseResultNote.StyleController = this.layoutControl_I;
-            this.memoExpertiseResultNote.TabIndex = 7;
-            // 
-            // layoutControlItemExpertiseResultNote
-            // 
-            this.layoutControlItemExpertiseResultNote.Control = this.memoExpertiseResultNote;
-            this.layoutControlItemExpertiseResultNote.ControlAlignment = System.Drawing.ContentAlignment.TopLeft;
-            this.layoutControlItemExpertiseResultNote.CustomizationFormText = "layoutControlItem9";
-            this.layoutControlItemExpertiseResultNote.Location = new System.Drawing.Point(380, 217);
-            this.layoutControlItemExpertiseResultNote.Name = "layoutControlItemExpertiseResultNote";
-            this.layoutControlItemExpertiseResultNote.Size = new System.Drawing.Size(382, 207);
-            this.layoutControlItemExpertiseResultNote.Text = "Примечание к результату экспертизы";
-            this.layoutControlItemExpertiseResultNote.TextLocation = DevExpress.Utils.Locations.Top;
-            this.layoutControlItemExpertiseResultNote.TextSize = new System.Drawing.Size(194, 13);
-            // 
-            // cmbEcologyExpertiseNeedExpertise
-            // 
-            this.cmbEcologyExpertiseNeedExpertise.EditValue = "";
-            this.cmbEcologyExpertiseNeedExpertise.Location = new System.Drawing.Point(308, 105);
-            this.cmbEcologyExpertiseNeedExpertise.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.cmbEcologyExpertiseNeedExpertise.Name = "cmbEcologyExpertiseNeedExpertise";
-            this.cmbEcologyExpertiseNeedExpertise.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
+            this.cmbEngineeringSurveysResultsSummary.EditValue = "";
+            this.cmbEngineeringSurveysResultsSummary.Location = new System.Drawing.Point(7, 32);
+            this.cmbEngineeringSurveysResultsSummary.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.cmbEngineeringSurveysResultsSummary.Name = "cmbEngineeringSurveysResultsSummary";
+            this.cmbEngineeringSurveysResultsSummary.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo),
-            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Ellipsis, "", -1, true, false, false, editorButtonImageOptions8, new DevExpress.Utils.KeyShortcut(System.Windows.Forms.Keys.None), serializableAppearanceObject29, serializableAppearanceObject30, serializableAppearanceObject31, serializableAppearanceObject32, "", null, null, DevExpress.Utils.ToolTipAnchor.Default),
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Ellipsis, "", -1, true, false, false, editorButtonImageOptions16, new DevExpress.Utils.KeyShortcut(System.Windows.Forms.Keys.None), serializableAppearanceObject61, serializableAppearanceObject62, serializableAppearanceObject63, serializableAppearanceObject64, "", null, null, DevExpress.Utils.ToolTipAnchor.Default),
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Delete)});
-            this.cmbEcologyExpertiseNeedExpertise.Properties.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.DisableTextEditor;
-            this.cmbEcologyExpertiseNeedExpertise.Size = new System.Drawing.Size(463, 20);
-            this.cmbEcologyExpertiseNeedExpertise.StyleController = this.layoutControl_I;
-            this.cmbEcologyExpertiseNeedExpertise.TabIndex = 6;
-            this.cmbEcologyExpertiseNeedExpertise.ButtonPressed += new DevExpress.XtraEditors.Controls.ButtonPressedEventHandler(this.ClearEditValue);
+            this.cmbEngineeringSurveysResultsSummary.Properties.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.DisableTextEditor;
+            this.cmbEngineeringSurveysResultsSummary.Size = new System.Drawing.Size(770, 20);
+            this.cmbEngineeringSurveysResultsSummary.StyleController = this.layoutControl4;
+            this.cmbEngineeringSurveysResultsSummary.TabIndex = 6;
             // 
-            // layoutControlItemEcologyExpertiseNeedExpertise
+            // layoutControlItemEngineeringSurveysResultsSummary
             // 
-            this.layoutControlItemEcologyExpertiseNeedExpertise.Control = this.cmbEcologyExpertiseNeedExpertise;
-            this.layoutControlItemEcologyExpertiseNeedExpertise.ControlAlignment = System.Drawing.ContentAlignment.TopLeft;
-            this.layoutControlItemEcologyExpertiseNeedExpertise.CustomizationFormText = "Результат экспертизы *";
-            this.layoutControlItemEcologyExpertiseNeedExpertise.Location = new System.Drawing.Point(0, 0);
-            this.layoutControlItemEcologyExpertiseNeedExpertise.Name = "layoutControlItemEcologyExpertiseNeedExpertise";
-            this.layoutControlItemEcologyExpertiseNeedExpertise.Size = new System.Drawing.Size(762, 24);
-            this.layoutControlItemEcologyExpertiseNeedExpertise.Text = "Необходимость проведения экологической экспертизы";
-            this.layoutControlItemEcologyExpertiseNeedExpertise.TextSize = new System.Drawing.Size(283, 13);
+            this.layoutControlItemEngineeringSurveysResultsSummary.Control = this.cmbEngineeringSurveysResultsSummary;
+            this.layoutControlItemEngineeringSurveysResultsSummary.ControlAlignment = System.Drawing.ContentAlignment.TopLeft;
+            this.layoutControlItemEngineeringSurveysResultsSummary.CustomizationFormText = "Результат экспертизы *";
+            this.layoutControlItemEngineeringSurveysResultsSummary.Location = new System.Drawing.Point(0, 0);
+            this.layoutControlItemEngineeringSurveysResultsSummary.Name = "layoutControlItemEngineeringSurveysResultsSummary";
+            this.layoutControlItemEngineeringSurveysResultsSummary.Size = new System.Drawing.Size(774, 49);
+            this.layoutControlItemEngineeringSurveysResultsSummary.Text = "Вывод об оценке результатов инженерных изысканий.";
+            this.layoutControlItemEngineeringSurveysResultsSummary.TextAlignMode = DevExpress.XtraLayout.TextAlignModeItem.CustomSize;
+            this.layoutControlItemEngineeringSurveysResultsSummary.TextLocation = DevExpress.Utils.Locations.Top;
+            this.layoutControlItemEngineeringSurveysResultsSummary.TextSize = new System.Drawing.Size(124, 13);
+            this.layoutControlItemEngineeringSurveysResultsSummary.TextToControlDistance = 12;
             // 
-            // memoEcologyExpertiseNote
+            // cmbEstimateValidationSummary
             // 
-            this.memoEcologyExpertiseNote.Location = new System.Drawing.Point(13, 145);
-            this.memoEcologyExpertiseNote.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.memoEcologyExpertiseNote.Name = "memoEcologyExpertiseNote";
-            this.memoEcologyExpertiseNote.Properties.ScrollBars = System.Windows.Forms.ScrollBars.None;
-            this.memoEcologyExpertiseNote.Size = new System.Drawing.Size(758, 380);
-            this.memoEcologyExpertiseNote.StyleController = this.layoutControl_I;
-            this.memoEcologyExpertiseNote.TabIndex = 7;
+            this.cmbEstimateValidationSummary.EditValue = "";
+            this.cmbEstimateValidationSummary.Location = new System.Drawing.Point(7, 81);
+            this.cmbEstimateValidationSummary.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.cmbEstimateValidationSummary.Name = "cmbEstimateValidationSummary";
+            this.cmbEstimateValidationSummary.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo),
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Ellipsis, "", -1, true, false, false, editorButtonImageOptions17, new DevExpress.Utils.KeyShortcut(System.Windows.Forms.Keys.None), serializableAppearanceObject65, serializableAppearanceObject66, serializableAppearanceObject67, serializableAppearanceObject68, "", null, null, DevExpress.Utils.ToolTipAnchor.Default),
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Delete)});
+            this.cmbEstimateValidationSummary.Properties.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.DisableTextEditor;
+            this.cmbEstimateValidationSummary.Size = new System.Drawing.Size(770, 20);
+            this.cmbEstimateValidationSummary.StyleController = this.layoutControl4;
+            this.cmbEstimateValidationSummary.TabIndex = 6;
             // 
-            // layoutControlItemEcologyExpertiseNote
+            // layoutControlItemEstimateValidationSummary
             // 
-            this.layoutControlItemEcologyExpertiseNote.Control = this.memoEcologyExpertiseNote;
-            this.layoutControlItemEcologyExpertiseNote.ControlAlignment = System.Drawing.ContentAlignment.TopLeft;
-            this.layoutControlItemEcologyExpertiseNote.CustomizationFormText = "layoutControlItem9";
-            this.layoutControlItemEcologyExpertiseNote.Location = new System.Drawing.Point(0, 24);
-            this.layoutControlItemEcologyExpertiseNote.Name = "layoutControlItemEcologyExpertiseNote";
-            this.layoutControlItemEcologyExpertiseNote.Size = new System.Drawing.Size(762, 400);
-            this.layoutControlItemEcologyExpertiseNote.Text = "Обоснование необходимости";
-            this.layoutControlItemEcologyExpertiseNote.TextLocation = DevExpress.Utils.Locations.Top;
-            this.layoutControlItemEcologyExpertiseNote.TextSize = new System.Drawing.Size(148, 13);
+            this.layoutControlItemEstimateValidationSummary.Control = this.cmbEstimateValidationSummary;
+            this.layoutControlItemEstimateValidationSummary.ControlAlignment = System.Drawing.ContentAlignment.TopLeft;
+            this.layoutControlItemEstimateValidationSummary.CustomizationFormText = "Результат экспертизы *";
+            this.layoutControlItemEstimateValidationSummary.Location = new System.Drawing.Point(0, 49);
+            this.layoutControlItemEstimateValidationSummary.Name = "layoutControlItemEstimateValidationSummary";
+            this.layoutControlItemEstimateValidationSummary.Size = new System.Drawing.Size(774, 49);
+            this.layoutControlItemEstimateValidationSummary.Text = "Вывод об оценке достоверности определения сметной стоимости.";
+            this.layoutControlItemEstimateValidationSummary.TextAlignMode = DevExpress.XtraLayout.TextAlignModeItem.CustomSize;
+            this.layoutControlItemEstimateValidationSummary.TextLocation = DevExpress.Utils.Locations.Top;
+            this.layoutControlItemEstimateValidationSummary.TextSize = new System.Drawing.Size(124, 13);
+            this.layoutControlItemEstimateValidationSummary.TextToControlDistance = 12;
+            // 
+            // cmbProjectDocumentationEngineeringSurveysResultsSummary
+            // 
+            this.cmbProjectDocumentationEngineeringSurveysResultsSummary.EditValue = "";
+            this.cmbProjectDocumentationEngineeringSurveysResultsSummary.Location = new System.Drawing.Point(7, 413);
+            this.cmbProjectDocumentationEngineeringSurveysResultsSummary.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.cmbProjectDocumentationEngineeringSurveysResultsSummary.Name = "cmbProjectDocumentationEngineeringSurveysResultsSummary";
+            this.cmbProjectDocumentationEngineeringSurveysResultsSummary.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo),
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Ellipsis, "", -1, true, false, false, editorButtonImageOptions18, new DevExpress.Utils.KeyShortcut(System.Windows.Forms.Keys.None), serializableAppearanceObject69, serializableAppearanceObject70, serializableAppearanceObject71, serializableAppearanceObject72, "", null, null, DevExpress.Utils.ToolTipAnchor.Default),
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Delete)});
+            this.cmbProjectDocumentationEngineeringSurveysResultsSummary.Properties.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.DisableTextEditor;
+            this.cmbProjectDocumentationEngineeringSurveysResultsSummary.Size = new System.Drawing.Size(770, 20);
+            this.cmbProjectDocumentationEngineeringSurveysResultsSummary.StyleController = this.layoutControl4;
+            this.cmbProjectDocumentationEngineeringSurveysResultsSummary.TabIndex = 6;
+            // 
+            // layoutControlItemProjectDocumentationEngineeringSurveysResultsSummary
+            // 
+            this.layoutControlItemProjectDocumentationEngineeringSurveysResultsSummary.Control = this.cmbProjectDocumentationEngineeringSurveysResultsSummary;
+            this.layoutControlItemProjectDocumentationEngineeringSurveysResultsSummary.ControlAlignment = System.Drawing.ContentAlignment.TopLeft;
+            this.layoutControlItemProjectDocumentationEngineeringSurveysResultsSummary.CustomizationFormText = "Результат экспертизы *";
+            this.layoutControlItemProjectDocumentationEngineeringSurveysResultsSummary.Location = new System.Drawing.Point(0, 381);
+            this.layoutControlItemProjectDocumentationEngineeringSurveysResultsSummary.Name = "layoutControlItemProjectDocumentationEngineeringSurveysResultsSummary";
+            this.layoutControlItemProjectDocumentationEngineeringSurveysResultsSummary.Size = new System.Drawing.Size(774, 49);
+            this.layoutControlItemProjectDocumentationEngineeringSurveysResultsSummary.Text = "Вывод об оценке проектной документации на соответсвие инженерным изысканиям.";
+            this.layoutControlItemProjectDocumentationEngineeringSurveysResultsSummary.TextAlignMode = DevExpress.XtraLayout.TextAlignModeItem.CustomSize;
+            this.layoutControlItemProjectDocumentationEngineeringSurveysResultsSummary.TextLocation = DevExpress.Utils.Locations.Top;
+            this.layoutControlItemProjectDocumentationEngineeringSurveysResultsSummary.TextSize = new System.Drawing.Size(124, 13);
+            this.layoutControlItemProjectDocumentationEngineeringSurveysResultsSummary.TextToControlDistance = 12;
+            // 
+            // cmbProjectDocumentationDesignAssignmentSummary
+            // 
+            this.cmbProjectDocumentationDesignAssignmentSummary.EditValue = "";
+            this.cmbProjectDocumentationDesignAssignmentSummary.Location = new System.Drawing.Point(7, 462);
+            this.cmbProjectDocumentationDesignAssignmentSummary.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.cmbProjectDocumentationDesignAssignmentSummary.Name = "cmbProjectDocumentationDesignAssignmentSummary";
+            this.cmbProjectDocumentationDesignAssignmentSummary.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo),
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Ellipsis, "", -1, true, false, false, editorButtonImageOptions19, new DevExpress.Utils.KeyShortcut(System.Windows.Forms.Keys.None), serializableAppearanceObject73, serializableAppearanceObject74, serializableAppearanceObject75, serializableAppearanceObject76, "", null, null, DevExpress.Utils.ToolTipAnchor.Default),
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Delete)});
+            this.cmbProjectDocumentationDesignAssignmentSummary.Properties.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.DisableTextEditor;
+            this.cmbProjectDocumentationDesignAssignmentSummary.Size = new System.Drawing.Size(770, 20);
+            this.cmbProjectDocumentationDesignAssignmentSummary.StyleController = this.layoutControl4;
+            this.cmbProjectDocumentationDesignAssignmentSummary.TabIndex = 6;
+            // 
+            // layoutControlItemProjectDocumentationDesignAssignmentSummary
+            // 
+            this.layoutControlItemProjectDocumentationDesignAssignmentSummary.Control = this.cmbProjectDocumentationDesignAssignmentSummary;
+            this.layoutControlItemProjectDocumentationDesignAssignmentSummary.ControlAlignment = System.Drawing.ContentAlignment.TopLeft;
+            this.layoutControlItemProjectDocumentationDesignAssignmentSummary.CustomizationFormText = "Результат экспертизы *";
+            this.layoutControlItemProjectDocumentationDesignAssignmentSummary.Location = new System.Drawing.Point(0, 430);
+            this.layoutControlItemProjectDocumentationDesignAssignmentSummary.Name = "layoutControlItemProjectDocumentationDesignAssignmentSummary";
+            this.layoutControlItemProjectDocumentationDesignAssignmentSummary.Size = new System.Drawing.Size(774, 49);
+            this.layoutControlItemProjectDocumentationDesignAssignmentSummary.Text = "Вывод об оценке проектной документации на соответствие заданию на проектирование." +
+    "";
+            this.layoutControlItemProjectDocumentationDesignAssignmentSummary.TextAlignMode = DevExpress.XtraLayout.TextAlignModeItem.CustomSize;
+            this.layoutControlItemProjectDocumentationDesignAssignmentSummary.TextLocation = DevExpress.Utils.Locations.Top;
+            this.layoutControlItemProjectDocumentationDesignAssignmentSummary.TextSize = new System.Drawing.Size(124, 13);
+            this.layoutControlItemProjectDocumentationDesignAssignmentSummary.TextToControlDistance = 12;
+            // 
+            // cmbProjectDocumentationTechnicalRequirementsSummary
+            // 
+            this.cmbProjectDocumentationTechnicalRequirementsSummary.EditValue = "";
+            this.cmbProjectDocumentationTechnicalRequirementsSummary.Location = new System.Drawing.Point(7, 511);
+            this.cmbProjectDocumentationTechnicalRequirementsSummary.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.cmbProjectDocumentationTechnicalRequirementsSummary.Name = "cmbProjectDocumentationTechnicalRequirementsSummary";
+            this.cmbProjectDocumentationTechnicalRequirementsSummary.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo),
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Ellipsis, "", -1, true, false, false, editorButtonImageOptions20, new DevExpress.Utils.KeyShortcut(System.Windows.Forms.Keys.None), serializableAppearanceObject77, serializableAppearanceObject78, serializableAppearanceObject79, serializableAppearanceObject80, "", null, null, DevExpress.Utils.ToolTipAnchor.Default),
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Delete)});
+            this.cmbProjectDocumentationTechnicalRequirementsSummary.Properties.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.DisableTextEditor;
+            this.cmbProjectDocumentationTechnicalRequirementsSummary.Size = new System.Drawing.Size(770, 20);
+            this.cmbProjectDocumentationTechnicalRequirementsSummary.StyleController = this.layoutControl4;
+            this.cmbProjectDocumentationTechnicalRequirementsSummary.TabIndex = 6;
+            // 
+            // layoutControlItemProjectDocumentationTechnicalRequirementsSummary
+            // 
+            this.layoutControlItemProjectDocumentationTechnicalRequirementsSummary.Control = this.cmbProjectDocumentationTechnicalRequirementsSummary;
+            this.layoutControlItemProjectDocumentationTechnicalRequirementsSummary.ControlAlignment = System.Drawing.ContentAlignment.TopLeft;
+            this.layoutControlItemProjectDocumentationTechnicalRequirementsSummary.CustomizationFormText = "Результат экспертизы *";
+            this.layoutControlItemProjectDocumentationTechnicalRequirementsSummary.Location = new System.Drawing.Point(0, 479);
+            this.layoutControlItemProjectDocumentationTechnicalRequirementsSummary.Name = "layoutControlItemProjectDocumentationTechnicalRequirementsSummary";
+            this.layoutControlItemProjectDocumentationTechnicalRequirementsSummary.Size = new System.Drawing.Size(774, 49);
+            this.layoutControlItemProjectDocumentationTechnicalRequirementsSummary.Text = "Вывод об оценке проектной документации на соответствие требованиям технических ре" +
+    "гламентов и иных требований.";
+            this.layoutControlItemProjectDocumentationTechnicalRequirementsSummary.TextAlignMode = DevExpress.XtraLayout.TextAlignModeItem.CustomSize;
+            this.layoutControlItemProjectDocumentationTechnicalRequirementsSummary.TextLocation = DevExpress.Utils.Locations.Top;
+            this.layoutControlItemProjectDocumentationTechnicalRequirementsSummary.TextSize = new System.Drawing.Size(124, 13);
+            this.layoutControlItemProjectDocumentationTechnicalRequirementsSummary.TextToControlDistance = 12;
             // 
             // ConclusionEdit
             // 
@@ -3936,6 +4188,9 @@
             ((System.ComponentModel.ISupportInitialize)(this.gridViewDocuments)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.cmbProjectDocumentationIM.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.cmbEngineeringSurveysIM.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.memoExpertiseResultNote.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.cmbEcologyExpertiseNeedExpertise.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.memoEcologyExpertiseNote.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlGroup_I)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.tabbedControlGroup1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlGroup9)).EndInit();
@@ -3950,6 +4205,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemExaminationStageNote)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemProjectDocumentationIM)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemEngineeringSurveysIM)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemExpertiseResultNote)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlGroup10)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlGroupEntity)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemSearch)).EndInit();
@@ -3967,6 +4223,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlGroup11)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemDeclarant)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlGroup12)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemEcologyExpertiseNeedExpertise)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemEcologyExpertiseNote)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlGroup13)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemDocuments)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlGroup14)).EndInit();
@@ -4100,27 +4358,27 @@
             this.xtraTabPageForm5.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.layoutControl3)).EndInit();
             this.layoutControl3.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.memoEngineeringSurveySummary.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.memoEngineeringSurveySummaryDate.Properties)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.memoProjectDocumentsSummary.Properties)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.memoProjectDocumentsSummaryDate.Properties)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.memoEstimateNormsAndWorksSummary.Properties)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.memoEstimateSummary.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.checkCmbEngineeringSurveyType.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.cmbEngineeringSurveysSummary.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.cmbProjectDocumentationSummary.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.cmbEstimateNormsAndWorksSummary.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.cmbEstimateSummary.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.memoProjectDocumentsSummaryDate.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlGroup3)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemEngineeringSurveySummary)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemEngineeringSurveySummaryDate)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemProjectDocumentsSummary)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemProjectDocumentsSummaryDate)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemEngineeringSurveyType)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemEstimateNormsAndWorksSummary)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemEstimateSummary)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemEngineeringSurveyType)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemEngineeringSurveysSummary)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemProjectDocumentationSummary)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemEngineeringSurveySummaryDate)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemProjectDocumentsSummaryDate)).EndInit();
             this.xtraTabPageForm6.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.layoutControl4)).EndInit();
             this.layoutControl4.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.memoExaminationSummary.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.memoEstimateSummary1315.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlGroup4)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemExaminationSummary)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemEstimateSummary1315)).EndInit();
             this.xtraTabPageForm7.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.gridControlExpert)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.gridViewExpert)).EndInit();
@@ -4150,12 +4408,16 @@
             ((System.ComponentModel.ISupportInitialize)(this.popupMenuEngineeringSurveyTechnicalCustomer)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.popupMenuExpertEngineeringSurveys)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.popupMenuEngineeringSurveyAddress)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.memoExpertiseResultNote.Properties)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemExpertiseResultNote)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.cmbEcologyExpertiseNeedExpertise.Properties)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemEcologyExpertiseNeedExpertise)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.memoEcologyExpertiseNote.Properties)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemEcologyExpertiseNote)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.cmbEngineeringSurveysResultsSummary.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemEngineeringSurveysResultsSummary)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.cmbEstimateValidationSummary.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemEstimateValidationSummary)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.cmbProjectDocumentationEngineeringSurveysResultsSummary.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemProjectDocumentationEngineeringSurveysResultsSummary)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.cmbProjectDocumentationDesignAssignmentSummary.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemProjectDocumentationDesignAssignmentSummary)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.cmbProjectDocumentationTechnicalRequirementsSummary.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemProjectDocumentationTechnicalRequirementsSummary)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -4238,23 +4500,13 @@
         private DevExpress.XtraBars.BarButtonItem barBtnCadastralNumberDel;
         private DevExpress.XtraBars.PopupMenu popupMenuCadastralNumber;
         private DevExpress.XtraLayout.LayoutControl layoutControl3;
-        private DevExpress.XtraEditors.MemoEdit memoEngineeringSurveySummary;
         private DevExpress.XtraEditors.MemoEdit memoEngineeringSurveySummaryDate;
         private DevExpress.XtraLayout.LayoutControlGroup layoutControlGroup3;
-        private DevExpress.XtraLayout.LayoutControlItem layoutControlItemEngineeringSurveySummary;
         private DevExpress.XtraLayout.LayoutControlItem layoutControlItemEngineeringSurveySummaryDate;
-        private DevExpress.XtraEditors.MemoEdit memoProjectDocumentsSummary;
-        private DevExpress.XtraEditors.MemoEdit memoProjectDocumentsSummaryDate;
-        private DevExpress.XtraEditors.MemoEdit memoEstimateNormsAndWorksSummary;
-        private DevExpress.XtraLayout.LayoutControlItem layoutControlItemProjectDocumentsSummary;
-        private DevExpress.XtraLayout.LayoutControlItem layoutControlItemProjectDocumentsSummaryDate;
-        private DevExpress.XtraLayout.LayoutControlItem layoutControlItemEstimateNormsAndWorksSummary;
-        private DevExpress.XtraEditors.MemoEdit memoEstimateSummary;
-        private DevExpress.XtraLayout.LayoutControlItem layoutControlItemEstimateSummary;
         private DevExpress.XtraLayout.LayoutControl layoutControl4;
         private DevExpress.XtraLayout.LayoutControlGroup layoutControlGroup4;
-        private DevExpress.XtraEditors.MemoEdit memoExaminationSummary;
-        private DevExpress.XtraLayout.LayoutControlItem layoutControlItemExaminationSummary;
+        private DevExpress.XtraEditors.MemoEdit memoEstimateSummary1315;
+        private DevExpress.XtraLayout.LayoutControlItem layoutControlItemEstimateSummary1315;
         private DevExpress.XtraLayout.LayoutControl layoutControl5;
         private DevExpress.XtraLayout.LayoutControlGroup layoutControlGroup5;
         private DevExpress.XtraEditors.CheckedComboBoxEdit checkCmbClimateDistrict;
@@ -4454,5 +4706,25 @@
         private DevExpress.XtraLayout.LayoutControlItem layoutControlItemEcologyExpertiseNeedExpertise;
         private DevExpress.XtraEditors.MemoEdit memoEcologyExpertiseNote;
         private DevExpress.XtraLayout.LayoutControlItem layoutControlItemEcologyExpertiseNote;
+        private DevExpress.XtraEditors.ComboBoxEdit cmbEngineeringSurveysSummary;
+        private DevExpress.XtraEditors.ComboBoxEdit cmbProjectDocumentationSummary;
+        private DevExpress.XtraEditors.ComboBoxEdit cmbEstimateNormsAndWorksSummary;
+        private DevExpress.XtraEditors.ComboBoxEdit cmbEstimateSummary;
+        private DevExpress.XtraLayout.LayoutControlItem layoutControlItemEngineeringSurveysSummary;
+        private DevExpress.XtraLayout.LayoutControlItem layoutControlItemProjectDocumentationSummary;
+        private DevExpress.XtraLayout.LayoutControlItem layoutControlItemEstimateNormsAndWorksSummary;
+        private DevExpress.XtraLayout.LayoutControlItem layoutControlItemEstimateSummary;
+        private DevExpress.XtraEditors.MemoEdit memoProjectDocumentsSummaryDate;
+        private DevExpress.XtraLayout.LayoutControlItem layoutControlItemProjectDocumentsSummaryDate;
+        private DevExpress.XtraEditors.ComboBoxEdit cmbEngineeringSurveysResultsSummary;
+        private DevExpress.XtraEditors.ComboBoxEdit cmbEstimateValidationSummary;
+        private DevExpress.XtraEditors.ComboBoxEdit cmbProjectDocumentationEngineeringSurveysResultsSummary;
+        private DevExpress.XtraLayout.LayoutControlItem layoutControlItemEngineeringSurveysResultsSummary;
+        private DevExpress.XtraLayout.LayoutControlItem layoutControlItemEstimateValidationSummary;
+        private DevExpress.XtraLayout.LayoutControlItem layoutControlItemProjectDocumentationEngineeringSurveysResultsSummary;
+        private DevExpress.XtraEditors.ComboBoxEdit cmbProjectDocumentationDesignAssignmentSummary;
+        private DevExpress.XtraEditors.ComboBoxEdit cmbProjectDocumentationTechnicalRequirementsSummary;
+        private DevExpress.XtraLayout.LayoutControlItem layoutControlItemProjectDocumentationDesignAssignmentSummary;
+        private DevExpress.XtraLayout.LayoutControlItem layoutControlItemProjectDocumentationTechnicalRequirementsSummary;
     }
 }

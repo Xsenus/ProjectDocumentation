@@ -9,7 +9,7 @@ namespace ProjectDocumentation.NET.Models.ConclusionObj
 {
     public static class EngineeringSurveyAddressController
     {
-        public static IEnumerable<EngineeringSurveyAddress> GetEngineeringSurveyAddress(ICollection<tEngineeringSurveyAddress> collection)
+        public static IEnumerable<EngineeringSurveyAddress> GetEngineeringSurveyAddress(ICollection<TEngineeringSurveyAddress> collection)
         {
             foreach (var obj in collection)
             {
@@ -22,18 +22,11 @@ namespace ProjectDocumentation.NET.Models.ConclusionObj
 
     public class EngineeringSurveyAddress
     {
-        public EngineeringSurveyAddress(tEngineeringSurveyAddress tEngineeringSurveyAddress)
+        public EngineeringSurveyAddress(TEngineeringSurveyAddress tEngineeringSurveyAddress)
         {
             EngineeringSurveyAddressObj = tEngineeringSurveyAddress;
             EngineeringSurveyDistrict = EngineeringSurveyAddressObj.EngineeringSurveyDistrict;
         }
-
-        public tEngineeringSurveyAddress EngineeringSurveyAddressObj { get; private set; }
-
-        public string EngineeringSurveyRegion { get; private set; }
-
-        [Size(1000)]
-        public string EngineeringSurveyDistrict { get; private set; }
 
         public async void SetEnumObj()
         {
@@ -52,5 +45,11 @@ namespace ProjectDocumentation.NET.Models.ConclusionObj
         {
             return base.ToString();
         }
+
+        public TEngineeringSurveyAddress EngineeringSurveyAddressObj { get; private set; }
+
+        [Size(1000)]
+        public string EngineeringSurveyDistrict { get; private set; }
+        public string EngineeringSurveyRegion { get; private set; }
     }
 }

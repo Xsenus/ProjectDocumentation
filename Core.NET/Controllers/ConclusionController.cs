@@ -24,7 +24,7 @@ namespace Core.NET.Controllers
                 Name = name
             };
 
-            if (Guid.TryParse(conclusion.ConclusionGUID, out Guid resultGuid))
+            if (Guid.TryParse(conclusion.ConclusionGuid, out Guid resultGuid))
             {
                 xpoObj.SetGuid(resultGuid);
             }

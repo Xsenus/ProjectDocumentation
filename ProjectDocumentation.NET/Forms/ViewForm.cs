@@ -1,4 +1,5 @@
 ﻿using Core.NET.AutoModels.ConclusionObj;
+using Core.NET.AutoModels.ExplanatoryNoteObj;
 using Core.NET.Controllers;
 using Core.NET.Extensions;
 using Core.NET.Models.XPO;
@@ -64,7 +65,7 @@ namespace ProjectDocumentation.NET.Forms
                 AddValueToString();
 
                 AddValueToString($"1.2. Сведения о заявителе");
-                AddValueToString($"{conclusion.Declarant?.Item?.GetCounterPartyDescription()}");
+                //AddValueToString($"{conclusion.Declarant?.Item?.GetCounterPartyDescription()}");
                 AddValueToString();
 
                 AddValueToString($"1.3. Основания для проведения повторной экспертизы");
@@ -78,11 +79,11 @@ namespace ProjectDocumentation.NET.Forms
                         {
                             documentCount++;
                             var documentValue = $"{documentCount}. {document.DocName} от {document.DocDate.ToShortDateString()} № {document.DocNumber}";
-                            var documentOrganizationName = document.Items?.FirstOrDefault()?.ToString();
-                            if (!string.IsNullOrWhiteSpace(documentOrganizationName))
-                            {
-                                documentValue += $", {documentOrganizationName}";
-                            }
+                            //var documentOrganizationName = document.Items?.FirstOrDefault()?.ToString();
+                            //if (!string.IsNullOrWhiteSpace(documentOrganizationName))
+                            //{
+                            //    documentValue += $", {documentOrganizationName}";
+                            //}
                             AddValueToString(documentValue);
                         }
                     }
@@ -121,11 +122,11 @@ namespace ProjectDocumentation.NET.Forms
                         {
                             documentCount++;
                             var documentValue = $"{documentCount}. {document.DocName} от {document.DocDate.ToShortDateString()} № {document.DocNumber}";
-                            var documentOrganizationName = document.Items?.FirstOrDefault()?.ToString();
-                            if (!string.IsNullOrWhiteSpace(documentOrganizationName))
-                            {
-                                documentValue += $", {documentOrganizationName}";
-                            }
+                            //var documentOrganizationName = document.Items?.FirstOrDefault()?.ToString();
+                            //if (!string.IsNullOrWhiteSpace(documentOrganizationName))
+                            //{
+                            //    documentValue += $", {documentOrganizationName}";
+                            //}
                             AddValueToString(documentValue);
                         }
                     }
@@ -168,15 +169,15 @@ namespace ProjectDocumentation.NET.Forms
                 AddValueToString($"2.1.2. Сведения о функциональном назначении объекта капитального строительства");
                 AddValueToString();
 
-                AddValueToString($"Функциональное назначение: {conclusion.Object?.Item ?? "Сведения отсутствуют."}");
-                AddValueToString();
+                //AddValueToString($"Функциональное назначение: {conclusion.Object?.Item ?? "Сведения отсутствуют."}");
+                //AddValueToString();
 
                 AddValueToString($"2.1.3. Сведения о технико-экономических показателях объекта капитального строительства");
                 AddValueToString();
 
-                AddValueToString($"Наименование технико-экономического показателя\tЕдиница измерения\tЗначение");
-                AddValueToString($"{GetProcessedList(conclusion.Object?.TEI)}");
-                AddValueToString();
+                //AddValueToString($"Наименование технико-экономического показателя\tЕдиница измерения\tЗначение");
+                //AddValueToString($"{GetProcessedList(conclusion.Object?.Tei)}");
+                //AddValueToString();
 
             }
 

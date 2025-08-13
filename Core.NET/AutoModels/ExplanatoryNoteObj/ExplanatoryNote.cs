@@ -1,5 +1,6 @@
 ﻿// Ignore Spelling: TEI Cadastral Geotechnical Technogenic Geodynamical Aerological Hydrogeological Perair Org OGRNIP SNILS Safity
 
+using Core.NET.AutoModels.ConclusionObj;
 using Core.NET.Extensions;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -32,7 +33,7 @@ namespace Core.NET.AutoModels.ExplanatoryNoteObj
         public tWorkPerson[] Signers { get; set; }
 
         [XmlElement("Developer", typeof(tDeveloper))]
-        [XmlElement("TechnicalCustomer", typeof(tTechnicalCustomer))]
+        [XmlElement("TechnicalCustomer", typeof(TTechnicalCustomer))]
         public object[] Items { get; set; }
 
         public tTextBlock UsedAbbreviations { get; set; }
@@ -89,7 +90,7 @@ namespace Core.NET.AutoModels.ExplanatoryNoteObj
 
         public tConstructionDates ConstructionDates { get; set; }
 
-        public tAddress Address { get; set; }
+        public TAddress Address { get; set; }
 
         public tFunctions Functions { get; set; }
 
@@ -213,7 +214,7 @@ namespace Core.NET.AutoModels.ExplanatoryNoteObj
         public string Name { get; set; }
 
         [XmlElement("Address")]
-        public tAddress[] Address { get; set; }
+        public TAddress[] Address { get; set; }
 
         public string FunctionsClass { get; set; }
 
@@ -2124,7 +2125,7 @@ namespace Core.NET.AutoModels.ExplanatoryNoteObj
         public string Name { get; set; }
 
         [XmlElement("Address")]
-        public tAddress[] Address { get; set; }
+        public TAddress[] Address { get; set; }
 
         public string FunctionsClass { get; set; }
 
@@ -2713,7 +2714,7 @@ namespace Core.NET.AutoModels.ExplanatoryNoteObj
 
         public tConstructionDates ConstructionDates { get; set; }
 
-        public tAddress Address { get; set; }
+        public TAddress Address { get; set; }
 
         public tFunctions Functions { get; set; }
 
@@ -2840,9 +2841,9 @@ namespace Core.NET.AutoModels.ExplanatoryNoteObj
 
         public tConstructionDates ConstructionDates { get; set; }
 
-        public tAddress Address { get; set; }
+        public TAddress Address { get; set; }
 
-        public tAddress FinishAddress { get; set; }
+        public TAddress FinishAddress { get; set; }
 
         public tFunctions Functions { get; set; }
 
@@ -2975,9 +2976,9 @@ namespace Core.NET.AutoModels.ExplanatoryNoteObj
 
     public partial class tAuthor
     {
-        [XmlElement("ForeignOrganization", typeof(tForeignOrganization))]
-        [XmlElement("IP", typeof(tIP))]
-        [XmlElement("Organization", typeof(tOrganization))]
+        [XmlElement("ForeignOrganization", typeof(TForeignOrganization))]
+        [XmlElement("IP", typeof(Tip))]
+        [XmlElement("Organization", typeof(TOrganization))]
         public object Item { get; set; }
 
         [XmlArrayItem("SRO", IsNullable = false)]
@@ -3021,17 +3022,17 @@ namespace Core.NET.AutoModels.ExplanatoryNoteObj
 
     public partial class tDeveloper
     {
-        [XmlElement("ForeignOrganization", typeof(tForeignOrganization))]
-        [XmlElement("IP", typeof(tIP))]
-        [XmlElement("Organization", typeof(tOrganization))]
-        [XmlElement("Person", typeof(tPerson))]
+        [XmlElement("ForeignOrganization", typeof(TForeignOrganization))]
+        [XmlElement("IP", typeof(Tip))]
+        [XmlElement("Organization", typeof(TOrganization))]
+        [XmlElement("Person", typeof(TPerson))]
         public object Item { get; set; }
     }
 
-    public partial class tTechnicalCustomer : ITechnicalCustomer
+    public partial class TTechnicalCustomer
     {
-        [XmlElement("ForeignOrganization", typeof(tForeignOrganization))]
-        [XmlElement("Organization", typeof(tOrganization))]
+        [XmlElement("ForeignOrganization", typeof(TForeignOrganization))]
+        [XmlElement("Organization", typeof(TOrganization))]
         public object Item { get; set; }
 
         [XmlArrayItem("SRO", IsNullable = false)]
@@ -3116,7 +3117,7 @@ namespace Core.NET.AutoModels.ExplanatoryNoteObj
 
     public partial class tStateCustomerSource
     {
-        public tTechnicalCustomer Owner { get; set; }
+        public TTechnicalCustomer Owner { get; set; }
 
         public double SourceRatio { get; set; }
 
@@ -3133,7 +3134,7 @@ namespace Core.NET.AutoModels.ExplanatoryNoteObj
     public partial class tDocument
     {
         public string DocTypeName => DocType.GetEnumDescription();
-        public tDocumentType DocType { get; set; }
+        public TDocumentType DocType { get; set; }
 
         [XmlElement(DataType = "normalizedString")]
         public string DocName { get; set; }

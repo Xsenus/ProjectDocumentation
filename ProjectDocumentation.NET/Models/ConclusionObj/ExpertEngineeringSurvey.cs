@@ -9,7 +9,7 @@ namespace ProjectDocumentation.NET.Models.ConclusionObj
 {
     public static class ExpertEngineeringSurveysController
     {
-        public static IEnumerable<ExpertEngineeringSurvey> GetExpertEngineeringSurveys(ICollection<tExpertEngineeringSurveys> collection)
+        public static IEnumerable<ExpertEngineeringSurvey> GetExpertEngineeringSurveys(ICollection<TExpertEngineeringSurveys> collection)
         {
             foreach (var obj in collection)
             {
@@ -22,21 +22,14 @@ namespace ProjectDocumentation.NET.Models.ConclusionObj
 
     public class ExpertEngineeringSurvey
     {
-        public ExpertEngineeringSurvey(tExpertEngineeringSurveys tExpertEngineeringSurveys)
+        public ExpertEngineeringSurvey(TExpertEngineeringSurveys tExpertEngineeringSurveys)
         {
             ExpertEngineeringSurveys = tExpertEngineeringSurveys;
-            EngineeringSurveyType = tExpertEngineeringSurveys.EngineeringSurveyConditions;
-            EngineeringSurveyProgramNote = tExpertEngineeringSurveys.EngineeringSurveyProgramNote;
-            EngineeringSurveyMethods = tExpertEngineeringSurveys.EngineeringSurveyMethods;
-            EngineeringSurveyChanges = tExpertEngineeringSurveys.EngineeringSurveyChanges;
+            //EngineeringSurveyType = tExpertEngineeringSurveys.EngineeringSurveyConditions;
+            //EngineeringSurveyProgramNote = tExpertEngineeringSurveys.EngineeringSurveyProgramNote;
+            //EngineeringSurveyMethods = tExpertEngineeringSurveys.EngineeringSurveyMethods;
+            //EngineeringSurveyChanges = tExpertEngineeringSurveys.EngineeringSurveyChanges;
         }
-
-        public tExpertEngineeringSurveys ExpertEngineeringSurveys { get; private set; }
-        public string EngineeringSurveyType { get; private set; }
-        public string EngineeringSurveyConditions { get; private set; }
-        public string EngineeringSurveyProgramNote { get; private set; }
-        public string EngineeringSurveyMethods { get; private set; }
-        public string EngineeringSurveyChanges { get; private set; }
 
         public async void SetEnumObj()
         {
@@ -55,5 +48,12 @@ namespace ProjectDocumentation.NET.Models.ConclusionObj
         {
             return base.ToString();
         }
+
+        public string EngineeringSurveyChanges { get; private set; }
+        public string EngineeringSurveyConditions { get; private set; }
+        public string EngineeringSurveyMethods { get; private set; }
+        public string EngineeringSurveyProgramNote { get; private set; }
+        public string EngineeringSurveyType { get; private set; }
+        public TExpertEngineeringSurveys ExpertEngineeringSurveys { get; private set; }
     }
 }

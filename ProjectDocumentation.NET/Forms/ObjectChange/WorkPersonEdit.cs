@@ -1,4 +1,6 @@
 ﻿using Core.NET.AutoModels;
+using Core.NET.AutoModels.ConclusionObj;
+using Core.NET.AutoModels.ExplanatoryNoteObj;
 using Core.NET.Controllers;
 using Core.NET.Extensions;
 using Core.NET.Models.XPO;
@@ -14,10 +16,6 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
 {
     public partial class WorkPersonEdit : XtraForm
     {
-        private Session Session => SessionController.GetSession();
-        public bool IsSave { get; private set; }
-        public tWorkPerson WorkPerson { get; private set; }
-
         public WorkPersonEdit()
         {
             InitializeComponent();
@@ -28,15 +26,96 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
             WorkPerson = person;
         }
 
-        private async Task FillFormControllersAsync()
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
+        private void btnCancel_Click(object sender, EventArgs e)
         {
-            var collection = await new XPQuery<GeneralizedDictionaryXPO>(Session).ToListAsync();
+            Close();
+        }
 
-            cmbEngineeringRegistry.Properties.Items.AddRange(collection
-                            .Where(w => w.GeneralizedDictionary == GeneralizedDictionary.LogicalAnswer).ToArray());
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
+        private void btnSave_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                WorkPerson.FamilyName = ConclusionEdit.GetStringValue(txtFamilyName.EditValue, txtFamilyName, "Заполните фамилию подписанта");
+                WorkPerson.FirstName = ConclusionEdit.GetStringValue(txtFirstName.EditValue, txtFirstName, "Заполните имя подписанта");
+                WorkPerson.SecondName = ConclusionEdit.GetStringValue(txtSecondName.EditValue, txtSecondName, "Заполните отчество подписанта");
+                WorkPerson.Position = ConclusionEdit.GetStringValue(txtPosition.EditValue, txtPosition, "Заполните должность подписанта");
 
-            cmbConstructionRegistry.Properties.Items.AddRange(collection
-                .Where(w => w.GeneralizedDictionary == GeneralizedDictionary.LogicalAnswer).ToArray());
+                if (cmbEngineeringRegistry.EditValue is GeneralizedDictionaryXPO valueEngineeringRegistry)
+                {
+                    WorkPerson.engineeringRegistrySpecified = true;
+
+                    if (valueEngineeringRegistry.Value == TYesNo.Да.GetEnumDescription())
+                    {
+                        WorkPerson.engineeringRegistry = TYesNo.Да;
+                    }
+                    else
+                    {
+                        WorkPerson.engineeringRegistry = TYesNo.Нет;
+                    }
+                }
+                else
+                {
+                    WorkPerson.engineeringRegistrySpecified = false;
+                }
+
+                if (cmbConstructionRegistry.EditValue is GeneralizedDictionaryXPO valueConstructionRegistry)
+                {
+                    WorkPerson.constructionRegistrySpecified = true;
+
+                    if (valueConstructionRegistry.Value == TYesNo.Да.GetEnumDescription())
+                    {
+                        WorkPerson.constructionRegistry = TYesNo.Да;
+                    }
+                    else
+                    {
+                        WorkPerson.constructionRegistry = TYesNo.Нет;
+                    }
+                }
+                else
+                {
+                    WorkPerson.constructionRegistrySpecified = false;
+                }
+            }
+            catch (Exception ex)
+            {
+                XtraMessageBox.Show(ex.Message,
+                    "Информационное сообщение",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
+                return;
+            }
+
+            IsSave = true;
+            Close();
+        }
+
+        private void ClearEditValue(object sender, ButtonPressedEventArgs e)
+        {
+            if (sender is CheckedComboBoxEdit checkedComboBoxEdit)
+            {
+                if (e.Button.Kind == ButtonPredefines.Delete)
+                {
+                    foreach (CheckedListBoxItem item in checkedComboBoxEdit.Properties.Items.Cast<CheckedListBoxItem>())
+                    {
+                        item.CheckState = CheckState.Unchecked;
+                    }
+                }
+            }
+
+            if (sender is ButtonEdit buttonEdit)
+            {
+                if (e.Button.Kind == ButtonPredefines.Delete)
+                {
+                    buttonEdit.EditValue = null;
+                }
+            }
+        }
+
+        private void cmbEngineeringRegistry_ButtonPressed(object sender, ButtonPressedEventArgs e)
+        {
+
         }
 
         private async void ConclusionBaseSettingEdit_Load(object sender, EventArgs e)
@@ -70,96 +149,19 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
             }
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
-        private void btnSave_Click(object sender, EventArgs e)
+        private async Task FillFormControllersAsync()
         {
-            try
-            {
-                WorkPerson.FamilyName = ConclusionEdit.GetStringValue(txtFamilyName.EditValue, txtFamilyName, "Заполните фамилию подписанта");
-                WorkPerson.FirstName = ConclusionEdit.GetStringValue(txtFirstName.EditValue, txtFirstName, "Заполните имя подписанта");
-                WorkPerson.SecondName = ConclusionEdit.GetStringValue(txtSecondName.EditValue, txtSecondName, "Заполните отчество подписанта");
-                WorkPerson.Position = ConclusionEdit.GetStringValue(txtPosition.EditValue, txtPosition, "Заполните должность подписанта");
+            var collection = await new XPQuery<GeneralizedDictionaryXPO>(Session).ToListAsync();
 
-                if (cmbEngineeringRegistry.EditValue is GeneralizedDictionaryXPO valueEngineeringRegistry)
-                {
-                    WorkPerson.engineeringRegistrySpecified = true;
+            cmbEngineeringRegistry.Properties.Items.AddRange(collection
+                            .Where(w => w.GeneralizedDictionary == GeneralizedDictionary.LogicalAnswer).ToArray());
 
-                    if (valueEngineeringRegistry.Value == tYesNo.да.GetEnumDescription())
-                    {
-                        WorkPerson.engineeringRegistry = tYesNo.да;
-                    }
-                    else
-                    {
-                        WorkPerson.engineeringRegistry = tYesNo.нет;
-                    }
-                }
-                else
-                {
-                    WorkPerson.engineeringRegistrySpecified = false;
-                }
-
-                if (cmbConstructionRegistry.EditValue is GeneralizedDictionaryXPO valueConstructionRegistry)
-                {
-                    WorkPerson.constructionRegistrySpecified = true;
-
-                    if (valueConstructionRegistry.Value == tYesNo.да.GetEnumDescription())
-                    {
-                        WorkPerson.constructionRegistry = tYesNo.да;
-                    }
-                    else
-                    {
-                        WorkPerson.constructionRegistry = tYesNo.нет;
-                    }
-                }
-                else
-                {
-                    WorkPerson.constructionRegistrySpecified = false;
-                }
-            }
-            catch (Exception ex)
-            {
-                XtraMessageBox.Show(ex.Message,
-                    "Информационное сообщение",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Error);
-                return;
-            }
-
-            IsSave = true;
-            Close();
+            cmbConstructionRegistry.Properties.Items.AddRange(collection
+                .Where(w => w.GeneralizedDictionary == GeneralizedDictionary.LogicalAnswer).ToArray());
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
-        private void btnCancel_Click(object sender, EventArgs e)
-        {
-            Close();
-        }
-
-        private void ClearEditValue(object sender, ButtonPressedEventArgs e)
-        {
-            if (sender is CheckedComboBoxEdit checkedComboBoxEdit)
-            {
-                if (e.Button.Kind == ButtonPredefines.Delete)
-                {
-                    foreach (CheckedListBoxItem item in checkedComboBoxEdit.Properties.Items.Cast<CheckedListBoxItem>())
-                    {
-                        item.CheckState = CheckState.Unchecked;
-                    }
-                }
-            }
-
-            if (sender is ButtonEdit buttonEdit)
-            {
-                if (e.Button.Kind == ButtonPredefines.Delete)
-                {
-                    buttonEdit.EditValue = null;
-                }
-            }
-        }
-
-        private void cmbEngineeringRegistry_ButtonPressed(object sender, ButtonPressedEventArgs e)
-        {
-
-        }
+        private Session Session => SessionController.GetSession();
+        public bool IsSave { get; private set; }
+        public tWorkPerson WorkPerson { get; private set; }
     }
 }

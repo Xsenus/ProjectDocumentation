@@ -1,4 +1,5 @@
-﻿using Core.NET.AutoModels.ConclusionObj;
+﻿using Core.NET.AutoModels;
+using Core.NET.AutoModels.ConclusionObj;
 using Core.NET.Controllers;
 using Core.NET.Extensions;
 using Core.NET.Models.XPO;
@@ -14,19 +15,81 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
 {
     public partial class PreviousConclusionEdit : XtraForm
     {
-        private Session Session => SessionController.GetSession();
-
-        public bool IsSave { get; private set; }
-        public tPreviousConclusion PreviousConclusion { get; private set; }
-
         public PreviousConclusionEdit()
         {
             InitializeComponent();
         }
 
-        public PreviousConclusionEdit(tPreviousConclusion tPreviousConclusion) : this()
+        public PreviousConclusionEdit(TPreviousConclusion TPreviousConclusion) : this()
         {
-            PreviousConclusion = tPreviousConclusion;
+            PreviousConclusion = TPreviousConclusion;
+        }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
+        private void btnClose_Click(object sender, EventArgs e)
+        {
+            Close();
+        }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
+        private void btnSave_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                var itemChoiceType = (ItemChoiceType)radioGroupConclusionNumber.SelectedIndex;
+
+                switch (itemChoiceType)
+                {
+                    case ItemChoiceType.EGRZ:
+                        PreviousConclusion.Number.Egrz = ConclusionEdit.GetStringValue(txtEEPDNumber.EditValue, txtEEPDNumber, "Заполните поле номер заключения экспертизы *");
+                        break;
+
+                    case ItemChoiceType.noEGRZ:
+                        PreviousConclusion.Number.NoEgrz = ConclusionEdit.GetStringValue(txtEEPDNumber.EditValue, txtEEPDNumber, "Заполните поле номер заключения экспертизы *");
+                        break;
+                }
+
+                if (dateEEPDDate.EditValue is DateTime date)
+                {
+                    PreviousConclusion.Date = date;
+                }
+                else
+                {
+                    dateEEPDDate.Focus();
+                    XtraMessageBox.Show("Заполните дату",
+                        "Информационное сообщение",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Error);
+                    return;
+                }
+                PreviousConclusion.Result = ConclusionEdit.GetEnumByAttributeValue<TExaminationResult>(ConclusionEdit.GetValueGeneralizedDictionary(
+                    cmbExaminationResult,
+                    message: "Заполните поле результат экспертизы")?.Value);
+                PreviousConclusion.ExaminationObjectType = ConclusionEdit.GetEnumByAttributeValue<TExaminationObjectType>(ConclusionEdit.GetValueGeneralizedDictionary(
+                    cmbExaminationObjectType,
+                    message: "Заполните поле вида объекта экспертизы")?.Value);
+                PreviousConclusion.Name = ConclusionEdit.GetStringValue(memoName.Text, memoName, "Заполните поле наименование объекта экспертизы");
+            }
+            catch (Exception ex)
+            {
+                XtraMessageBox.Show(ex.Message, "Информационное сообщение", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            IsSave = true;
+            Close();
+        }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
+        private void dateEEPDDate_ButtonPressed(object sender, ButtonPressedEventArgs e)
+        {
+            if (sender is ButtonEdit buttonEdit)
+            {
+                if (e.Button.Kind == ButtonPredefines.Delete)
+                {
+                    buttonEdit.EditValue = null;
+                }
+            }
         }
 
         private async Task FillFormControllersAsync()
@@ -48,26 +111,25 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
 
             if (PreviousConclusion is null)
             {
-                PreviousConclusion = new tPreviousConclusion
+                PreviousConclusion = new TPreviousConclusion
                 {
-                    Number = new tConclusionNumber()
+                    Number = new TConclusionNumber()
                 };
             }
 
             var number = PreviousConclusion.Number;
             if (number != null)
             {
-                switch (number.ItemElementName)
+                if (!string.IsNullOrWhiteSpace(number.Egrz))
                 {
-                    case ItemChoiceType.EGRZ:
-                        radioGroupConclusionNumber.SelectedIndex = (int)ItemChoiceType.EGRZ;
-                        break;
-
-                    case ItemChoiceType.noEGRZ:
-                        radioGroupConclusionNumber.SelectedIndex = (int)ItemChoiceType.noEGRZ;
-                        break;
+                    radioGroupConclusionNumber.SelectedIndex = (int)ItemChoiceType.EGRZ;
+                    txtEEPDNumber.EditValue = number.Egrz;
                 }
-                txtEEPDNumber.EditValue = number.Item;
+                else if (!string.IsNullOrWhiteSpace(number.NoEgrz))
+                {
+                    radioGroupConclusionNumber.SelectedIndex = (int)ItemChoiceType.noEGRZ;
+                    txtEEPDNumber.EditValue = number.NoEgrz;
+                }
             }
             if (PreviousConclusion.Date != DateTime.MinValue)
             {
@@ -82,50 +144,6 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                 ?.Where(w => w.GeneralizedDictionary == GeneralizedDictionary.ExaminationObjectType)
                 ?.FirstOrDefault(f => f.ValueInt == PreviousConclusion?.ExaminationObjectType.GetEnumXmlAttributeValueInt());
             memoName.EditValue = PreviousConclusion.Name;
-        }
-
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
-        private void btnSave_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                PreviousConclusion.Number.ItemElementName = (ItemChoiceType)radioGroupConclusionNumber.SelectedIndex;
-                PreviousConclusion.Number.Item = ConclusionEdit.GetStringValue(txtEEPDNumber.EditValue, txtEEPDNumber, "Заполните поле номер заключения экспертизы *"); ;
-                if (dateEEPDDate.EditValue is DateTime date)
-                {
-                    PreviousConclusion.Date = date;
-                }
-                else
-                {
-                    dateEEPDDate.Focus();
-                    XtraMessageBox.Show("Заполните дату",
-                        "Информационное сообщение",
-                        MessageBoxButtons.OK,
-                        MessageBoxIcon.Error);
-                    return;
-                }
-                PreviousConclusion.Result = ConclusionEdit.GetEnumByAttributeValue<tExaminationResult>(ConclusionEdit.GetValueGeneralizedDictionary(
-                    cmbExaminationResult,
-                    message: "Заполните поле результат экспертизы")?.Value);
-                PreviousConclusion.ExaminationObjectType = ConclusionEdit.GetEnumByAttributeValue<tExaminationObjectType>(ConclusionEdit.GetValueGeneralizedDictionary(
-                    cmbExaminationObjectType,
-                    message: "Заполните поле вида объекта экспертизы")?.Value);
-                PreviousConclusion.Name = ConclusionEdit.GetStringValue(memoName.Text, memoName, "Заполните поле наименование объекта экспертизы");
-            }
-            catch (Exception ex)
-            {
-                XtraMessageBox.Show(ex.Message, "Информационное сообщение", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            }
-
-            IsSave = true;
-            Close();
-        }
-
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
-        private void btnClose_Click(object sender, EventArgs e)
-        {
-            Close();
         }
 
 
@@ -149,16 +167,8 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
             }
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
-        private void dateEEPDDate_ButtonPressed(object sender, ButtonPressedEventArgs e)
-        {
-            if (sender is ButtonEdit buttonEdit)
-            {
-                if (e.Button.Kind == ButtonPredefines.Delete)
-                {
-                    buttonEdit.EditValue = null;
-                }
-            }
-        }
+        private Session Session => SessionController.GetSession();
+        public bool IsSave { get; private set; }
+        public TPreviousConclusion PreviousConclusion { get; private set; }
     }
 }

@@ -1,5 +1,4 @@
-﻿using Core.NET.AutoModels;
-using Core.NET.AutoModels.ConclusionObj;
+﻿using Core.NET.AutoModels.ConclusionObj;
 using Core.NET.Controllers;
 using Core.NET.DaDataObj;
 using Core.NET.Models.XPO;
@@ -20,60 +19,46 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
 {
     public partial class ObjPartEdit : XtraForm
     {
-        private List<tTEI> _tTEIs;
-        private Session Session => SessionController.GetSession();
-
-        public bool IsSave { get; private set; }
-        public tObjectPart ObjectPart { get; private set; }
+        private List<Ttei> _tTEIs;
 
         public ObjPartEdit()
         {
             InitializeComponent();
         }
 
-        public ObjPartEdit(tObjectPart tObjectPart) : this()
+        public ObjPartEdit(TObjectPart TObjectPart) : this()
         {
-            ObjectPart = tObjectPart;
+            ObjectPart = TObjectPart;
         }
 
-        private async Task FillFormControllersAsync()
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
+        private void barBtnTEIAdd_ItemClick(object sender, ItemClickEventArgs e)
         {
-            var collection = await new XPQuery<GeneralizedDictionaryXPO>(Session).ToListAsync();
-
-            cmbObjectType.Properties.Items.AddRange(collection
-                .Where(w => w.GeneralizedDictionary == GeneralizedDictionary.ObjectType).ToArray());
+            _tTEIs.Add(new Ttei());
+            gridControlTEI.RefreshDataSource();
         }
 
-        private async void ObjPartEdit_Load(object sender, EventArgs e)
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
+        private void barBtnTEIDel_ItemClick(object sender, ItemClickEventArgs e)
         {
-            await FillFormControllersAsync();
+            if (gridViewTEI.GetRow(gridViewTEI.FocusedRowHandle) is Ttei obj)
+            {
+                if (XtraMessageBox.Show(
+                    "Вы действительно хотите удалить выделенный объект?",
+                    "Информационное сообщение",
+                    MessageBoxButtons.OKCancel,
+                    MessageBoxIcon.Question) == DialogResult.OK)
+                {
+                    _tTEIs.Remove(obj);
+                    gridControlTEI.RefreshDataSource();
+                }
+            }
+        }
 
-            if (ObjectPart is null)
-            {
-                ObjectPart = new tObjectPart();
-            }
-
-            memoObjectName.EditValue = ObjectPart?.Name;
-            //cmbObjectType.EditValue = cmbObjectType.Properties.Items
-            //  ?.Cast<GeneralizedDictionaryXPO>()
-            //  ?.Where(w => w.GeneralizedDictionary == GeneralizedDictionary.ObjectType)
-            //  ?.FirstOrDefault(f => f.ValueInt == ObjectPart?.Type.GetEnumXmlAttributeValueInt());
-            cmbFunctionsClass.EditValue = ObjectPart?.Item;
-            cmbObjectAddress.EditValue = ObjectPart?.Address?.FirstOrDefault();
-            _tTEIs = ObjectPart?.TEI?.ToList() ?? new List<tTEI>();
-            gridControlTEI.DataSource = _tTEIs;
-            if (gridViewTEI.Columns[nameof(tTEI.Name)] is GridColumn gridTEIName)
-            {
-                gridTEIName.Caption = "Наименование показателя";
-            }
-            if (gridViewTEI.Columns[nameof(tTEI.Measure)] is GridColumn gridTEIMeasure)
-            {
-                gridTEIMeasure.Caption = "Единица измерения показателя";
-            }
-            if (gridViewTEI.Columns[nameof(tTEI.Value)] is GridColumn gridTEIValue)
-            {
-                gridTEIValue.Caption = "Значение показателя";
-            }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
+        private void btnClose_Click(object sender, EventArgs e)
+        {
+            Close();
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
@@ -85,10 +70,10 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                 //ObjectPart.Type = ConclusionEdit.GetEnumByAttributeValue<tObjectType>(ConclusionEdit.GetValueGeneralizedDictionary(
                 //   cmbObjectType,
                 //   message: "Заполните поле вид объекта капитального строительства")?.Value);
-                ObjectPart.Item = ConclusionEdit.GetStringValue(cmbFunctionsClass.EditValue?.ToString(), cmbFunctionsClass, "Функциональное назначение объекта капитального строительства (код по классификатору)");
-                if (cmbObjectAddress.EditValue is tAddress objectAddress)
+                ObjectPart.FunctionsClass = ConclusionEdit.GetStringValue(cmbFunctionsClass.EditValue?.ToString(), cmbFunctionsClass, "Функциональное назначение объекта капитального строительства (код по классификатору)");
+                if (cmbObjectAddress.EditValue is TAddress objectAddress)
                 {
-                    ObjectPart.Address = new tAddress[] { objectAddress };
+                    ObjectPart.Address.Add(objectAddress);
                 }
                 else
                 {
@@ -130,7 +115,14 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                             return;
                         }
                     }
-                    ObjectPart.TEI = _tTEIs.ToArray();
+
+                    if (_tTEIs != null)
+                    {
+                        foreach (var item in _tTEIs)
+                        {
+                            ObjectPart.Tei.Add(item);
+                        }
+                    }
                 }
             }
             catch (Exception ex)
@@ -140,12 +132,6 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
             }
 
             IsSave = true;
-            Close();
-        }
-
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
-        private void btnClose_Click(object sender, EventArgs e)
-        {
             Close();
         }
 
@@ -180,7 +166,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                 if (e.Button.Kind == ButtonPredefines.Ellipsis)
                 {
                     AddressEdit form;
-                    if (buttonEdit.EditValue is tAddress address)
+                    if (buttonEdit.EditValue is TAddress address)
                     {
                         form = new AddressEdit(address);
                     }
@@ -204,7 +190,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                         var addressData = await DaDataObj.GetAddressAsync(obj);
                         if (addressData != null)
                         {
-                            var address = new tAddress()
+                            var address = new TAddress()
                             {
                                 Country = addressData.country,
                                 District = addressData.city_district,
@@ -218,7 +204,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
 
                             try
                             {
-                                var region = ConclusionEdit.GetEnumByAttributeValue<tRegionsRF>(addressData.region_kladr_id?.Replace("0", string.Empty));
+                                var region = ConclusionEdit.GetEnumByAttributeValue<TRegionsRf>(addressData.region_kladr_id?.Replace("0", string.Empty));
                                 address.Region = region;
                             }
                             catch (Exception)
@@ -236,6 +222,14 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
             }
         }
 
+        private async Task FillFormControllersAsync()
+        {
+            var collection = await new XPQuery<GeneralizedDictionaryXPO>(Session).ToListAsync();
+
+            cmbObjectType.Properties.Items.AddRange(collection
+                .Where(w => w.GeneralizedDictionary == GeneralizedDictionary.ObjectType).ToArray());
+        }
+
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
         private void gridViewTEI_PopupMenuShowing(object sender, PopupMenuShowingEventArgs e)
         {
@@ -245,28 +239,41 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
             }
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
-        private void barBtnTEIAdd_ItemClick(object sender, ItemClickEventArgs e)
+        private async void ObjPartEdit_Load(object sender, EventArgs e)
         {
-            _tTEIs.Add(new tTEI());
-            gridControlTEI.RefreshDataSource();
-        }
+            await FillFormControllersAsync();
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
-        private void barBtnTEIDel_ItemClick(object sender, ItemClickEventArgs e)
-        {
-            if (gridViewTEI.GetRow(gridViewTEI.FocusedRowHandle) is tTEI obj)
+            if (ObjectPart is null)
             {
-                if (XtraMessageBox.Show(
-                    "Вы действительно хотите удалить выделенный объект?",
-                    "Информационное сообщение",
-                    MessageBoxButtons.OKCancel,
-                    MessageBoxIcon.Question) == DialogResult.OK)
-                {
-                    _tTEIs.Remove(obj);
-                    gridControlTEI.RefreshDataSource();
-                }
+                ObjectPart = new TObjectPart();
+            }
+
+            memoObjectName.EditValue = ObjectPart?.Name;
+            //cmbObjectType.EditValue = cmbObjectType.Properties.Items
+            //  ?.Cast<GeneralizedDictionaryXPO>()
+            //  ?.Where(w => w.GeneralizedDictionary == GeneralizedDictionary.ObjectType)
+            //  ?.FirstOrDefault(f => f.ValueInt == ObjectPart?.Type.GetEnumXmlAttributeValueInt());
+            cmbFunctionsClass.EditValue = ObjectPart?.FunctionsClass;
+            cmbObjectAddress.EditValue = ObjectPart?.Address?.FirstOrDefault();
+            _tTEIs = ObjectPart?.Tei?.ToList() ?? new List<Ttei>();
+            gridControlTEI.DataSource = _tTEIs;
+            if (gridViewTEI.Columns[nameof(Ttei.Name)] is GridColumn gridTEIName)
+            {
+                gridTEIName.Caption = "Наименование показателя";
+            }
+            if (gridViewTEI.Columns[nameof(Ttei.Measure)] is GridColumn gridTEIMeasure)
+            {
+                gridTEIMeasure.Caption = "Единица измерения показателя";
+            }
+            if (gridViewTEI.Columns[nameof(Ttei.Value)] is GridColumn gridTEIValue)
+            {
+                gridTEIValue.Caption = "Значение показателя";
             }
         }
+
+        private Session Session => SessionController.GetSession();
+
+        public bool IsSave { get; private set; }
+        public TObjectPart ObjectPart { get; private set; }
     }
 }

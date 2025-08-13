@@ -1,12 +1,13 @@
 ﻿// Ignore Spelling: Cadastral Declarant Org OGRNIP TEI SNILS Constraction
 
+using Core.NET.AutoModels.ConclusionObj;
 using System;
 using System.CodeDom.Compiler;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Xml.Serialization;
 
-namespace Core.NET.AutoModels
+namespace Core.NET.AutoModels.ExplanatoryNoteObj
 {
     [GeneratedCode("xsd", "4.6.1055.0")]
     [Serializable()]
@@ -27,13 +28,13 @@ namespace Core.NET.AutoModels
         public string Position { get; set; }
 
         [XmlAttribute()]
-        public tYesNo engineeringRegistry { get; set; }
+        public TYesNo engineeringRegistry { get; set; }
 
         [XmlIgnore()]
         public bool engineeringRegistrySpecified { get; set; }
 
         [XmlAttribute()]
-        public tYesNo constructionRegistry { get; set; }
+        public TYesNo constructionRegistry { get; set; }
 
         [XmlIgnore()]
         public bool constructionRegistrySpecified { get; set; }

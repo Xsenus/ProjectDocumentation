@@ -19,68 +19,48 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
 {
     public partial class ExpertEngineeringSurveyEdit : XtraForm
     {
-        private Session Session => SessionController.GetSession();
-
-        public bool IsSave { get; private set; }
-        public tExpertEngineeringSurveys ExpertEngineeringSurvey { get; private set; }
-        public List<tMismatch> _tMismatches = new List<tMismatch>();
+        public List<TMismatch> _tMismatches = new List<TMismatch>();
 
         public ExpertEngineeringSurveyEdit()
         {
             InitializeComponent();
         }
 
-        public ExpertEngineeringSurveyEdit(tExpertEngineeringSurveys tExpertEngineeringSurveys) : this()
+        public ExpertEngineeringSurveyEdit(TExpertEngineeringSurveys TExpertEngineeringSurveys) : this()
         {
-            ExpertEngineeringSurvey = tExpertEngineeringSurveys;
+            ExpertEngineeringSurvey = TExpertEngineeringSurveys;
         }
 
-        private async Task FillFormControllersAsync()
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
+        private void barBtnMismatchesAdd_ItemClick(object sender, ItemClickEventArgs e)
         {
-            var collection = await new XPQuery<GeneralizedDictionaryXPO>(Session).ToListAsync();
-
-            cmbEngineeringSurveyType.Properties.Items.AddRange(collection
-                .Where(w => w.GeneralizedDictionary == GeneralizedDictionary.EngineeringSurveyType).ToList());
+            _tMismatches.Add(new TMismatch());
+            gridControlMismatches.DataSource = _tMismatches.ToArray();
+            gridControlMismatches.RefreshDataSource();
         }
 
-        private async void Obj_Load(object sender, EventArgs e)
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
+        private void barBtnMismatchesDel_ItemClick(object sender, ItemClickEventArgs e)
         {
-            await FillFormControllersAsync();
+            if (gridViewMismatches.GetRow(gridViewMismatches.FocusedRowHandle) is TMismatch obj)
+            {
+                if (XtraMessageBox.Show(
+                    "Вы действительно хотите удалить выделенный объект?",
+                    "Информационное сообщение",
+                    MessageBoxButtons.OKCancel,
+                    MessageBoxIcon.Question) == DialogResult.OK)
+                {
+                    _tMismatches.Remove(obj);
+                    gridControlMismatches.DataSource = _tMismatches.ToArray();
+                    gridControlMismatches.RefreshDataSource();
+                }
+            }
+        }
 
-            if (ExpertEngineeringSurvey is null)
-            {
-                ExpertEngineeringSurvey = new tExpertEngineeringSurveys();
-            }
-
-            cmbEngineeringSurveyType.EditValue = cmbEngineeringSurveyType.Properties.Items
-                    ?.Cast<GeneralizedDictionaryXPO>()
-                    ?.Where(w => w.GeneralizedDictionary == GeneralizedDictionary.EngineeringSurveyType)
-                    ?.FirstOrDefault(f => f.Value == ExpertEngineeringSurvey?.EngineeringSurveyType.GetEnumXmlAttributeValue().ToString());
-            memoEngineeringSurveyConditions.EditValue = ExpertEngineeringSurvey.EngineeringSurveyConditions;
-            memoEngineeringSurveyProgramNote.EditValue = ExpertEngineeringSurvey.EngineeringSurveyProgramNote;
-            memoEngineeringSurveyMethods.EditValue = ExpertEngineeringSurvey.EngineeringSurveyMethods;
-            memoEngineeringSurveyChanges.EditValue = ExpertEngineeringSurvey.EngineeringSurveyChanges;
-            _tMismatches = ExpertEngineeringSurvey.Mismatches?.ToList() ?? new List<tMismatch>();
-            gridControlMismatches.DataSource = _tMismatches;
-            foreach (GridColumn column in gridViewMismatches.Columns.Cast<GridColumn>())
-            {
-                column.Visible = false;
-            }
-            if (gridViewMismatches.Columns[nameof(tMismatch.Summary)] is GridColumn gridColumnSummary)
-            {
-                gridColumnSummary.Caption = "Вывод о несоответствии";
-                gridColumnSummary.Visible = true;
-            }
-            if (gridViewMismatches.Columns[nameof(tMismatch.Part)] is GridColumn gridColumnPart)
-            {
-                gridColumnPart.Caption = "Ссылка на материалы";
-                gridColumnPart.Visible = true;
-            }
-            if (gridViewMismatches.Columns[nameof(tMismatch.Link)] is GridColumn gridColumnLink)
-            {
-                gridColumnLink.Caption = "Ссылка на конкретное требование";
-                gridColumnLink.Visible = true;
-            }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
+        private void btnClose_Click(object sender, EventArgs e)
+        {
+            Close();
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
@@ -88,26 +68,24 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
         {
             try
             {
-                ExpertEngineeringSurvey.EngineeringSurveyType = ConclusionEdit.GetEnumByAttributeValue<tEngineeringSurveyType>(ConclusionEdit.GetValueGeneralizedDictionary(
+                ExpertEngineeringSurvey.EngineeringSurveyType = ConclusionEdit.GetEnumByAttributeValue<TEngineeringSurveyType>(ConclusionEdit.GetValueGeneralizedDictionary(
                     cmbEngineeringSurveyType,
                     message: "Заполните поле вид инженерных изысканий")?.Value);
-                ExpertEngineeringSurvey.EngineeringSurveyConditions = ConclusionEdit.GetStringValue(memoEngineeringSurveyConditions.EditValue,
-                    memoEngineeringSurveyConditions, "Заполните поле.", isNullAble: true);
-                ExpertEngineeringSurvey.EngineeringSurveyProgramNote = ConclusionEdit.GetStringValue(memoEngineeringSurveyProgramNote.EditValue,
-                    memoEngineeringSurveyProgramNote, "Заполните поле.", isNullAble: true);
-                ExpertEngineeringSurvey.EngineeringSurveyMethods = ConclusionEdit.GetStringValue(memoEngineeringSurveyMethods.EditValue,
-                    memoEngineeringSurveyMethods, "Заполните поле.", isNullAble: true);
-                ExpertEngineeringSurvey.EngineeringSurveyChanges = ConclusionEdit.GetStringValue(memoEngineeringSurveyChanges.EditValue,
-                    memoEngineeringSurveyChanges, "Заполните поле.", isNullAble: true);
+                //ExpertEngineeringSurvey.EngineeringSurveyConditions = ConclusionEdit.GetStringValue(memoEngineeringSurveyConditions.EditValue,
+                //    memoEngineeringSurveyConditions, "Заполните поле.", isNullAble: true);
+                //ExpertEngineeringSurvey.EngineeringSurveyProgramNote = ConclusionEdit.GetStringValue(memoEngineeringSurveyProgramNote.EditValue,
+                //    memoEngineeringSurveyProgramNote, "Заполните поле.", isNullAble: true);
+                //ExpertEngineeringSurvey.EngineeringSurveyMethods = ConclusionEdit.GetStringValue(memoEngineeringSurveyMethods.EditValue,
+                //    memoEngineeringSurveyMethods, "Заполните поле.", isNullAble: true);
+                //ExpertEngineeringSurvey.EngineeringSurveyChanges = ConclusionEdit.GetStringValue(memoEngineeringSurveyChanges.EditValue,
+                //    memoEngineeringSurveyChanges, "Заполните поле.", isNullAble: true);
                 if (_tMismatches.Count > 0)
                 {
-                    ExpertEngineeringSurvey.Mismatches = _tMismatches.ToArray();
+                    foreach (var item in _tMismatches)
+                    {
+                        ExpertEngineeringSurvey.Mismatches.Add(item);
+                    }
                 }
-                else
-                {
-                    ExpertEngineeringSurvey.Mismatches = null;
-                }
-
             }
             catch (Exception ex)
             {
@@ -116,12 +94,6 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
             }
 
             IsSave = true;
-            Close();
-        }
-
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
-        private void btnClose_Click(object sender, EventArgs e)
-        {
             Close();
         }
 
@@ -137,6 +109,14 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
             }
         }
 
+        private async Task FillFormControllersAsync()
+        {
+            var collection = await new XPQuery<GeneralizedDictionaryXPO>(Session).ToListAsync();
+
+            cmbEngineeringSurveyType.Properties.Items.AddRange(collection
+                .Where(w => w.GeneralizedDictionary == GeneralizedDictionary.EngineeringSurveyType).ToList());
+        }
+
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
         private void gridViewMismatches_PopupMenuShowing(object sender, PopupMenuShowingEventArgs e)
         {
@@ -146,30 +126,48 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
             }
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
-        private void barBtnMismatchesAdd_ItemClick(object sender, ItemClickEventArgs e)
+        private async void Obj_Load(object sender, EventArgs e)
         {
-            _tMismatches.Add(new tMismatch());
-            gridControlMismatches.DataSource = _tMismatches.ToArray();
-            gridControlMismatches.RefreshDataSource();
-        }
+            await FillFormControllersAsync();
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
-        private void barBtnMismatchesDel_ItemClick(object sender, ItemClickEventArgs e)
-        {
-            if (gridViewMismatches.GetRow(gridViewMismatches.FocusedRowHandle) is tMismatch obj)
+            if (ExpertEngineeringSurvey is null)
             {
-                if (XtraMessageBox.Show(
-                    "Вы действительно хотите удалить выделенный объект?",
-                    "Информационное сообщение",
-                    MessageBoxButtons.OKCancel,
-                    MessageBoxIcon.Question) == DialogResult.OK)
-                {
-                    _tMismatches.Remove(obj);
-                    gridControlMismatches.DataSource = _tMismatches.ToArray();
-                    gridControlMismatches.RefreshDataSource();
-                }
+                ExpertEngineeringSurvey = new TExpertEngineeringSurveys();
+            }
+
+            cmbEngineeringSurveyType.EditValue = cmbEngineeringSurveyType.Properties.Items
+                    ?.Cast<GeneralizedDictionaryXPO>()
+                    ?.Where(w => w.GeneralizedDictionary == GeneralizedDictionary.EngineeringSurveyType)
+                    ?.FirstOrDefault(f => f.Value == ExpertEngineeringSurvey?.EngineeringSurveyType.GetEnumXmlAttributeValue().ToString());
+            //memoEngineeringSurveyConditions.EditValue = ExpertEngineeringSurvey.EngineeringSurveyConditions;
+            //memoEngineeringSurveyProgramNote.EditValue = ExpertEngineeringSurvey.EngineeringSurveyProgramNote;
+            //memoEngineeringSurveyMethods.EditValue = ExpertEngineeringSurvey.EngineeringSurveyMethods;
+            //memoEngineeringSurveyChanges.EditValue = ExpertEngineeringSurvey.EngineeringSurveyChanges;
+            _tMismatches = ExpertEngineeringSurvey.Mismatches?.ToList() ?? new List<TMismatch>();
+            gridControlMismatches.DataSource = _tMismatches;
+            foreach (GridColumn column in gridViewMismatches.Columns.Cast<GridColumn>())
+            {
+                column.Visible = false;
+            }
+            if (gridViewMismatches.Columns[nameof(TMismatch.Summary)] is GridColumn gridColumnSummary)
+            {
+                gridColumnSummary.Caption = "Вывод о несоответствии";
+                gridColumnSummary.Visible = true;
+            }
+            if (gridViewMismatches.Columns[nameof(TMismatch.Part)] is GridColumn gridColumnPart)
+            {
+                gridColumnPart.Caption = "Ссылка на материалы";
+                gridColumnPart.Visible = true;
+            }
+            if (gridViewMismatches.Columns[nameof(TMismatch.Link)] is GridColumn gridColumnLink)
+            {
+                gridColumnLink.Caption = "Ссылка на конкретное требование";
+                gridColumnLink.Visible = true;
             }
         }
+
+        private Session Session => SessionController.GetSession();
+        public TExpertEngineeringSurveys ExpertEngineeringSurvey { get; private set; }
+        public bool IsSave { get; private set; }
     }
 }

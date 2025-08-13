@@ -1,6 +1,4 @@
-﻿// Ignore Spelling: Expret
-
-using Core.NET.AutoModels.ConclusionObj;
+﻿using Core.NET.AutoModels.ConclusionObj;
 using Core.NET.Controllers;
 using Core.NET.Extensions;
 using Core.NET.Models.XPO;
@@ -13,50 +11,22 @@ using System.Windows.Forms;
 
 namespace ProjectDocumentation.NET.Forms.ObjectChange
 {
-    public partial class ExpretEdit : XtraForm
+    public partial class ExpertEdit : XtraForm
     {
-        private Session Session => SessionController.GetSession();
-        public bool IsSave { get; private set; }
-        public tExpert Expert { get; private set; }
-
-        public ExpretEdit()
+        public ExpertEdit()
         {
             InitializeComponent();
         }
 
-        public ExpretEdit(tExpert expert) : this()
+        public ExpertEdit(TExpert expert) : this()
         {
             Expert = expert;
         }
-        private async Task FillFormControllersAsync()
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
+        private void btnCancel_Click(object sender, EventArgs e)
         {
-            var collection = await new XPQuery<GeneralizedDictionaryXPO>(Session).ToListAsync();
-
-            cmbExpertType.Properties.Items.AddRange(collection
-                .Where(w => w.GeneralizedDictionary == GeneralizedDictionary.ExpertType).ToList());
-        }
-
-        private async void ExpretEdit_Load(object sender, EventArgs e)
-        {
-            await FillFormControllersAsync();
-
-            if (Expert is null)
-            {
-                Expert = new tExpert();
-            }
-            else
-            {
-                txtFamilyName.EditValue = Expert.FamilyName;
-                txtFirstName.EditValue = Expert.FirstName;
-                txtSecondName.EditValue = Expert.SecondName;
-                cmbExpertType.EditValue = cmbExpertType.Properties.Items
-                    ?.Cast<GeneralizedDictionaryXPO>()
-                    ?.Where(w => w.GeneralizedDictionary == GeneralizedDictionary.ExpertType)
-                    ?.FirstOrDefault(f => f.Value == Expert.ExpertType.GetEnumXmlAttributeValue()?.ToString());
-                txtExpertCertificate.EditValue = Expert.ExpertCertificate;
-                dateExpertCertificateBeginDate.EditValue = Expert.ExpertCertificateBeginDate;
-                dateExpertCertificateEndDate.EditValue = Expert.ExpertCertificateEndDate;
-            }
+            Close();
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
@@ -67,7 +37,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                 Expert.FamilyName = ConclusionEdit.GetStringValue(txtFamilyName.EditValue, txtFamilyName, "Заполните поле фамилию");
                 Expert.FirstName = ConclusionEdit.GetStringValue(txtFirstName.EditValue, txtFirstName, "Заполните поле имя");
                 Expert.SecondName = ConclusionEdit.GetStringValue(txtSecondName.EditValue, txtSecondName, isNullAble: true);
-                Expert.ExpertType = ConclusionEdit.GetEnumByAttributeValue<tExpertType>(ConclusionEdit.GetValueGeneralizedDictionary(
+                Expert.ExpertType = ConclusionEdit.GetEnumByAttributeValue<TExpertType>(ConclusionEdit.GetValueGeneralizedDictionary(
                         cmbExpertType,
                         message: "Заполните поле направление деятельности эксперта")?.Value);
                 Expert.ExpertCertificate = ConclusionEdit.GetStringValue(txtExpertCertificate.EditValue, txtExpertCertificate, "Заполните номер сертификата");
@@ -112,10 +82,38 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
             Close();
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
-        private void btnCancel_Click(object sender, EventArgs e)
+        private async void ExpretEdit_Load(object sender, EventArgs e)
         {
-            Close();
+            await FillFormControllersAsync();
+
+            if (Expert is null)
+            {
+                Expert = new TExpert();
+            }
+            else
+            {
+                txtFamilyName.EditValue = Expert.FamilyName;
+                txtFirstName.EditValue = Expert.FirstName;
+                txtSecondName.EditValue = Expert.SecondName;
+                cmbExpertType.EditValue = cmbExpertType.Properties.Items
+                    ?.Cast<GeneralizedDictionaryXPO>()
+                    ?.Where(w => w.GeneralizedDictionary == GeneralizedDictionary.ExpertType)
+                    ?.FirstOrDefault(f => f.Value == Expert.ExpertType.GetEnumXmlAttributeValue()?.ToString());
+                txtExpertCertificate.EditValue = Expert.ExpertCertificate;
+                dateExpertCertificateBeginDate.EditValue = Expert.ExpertCertificateBeginDate;
+                dateExpertCertificateEndDate.EditValue = Expert.ExpertCertificateEndDate;
+            }
         }
+        private async Task FillFormControllersAsync()
+        {
+            var collection = await new XPQuery<GeneralizedDictionaryXPO>(Session).ToListAsync();
+
+            cmbExpertType.Properties.Items.AddRange(collection
+                .Where(w => w.GeneralizedDictionary == GeneralizedDictionary.ExpertType).ToList());
+        }
+
+        private Session Session => SessionController.GetSession();
+        public TExpert Expert { get; private set; }
+        public bool IsSave { get; private set; }
     }
 }

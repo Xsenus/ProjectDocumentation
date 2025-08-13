@@ -1,4 +1,4 @@
-﻿using Core.NET.AutoModels;
+﻿using Core.NET.AutoModels.ConclusionObj;
 using Core.NET.DaDataObj;
 using DevExpress.XtraEditors;
 using DevExpress.XtraEditors.Controls;
@@ -10,48 +10,88 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
 {
     public partial class ConclusionBaseSettingEdit : XtraForm
     {
-        public bool IsSave { get; private set; }
-        public tOrganization Organization { get; private set; }
-        public tWorkPerson Person { get; private set; }
-
         public ConclusionBaseSettingEdit()
         {
             InitializeComponent();
         }
 
-        public ConclusionBaseSettingEdit(tOrganization tOrganization, tWorkPerson person) : this()
+        public ConclusionBaseSettingEdit(TOrganization TOrganization, TWorkPerson person) : this()
         {
-            Organization = tOrganization;
+            Organization = TOrganization;
             Person = person;
         }
 
-        private void ConclusionBaseSettingEdit_Load(object sender, EventArgs e)
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
+        private async void btnAddress_ButtonPressed(object sender, ButtonPressedEventArgs e)
         {
-            if (Organization is null)
+            if (sender is ButtonEdit buttonEdit)
             {
-                Organization = new tOrganization
+                if (e.Button.Kind == ButtonPredefines.Delete)
                 {
-                    OrgINN = "5405997054"
-                };
+                    buttonEdit.EditValue = null;
+                }
+                else if (e.Button.Kind == ButtonPredefines.Ellipsis)
+                {
+                    AddressEdit form;
+                    if (buttonEdit.EditValue is TAddress address)
+                    {
+                        form = new AddressEdit(address);
+                    }
+                    else
+                    {
+                        form = new AddressEdit();
+                    }
+
+                    form.ShowDialog();
+                    if (form.IsSave)
+                    {
+                        buttonEdit.EditValue = form.Address;
+                    }
+                }
+                else if (e.Button.Kind == ButtonPredefines.Search)
+                {
+                    var obj = buttonEdit.EditValue?.ToString();
+                    if (!string.IsNullOrWhiteSpace(obj))
+                    {
+                        var addressData = await DaDataObj.GetAddressAsync(obj);
+                        if (addressData != null)
+                        {
+                            var address = new TAddress()
+                            {
+                                Country = addressData.country,
+                                District = addressData.city_district,
+                                City = addressData.city,
+                                Settlement = addressData.settlement,
+                                Street = addressData.street,
+                                Building = addressData.house,
+                                Room = addressData.flat,
+                                Note = addressData.result,
+                            };
+
+                            try
+                            {
+                                var region = ConclusionEdit.GetEnumByAttributeValue<TRegionsRf>(addressData.region_kladr_id?.Replace("0", string.Empty));
+                                address.Region = region;
+                            }
+                            catch (Exception)
+                            {
+                                XtraMessageBox.Show("Регион не определен, введите вручную",
+                                    "Информационное сообщение",
+                                    MessageBoxButtons.OK,
+                                    MessageBoxIcon.Exclamation);
+                            }
+
+                            buttonEdit.EditValue = address;
+                        }
+                    }
+                }
             }
+        }
 
-            btnSearch.EditValue = Organization.OrgINN;
-            txtOrgFullName.EditValue = Organization.OrgFullName;
-            txtOrgOGRN.EditValue = Organization.OrgOGRN;
-            txtOrgKPP.EditValue = Organization.OrgKPP;
-            txtOrgINN.EditValue = Organization.OrgINN;
-            txtEmail.EditValue = Organization.Email;
-            btnAddress.EditValue = Organization.Address;
-
-            if (Person is null)
-            {
-                Person = new tWorkPerson();
-            }
-
-            txtFamilyName.EditValue = Person.FamilyName;
-            txtFirstName.EditValue = Person.FirstName;
-            txtSecondName.EditValue = Person.SecondName;
-            txtPosition.EditValue = Person.Position;
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
+        private void btnCancel_Click(object sender, EventArgs e)
+        {
+            Close();
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
@@ -60,11 +100,11 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
             try
             {
                 Organization.OrgFullName = ConclusionEdit.GetStringValue(txtOrgFullName.EditValue, txtOrgFullName, "Заполните наименование организации");
-                Organization.OrgOGRN = ConclusionEdit.GetStringValue(txtOrgOGRN.EditValue, txtOrgOGRN, "Заполните ОГРН организации");
-                Organization.OrgKPP = ConclusionEdit.GetStringValue(txtOrgKPP.EditValue, txtOrgKPP, "Заполните КПП организации");
-                Organization.OrgINN = ConclusionEdit.GetStringValue(txtOrgINN.EditValue, txtOrgINN, "Заполните ИНН организации");
+                Organization.OrgOgrn = ConclusionEdit.GetStringValue(txtOrgOGRN.EditValue, txtOrgOGRN, "Заполните ОГРН организации");
+                Organization.OrgKpp = ConclusionEdit.GetStringValue(txtOrgKPP.EditValue, txtOrgKPP, "Заполните КПП организации");
+                Organization.OrgInn = ConclusionEdit.GetStringValue(txtOrgINN.EditValue, txtOrgINN, "Заполните ИНН организации");
                 Organization.Email = ConclusionEdit.GetStringValue(txtEmail.EditValue, txtEmail, isNullAble: true);
-                if (btnAddress.EditValue is tAddress address)
+                if (btnAddress.EditValue is TAddress address)
                 {
                     Organization.Address = address;
                 }
@@ -93,12 +133,6 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
             }
 
             IsSave = true;
-            Close();
-        }
-
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
-        private void btnCancel_Click(object sender, EventArgs e)
-        {
             Close();
         }
 
@@ -134,7 +168,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                             var addressData = data.address?.data;
                             if (addressData != null)
                             {
-                                var address = new tAddress()
+                                var address = new TAddress()
                                 {
                                     Country = addressData.country,
                                     District = addressData.city_district,
@@ -148,7 +182,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
 
                                 try
                                 {
-                                    var region = ConclusionEdit.GetEnumByAttributeValue<tRegionsRF>(addressData.region_kladr_id?.Replace("0", string.Empty));
+                                    var region = ConclusionEdit.GetEnumByAttributeValue<TRegionsRf>(addressData.region_kladr_id?.Replace("0", string.Empty));
                                     address.Region = region;
                                 }
                                 catch (Exception)
@@ -176,71 +210,37 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
             }
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
-        private async void btnAddress_ButtonPressed(object sender, ButtonPressedEventArgs e)
+        private void ConclusionBaseSettingEdit_Load(object sender, EventArgs e)
         {
-            if (sender is ButtonEdit buttonEdit)
+            if (Organization is null)
             {
-                if (e.Button.Kind == ButtonPredefines.Delete)
+                Organization = new TOrganization
                 {
-                    buttonEdit.EditValue = null;
-                }
-                else if (e.Button.Kind == ButtonPredefines.Ellipsis)
-                {
-                    AddressEdit form;
-                    if (buttonEdit.EditValue is tAddress address)
-                    {
-                        form = new AddressEdit(address);
-                    }
-                    else
-                    {
-                        form = new AddressEdit();
-                    }
-
-                    form.ShowDialog();
-                    if (form.IsSave)
-                    {
-                        buttonEdit.EditValue = form.Address;
-                    }
-                }
-                else if (e.Button.Kind == ButtonPredefines.Search)
-                {
-                    var obj = buttonEdit.EditValue?.ToString();
-                    if (!string.IsNullOrWhiteSpace(obj))
-                    {
-                        var addressData = await DaDataObj.GetAddressAsync(obj);
-                        if (addressData != null)
-                        {
-                            var address = new tAddress()
-                            {
-                                Country = addressData.country,
-                                District = addressData.city_district,
-                                City = addressData.city,
-                                Settlement = addressData.settlement,
-                                Street = addressData.street,
-                                Building = addressData.house,
-                                Room = addressData.flat,
-                                Note = addressData.result,
-                            };
-
-                            try
-                            {
-                                var region = ConclusionEdit.GetEnumByAttributeValue<tRegionsRF>(addressData.region_kladr_id?.Replace("0", string.Empty));
-                                address.Region = region;
-                            }
-                            catch (Exception)
-                            {
-                                XtraMessageBox.Show("Регион не определен, введите вручную",
-                                    "Информационное сообщение",
-                                    MessageBoxButtons.OK,
-                                    MessageBoxIcon.Exclamation);
-                            }
-
-                            buttonEdit.EditValue = address;
-                        }
-                    }
-                }
+                    OrgInn = "5405997054"
+                };
             }
+
+            btnSearch.EditValue = Organization.OrgInn;
+            txtOrgFullName.EditValue = Organization.OrgFullName;
+            txtOrgOGRN.EditValue = Organization.OrgOgrn;
+            txtOrgKPP.EditValue = Organization.OrgKpp;
+            txtOrgINN.EditValue = Organization.OrgInn;
+            txtEmail.EditValue = Organization.Email;
+            btnAddress.EditValue = Organization.Address;
+
+            if (Person is null)
+            {
+                Person = new TWorkPerson();
+            }
+
+            txtFamilyName.EditValue = Person.FamilyName;
+            txtFirstName.EditValue = Person.FirstName;
+            txtSecondName.EditValue = Person.SecondName;
+            txtPosition.EditValue = Person.Position;
         }
+
+        public bool IsSave { get; private set; }
+        public TOrganization Organization { get; private set; }
+        public TWorkPerson Person { get; private set; }
     }
 }

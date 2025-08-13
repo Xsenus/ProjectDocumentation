@@ -22,10 +22,6 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
 {
     public partial class ExpertProjectDocumentsEdit : XtraForm
     {
-        private Session Session => SessionController.GetSession();
-
-        public bool IsSave { get; private set; }
-        public tExpertProjectDocuments ExpertProjectDocuments { get; private set; }
         public List<MismatchObj> _mismatchObjS = new List<MismatchObj>();
 
         public ExpertProjectDocumentsEdit()
@@ -37,9 +33,166 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
             richEditControlDangerSolutions.ActiveViewType = RichEditViewType.Simple;
         }
 
-        public ExpertProjectDocumentsEdit(tExpertProjectDocuments tExpertProjectDocuments) : this()
+        public ExpertProjectDocumentsEdit(TExpertProjectDocuments TExpertProjectDocuments) : this()
         {
-            ExpertProjectDocuments = tExpertProjectDocuments;
+            ExpertProjectDocuments = TExpertProjectDocuments;
+        }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
+        private void barBtnAdd_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            _mismatchObjS.Add(new MismatchObj());
+            gridControlProjectDocumentsMismatches.DataSource = _mismatchObjS.ToArray();
+            gridControlProjectDocumentsMismatches.RefreshDataSource();
+        }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
+        private void barBtnDel_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            if (gridViewProjectDocumentsMismatches.GetRow(gridViewProjectDocumentsMismatches.FocusedRowHandle) is MismatchObj obj)
+            {
+                if (XtraMessageBox.Show(
+                    "Вы действительно хотите удалить выделенный объект?",
+                    "Информационное сообщение",
+                    MessageBoxButtons.OKCancel,
+                    MessageBoxIcon.Question) == DialogResult.OK)
+                {
+                    _mismatchObjS.Remove(obj);
+                    gridControlProjectDocumentsMismatches.DataSource = _mismatchObjS.ToArray();
+                    gridControlProjectDocumentsMismatches.RefreshDataSource();
+                }
+            }
+        }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
+        private void btnClose_Click(object sender, EventArgs e)
+        {
+            Close();
+        }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
+        private void btnSave_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                ExpertProjectDocuments.ExpertType = ConclusionEdit.GetEnumByAttributeValue<TExpertType>(ConclusionEdit.GetValueGeneralizedDictionary(
+                    cmbExpertType,
+                    message: "Заполните поле направление деятельности в области экспертизы проектной документации.")?.Value);
+
+                //ExpertProjectDocuments.ProjectDocumentsReview = ConclusionEdit.GetStringValue(richEditControlProjectDocumentsReview.Text, richEditControlProjectDocumentsReview, "Заполните поле описание основных решений (мероприятий), принятых в проектной документации.", isNullAble: true);
+                //ExpertProjectDocuments.ProjectDocumentsChanges = ConclusionEdit.GetStringValue(richEditControlProjectDocumentsChanges.Text, richEditControlProjectDocumentsChanges, "Заполните поле сведения об оперативных изменениях.", isNullAble: true);
+
+                //ExpertProjectDocuments.ProjectDocumentsReview = null;
+                //ExpertProjectDocuments.ProjectDocumentsChanges = null;
+
+                ExpertProjectDocuments.DangerSolutions = ConclusionEdit.GetStringValue(richEditControlDangerSolutions.Text, richEditControlDangerSolutions, "Заполните поле сведения о решениях о решениях, которые которые в случае их реализации могли привести к риску возникновения аварийных ситуаций, гибели людей, причинения значительного материального ущерба и которые в ходе проведения государственной экспертизы были приведены в соответствие с установленными требованиями.", isNullAble: true);
+
+                if (string.IsNullOrWhiteSpace(ExpertProjectDocuments.DangerSolutions))
+                {
+                    ExpertProjectDocuments.DangerSolutions = null;
+                }
+
+                if (_mismatchObjS.Count > 0)
+                {
+                    ExpertProjectDocuments.Mismatches = new TProjectDocumentsMismatches();
+
+                    if (_mismatchObjS.Where(w => w.Type == MismatchObjType.EngineeringSurveyMismatch).Count() > 0)
+                    {
+                        var objs = _mismatchObjS
+                            .Where(w => w.Type == MismatchObjType.EngineeringSurveyMismatch)
+                            .Select(s => new TMismatch() { Summary = s.Summary, Link = s.Link, Part = s.Part })
+                            .ToArray();
+
+                        if (objs != null)
+                        {
+                            foreach (var item in objs)
+                            {
+                                ExpertProjectDocuments.Mismatches.EngineeringSurveyMismatch.Add(item);
+                            }
+                        }
+                    }
+
+                    if (_mismatchObjS.Where(w => w.Type == MismatchObjType.ProjectTaskMismatch).Count() > 0)
+                    {
+                        var objs = _mismatchObjS
+                            .Where(w => w.Type == MismatchObjType.ProjectTaskMismatch)
+                            .Select(s => new TMismatch() { Summary = s.Summary, Link = s.Link, Part = s.Part })
+                            .ToArray();
+
+                        if (objs != null)
+                        {
+                            foreach (var item in objs)
+                            {
+                                ExpertProjectDocuments.Mismatches.ProjectTaskMismatch.Add(item);
+                            }
+                        }
+                    }
+
+                    if (_mismatchObjS.Where(w => w.Type == MismatchObjType.NormsMismatch).Count() > 0)
+                    {
+                        var objs = _mismatchObjS
+                            .Where(w => w.Type == MismatchObjType.NormsMismatch)
+                            .Select(s => new TMismatch() { Summary = s.Summary, Link = s.Link, Part = s.Part })
+                            .ToArray();
+
+                        if (objs != null)
+                        {
+                            foreach (var item in objs)
+                            {
+                                ExpertProjectDocuments.Mismatches.NormsMismatch.Add(item);
+                            }
+                        }
+                    }
+                }
+
+                var dangerMismatch = ConclusionEdit.GetStringValue(memoDangerMismatch.Text, memoDangerMismatch, "Описание решения, реализация которого может привести к риску возникновения аварийных ситуаций на объекте капитального строительства, гибели людей, причинения значительного материального ущерба.", isNullAble: true);
+                if (string.IsNullOrWhiteSpace(dangerMismatch))
+                {
+                    if (ExpertProjectDocuments.Mismatches != null)
+                    {
+                        ExpertProjectDocuments.Mismatches.DangerMismatch = null;
+                    }
+                }
+                else
+                {
+                    if (ExpertProjectDocuments.Mismatches is null)
+                    {
+                        ExpertProjectDocuments.Mismatches = new TProjectDocumentsMismatches();
+                    }
+                    ExpertProjectDocuments.Mismatches.DangerMismatch = dangerMismatch;
+                }
+
+                if (ExpertProjectDocuments.Mismatches != null)
+                {
+                    if (ExpertProjectDocuments.Mismatches.DangerMismatch is null
+                        && ExpertProjectDocuments.Mismatches.EngineeringSurveyMismatch is null
+                        && ExpertProjectDocuments.Mismatches.NormsMismatch is null
+                        && ExpertProjectDocuments.Mismatches.ProjectTaskMismatch is null)
+                    {
+                        ExpertProjectDocuments.Mismatches = null;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                XtraMessageBox.Show(ex.Message, "Информационное сообщение", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            IsSave = true;
+            Close();
+        }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
+        private void buttonEdit_ButtonPressed(object sender, ButtonPressedEventArgs e)
+        {
+            if (sender is ButtonEdit buttonEdit)
+            {
+                if (e.Button.Kind == ButtonPredefines.Delete)
+                {
+                    buttonEdit.EditValue = null;
+                }
+            }
         }
 
         private async Task FillFormControllersAsync()
@@ -50,47 +203,13 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                 .Where(w => w.GeneralizedDictionary == GeneralizedDictionary.ExpertType).ToList());
         }
 
-        public class MismatchObj
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
+        private void gridViewProjectDocumentsMismatches_PopupMenuShowing(object sender, DevExpress.XtraGrid.Views.Grid.PopupMenuShowingEventArgs e)
         {
-            public MismatchObj() { }
-
-            public MismatchObj(MismatchObjType type)
+            if (sender is GridView)
             {
-                Type = type;
+                popupMenuMismatches.ShowPopup(new Point(Cursor.Position.X, Cursor.Position.Y));
             }
-
-            public MismatchObj(MismatchObjType type, tMismatch tMismatch) : this(type)
-            {
-                Summary = tMismatch.Summary;
-                Part = tMismatch.Part;
-                Link = tMismatch.Link;
-            }
-
-            public MismatchObjType Type { get; set; }
-            public string Summary { get; set; }
-            public string Part { get; set; }
-            public string Link { get; set; }
-        }
-
-        public enum MismatchObjType
-        {
-            /// <summary>
-            /// Сведения о несоответствии проектной документации результату инженерных изысканий.
-            /// </summary>
-            [Description("Сведения о несоответствии проектной документации результату инженерных изысканий")]
-            EngineeringSurveyMismatch,
-
-            /// <summary>
-            /// Сведения о несоответствии проектной документации заданию на проектирование.
-            /// </summary>
-            [Description("Сведения о несоответствии проектной документации заданию на проектирование")]
-            ProjectTaskMismatch,
-
-            /// <summary>
-            /// Сведения о несоответствии проектной документации требованиям технических регламентов.
-            /// </summary>
-            [Description("Сведения о несоответствии проектной документации требованиям технических регламентов")]
-            NormsMismatch
         }
 
         private async void ObjPartEdit_Load(object sender, EventArgs e)
@@ -99,7 +218,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
 
             if (ExpertProjectDocuments is null)
             {
-                ExpertProjectDocuments = new tExpertProjectDocuments();
+                ExpertProjectDocuments = new TExpertProjectDocuments();
             }
 
             cmbExpertType.EditValue = cmbExpertType.Properties.Items
@@ -107,8 +226,8 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                     ?.Where(w => w.GeneralizedDictionary == GeneralizedDictionary.ExpertType)
                     ?.FirstOrDefault(f => f.Value == ExpertProjectDocuments?.ExpertType.GetEnumXmlAttributeValue().ToString());
 
-            richEditControlProjectDocumentsReview.Text = ExpertProjectDocuments.ProjectDocumentsReview;
-            richEditControlProjectDocumentsChanges.Text = ExpertProjectDocuments.ProjectDocumentsChanges;
+            //richEditControlProjectDocumentsReview.Text = ExpertProjectDocuments.ProjectDocumentsReview;
+            //richEditControlProjectDocumentsChanges.Text = ExpertProjectDocuments.ProjectDocumentsChanges;
             richEditControlDangerSolutions.Text = ExpertProjectDocuments.DangerSolutions;
 
             if (ExpertProjectDocuments.Mismatches?.EngineeringSurveyMismatch?.Count() > 0)
@@ -162,167 +281,51 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
             memoDangerMismatch.EditValue = ExpertProjectDocuments.Mismatches?.DangerMismatch;
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
-        private void btnSave_Click(object sender, EventArgs e)
+        private Session Session => SessionController.GetSession();
+        public TExpertProjectDocuments ExpertProjectDocuments { get; private set; }
+        public bool IsSave { get; private set; }
+
+        public class MismatchObj
         {
-            try
+            public MismatchObj() { }
+
+            public MismatchObj(MismatchObjType type)
             {
-                ExpertProjectDocuments.ExpertType = ConclusionEdit.GetEnumByAttributeValue<tExpertType>(ConclusionEdit.GetValueGeneralizedDictionary(
-                    cmbExpertType,
-                    message: "Заполните поле направление деятельности в области экспертизы проектной документации.")?.Value);
-
-                ExpertProjectDocuments.ProjectDocumentsReview = ConclusionEdit.GetStringValue(richEditControlProjectDocumentsReview.Text, richEditControlProjectDocumentsReview, "Заполните поле описание основных решений (мероприятий), принятых в проектной документации.", isNullAble: true);
-                ExpertProjectDocuments.ProjectDocumentsChanges = ConclusionEdit.GetStringValue(richEditControlProjectDocumentsChanges.Text, richEditControlProjectDocumentsChanges, "Заполните поле сведения об оперативных изменениях.", isNullAble: true);
-
-                ExpertProjectDocuments.ProjectDocumentsReview = null;
-                ExpertProjectDocuments.ProjectDocumentsChanges = null;
-
-                ExpertProjectDocuments.DangerSolutions = ConclusionEdit.GetStringValue(richEditControlDangerSolutions.Text, richEditControlDangerSolutions, "Заполните поле сведения о решениях о решениях, которые которые в случае их реализации могли привести к риску возникновения аварийных ситуаций, гибели людей, причинения значительного материального ущерба и которые в ходе проведения государственной экспертизы были приведены в соответствие с установленными требованиями.", isNullAble: true);
-
-                if (string.IsNullOrWhiteSpace(ExpertProjectDocuments.DangerSolutions))
-                {
-                    ExpertProjectDocuments.DangerSolutions = null;
-                }
-
-                if (_mismatchObjS.Count > 0)
-                {
-                    ExpertProjectDocuments.Mismatches = new tProjectDocumentsMismatches();
-
-                    if (_mismatchObjS.Where(w => w.Type == MismatchObjType.EngineeringSurveyMismatch).Count() > 0)
-                    {
-                        ExpertProjectDocuments.Mismatches.EngineeringSurveyMismatch = _mismatchObjS
-                            .Where(w => w.Type == MismatchObjType.EngineeringSurveyMismatch)
-                            .Select(s => new tMismatch() { Summary = s.Summary, Link = s.Link, Part = s.Part })
-                            .ToArray();
-                    }
-                    else
-                    {
-                        ExpertProjectDocuments.Mismatches.EngineeringSurveyMismatch = null;
-                    }
-
-                    if (_mismatchObjS.Where(w => w.Type == MismatchObjType.ProjectTaskMismatch).Count() > 0)
-                    {
-                        ExpertProjectDocuments.Mismatches.ProjectTaskMismatch = _mismatchObjS
-                            .Where(w => w.Type == MismatchObjType.ProjectTaskMismatch)
-                            .Select(s => new tMismatch() { Summary = s.Summary, Link = s.Link, Part = s.Part })
-                            .ToArray();
-                    }
-                    else
-                    {
-                        ExpertProjectDocuments.Mismatches.ProjectTaskMismatch = null;
-                    }
-
-                    if (_mismatchObjS.Where(w => w.Type == MismatchObjType.NormsMismatch).Count() > 0)
-                    {
-                        ExpertProjectDocuments.Mismatches.NormsMismatch = _mismatchObjS
-                            .Where(w => w.Type == MismatchObjType.NormsMismatch)
-                            .Select(s => new tMismatch() { Summary = s.Summary, Link = s.Link, Part = s.Part })
-                            .ToArray();
-                    }
-                    else
-                    {
-                        ExpertProjectDocuments.Mismatches.NormsMismatch = null;
-                    }
-                }
-                else
-                {
-                    if (ExpertProjectDocuments.Mismatches != null)
-                    {
-                        ExpertProjectDocuments.Mismatches.EngineeringSurveyMismatch = null;
-                        ExpertProjectDocuments.Mismatches.ProjectTaskMismatch = null;
-                        ExpertProjectDocuments.Mismatches.NormsMismatch = null;
-                    }
-                }
-
-                var dangerMismatch = ConclusionEdit.GetStringValue(memoDangerMismatch.Text, memoDangerMismatch, "Описание решения, реализация которого может привести к риску возникновения аварийных ситуаций на объекте капитального строительства, гибели людей, причинения значительного материального ущерба.", isNullAble: true);
-                if (string.IsNullOrWhiteSpace(dangerMismatch))
-                {
-                    if (ExpertProjectDocuments.Mismatches != null)
-                    {
-                        ExpertProjectDocuments.Mismatches.DangerMismatch = null;
-                    }
-                }
-                else
-                {
-                    if (ExpertProjectDocuments.Mismatches is null)
-                    {
-                        ExpertProjectDocuments.Mismatches = new tProjectDocumentsMismatches();
-                    }
-                    ExpertProjectDocuments.Mismatches.DangerMismatch = dangerMismatch;
-                }
-
-                if (ExpertProjectDocuments.Mismatches != null)
-                {
-                    if (ExpertProjectDocuments.Mismatches.DangerMismatch is null
-                        && ExpertProjectDocuments.Mismatches.EngineeringSurveyMismatch is null
-                        && ExpertProjectDocuments.Mismatches.NormsMismatch is null
-                        && ExpertProjectDocuments.Mismatches.ProjectTaskMismatch is null)
-                    {
-                        ExpertProjectDocuments.Mismatches = null;
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                XtraMessageBox.Show(ex.Message, "Информационное сообщение", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
+                Type = type;
             }
 
-            IsSave = true;
-            Close();
-        }
-
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
-        private void btnClose_Click(object sender, EventArgs e)
-        {
-            Close();
-        }
-
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
-        private void buttonEdit_ButtonPressed(object sender, ButtonPressedEventArgs e)
-        {
-            if (sender is ButtonEdit buttonEdit)
+            public MismatchObj(MismatchObjType type, TMismatch TMismatch) : this(type)
             {
-                if (e.Button.Kind == ButtonPredefines.Delete)
-                {
-                    buttonEdit.EditValue = null;
-                }
+                Summary = TMismatch.Summary;
+                Part = TMismatch.Part;
+                Link = TMismatch.Link;
             }
+
+            public string Link { get; set; }
+            public string Part { get; set; }
+            public string Summary { get; set; }
+            public MismatchObjType Type { get; set; }
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
-        private void gridViewProjectDocumentsMismatches_PopupMenuShowing(object sender, DevExpress.XtraGrid.Views.Grid.PopupMenuShowingEventArgs e)
+        public enum MismatchObjType
         {
-            if (sender is GridView)
-            {
-                popupMenuMismatches.ShowPopup(new Point(Cursor.Position.X, Cursor.Position.Y));
-            }
-        }
+            /// <summary>
+            /// Сведения о несоответствии проектной документации результату инженерных изысканий.
+            /// </summary>
+            [Description("Сведения о несоответствии проектной документации результату инженерных изысканий")]
+            EngineeringSurveyMismatch,
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
-        private void barBtnAdd_ItemClick(object sender, ItemClickEventArgs e)
-        {
-            _mismatchObjS.Add(new MismatchObj());
-            gridControlProjectDocumentsMismatches.DataSource = _mismatchObjS.ToArray();
-            gridControlProjectDocumentsMismatches.RefreshDataSource();
-        }
+            /// <summary>
+            /// Сведения о несоответствии проектной документации заданию на проектирование.
+            /// </summary>
+            [Description("Сведения о несоответствии проектной документации заданию на проектирование")]
+            ProjectTaskMismatch,
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
-        private void barBtnDel_ItemClick(object sender, ItemClickEventArgs e)
-        {
-            if (gridViewProjectDocumentsMismatches.GetRow(gridViewProjectDocumentsMismatches.FocusedRowHandle) is MismatchObj obj)
-            {
-                if (XtraMessageBox.Show(
-                    "Вы действительно хотите удалить выделенный объект?",
-                    "Информационное сообщение",
-                    MessageBoxButtons.OKCancel,
-                    MessageBoxIcon.Question) == DialogResult.OK)
-                {
-                    _mismatchObjS.Remove(obj);
-                    gridControlProjectDocumentsMismatches.DataSource = _mismatchObjS.ToArray();
-                    gridControlProjectDocumentsMismatches.RefreshDataSource();
-                }
-            }
+            /// <summary>
+            /// Сведения о несоответствии проектной документации требованиям технических регламентов.
+            /// </summary>
+            [Description("Сведения о несоответствии проектной документации требованиям технических регламентов")]
+            NormsMismatch
         }
     }
 }

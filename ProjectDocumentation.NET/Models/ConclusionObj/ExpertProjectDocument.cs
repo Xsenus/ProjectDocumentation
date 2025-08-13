@@ -9,7 +9,7 @@ namespace ProjectDocumentation.NET.Models.ConclusionObj
 {
     public static class ExpertProjectDocumentController
     {
-        public static IEnumerable<ExpertProjectDocument> GetExpertProjectDocuments(ICollection<tExpertProjectDocuments> collection)
+        public static IEnumerable<ExpertProjectDocument> GetExpertProjectDocuments(ICollection<TExpertProjectDocuments> collection)
         {
             foreach (var obj in collection)
             {
@@ -22,13 +22,10 @@ namespace ProjectDocumentation.NET.Models.ConclusionObj
 
     public class ExpertProjectDocument
     {
-        public ExpertProjectDocument(tExpertProjectDocuments tExpertProjectDocuments)
+        public ExpertProjectDocument(TExpertProjectDocuments tExpertProjectDocuments)
         {
             ExpertProjectDocuments = tExpertProjectDocuments;
         }
-
-        public tExpertProjectDocuments ExpertProjectDocuments { get; private set; }
-        public string ExpertType { get; private set; }
 
         public async void SetEnumObj()
         {
@@ -47,5 +44,8 @@ namespace ProjectDocumentation.NET.Models.ConclusionObj
         {
             return base.ToString();
         }
+
+        public TExpertProjectDocuments ExpertProjectDocuments { get; private set; }
+        public string ExpertType { get; private set; }
     }
 }

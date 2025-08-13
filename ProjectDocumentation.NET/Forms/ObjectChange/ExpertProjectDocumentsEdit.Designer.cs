@@ -39,6 +39,13 @@
             this.layoutControlObjPart = new DevExpress.XtraLayout.LayoutControl();
             this.memoDangerMismatchMemo = new DevExpress.XtraEditors.MemoEdit();
             this.richEditControlProjectDocumentsReview = new DevExpress.XtraRichEdit.RichEditControl();
+            this.barManager = new DevExpress.XtraBars.BarManager(this.components);
+            this.barDockControlTop = new DevExpress.XtraBars.BarDockControl();
+            this.barDockControlBottom = new DevExpress.XtraBars.BarDockControl();
+            this.barDockControlLeft = new DevExpress.XtraBars.BarDockControl();
+            this.barDockControlRight = new DevExpress.XtraBars.BarDockControl();
+            this.barBtnAdd = new DevExpress.XtraBars.BarButtonItem();
+            this.barBtnDel = new DevExpress.XtraBars.BarButtonItem();
             this.btnClose = new DevExpress.XtraEditors.SimpleButton();
             this.cmbExpertType = new DevExpress.XtraEditors.ComboBoxEdit();
             this.richEditControlProjectDocumentsChanges = new DevExpress.XtraRichEdit.RichEditControl();
@@ -66,16 +73,10 @@
             this.splitterItem = new DevExpress.XtraLayout.SplitterItem();
             this.layoutControlItemProjectDocumentsChanges = new DevExpress.XtraLayout.LayoutControlItem();
             this.popupMenuMismatches = new DevExpress.XtraBars.PopupMenu(this.components);
-            this.barManager = new DevExpress.XtraBars.BarManager(this.components);
-            this.barDockControlTop = new DevExpress.XtraBars.BarDockControl();
-            this.barDockControlBottom = new DevExpress.XtraBars.BarDockControl();
-            this.barDockControlLeft = new DevExpress.XtraBars.BarDockControl();
-            this.barDockControlRight = new DevExpress.XtraBars.BarDockControl();
-            this.barBtnAdd = new DevExpress.XtraBars.BarButtonItem();
-            this.barBtnDel = new DevExpress.XtraBars.BarButtonItem();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlObjPart)).BeginInit();
             this.layoutControlObjPart.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.memoDangerMismatchMemo.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.barManager)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.cmbExpertType.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.memoDangerSolutions.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.gridControlProjectDocumentsMismatches)).BeginInit();
@@ -100,7 +101,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.splitterItem)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemProjectDocumentsChanges)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.popupMenuMismatches)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.barManager)).BeginInit();
             this.SuspendLayout();
             // 
             // btnSave
@@ -157,9 +157,68 @@
             this.richEditControlProjectDocumentsReview.MenuManager = this.barManager;
             this.richEditControlProjectDocumentsReview.MinimumSize = new System.Drawing.Size(0, 150);
             this.richEditControlProjectDocumentsReview.Name = "richEditControlProjectDocumentsReview";
+            this.richEditControlProjectDocumentsReview.Options.DocumentSaveOptions.CurrentFormat = DevExpress.XtraRichEdit.DocumentFormat.PlainText;
             this.richEditControlProjectDocumentsReview.Size = new System.Drawing.Size(770, 256);
             this.richEditControlProjectDocumentsReview.TabIndex = 14;
             this.richEditControlProjectDocumentsReview.Text = "ProjectDocumentsReview";
+            // 
+            // barManager
+            // 
+            this.barManager.DockControls.Add(this.barDockControlTop);
+            this.barManager.DockControls.Add(this.barDockControlBottom);
+            this.barManager.DockControls.Add(this.barDockControlLeft);
+            this.barManager.DockControls.Add(this.barDockControlRight);
+            this.barManager.Form = this;
+            this.barManager.Items.AddRange(new DevExpress.XtraBars.BarItem[] {
+            this.barBtnAdd,
+            this.barBtnDel});
+            this.barManager.MaxItemId = 2;
+            // 
+            // barDockControlTop
+            // 
+            this.barDockControlTop.CausesValidation = false;
+            this.barDockControlTop.Dock = System.Windows.Forms.DockStyle.Top;
+            this.barDockControlTop.Location = new System.Drawing.Point(0, 0);
+            this.barDockControlTop.Manager = this.barManager;
+            this.barDockControlTop.Size = new System.Drawing.Size(798, 0);
+            // 
+            // barDockControlBottom
+            // 
+            this.barDockControlBottom.CausesValidation = false;
+            this.barDockControlBottom.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.barDockControlBottom.Location = new System.Drawing.Point(0, 668);
+            this.barDockControlBottom.Manager = this.barManager;
+            this.barDockControlBottom.Size = new System.Drawing.Size(798, 0);
+            // 
+            // barDockControlLeft
+            // 
+            this.barDockControlLeft.CausesValidation = false;
+            this.barDockControlLeft.Dock = System.Windows.Forms.DockStyle.Left;
+            this.barDockControlLeft.Location = new System.Drawing.Point(0, 0);
+            this.barDockControlLeft.Manager = this.barManager;
+            this.barDockControlLeft.Size = new System.Drawing.Size(0, 668);
+            // 
+            // barDockControlRight
+            // 
+            this.barDockControlRight.CausesValidation = false;
+            this.barDockControlRight.Dock = System.Windows.Forms.DockStyle.Right;
+            this.barDockControlRight.Location = new System.Drawing.Point(798, 0);
+            this.barDockControlRight.Manager = this.barManager;
+            this.barDockControlRight.Size = new System.Drawing.Size(0, 668);
+            // 
+            // barBtnAdd
+            // 
+            this.barBtnAdd.Caption = "Добавить";
+            this.barBtnAdd.Id = 0;
+            this.barBtnAdd.Name = "barBtnAdd";
+            this.barBtnAdd.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.barBtnAdd_ItemClick);
+            // 
+            // barBtnDel
+            // 
+            this.barBtnDel.Caption = "Удалить";
+            this.barBtnDel.Id = 1;
+            this.barBtnDel.Name = "barBtnDel";
+            this.barBtnDel.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.barBtnDel_ItemClick);
             // 
             // btnClose
             // 
@@ -194,6 +253,7 @@
             this.richEditControlProjectDocumentsChanges.MenuManager = this.barManager;
             this.richEditControlProjectDocumentsChanges.MinimumSize = new System.Drawing.Size(0, 150);
             this.richEditControlProjectDocumentsChanges.Name = "richEditControlProjectDocumentsChanges";
+            this.richEditControlProjectDocumentsChanges.Options.DocumentSaveOptions.CurrentFormat = DevExpress.XtraRichEdit.DocumentFormat.PlainText;
             this.richEditControlProjectDocumentsChanges.Size = new System.Drawing.Size(770, 249);
             this.richEditControlProjectDocumentsChanges.TabIndex = 14;
             this.richEditControlProjectDocumentsChanges.Text = "ProjectDocumentsChanges";
@@ -204,6 +264,7 @@
             this.richEditControlDangerSolutions.MenuManager = this.barManager;
             this.richEditControlDangerSolutions.MinimumSize = new System.Drawing.Size(0, 150);
             this.richEditControlDangerSolutions.Name = "richEditControlDangerSolutions";
+            this.richEditControlDangerSolutions.Options.DocumentSaveOptions.CurrentFormat = DevExpress.XtraRichEdit.DocumentFormat.PlainText;
             this.richEditControlDangerSolutions.Size = new System.Drawing.Size(770, 161);
             this.richEditControlDangerSolutions.TabIndex = 14;
             this.richEditControlDangerSolutions.Text = "DangerSolutions";
@@ -274,11 +335,9 @@
             // 
             // emptySpaceItemSave
             // 
-            this.emptySpaceItemSave.AllowHotTrack = false;
             this.emptySpaceItemSave.Location = new System.Drawing.Point(0, 634);
             this.emptySpaceItemSave.Name = "emptySpaceItemSave";
             this.emptySpaceItemSave.Size = new System.Drawing.Size(197, 26);
-            this.emptySpaceItemSave.TextSize = new System.Drawing.Size(0, 0);
             // 
             // layoutControlItem2
             // 
@@ -286,16 +345,13 @@
             this.layoutControlItem2.Location = new System.Drawing.Point(395, 634);
             this.layoutControlItem2.Name = "layoutControlItem2";
             this.layoutControlItem2.Size = new System.Drawing.Size(197, 26);
-            this.layoutControlItem2.TextSize = new System.Drawing.Size(0, 0);
             this.layoutControlItem2.TextVisible = false;
             // 
             // emptySpaceItemClose
             // 
-            this.emptySpaceItemClose.AllowHotTrack = false;
             this.emptySpaceItemClose.Location = new System.Drawing.Point(197, 634);
             this.emptySpaceItemClose.Name = "emptySpaceItemClose";
             this.emptySpaceItemClose.Size = new System.Drawing.Size(198, 26);
-            this.emptySpaceItemClose.TextSize = new System.Drawing.Size(0, 0);
             // 
             // layoutControlItem1
             // 
@@ -303,7 +359,6 @@
             this.layoutControlItem1.Location = new System.Drawing.Point(592, 634);
             this.layoutControlItem1.Name = "layoutControlItem1";
             this.layoutControlItem1.Size = new System.Drawing.Size(198, 26);
-            this.layoutControlItem1.TextSize = new System.Drawing.Size(0, 0);
             this.layoutControlItem1.TextVisible = false;
             // 
             // layoutControlItemExaminationResult
@@ -349,7 +404,6 @@
             this.layoutControlItemDangerSolutionsMemo.Location = new System.Drawing.Point(0, 0);
             this.layoutControlItemDangerSolutionsMemo.Name = "layoutControlItemDangerSolutionsMemo";
             this.layoutControlItemDangerSolutionsMemo.Size = new System.Drawing.Size(774, 49);
-            this.layoutControlItemDangerSolutionsMemo.TextSize = new System.Drawing.Size(0, 0);
             this.layoutControlItemDangerSolutionsMemo.TextVisible = false;
             // 
             // layoutControlItemDangerSolutions
@@ -362,7 +416,6 @@
             this.layoutControlItemDangerSolutions.Size = new System.Drawing.Size(774, 165);
             this.layoutControlItemDangerSolutions.Text = "DangerSolutions";
             this.layoutControlItemDangerSolutions.TextLocation = DevExpress.Utils.Locations.Top;
-            this.layoutControlItemDangerSolutions.TextSize = new System.Drawing.Size(0, 0);
             this.layoutControlItemDangerSolutions.TextVisible = false;
             // 
             // layoutControlItemProjectDocumentsMismatches
@@ -380,7 +433,6 @@
             // 
             // splitterItem1
             // 
-            this.splitterItem1.AllowHotTrack = true;
             this.splitterItem1.Location = new System.Drawing.Point(0, 214);
             this.splitterItem1.Name = "splitterItem1";
             this.splitterItem1.Size = new System.Drawing.Size(774, 10);
@@ -396,7 +448,6 @@
             this.layoutControlItemDangerMismatch.Text = "DangerMismatch";
             this.layoutControlItemDangerMismatch.TextAlignMode = DevExpress.XtraLayout.TextAlignModeItem.AutoSize;
             this.layoutControlItemDangerMismatch.TextLocation = DevExpress.Utils.Locations.Top;
-            this.layoutControlItemDangerMismatch.TextSize = new System.Drawing.Size(0, 0);
             this.layoutControlItemDangerMismatch.TextToControlDistance = 0;
             this.layoutControlItemDangerMismatch.TextVisible = false;
             // 
@@ -407,7 +458,6 @@
             this.layoutControlItemDangerMismatchMemo.Name = "layoutControlItemDangerMismatchMemo";
             this.layoutControlItemDangerMismatchMemo.Size = new System.Drawing.Size(774, 39);
             this.layoutControlItemDangerMismatchMemo.Text = "DangerMismatch";
-            this.layoutControlItemDangerMismatchMemo.TextSize = new System.Drawing.Size(0, 0);
             this.layoutControlItemDangerMismatchMemo.TextVisible = false;
             // 
             // layoutControlGroupBasicInformation
@@ -434,7 +484,6 @@
             // 
             // splitterItem
             // 
-            this.splitterItem.AllowHotTrack = true;
             this.splitterItem.Location = new System.Drawing.Point(0, 276);
             this.splitterItem.Name = "splitterItem";
             this.splitterItem.Size = new System.Drawing.Size(774, 10);
@@ -460,64 +509,6 @@
             this.popupMenuMismatches.Manager = this.barManager;
             this.popupMenuMismatches.Name = "popupMenuMismatches";
             // 
-            // barManager
-            // 
-            this.barManager.DockControls.Add(this.barDockControlTop);
-            this.barManager.DockControls.Add(this.barDockControlBottom);
-            this.barManager.DockControls.Add(this.barDockControlLeft);
-            this.barManager.DockControls.Add(this.barDockControlRight);
-            this.barManager.Form = this;
-            this.barManager.Items.AddRange(new DevExpress.XtraBars.BarItem[] {
-            this.barBtnAdd,
-            this.barBtnDel});
-            this.barManager.MaxItemId = 2;
-            // 
-            // barDockControlTop
-            // 
-            this.barDockControlTop.CausesValidation = false;
-            this.barDockControlTop.Dock = System.Windows.Forms.DockStyle.Top;
-            this.barDockControlTop.Location = new System.Drawing.Point(0, 0);
-            this.barDockControlTop.Manager = this.barManager;
-            this.barDockControlTop.Size = new System.Drawing.Size(798, 0);
-            // 
-            // barDockControlBottom
-            // 
-            this.barDockControlBottom.CausesValidation = false;
-            this.barDockControlBottom.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.barDockControlBottom.Location = new System.Drawing.Point(0, 668);
-            this.barDockControlBottom.Manager = this.barManager;
-            this.barDockControlBottom.Size = new System.Drawing.Size(798, 0);
-            // 
-            // barDockControlLeft
-            // 
-            this.barDockControlLeft.CausesValidation = false;
-            this.barDockControlLeft.Dock = System.Windows.Forms.DockStyle.Left;
-            this.barDockControlLeft.Location = new System.Drawing.Point(0, 0);
-            this.barDockControlLeft.Manager = this.barManager;
-            this.barDockControlLeft.Size = new System.Drawing.Size(0, 668);
-            // 
-            // barDockControlRight
-            // 
-            this.barDockControlRight.CausesValidation = false;
-            this.barDockControlRight.Dock = System.Windows.Forms.DockStyle.Right;
-            this.barDockControlRight.Location = new System.Drawing.Point(798, 0);
-            this.barDockControlRight.Manager = this.barManager;
-            this.barDockControlRight.Size = new System.Drawing.Size(0, 668);
-            // 
-            // barBtnAdd
-            // 
-            this.barBtnAdd.Caption = "Добавить";
-            this.barBtnAdd.Id = 0;
-            this.barBtnAdd.Name = "barBtnAdd";
-            this.barBtnAdd.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.barBtnAdd_ItemClick);
-            // 
-            // barBtnDel
-            // 
-            this.barBtnDel.Caption = "Удалить";
-            this.barBtnDel.Id = 1;
-            this.barBtnDel.Name = "barBtnDel";
-            this.barBtnDel.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.barBtnDel_ItemClick);
-            // 
             // ExpertProjectDocumentsEdit
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -537,6 +528,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlObjPart)).EndInit();
             this.layoutControlObjPart.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.memoDangerMismatchMemo.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.barManager)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.cmbExpertType.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.memoDangerSolutions.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.gridControlProjectDocumentsMismatches)).EndInit();
@@ -561,7 +553,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.splitterItem)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemProjectDocumentsChanges)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.popupMenuMismatches)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.barManager)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
