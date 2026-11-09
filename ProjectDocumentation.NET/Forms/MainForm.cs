@@ -1,4 +1,5 @@
 ﻿using AutoUpdaterDotNET;
+using Core.NET.AutoModels.ConclusionObj;
 using Core.NET.Controllers;
 using Core.NET.Extensions;
 using Core.NET.Models.XPO;
@@ -93,6 +94,33 @@ namespace ProjectDocumentation.NET.Forms
             await UpdateGridDataSourceAsync();
             InitialSetupGridControl();
             await CheckUpdates();
+        }
+
+        /// <summary>
+        /// Старая версия при каждом пересохранении удваивала списки заключения.
+        /// Если в документе есть одинаковые записи, предлагаем удалить повторы до открытия формы;
+        /// в базу изменения попадут только при сохранении формы.
+        /// </summary>
+        private static void OfferDuplicateCleanup(Conclusion conclusion)
+        {
+            var duplicates = conclusion.RemoveDuplicateItems(apply: false);
+            if (duplicates == 0)
+            {
+                return;
+            }
+
+            var answer = XtraMessageBox.Show(
+                $"В заключении найдено повторяющихся записей: {duplicates} (полностью одинаковые документы, эксперты, финансирование и т. п.)." + Environment.NewLine +
+                "Обычно это последствие ошибки сохранения в прежней версии программы." + Environment.NewLine + Environment.NewLine +
+                "Удалить повторы? Останется по одной записи; изменения сохранятся в базе, когда вы нажмёте «Сохранить» в форме.",
+                "Повторяющиеся записи",
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Question);
+
+            if (answer == DialogResult.Yes)
+            {
+                conclusion.RemoveDuplicateItems();
+            }
         }
 
         /// <summary>
@@ -348,6 +376,8 @@ namespace ProjectDocumentation.NET.Forms
                 {
                     return;
                 }
+
+                OfferDuplicateCleanup(conclusion);
 
                 var form = new ConclusionEdit(conclusion);
                 form.SetFileName(conclusionXPO.Name);

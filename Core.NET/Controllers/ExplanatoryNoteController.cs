@@ -2,6 +2,7 @@
 using Core.NET.Extensions;
 using Core.NET.Models.XPO;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 
@@ -11,31 +12,26 @@ namespace Core.NET.Controllers
     {
         public static async Task<ExplanatoryNoteXPO> CreateExplanatoryNoteByPath(string path, string name = default)
         {
-            var explanatoryNote = GetExplanatoryNoteByPath(path);
+            return (await ImportExplanatoryNoteAsync(path, name)).Document as ExplanatoryNoteXPO;
+        }
+
+        /// <summary>
+        /// Импорт пояснительной записки из файла. GUID берётся из имени файла, иначе создаётся новый.
+        /// Если документ с таким GUID уже есть, решение принимает <paramref name="resolveConflict"/>
+        /// (по умолчанию — копия с новым GUID).
+        /// </summary>
+        public static async Task<ImportResult> ImportExplanatoryNoteAsync(string path, string name = default, Func<XmlObjXPO, ImportConflictAction> resolveConflict = null)
+        {
+            var result = new ImportResult();
+            var explanatoryNote = GetExplanatoryNoteByPath(path, result.Warnings);
             if (explanatoryNote is null)
             {
-                return default;
+                return result;
             }
 
-            var fileGuid = GetGuidByFile(path);
-
-            var xpoObj = new ExplanatoryNoteXPO(SessionController.GetSession())
-            {
-                Name = name
-            };
-
-            if (fileGuid != null)
-            {
-                xpoObj.SetGuid(fileGuid.Value);
-            }
-            else
-            {
-                xpoObj.SetGuid(Guid.NewGuid());
-            }
-
-            xpoObj.SetObj(explanatoryNote.SerializeObject());
-            await SessionController.GetSession().SaveAsync(xpoObj);
-            return xpoObj;
+            return await ImportController.SaveAsync(result, name, GetGuidByFile(path), resolveConflict,
+                session => new ExplanatoryNoteXPO(session),
+                newGuid => explanatoryNote.SerializeObject());
         }
 
         private static Guid? GetGuidByFile(string path)
@@ -53,11 +49,11 @@ namespace Core.NET.Controllers
             return default;
         }
 
-        public static ExplanatoryNote GetExplanatoryNoteByPath(string path)
+        public static ExplanatoryNote GetExplanatoryNoteByPath(string path, ICollection<string> warnings = null)
         {
             if (FileController.CheckFile(path))
             {
-                return Utf8StringSerialize.DeSerializeObject<ExplanatoryNote>(path);
+                return Utf8StringSerialize.DeSerializeObject<ExplanatoryNote>(path, warnings: warnings);
             }
 
             return default;
