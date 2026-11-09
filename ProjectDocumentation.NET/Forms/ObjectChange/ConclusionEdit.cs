@@ -83,13 +83,15 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
         private void barBtnDesignersAdd_ItemClick(object sender, ItemClickEventArgs e)
         {
-            var form = new DesignerEdit();
-            form.ShowDialog();
-            if (form.IsSave)
+            using (var form = new DesignerEdit())
             {
-                _tDesigners.Add(form.Designer);
-                gridControlDesigners.DataSource = PersonObjController.GetPersonObjByDesigner(_tDesigners)?.ToArray();
-                gridControlDesigners.RefreshDataSource();
+                form.ShowDialog();
+                if (form.IsSave)
+                {
+                    _tDesigners.Add(form.Designer);
+                    gridControlDesigners.DataSource = PersonObjController.GetPersonObjByDesigner(_tDesigners)?.ToArray();
+                    gridControlDesigners.RefreshDataSource();
+                }
             }
         }
 
@@ -119,12 +121,14 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
         {
             if (gridViewDesigners.GetRow(gridViewDesigners.FocusedRowHandle) is PersonObj obj)
             {
-                var form = new DesignerEdit(obj.BaseObj);
-                form.ShowDialog();
-                if (form.IsSave)
+                using (var form = new DesignerEdit(obj.BaseObj))
                 {
-                    gridControlDesigners.DataSource = PersonObjController.GetPersonObjByDesigner(_tDesigners?.ToArray())?.ToArray();
-                    gridControlDesigners.RefreshDataSource();
+                    form.ShowDialog();
+                    if (form.IsSave)
+                    {
+                        gridControlDesigners.DataSource = PersonObjController.GetPersonObjByDesigner(_tDesigners?.ToArray())?.ToArray();
+                        gridControlDesigners.RefreshDataSource();
+                    }
                 }
             }
         }
@@ -132,13 +136,15 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
         private void barBtnDocumentsAdd_ItemClick(object sender, ItemClickEventArgs e)
         {
-            var form = new DocumentEdit();
-            form.ShowDialog();
-            if (form.IsSave)
+            using (var form = new DocumentEdit())
             {
-                _tDocuments.Add(form.Document);
-                gridControlDocuments.DataSource = DocumentObjController.GetDocumentObjS(_tDocuments).ToArray();
-                gridControlDocuments.RefreshDataSource();
+                form.ShowDialog();
+                if (form.IsSave)
+                {
+                    _tDocuments.Add(form.Document);
+                    gridControlDocuments.DataSource = DocumentObjController.GetDocumentObjS(_tDocuments).ToArray();
+                    gridControlDocuments.RefreshDataSource();
+                }
             }
         }
 
@@ -165,12 +171,14 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
         {
             if (gridViewDocuments.GetRow(gridViewDocuments.FocusedRowHandle) is DocumentObj obj)
             {
-                var form = new DocumentEdit(obj.Document);
-                form.ShowDialog();
-                if (form.IsSave)
+                using (var form = new DocumentEdit(obj.Document))
                 {
-                    gridControlDocuments.DataSource = DocumentObjController.GetDocumentObjS(_tDocuments).ToArray();
-                    gridControlDocuments.RefreshDataSource();
+                    form.ShowDialog();
+                    if (form.IsSave)
+                    {
+                        gridControlDocuments.DataSource = DocumentObjController.GetDocumentObjS(_tDocuments).ToArray();
+                        gridControlDocuments.RefreshDataSource();
+                    }
                 }
             }
         }
@@ -178,13 +186,15 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
         private void barBtnEngineeringSurveyAddressAdd_ItemClick(object sender, ItemClickEventArgs e)
         {
-            var form = new EngineeringSurveyAddressEdit();
-            form.ShowDialog();
-            if (form.IsSave)
+            using (var form = new EngineeringSurveyAddressEdit())
             {
-                _tEngineeringSurveyAddresses.Add(form.EngineeringSurveyAddress);
-                gridControlEngineeringSurveyAddress.DataSource = EngineeringSurveyAddressController.GetEngineeringSurveyAddress(_tEngineeringSurveyAddresses);
-                gridControlEngineeringSurveyAddress.RefreshDataSource();
+                form.ShowDialog();
+                if (form.IsSave)
+                {
+                    _tEngineeringSurveyAddresses.Add(form.EngineeringSurveyAddress);
+                    gridControlEngineeringSurveyAddress.DataSource = EngineeringSurveyAddressController.GetEngineeringSurveyAddress(_tEngineeringSurveyAddresses);
+                    gridControlEngineeringSurveyAddress.RefreshDataSource();
+                }
             }
         }
 
@@ -211,12 +221,14 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
         {
             if (gridViewEngineeringSurveyAddress.GetRow(gridViewEngineeringSurveyAddress.FocusedRowHandle) is EngineeringSurveyAddress obj)
             {
-                var form = new EngineeringSurveyAddressEdit(obj.EngineeringSurveyAddressObj);
-                form.ShowDialog();
-                if (form.IsSave)
+                using (var form = new EngineeringSurveyAddressEdit(obj.EngineeringSurveyAddressObj))
                 {
-                    gridControlEngineeringSurveyAddress.DataSource = EngineeringSurveyAddressController.GetEngineeringSurveyAddress(_tEngineeringSurveyAddresses);
-                    gridControlEngineeringSurveyAddress.RefreshDataSource();
+                    form.ShowDialog();
+                    if (form.IsSave)
+                    {
+                        gridControlEngineeringSurveyAddress.DataSource = EngineeringSurveyAddressController.GetEngineeringSurveyAddress(_tEngineeringSurveyAddresses);
+                        gridControlEngineeringSurveyAddress.RefreshDataSource();
+                    }
                 }
             }
         }
@@ -224,13 +236,15 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
         private void barBtnEngineeringSurveyDeveloperAdd_ItemClick(object sender, ItemClickEventArgs e)
         {
-            var form = new DeclarantEdit();
-            form.ShowDialog();
-            if (form.IsSave)
+            using (var form = new DeclarantEdit())
             {
-                _tEngineeringSurveyDeveloper.Add(form.Declarant);
-                gridControlEngineeringSurveyDeveloper.DataSource = PersonObjController.GetPersonObjByDeclarator(_tEngineeringSurveyDeveloper).ToArray();
-                gridControlEngineeringSurveyDeveloper.RefreshDataSource();
+                form.ShowDialog();
+                if (form.IsSave)
+                {
+                    _tEngineeringSurveyDeveloper.Add(form.Declarant);
+                    gridControlEngineeringSurveyDeveloper.DataSource = PersonObjController.GetPersonObjByDeclarator(_tEngineeringSurveyDeveloper).ToArray();
+                    gridControlEngineeringSurveyDeveloper.RefreshDataSource();
+                }
             }
         }
 
@@ -260,12 +274,14 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
         {
             if (gridViewEngineeringSurveyDeveloper.GetRow(gridViewEngineeringSurveyDeveloper.FocusedRowHandle) is PersonObj obj)
             {
-                var form = new DeclarantEdit(obj.BaseObj);
-                form.ShowDialog();
-                if (form.IsSave)
+                using (var form = new DeclarantEdit(obj.BaseObj))
                 {
-                    gridControlEngineeringSurveyDeveloper.DataSource = PersonObjController.GetPersonObjByDeclarator(_tEngineeringSurveyDeveloper).ToArray();
-                    gridControlEngineeringSurveyDeveloper.RefreshDataSource();
+                    form.ShowDialog();
+                    if (form.IsSave)
+                    {
+                        gridControlEngineeringSurveyDeveloper.DataSource = PersonObjController.GetPersonObjByDeclarator(_tEngineeringSurveyDeveloper).ToArray();
+                        gridControlEngineeringSurveyDeveloper.RefreshDataSource();
+                    }
                 }
             }
         }
@@ -273,13 +289,15 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
         private void barBtnEngineeringSurveyTechnicalCustomerAdd_ItemClick(object sender, ItemClickEventArgs e)
         {
-            var form = new TechnicalCustomerEdit();
-            form.ShowDialog();
-            if (form.IsSave)
+            using (var form = new TechnicalCustomerEdit())
             {
-                _tEngineeringSurveyTechnicalCustomer.Add(form.TechnicalCustomer);
-                gridControlEngineeringSurveyTechnicalCustomer.DataSource = PersonObjController.GetPersonObjByTechnicalCustomer(_tEngineeringSurveyTechnicalCustomer).ToArray();
-                gridControlEngineeringSurveyTechnicalCustomer.RefreshDataSource();
+                form.ShowDialog();
+                if (form.IsSave)
+                {
+                    _tEngineeringSurveyTechnicalCustomer.Add(form.TechnicalCustomer);
+                    gridControlEngineeringSurveyTechnicalCustomer.DataSource = PersonObjController.GetPersonObjByTechnicalCustomer(_tEngineeringSurveyTechnicalCustomer).ToArray();
+                    gridControlEngineeringSurveyTechnicalCustomer.RefreshDataSource();
+                }
             }
         }
 
@@ -309,12 +327,14 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
         {
             if (gridViewEngineeringSurveyTechnicalCustomer.GetRow(gridViewEngineeringSurveyTechnicalCustomer.FocusedRowHandle) is PersonObj obj)
             {
-                var form = new TechnicalCustomerEdit(obj.BaseObj);
-                form.ShowDialog();
-                if (form.IsSave)
+                using (var form = new TechnicalCustomerEdit(obj.BaseObj))
                 {
-                    gridControlEngineeringSurveyTechnicalCustomer.DataSource = PersonObjController.GetPersonObjByTechnicalCustomer(_tEngineeringSurveyTechnicalCustomer).ToArray();
-                    gridControlEngineeringSurveyTechnicalCustomer.RefreshDataSource();
+                    form.ShowDialog();
+                    if (form.IsSave)
+                    {
+                        gridControlEngineeringSurveyTechnicalCustomer.DataSource = PersonObjController.GetPersonObjByTechnicalCustomer(_tEngineeringSurveyTechnicalCustomer).ToArray();
+                        gridControlEngineeringSurveyTechnicalCustomer.RefreshDataSource();
+                    }
                 }
             }
         }
@@ -369,13 +389,15 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
         private void barBtnExpertEngineeringSurveysAdd_ItemClick(object sender, ItemClickEventArgs e)
         {
-            var form = new ExpertEngineeringSurveyEdit();
-            form.ShowDialog();
-            if (form.IsSave)
+            using (var form = new ExpertEngineeringSurveyEdit())
             {
-                _tExpertEngineeringSurveys.Add(form.ExpertEngineeringSurvey);
-                gridControlExpertEngineeringSurveys.DataSource = ExpertEngineeringSurveysController.GetExpertEngineeringSurveys(_tExpertEngineeringSurveys).ToArray();
-                gridControlExpertEngineeringSurveys.RefreshDataSource();
+                form.ShowDialog();
+                if (form.IsSave)
+                {
+                    _tExpertEngineeringSurveys.Add(form.ExpertEngineeringSurvey);
+                    gridControlExpertEngineeringSurveys.DataSource = ExpertEngineeringSurveysController.GetExpertEngineeringSurveys(_tExpertEngineeringSurveys).ToArray();
+                    gridControlExpertEngineeringSurveys.RefreshDataSource();
+                }
             }
         }
 
@@ -402,12 +424,14 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
         {
             if (gridViewExpertEngineeringSurveys.GetRow(gridViewExpertEngineeringSurveys.FocusedRowHandle) is ExpertEngineeringSurvey obj)
             {
-                var form = new ExpertEngineeringSurveyEdit(obj.ExpertEngineeringSurveys);
-                form.ShowDialog();
-                if (form.IsSave)
+                using (var form = new ExpertEngineeringSurveyEdit(obj.ExpertEngineeringSurveys))
                 {
-                    gridControlExpertEngineeringSurveys.DataSource = ExpertEngineeringSurveysController.GetExpertEngineeringSurveys(_tExpertEngineeringSurveys).ToArray();
-                    gridControlExpertEngineeringSurveys.RefreshDataSource();
+                    form.ShowDialog();
+                    if (form.IsSave)
+                    {
+                        gridControlExpertEngineeringSurveys.DataSource = ExpertEngineeringSurveysController.GetExpertEngineeringSurveys(_tExpertEngineeringSurveys).ToArray();
+                        gridControlExpertEngineeringSurveys.RefreshDataSource();
+                    }
                 }
             }
         }
@@ -415,13 +439,15 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
         private void barBtnExpertProjectDocumentsAdd_ItemClick(object sender, ItemClickEventArgs e)
         {
-            var form = new ExpertProjectDocumentsEdit();
-            form.ShowDialog();
-            if (form.IsSave)
+            using (var form = new ExpertProjectDocumentsEdit())
             {
-                _tExpertProjectDocuments.Add(form.ExpertProjectDocuments);
-                gridControlExpertProjectDocuments.DataSource = ExpertProjectDocumentController.GetExpertProjectDocuments(_tExpertProjectDocuments).ToArray();
-                gridControlExpertProjectDocuments.RefreshDataSource();
+                form.ShowDialog();
+                if (form.IsSave)
+                {
+                    _tExpertProjectDocuments.Add(form.ExpertProjectDocuments);
+                    gridControlExpertProjectDocuments.DataSource = ExpertProjectDocumentController.GetExpertProjectDocuments(_tExpertProjectDocuments).ToArray();
+                    gridControlExpertProjectDocuments.RefreshDataSource();
+                }
             }
         }
 
@@ -448,12 +474,14 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
         {
             if (gridViewExpertProjectDocuments.GetRow(gridViewExpertProjectDocuments.FocusedRowHandle) is ExpertProjectDocument obj)
             {
-                var form = new ExpertProjectDocumentsEdit(obj.ExpertProjectDocuments);
-                form.ShowDialog();
-                if (form.IsSave)
+                using (var form = new ExpertProjectDocumentsEdit(obj.ExpertProjectDocuments))
                 {
-                    gridControlExpertProjectDocuments.DataSource = ExpertProjectDocumentController.GetExpertProjectDocuments(_tExpertProjectDocuments).ToArray();
-                    gridControlExpertProjectDocuments.RefreshDataSource();
+                    form.ShowDialog();
+                    if (form.IsSave)
+                    {
+                        gridControlExpertProjectDocuments.DataSource = ExpertProjectDocumentController.GetExpertProjectDocuments(_tExpertProjectDocuments).ToArray();
+                        gridControlExpertProjectDocuments.RefreshDataSource();
+                    }
                 }
             }
         }
@@ -461,13 +489,15 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
         private void barBtnFinanceAdd_ItemClick(object sender, ItemClickEventArgs e)
         {
-            var form = new FundingInformationEdit();
-            form.ShowDialog();
-            if (form.IsSave)
+            using (var form = new FundingInformationEdit())
             {
-                _tFinances.Add(form.Finance);
-                gridControlFinances.DataSource = FinanceObjController.GetFinanceObj(_tFinances);
-                gridControlFinances.RefreshDataSource();
+                form.ShowDialog();
+                if (form.IsSave)
+                {
+                    _tFinances.Add(form.Finance);
+                    gridControlFinances.DataSource = FinanceObjController.GetFinanceObj(_tFinances);
+                    gridControlFinances.RefreshDataSource();
+                }
             }
         }
 
@@ -494,12 +524,14 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
         {
             if (gridViewFinances.GetRow(gridViewFinances.FocusedRowHandle) is FinanceObj obj)
             {
-                var form = new FundingInformationEdit(obj.TFinance);
-                form.ShowDialog();
-                if (form.IsSave)
+                using (var form = new FundingInformationEdit(obj.TFinance))
                 {
-                    gridControlFinances.DataSource = FinanceObjController.GetFinanceObj(_tFinances);
-                    gridControlFinances.RefreshDataSource();
+                    form.ShowDialog();
+                    if (form.IsSave)
+                    {
+                        gridControlFinances.DataSource = FinanceObjController.GetFinanceObj(_tFinances);
+                        gridControlFinances.RefreshDataSource();
+                    }
                 }
             }
         }
@@ -554,12 +586,14 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
         private void barBtnObjectPartAdd_ItemClick(object sender, ItemClickEventArgs e)
         {
-            var form = new ObjPartEdit();
-            form.ShowDialog();
-            if (form.IsSave)
+            using (var form = new ObjPartEdit())
             {
-                _tObjectParts.Add(form.ObjectPart);
-                gridControlObjectPart.RefreshDataSource();
+                form.ShowDialog();
+                if (form.IsSave)
+                {
+                    _tObjectParts.Add(form.ObjectPart);
+                    gridControlObjectPart.RefreshDataSource();
+                }
             }
         }
 
@@ -585,11 +619,13 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
         {
             if (gridViewObjectPart.GetRow(gridViewObjectPart.FocusedRowHandle) is TObjectPart obj)
             {
-                var form = new ObjPartEdit(obj);
-                form.ShowDialog();
-                if (form.IsSave)
+                using (var form = new ObjPartEdit(obj))
                 {
-                    gridControlObjectPart.RefreshDataSource();
+                    form.ShowDialog();
+                    if (form.IsSave)
+                    {
+                        gridControlObjectPart.RefreshDataSource();
+                    }
                 }
             }
         }
@@ -597,12 +633,14 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
         private void barBtnPreviousConclusionsAdd_ItemClick(object sender, ItemClickEventArgs e)
         {
-            var form = new PreviousConclusionEdit();
-            form.ShowDialog();
-            if (form.IsSave)
+            using (var form = new PreviousConclusionEdit())
             {
-                _tPreviousConclusions.Add(form.PreviousConclusion);
-                gridControlPreviousConclusions.RefreshDataSource();
+                form.ShowDialog();
+                if (form.IsSave)
+                {
+                    _tPreviousConclusions.Add(form.PreviousConclusion);
+                    gridControlPreviousConclusions.RefreshDataSource();
+                }
             }
         }
 
@@ -628,11 +666,13 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
         {
             if (gridViewPreviousConclusions.GetRow(gridViewPreviousConclusions.FocusedRowHandle) is TPreviousConclusion obj)
             {
-                var form = new PreviousConclusionEdit(obj);
-                form.ShowDialog();
-                if (form.IsSave)
+                using (var form = new PreviousConclusionEdit(obj))
                 {
-                    gridControlPreviousConclusions.RefreshDataSource();
+                    form.ShowDialog();
+                    if (form.IsSave)
+                    {
+                        gridControlPreviousConclusions.RefreshDataSource();
+                    }
                 }
             }
         }
@@ -640,13 +680,15 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
         private void barBtnProjectDocumentsDeveloperAdd_ItemClick(object sender, ItemClickEventArgs e)
         {
-            var form = new DeclarantEdit();
-            form.ShowDialog();
-            if (form.IsSave)
+            using (var form = new DeclarantEdit())
             {
-                _tProjectDocumentsDevelopers.Add(form.Declarant);
-                gridControlProjectDocumentsDeveloper.DataSource = PersonObjController.GetPersonObjByDeclarator(_tProjectDocumentsDevelopers).ToArray();
-                gridControlProjectDocumentsDeveloper.RefreshDataSource();
+                form.ShowDialog();
+                if (form.IsSave)
+                {
+                    _tProjectDocumentsDevelopers.Add(form.Declarant);
+                    gridControlProjectDocumentsDeveloper.DataSource = PersonObjController.GetPersonObjByDeclarator(_tProjectDocumentsDevelopers).ToArray();
+                    gridControlProjectDocumentsDeveloper.RefreshDataSource();
+                }
             }
         }
 
@@ -676,12 +718,14 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
         {
             if (gridViewProjectDocumentsDeveloper.GetRow(gridViewProjectDocumentsDeveloper.FocusedRowHandle) is PersonObj obj)
             {
-                var form = new DeclarantEdit(obj.BaseObj);
-                form.ShowDialog();
-                if (form.IsSave)
+                using (var form = new DeclarantEdit(obj.BaseObj))
                 {
-                    gridControlProjectDocumentsDeveloper.DataSource = PersonObjController.GetPersonObjByDeclarator(_tProjectDocumentsDevelopers).ToArray();
-                    gridControlProjectDocumentsDeveloper.RefreshDataSource();
+                    form.ShowDialog();
+                    if (form.IsSave)
+                    {
+                        gridControlProjectDocumentsDeveloper.DataSource = PersonObjController.GetPersonObjByDeclarator(_tProjectDocumentsDevelopers).ToArray();
+                        gridControlProjectDocumentsDeveloper.RefreshDataSource();
+                    }
                 }
             }
         }
@@ -689,13 +733,15 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
         private void barBtnProjectDocumentsTechnicalCustomerAdd_ItemClick(object sender, ItemClickEventArgs e)
         {
-            var form = new TechnicalCustomerEdit();
-            form.ShowDialog();
-            if (form.IsSave)
+            using (var form = new TechnicalCustomerEdit())
             {
-                _tProjectDocumentsTechnicalCustomer.Add(form.TechnicalCustomer);
-                gridControlProjectDocumentsTechnicalCustomer.DataSource = PersonObjController.GetPersonObjByTechnicalCustomer(_tProjectDocumentsTechnicalCustomer).ToArray();
-                gridControlProjectDocumentsTechnicalCustomer.RefreshDataSource();
+                form.ShowDialog();
+                if (form.IsSave)
+                {
+                    _tProjectDocumentsTechnicalCustomer.Add(form.TechnicalCustomer);
+                    gridControlProjectDocumentsTechnicalCustomer.DataSource = PersonObjController.GetPersonObjByTechnicalCustomer(_tProjectDocumentsTechnicalCustomer).ToArray();
+                    gridControlProjectDocumentsTechnicalCustomer.RefreshDataSource();
+                }
             }
         }
 
@@ -725,12 +771,14 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
         {
             if (gridViewProjectDocumentsTechnicalCustomer.GetRow(gridViewProjectDocumentsTechnicalCustomer.FocusedRowHandle) is PersonObj obj)
             {
-                var form = new TechnicalCustomerEdit(obj.BaseObj);
-                form.ShowDialog();
-                if (form.IsSave)
+                using (var form = new TechnicalCustomerEdit(obj.BaseObj))
                 {
-                    gridControlProjectDocumentsTechnicalCustomer.DataSource = PersonObjController.GetPersonObjByTechnicalCustomer(_tProjectDocumentsTechnicalCustomer).ToArray();
-                    gridControlProjectDocumentsTechnicalCustomer.RefreshDataSource();
+                    form.ShowDialog();
+                    if (form.IsSave)
+                    {
+                        gridControlProjectDocumentsTechnicalCustomer.DataSource = PersonObjController.GetPersonObjByTechnicalCustomer(_tProjectDocumentsTechnicalCustomer).ToArray();
+                        gridControlProjectDocumentsTechnicalCustomer.RefreshDataSource();
+                    }
                 }
             }
         }
@@ -780,10 +828,13 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                         form = new AddressEdit();
                     }
 
-                    form.ShowDialog();
-                    if (form.IsSave)
+                    using (form)
                     {
-                        buttonEdit.EditValue = form.Address;
+                        form.ShowDialog();
+                        if (form.IsSave)
+                        {
+                            buttonEdit.EditValue = form.Address;
+                        }
                     }
                 }
                 else if (e.Button.Kind == ButtonPredefines.Search)
@@ -852,10 +903,13 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                     {
                         form = new DeclarantEdit();
                     }
-                    form.ShowDialog();
-                    if (form.IsSave)
+                    using (form)
                     {
-                        buttonEdit.EditValue = form.Declarant;
+                        form.ShowDialog();
+                        if (form.IsSave)
+                        {
+                            buttonEdit.EditValue = form.Declarant;
+                        }
                     }
                 }
             }
@@ -1578,12 +1632,15 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                     {
                         form = new AddressEdit();
                     }
-                    form.ShowDialog();
-
-                    if (form.IsSave)
+                    using (form)
                     {
-                        buttonEdit.EditValue = form.Address;
-                        buttonEdit.Refresh();
+                        form.ShowDialog();
+
+                        if (form.IsSave)
+                        {
+                            buttonEdit.EditValue = form.Address;
+                            buttonEdit.Refresh();
+                        }
                     }
                 }
                 else if (e.Button.Kind == ButtonPredefines.Search)

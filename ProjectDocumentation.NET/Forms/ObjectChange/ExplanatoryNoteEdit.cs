@@ -660,10 +660,13 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                     {
                         form = new AuthorEdit();
                     }
-                    form.ShowDialog();
-                    if (form.IsSave)
+                    using (form)
                     {
-                        buttonEdit.EditValue = form.Author;
+                        form.ShowDialog();
+                        if (form.IsSave)
+                        {
+                            buttonEdit.EditValue = form.Author;
+                        }
                     }
                 }
             }
@@ -679,12 +682,14 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
 
         private void barBtnProjectDocumentationAuthorAdd_ItemClick(object sender, ItemClickEventArgs e)
         {
-            var form = new AuthorEdit();
-            form.ShowDialog();
-            if (form.IsSave)
+            using (var form = new AuthorEdit())
             {
-                _tProjectDocumentationAuthors.Add(form.Author);
-                gridControlProjectDocumentationAuthors.RefreshDataSource();
+                form.ShowDialog();
+                if (form.IsSave)
+                {
+                    _tProjectDocumentationAuthors.Add(form.Author);
+                    gridControlProjectDocumentationAuthors.RefreshDataSource();
+                }
             }
         }
 
@@ -692,11 +697,13 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
         {
             if (gridViewProjectDocumentationAuthors.GetRow(gridViewProjectDocumentationAuthors.FocusedRowHandle) is tAuthor obj)
             {
-                var form = new AuthorEdit(obj);
-                form.ShowDialog();
-                if (form.IsSave)
+                using (var form = new AuthorEdit(obj))
                 {
-                    gridControlProjectDocumentationAuthors.RefreshDataSource();
+                    form.ShowDialog();
+                    if (form.IsSave)
+                    {
+                        gridControlProjectDocumentationAuthors.RefreshDataSource();
+                    }
                 }
             }
         }
@@ -727,12 +734,14 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
 
         private void barBtnSignerAdd_ItemClick(object sender, ItemClickEventArgs e)
         {
-            var form = new WorkPersonEdit();
-            form.ShowDialog();
-            if (form.IsSave)
+            using (var form = new WorkPersonEdit())
             {
-                _tSigners.Add(form.WorkPerson);
-                gridControlSigners.RefreshDataSource();
+                form.ShowDialog();
+                if (form.IsSave)
+                {
+                    _tSigners.Add(form.WorkPerson);
+                    gridControlSigners.RefreshDataSource();
+                }
             }
         }
 
@@ -740,11 +749,13 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
         {
             if (gridViewSigners.GetRow(gridViewSigners.FocusedRowHandle) is tWorkPerson obj)
             {
-                var form = new WorkPersonEdit(obj);
-                form.ShowDialog();
-                if (form.IsSave)
+                using (var form = new WorkPersonEdit(obj))
                 {
-                    gridControlSigners.RefreshDataSource();
+                    form.ShowDialog();
+                    if (form.IsSave)
+                    {
+                        gridControlSigners.RefreshDataSource();
+                    }
                 }
             }
         }
@@ -775,13 +786,15 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
 
         private void barBtnDeveloperAdd_ItemClick(object sender, ItemClickEventArgs e)
         {
-            var form = new DeveloperEdit();
-            form.ShowDialog();
-            if (form.IsSave)
+            using (var form = new DeveloperEdit())
             {
-                _tDevelopers.Add(form.Developer);
-                gridControlDeveloper.DataSource = PersonObjController.GetPersonObjByDeveloper(_tDevelopers).ToArray();
-                gridControlDeveloper.RefreshDataSource();
+                form.ShowDialog();
+                if (form.IsSave)
+                {
+                    _tDevelopers.Add(form.Developer);
+                    gridControlDeveloper.DataSource = PersonObjController.GetPersonObjByDeveloper(_tDevelopers).ToArray();
+                    gridControlDeveloper.RefreshDataSource();
+                }
             }
         }
 
@@ -789,12 +802,14 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
         {
             if (gridViewDeveloper.GetRow(gridViewDeveloper.FocusedRowHandle) is PersonObj obj)
             {
-                var form = new DeveloperEdit(obj.BaseObj);
-                form.ShowDialog();
-                if (form.IsSave)
+                using (var form = new DeveloperEdit(obj.BaseObj))
                 {
-                    gridControlDeveloper.DataSource = PersonObjController.GetPersonObjByDeveloper(_tDevelopers).ToArray();
-                    gridControlDeveloper.RefreshDataSource();
+                    form.ShowDialog();
+                    if (form.IsSave)
+                    {
+                        gridControlDeveloper.DataSource = PersonObjController.GetPersonObjByDeveloper(_tDevelopers).ToArray();
+                        gridControlDeveloper.RefreshDataSource();
+                    }
                 }
             }
         }
@@ -829,13 +844,15 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
 
         private void barBtnTechnicalCustomerAdd_ItemClick(object sender, ItemClickEventArgs e)
         {
-            var form = new TechnicalCustomerENEdit();
-            form.ShowDialog();
-            if (form.IsSave)
+            using (var form = new TechnicalCustomerENEdit())
             {
-                _tTechnicalCustomers.Add(form.TechnicalCustomer);
-                gridControlTechnicalCustomer.DataSource = PersonObjController.GetPersonObjByTechnicalCustomer(_tTechnicalCustomers).ToArray();
-                gridControlTechnicalCustomer.RefreshDataSource();
+                form.ShowDialog();
+                if (form.IsSave)
+                {
+                    _tTechnicalCustomers.Add(form.TechnicalCustomer);
+                    gridControlTechnicalCustomer.DataSource = PersonObjController.GetPersonObjByTechnicalCustomer(_tTechnicalCustomers).ToArray();
+                    gridControlTechnicalCustomer.RefreshDataSource();
+                }
             }
         }
 
@@ -843,12 +860,14 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
         {
             if (gridViewTechnicalCustomer.GetRow(gridViewTechnicalCustomer.FocusedRowHandle) is PersonObj obj)
             {
-                var form = new TechnicalCustomerENEdit(obj.BaseObj);
-                form.ShowDialog();
-                if (form.IsSave)
+                using (var form = new TechnicalCustomerENEdit(obj.BaseObj))
                 {
-                    gridControlTechnicalCustomer.DataSource = PersonObjController.GetPersonObjByTechnicalCustomer(_tTechnicalCustomers).ToArray();
-                    gridControlTechnicalCustomer.RefreshDataSource();
+                    form.ShowDialog();
+                    if (form.IsSave)
+                    {
+                        gridControlTechnicalCustomer.DataSource = PersonObjController.GetPersonObjByTechnicalCustomer(_tTechnicalCustomers).ToArray();
+                        gridControlTechnicalCustomer.RefreshDataSource();
+                    }
                 }
             }
         }
@@ -913,13 +932,15 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
 
         private void barBtnProjectDecisionDocumentsAdd_ItemClick(object sender, ItemClickEventArgs e)
         {
-            var form = new DocumentENEdit();
-            form.ShowDialog();
-            if (form.IsSave)
+            using (var form = new DocumentENEdit())
             {
-                _tProjectDecisionDocuments.Add(form.Document);
-                gridControlProjectDecisionDocuments.DataSource = DocumentObjEnController.GetDocumentObjS(_tProjectDecisionDocuments).ToArray();
-                gridControlProjectDecisionDocuments.RefreshDataSource();
+                form.ShowDialog();
+                if (form.IsSave)
+                {
+                    _tProjectDecisionDocuments.Add(form.Document);
+                    gridControlProjectDecisionDocuments.DataSource = DocumentObjEnController.GetDocumentObjS(_tProjectDecisionDocuments).ToArray();
+                    gridControlProjectDecisionDocuments.RefreshDataSource();
+                }
             }
         }
 
@@ -927,12 +948,14 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
         {
             if (gridViewProjectDecisionDocuments.GetRow(gridViewProjectDecisionDocuments.FocusedRowHandle) is DocumentObjEn obj)
             {
-                var form = new DocumentENEdit(obj.Document);
-                form.ShowDialog();
-                if (form.IsSave)
+                using (var form = new DocumentENEdit(obj.Document))
                 {
-                    gridControlProjectDecisionDocuments.DataSource = DocumentObjEnController.GetDocumentObjS(_tProjectDecisionDocuments).ToArray();
-                    gridControlProjectDecisionDocuments.RefreshDataSource();
+                    form.ShowDialog();
+                    if (form.IsSave)
+                    {
+                        gridControlProjectDecisionDocuments.DataSource = DocumentObjEnController.GetDocumentObjS(_tProjectDecisionDocuments).ToArray();
+                        gridControlProjectDecisionDocuments.RefreshDataSource();
+                    }
                 }
             }
         }
@@ -964,13 +987,15 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
 
         private void barBtnProjectInitialDocumentsAdd_ItemClick(object sender, ItemClickEventArgs e)
         {
-            var form = new DocumentENEdit();
-            form.ShowDialog();
-            if (form.IsSave)
+            using (var form = new DocumentENEdit())
             {
-                _tProjectInitialDocuments.Add(form.Document);
-                gridControlProjectInitialDocuments.DataSource = DocumentObjEnController.GetDocumentObjS(_tProjectInitialDocuments).ToArray();
-                gridControlProjectInitialDocuments.RefreshDataSource();
+                form.ShowDialog();
+                if (form.IsSave)
+                {
+                    _tProjectInitialDocuments.Add(form.Document);
+                    gridControlProjectInitialDocuments.DataSource = DocumentObjEnController.GetDocumentObjS(_tProjectInitialDocuments).ToArray();
+                    gridControlProjectInitialDocuments.RefreshDataSource();
+                }
             }
         }
 
@@ -978,12 +1003,14 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
         {
             if (gridViewProjectInitialDocuments.GetRow(gridViewProjectInitialDocuments.FocusedRowHandle) is DocumentObjEn obj)
             {
-                var form = new DocumentENEdit(obj.Document);
-                form.ShowDialog();
-                if (form.IsSave)
+                using (var form = new DocumentENEdit(obj.Document))
                 {
-                    gridControlProjectInitialDocuments.DataSource = DocumentObjEnController.GetDocumentObjS(_tProjectInitialDocuments).ToArray();
-                    gridControlProjectInitialDocuments.RefreshDataSource();
+                    form.ShowDialog();
+                    if (form.IsSave)
+                    {
+                        gridControlProjectInitialDocuments.DataSource = DocumentObjEnController.GetDocumentObjS(_tProjectInitialDocuments).ToArray();
+                        gridControlProjectInitialDocuments.RefreshDataSource();
+                    }
                 }
             }
         }
@@ -1018,7 +1045,10 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                 {
                     form = new TextBlockEdit();
                 }
-                form.ShowDialog();
+                using (form)
+                {
+                    form.ShowDialog();
+                }
             }
         }
     }

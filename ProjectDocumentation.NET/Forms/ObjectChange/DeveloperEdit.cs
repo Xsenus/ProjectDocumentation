@@ -52,10 +52,13 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                         form = new AddressEdit();
                     }
 
-                    form.ShowDialog();
-                    if (form.IsSave)
+                    using (form)
                     {
-                        buttonEdit.EditValue = form.Address;
+                        form.ShowDialog();
+                        if (form.IsSave)
+                        {
+                            buttonEdit.EditValue = form.Address;
+                        }
                     }
                 }
                 else if (e.Button.Kind == ButtonPredefines.Search)
@@ -121,10 +124,13 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                         form = new PostAddressEdit();
                     }
 
-                    form.ShowDialog();
-                    if (form.IsSave)
+                    using (form)
                     {
-                        buttonEdit.EditValue = form.PostAddress;
+                        form.ShowDialog();
+                        if (form.IsSave)
+                        {
+                            buttonEdit.EditValue = form.PostAddress;
+                        }
                     }
                 }
                 else if (e.Button.Kind == ButtonPredefines.Search)

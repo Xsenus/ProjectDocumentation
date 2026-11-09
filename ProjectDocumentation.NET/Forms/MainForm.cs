@@ -311,52 +311,56 @@ namespace ProjectDocumentation.NET.Forms
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
         private async void barBtnAddConclusion_ItemClick(object sender, ItemClickEventArgs e)
         {
-            var form = new ConclusionEdit();
-            form.ShowDialog();
-
-            if (form.IsSave)
+            using (var form = new ConclusionEdit())
             {
-                var conclusionXPO = new ConclusionXPO(Session)
-                {
-                    Name = form.FileName
-                };
+                form.ShowDialog();
 
-                form.Conclusion.ConclusionGuid = conclusionXPO.Guid?.ToString();
-                var xml = form.Conclusion.GetSerializeConclusion();
-                if (!CheckSerialized(xml))
+                if (form.IsSave)
                 {
-                    return;
+                    var conclusionXPO = new ConclusionXPO(Session)
+                    {
+                        Name = form.FileName
+                    };
+
+                    form.Conclusion.ConclusionGuid = conclusionXPO.Guid?.ToString();
+                    var xml = form.Conclusion.GetSerializeConclusion();
+                    if (!CheckSerialized(xml))
+                    {
+                        return;
+                    }
+
+                    conclusionXPO.SetObj(xml);
+                    await Session.SaveAsync(conclusionXPO);
+
+                    await UpdateGridDataSourceAsync(nameof(XmlObjXPO.Guid), conclusionXPO.Guid);
                 }
-
-                conclusionXPO.SetObj(xml);
-                await Session.SaveAsync(conclusionXPO);
-
-                await UpdateGridDataSourceAsync(nameof(XmlObjXPO.Guid), conclusionXPO.Guid);
             }
         }
 
         private async void barBtnAddExplanatoryNote_ItemClick(object sender, ItemClickEventArgs e)
         {
-            var form = new ExplanatoryNoteEdit();
-            form.ShowDialog();
-
-            if (form.IsSave)
+            using (var form = new ExplanatoryNoteEdit())
             {
-                var explanatoryNoteXPO = new ExplanatoryNoteXPO(Session)
-                {
-                    Name = form.FileName
-                };
+                form.ShowDialog();
 
-                var xml = form.ExplanatoryNote.GetSerializeExplanatoryNote();
-                if (!CheckSerialized(xml))
+                if (form.IsSave)
                 {
-                    return;
+                    var explanatoryNoteXPO = new ExplanatoryNoteXPO(Session)
+                    {
+                        Name = form.FileName
+                    };
+
+                    var xml = form.ExplanatoryNote.GetSerializeExplanatoryNote();
+                    if (!CheckSerialized(xml))
+                    {
+                        return;
+                    }
+
+                    explanatoryNoteXPO.SetObj(xml);
+                    await Session.SaveAsync(explanatoryNoteXPO);
+
+                    await UpdateGridDataSourceAsync(nameof(XmlObjXPO.Guid), explanatoryNoteXPO.Guid);
                 }
-
-                explanatoryNoteXPO.SetObj(xml);
-                await Session.SaveAsync(explanatoryNoteXPO);
-
-                await UpdateGridDataSourceAsync(nameof(XmlObjXPO.Guid), explanatoryNoteXPO.Guid);
             }
         }
 
@@ -381,16 +385,19 @@ namespace ProjectDocumentation.NET.Forms
 
                 var form = new ConclusionEdit(conclusion);
                 form.SetFileName(conclusionXPO.Name);
-                form.ShowDialog();
-
-                if (form.IsSave)
+                using (form)
                 {
-                    var newXml = form.Conclusion.GetSerializeConclusion();
-                    if (CheckSerialized(newXml))
+                    form.ShowDialog();
+
+                    if (form.IsSave)
                     {
-                        conclusionXPO.Name = form.FileName;
-                        conclusionXPO.SetObj(newXml);
-                        await Session.SaveAsync(conclusionXPO);
+                        var newXml = form.Conclusion.GetSerializeConclusion();
+                        if (CheckSerialized(newXml))
+                        {
+                            conclusionXPO.Name = form.FileName;
+                            conclusionXPO.SetObj(newXml);
+                            await Session.SaveAsync(conclusionXPO);
+                        }
                     }
                 }
             }
@@ -405,16 +412,19 @@ namespace ProjectDocumentation.NET.Forms
 
                 var form = new ExplanatoryNoteEdit(explanatoryNote);
                 form.SetFileName(explanatoryNoteXPO.Name);
-                form.ShowDialog();
-
-                if (form.IsSave)
+                using (form)
                 {
-                    var newXml = form.ExplanatoryNote.GetSerializeExplanatoryNote();
-                    if (CheckSerialized(newXml))
+                    form.ShowDialog();
+
+                    if (form.IsSave)
                     {
-                        explanatoryNoteXPO.Name = form.FileName;
-                        explanatoryNoteXPO.SetObj(newXml);
-                        await Session.SaveAsync(explanatoryNoteXPO);
+                        var newXml = form.ExplanatoryNote.GetSerializeExplanatoryNote();
+                        if (CheckSerialized(newXml))
+                        {
+                            explanatoryNoteXPO.Name = form.FileName;
+                            explanatoryNoteXPO.SetObj(newXml);
+                            await Session.SaveAsync(explanatoryNoteXPO);
+                        }
                     }
                 }
             }
@@ -433,22 +443,24 @@ namespace ProjectDocumentation.NET.Forms
                     return;
                 }
 
-                var form = new ConclusionBaseSettingEdit(conclusion.ExpertOrganization, conclusion.Approver);
-                form.ShowDialog();
-
-                if (form.IsSave)
+                using (var form = new ConclusionBaseSettingEdit(conclusion.ExpertOrganization, conclusion.Approver))
                 {
-                    conclusion.ExpertOrganization = form.Organization;
-                    conclusion.Approver = form.Person;
-                    var newXml = conclusion.GetSerializeConclusion();
-                    if (CheckSerialized(newXml))
-                    {
-                        conclusionXPO.SetObj(newXml);
-                        await Session.SaveAsync(conclusionXPO);
-                    }
-                }
+                    form.ShowDialog();
 
-                await UpdateGridDataSource(gridView.FocusedRowHandle);
+                    if (form.IsSave)
+                    {
+                        conclusion.ExpertOrganization = form.Organization;
+                        conclusion.Approver = form.Person;
+                        var newXml = conclusion.GetSerializeConclusion();
+                        if (CheckSerialized(newXml))
+                        {
+                            conclusionXPO.SetObj(newXml);
+                            await Session.SaveAsync(conclusionXPO);
+                        }
+                    }
+
+                    await UpdateGridDataSource(gridView.FocusedRowHandle);
+                }
             }
         }
 
@@ -464,8 +476,10 @@ namespace ProjectDocumentation.NET.Forms
                     return;
                 }
 
-                var form = new ViewForm(conclusion);
-                form.ShowDialog();
+                using (var form = new ViewForm(conclusion))
+                {
+                    form.ShowDialog();
+                }
             }
         }
     }

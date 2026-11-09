@@ -175,12 +175,15 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                     {
                         form = new AddressEdit();
                     }
-                    form.ShowDialog();
-
-                    if (form.IsSave)
+                    using (form)
                     {
-                        buttonEdit.EditValue = form.Address;
-                        buttonEdit.Refresh();
+                        form.ShowDialog();
+
+                        if (form.IsSave)
+                        {
+                            buttonEdit.EditValue = form.Address;
+                            buttonEdit.Refresh();
+                        }
                     }
                 }
                 else if (e.Button.Kind == ButtonPredefines.Search)

@@ -51,10 +51,13 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                         form = new AddressEdit();
                     }
 
-                    form.ShowDialog();
-                    if (form.IsSave)
+                    using (form)
                     {
-                        buttonEdit.EditValue = form.Address;
+                        form.ShowDialog();
+                        if (form.IsSave)
+                        {
+                            buttonEdit.EditValue = form.Address;
+                        }
                     }
                 }
                 else if (e.Button.Kind == ButtonPredefines.Search)
