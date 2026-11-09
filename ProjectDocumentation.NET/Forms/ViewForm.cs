@@ -34,24 +34,27 @@ namespace ProjectDocumentation.NET.Forms
                 AddValueToString($"{conclusion.Approver?.FamilyName} {conclusion.Approver?.FirstName} {conclusion.Approver?.SecondName}");
                 AddValueToString();
 
-                var examinationResult = await GetValueXPOAsync(GeneralizedDictionary.ExaminationResult, conclusion.ExaminationObject.ExaminationResult);
-                AddValueToString($"{examinationResult.Replace("ый", "ое")} заключение повторной негосударственной экспертизы");
+                // Раздел может отсутствовать в импортированном файле: пустой объект вместо NullReferenceException.
+                var examinationObject = conclusion.ExaminationObject ?? new TExaminationObject();
+
+                var examinationResult = await GetValueXPOAsync(GeneralizedDictionary.ExaminationResult, examinationObject.ExaminationResult);
+                AddValueToString($"{examinationResult?.Replace("ый", "ое")} заключение повторной негосударственной экспертизы");
                 AddValueToString();
 
                 AddValueToString($"Наименование объекта экспертизы:");
-                AddValueToString($"{conclusion.ExaminationObject.Name}");
+                AddValueToString($"{examinationObject.Name}");
                 AddValueToString();
 
                 AddValueToString($"Вид работ:");
-                AddValueToString($"{await GetValueXPOAsync(GeneralizedDictionary.ConstructionType, conclusion.ExaminationObject.ConstructionType)}");
+                AddValueToString($"{await GetValueXPOAsync(GeneralizedDictionary.ConstructionType, examinationObject.ConstructionType)}");
                 AddValueToString();
 
                 AddValueToString($"Объект экспертизы:");
-                AddValueToString($"{await GetValueXPOAsync(GeneralizedDictionary.ExaminationStage, conclusion.ExaminationObject.ExaminationStage)}");
+                AddValueToString($"{await GetValueXPOAsync(GeneralizedDictionary.ExaminationStage, examinationObject.ExaminationStage)}");
                 AddValueToString();
 
                 AddValueToString($"Предмет экспертизы:");
-                foreach (var item in conclusion.ExaminationObject.ExaminationType)
+                foreach (var item in examinationObject.ExaminationType)
                 {
                     AddValueToString($"{await GetValueXPOAsync(GeneralizedDictionary.ExaminationType, item)}");
                 }
@@ -75,7 +78,7 @@ namespace ProjectDocumentation.NET.Forms
                 {
                     foreach (var document in conclusion.Documents)
                     {
-                        if (document.DocType.GetEnumXmlAttributeValue().ToString().Contains("01."))
+                        if ((document.DocType.GetEnumXmlAttributeValue()?.ToString() ?? string.Empty).Contains("01."))
                         {
                             documentCount++;
                             var documentValue = $"{documentCount}. {document.DocName} от {document.DocDate.ToShortDateString()} № {document.DocNumber}";
@@ -97,7 +100,7 @@ namespace ProjectDocumentation.NET.Forms
                 {
                     foreach (var document in conclusion.Documents)
                     {
-                        if (document.DocType.GetEnumXmlAttributeValue().ToString().Contains("03."))
+                        if ((document.DocType.GetEnumXmlAttributeValue()?.ToString() ?? string.Empty).Contains("03."))
                         {
                             //documentCount++;
                             //var documentValue = $"{documentCount}. {document.DocName} от {document.DocDate.ToShortDateString()} № {document.DocNumber}";
@@ -118,7 +121,7 @@ namespace ProjectDocumentation.NET.Forms
                 {
                     foreach (var document in conclusion.Documents)
                     {
-                        if (document.DocType.GetEnumXmlAttributeValue().ToString().Contains("03."))
+                        if ((document.DocType.GetEnumXmlAttributeValue()?.ToString() ?? string.Empty).Contains("03."))
                         {
                             documentCount++;
                             var documentValue = $"{documentCount}. {document.DocName} от {document.DocDate.ToShortDateString()} № {document.DocNumber}";
@@ -138,7 +141,7 @@ namespace ProjectDocumentation.NET.Forms
                 {
                     foreach (var document in conclusion.Documents)
                     {
-                        if (document.DocType.GetEnumXmlAttributeValue().ToString().Contains("03."))
+                        if ((document.DocType.GetEnumXmlAttributeValue()?.ToString() ?? string.Empty).Contains("03."))
                         {
                             //documentCount++;
                             //var documentValue = $"{documentCount}. {document.DocName} от {document.DocDate.ToShortDateString()} № {document.DocNumber}";
@@ -193,7 +196,7 @@ namespace ProjectDocumentation.NET.Forms
                 var result = new List<string>();
                 foreach (var item in collection)
                 {
-                    var name = item.Name;
+                    var name = item.Name ?? string.Empty;
                     while (name.Length < maxLenght)
                     {
                         name += " ";

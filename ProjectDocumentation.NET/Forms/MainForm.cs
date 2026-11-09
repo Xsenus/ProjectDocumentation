@@ -1,5 +1,6 @@
 ﻿using AutoUpdaterDotNET;
 using Core.NET.Controllers;
+using Core.NET.Extensions;
 using Core.NET.Models.XPO;
 using DevExpress.Utils;
 using DevExpress.Xpo;
@@ -92,6 +93,42 @@ namespace ProjectDocumentation.NET.Forms
             await UpdateGridDataSourceAsync();
             InitialSetupGridControl();
             await CheckUpdates();
+        }
+
+        /// <summary>
+        /// Сериализация возвращает null при ошибке: такую запись сохранять нельзя, иначе документ станет пустым.
+        /// </summary>
+        private static bool CheckSerialized(string xml)
+        {
+            if (!string.IsNullOrWhiteSpace(xml))
+            {
+                return true;
+            }
+
+            XtraMessageBox.Show(
+                "Не удалось сформировать XML документа. Изменения не сохранены.",
+                "Информационное сообщение",
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Error);
+            return false;
+        }
+
+        /// <summary>
+        /// Если XML из базы не прочитался, форма открылась бы пустой и при сохранении перезаписала бы документ.
+        /// </summary>
+        private static bool CheckDeserialized(object obj)
+        {
+            if (obj != null)
+            {
+                return true;
+            }
+
+            XtraMessageBox.Show(
+                "Не удалось прочитать XML документа из базы. Документ не открыт, чтобы не перезаписать его пустыми данными.",
+                "Информационное сообщение",
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Error);
+            return false;
         }
 
         private async Task UpdateGridDataSourceAsync(string columnName = default, object obj = default)
@@ -210,7 +247,8 @@ namespace ProjectDocumentation.NET.Forms
                             {
                                 case "conclusion":
                                     result = result.Replace("xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\"", $"xsi:noNamespaceSchemaLocation=\"{fileName}.xsd\"");
-                                    result += "<?xml-stylesheet type=\"text/xsl\" href=\"conclusion.xsl\" ?>";
+                                    // Инструкция xml-stylesheet должна стоять в прологе: после корневого элемента браузер её игнорирует.
+                                    result = result.InsertIntoXmlProlog("<?xml-stylesheet type=\"text/xsl\" href=\"conclusion.xsl\" ?>");
                                     break;
 
                                 case "explanatoryNote":
@@ -256,7 +294,13 @@ namespace ProjectDocumentation.NET.Forms
                 };
 
                 form.Conclusion.ConclusionGuid = conclusionXPO.Guid?.ToString();
-                conclusionXPO.SetObj(form.Conclusion.GetSerializeConclusion());
+                var xml = form.Conclusion.GetSerializeConclusion();
+                if (!CheckSerialized(xml))
+                {
+                    return;
+                }
+
+                conclusionXPO.SetObj(xml);
                 await Session.SaveAsync(conclusionXPO);
 
                 await UpdateGridDataSourceAsync(nameof(XmlObjXPO.Guid), conclusionXPO.Guid);
@@ -275,7 +319,13 @@ namespace ProjectDocumentation.NET.Forms
                     Name = form.FileName
                 };
 
-                explanatoryNoteXPO.SetObj(form.ExplanatoryNote.GetSerializeExplanatoryNote());
+                var xml = form.ExplanatoryNote.GetSerializeExplanatoryNote();
+                if (!CheckSerialized(xml))
+                {
+                    return;
+                }
+
+                explanatoryNoteXPO.SetObj(xml);
                 await Session.SaveAsync(explanatoryNoteXPO);
 
                 await UpdateGridDataSourceAsync(nameof(XmlObjXPO.Guid), explanatoryNoteXPO.Guid);
@@ -294,30 +344,48 @@ namespace ProjectDocumentation.NET.Forms
             {
                 var xml = conclusionXPO.GetObj();
                 var conclusion = ConclusionController.GetConclusionByString(xml);
+                if (!CheckDeserialized(conclusion))
+                {
+                    return;
+                }
+
                 var form = new ConclusionEdit(conclusion);
                 form.SetFileName(conclusionXPO.Name);
                 form.ShowDialog();
 
                 if (form.IsSave)
                 {
-                    conclusionXPO.Name = form.FileName;
-                    conclusionXPO.SetObj(form.Conclusion.GetSerializeConclusion());
-                    await Session.SaveAsync(conclusionXPO);
+                    var newXml = form.Conclusion.GetSerializeConclusion();
+                    if (CheckSerialized(newXml))
+                    {
+                        conclusionXPO.Name = form.FileName;
+                        conclusionXPO.SetObj(newXml);
+                        await Session.SaveAsync(conclusionXPO);
+                    }
                 }
             }
             else if (gridView.GetRow(gridView.FocusedRowHandle) is ExplanatoryNoteXPO explanatoryNoteXPO)
             {
                 var xml = explanatoryNoteXPO.GetObj();
                 var explanatoryNote = ExplanatoryNoteController.GetExplanatoryNoteByString(xml);
+                if (!CheckDeserialized(explanatoryNote))
+                {
+                    return;
+                }
+
                 var form = new ExplanatoryNoteEdit(explanatoryNote);
                 form.SetFileName(explanatoryNoteXPO.Name);
                 form.ShowDialog();
 
                 if (form.IsSave)
                 {
-                    explanatoryNoteXPO.Name = form.FileName;
-                    explanatoryNoteXPO.SetObj(form.ExplanatoryNote.GetSerializeExplanatoryNote());
-                    await Session.SaveAsync(explanatoryNoteXPO);
+                    var newXml = form.ExplanatoryNote.GetSerializeExplanatoryNote();
+                    if (CheckSerialized(newXml))
+                    {
+                        explanatoryNoteXPO.Name = form.FileName;
+                        explanatoryNoteXPO.SetObj(newXml);
+                        await Session.SaveAsync(explanatoryNoteXPO);
+                    }
                 }
             }
             await UpdateGridDataSource(gridView.FocusedRowHandle);
@@ -330,6 +398,11 @@ namespace ProjectDocumentation.NET.Forms
             {
                 var xml = conclusionXPO.GetObj();
                 var conclusion = ConclusionController.GetConclusionByString(xml);
+                if (!CheckDeserialized(conclusion))
+                {
+                    return;
+                }
+
                 var form = new ConclusionBaseSettingEdit(conclusion.ExpertOrganization, conclusion.Approver);
                 form.ShowDialog();
 
@@ -337,8 +410,12 @@ namespace ProjectDocumentation.NET.Forms
                 {
                     conclusion.ExpertOrganization = form.Organization;
                     conclusion.Approver = form.Person;
-                    conclusionXPO.SetObj(conclusion.GetSerializeConclusion());
-                    await Session.SaveAsync(conclusionXPO);
+                    var newXml = conclusion.GetSerializeConclusion();
+                    if (CheckSerialized(newXml))
+                    {
+                        conclusionXPO.SetObj(newXml);
+                        await Session.SaveAsync(conclusionXPO);
+                    }
                 }
 
                 await UpdateGridDataSource(gridView.FocusedRowHandle);
@@ -352,6 +429,11 @@ namespace ProjectDocumentation.NET.Forms
             {
                 var xml = conclusionXPO.GetObj();
                 var conclusion = ConclusionController.GetConclusionByString(xml);
+                if (!CheckDeserialized(conclusion))
+                {
+                    return;
+                }
+
                 var form = new ViewForm(conclusion);
                 form.ShowDialog();
             }

@@ -1,5 +1,6 @@
 ﻿using Core.NET.AutoModels.ConclusionObj;
 using Core.NET.DaDataObj;
+using Core.NET.Extensions;
 using DevExpress.XtraEditors;
 using DevExpress.XtraEditors.Controls;
 using System;
@@ -70,7 +71,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
 
                             try
                             {
-                                var region = ConclusionEdit.GetEnumByAttributeValue<TRegionsRf>(addressData.region_kladr_id?.Replace("0", string.Empty));
+                                var region = ConclusionEdit.GetEnumByAttributeValue<TRegionsRf>(addressData.region_kladr_id.GetKladrRegionCode(), isNullAble: false);
                                 address.Region = region;
                             }
                             catch (Exception)
@@ -151,13 +152,13 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                         var data = party?.suggestions?.FirstOrDefault()?.data;
                         if (data != null)
                         {
-                            txtOrgFullName.EditValue = data.name?.full_with_opf ?? data.name.ToString();
+                            txtOrgFullName.EditValue = data.name?.full_with_opf ?? data.name?.full;
                             txtOrgOGRN.EditValue = data.ogrn;
                             txtOrgKPP.EditValue = data.kpp;
                             txtOrgINN.EditValue = data.inn;
 
                             var splitsSplitsName = data.management?.name?.Split();
-                            if (splitsSplitsName.Length >= 3)
+                            if (splitsSplitsName?.Length >= 3)
                             {
                                 txtFamilyName.EditValue = splitsSplitsName[0];
                                 txtFirstName.EditValue = splitsSplitsName[1];
@@ -182,7 +183,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
 
                                 try
                                 {
-                                    var region = ConclusionEdit.GetEnumByAttributeValue<TRegionsRf>(addressData.region_kladr_id?.Replace("0", string.Empty));
+                                    var region = ConclusionEdit.GetEnumByAttributeValue<TRegionsRf>(addressData.region_kladr_id.GetKladrRegionCode(), isNullAble: false);
                                     address.Region = region;
                                 }
                                 catch (Exception)

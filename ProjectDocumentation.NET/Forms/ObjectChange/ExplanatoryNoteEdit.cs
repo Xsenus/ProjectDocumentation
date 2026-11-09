@@ -66,23 +66,30 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
         {
             if (sender is ButtonEdit buttonEdit)
             {
-                _explanatoryNoteObjType = EnumExtension.GetDefaultEnum<ExplanatoryNoteObjType>(buttonEdit.Text);
-
-                layoutControlGroupIndustrialObject.Visibility = LayoutVisibility.Never;
-
-                switch (_explanatoryNoteObjType)
-                {
-                    case ExplanatoryNoteObjType.IndustrialObject:
-                        layoutControlGroupIndustrialObject.Visibility = LayoutVisibility.Always;
-                        break;
-
-                    case ExplanatoryNoteObjType.NonIndustrialObject:
-                        break;
-
-                    case ExplanatoryNoteObjType.LinearObject:
-                        break;
-                }
+                ApplyObjType(EnumExtension.GetDefaultEnum<ExplanatoryNoteObjType>(buttonEdit.Text));
             }
+        }
+
+        /// <summary>
+        /// Запоминает тип объекта и показывает блок полей производственного объекта только для него.
+        /// </summary>
+        private void ApplyObjType(ExplanatoryNoteObjType objType)
+        {
+            _explanatoryNoteObjType = objType;
+
+            layoutControlGroupIndustrialObject.Visibility = objType == ExplanatoryNoteObjType.IndustrialObject
+                ? LayoutVisibility.Always
+                : LayoutVisibility.Never;
+        }
+
+        /// <summary>
+        /// Выставляет тип объекта и в списке, и в поле формы: тип при сохранении не должен зависеть от того,
+        /// сработало ли событие выбора в списке.
+        /// </summary>
+        private void SetObjType(ExplanatoryNoteObjType objType)
+        {
+            cmbExplanatoryNoteObjType.EditValue = objType.GetEnumDescription();
+            ApplyObjType(objType);
         }
 
         private async Task FillFormControllersAsync()
@@ -173,9 +180,24 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
             }
             #endregion
 
+            if (ExplanatoryNote?.Item is tNonIndustrialObject)
+            {
+                // Поля непроизводственного объекта в форме пока не редактируются: объект сохраняется как есть.
+                SetObjType(ExplanatoryNoteObjType.NonIndustrialObject);
+            }
+            else if (ExplanatoryNote?.Item is tLinearObject)
+            {
+                // Поля линейного объекта в форме пока не редактируются: объект сохраняется как есть.
+                SetObjType(ExplanatoryNoteObjType.LinearObject);
+            }
+            else if (ExplanatoryNote?.Item is null)
+            {
+                SetObjType(ExplanatoryNoteObjType.IndustrialObject);
+            }
+
             if (ExplanatoryNote?.Item is tIndustrialObject tIndustrialObject)
             {
-                cmbExplanatoryNoteObjType.EditValue = ExplanatoryNoteObjType.IndustrialObject.GetEnumDescription();
+                SetObjType(ExplanatoryNoteObjType.IndustrialObject);
 
                 #region IndustrialObject
                 txtIndustrialObjectID.EditValue = tIndustrialObject.ObjectID;
@@ -223,12 +245,12 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                 cmbFireDangerCategory.EditValue = cmbFireDangerCategory.Properties.Items
                     ?.Cast<GeneralizedDictionaryXPO>()
                     ?.Where(w => w.GeneralizedDictionary == GeneralizedDictionary.FireDangerCategory)
-                    ?.FirstOrDefault(f => f.Value == fireDangerCategory?.GetEnumDescription());
+                    ?.FirstOrDefault(f => f.Value == fireDangerCategory?.GetEnumXmlAttributeValue()?.ToString());
                 var responsibilityLevel = tIndustrialObject.Items?.Where(w => w is tResponsibilityLevel)?.Cast<tResponsibilityLevel>()?.FirstOrDefault();
                 cmbResponsibilityLevel.EditValue = cmbResponsibilityLevel.Properties.Items
                     ?.Cast<GeneralizedDictionaryXPO>()
                     ?.Where(w => w.GeneralizedDictionary == GeneralizedDictionary.ResponsibilityLevel)
-                    ?.FirstOrDefault(f => f.Value == responsibilityLevel?.GetEnumDescription());
+                    ?.FirstOrDefault(f => f.Value == responsibilityLevel?.GetEnumXmlAttributeValue()?.ToString());
                 var peoplePermanentStay = tIndustrialObject.Items?.Where(w => w is tTextBlock)?.Cast<tTextBlock>()?.FirstOrDefault();
                 btnPeoplePermanentStay.EditValue = peoplePermanentStay;
                 #endregion
@@ -437,7 +459,10 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                         tIndustrialObject.ConstructionType = ConclusionEdit.GetEnumByAttributeValue<tConstructionType>(ConclusionEdit.GetValueGeneralizedDictionary(
                             cmbConstructionType,
                             message: "Заполните поле вид работ, на который разрабатывается проектная документация")?.Value);
-                        if (int.TryParse(ConclusionEdit.GetStringValue(txtConstructionDuration.EditValue, txtConstructionDuration, "Заполните поле продолжительность работ, месяц"), out int resultConstructionDuration))
+                        // Продолжительность — decimal (например, 1,5 месяца): int.TryParse отбрасывал такие значения.
+                        var constructionDurationText = ConclusionEdit.GetStringValue(txtConstructionDuration.EditValue, txtConstructionDuration, "Заполните поле продолжительность работ, месяц");
+                        if (decimal.TryParse(constructionDurationText, System.Globalization.NumberStyles.Number, System.Globalization.CultureInfo.CurrentCulture, out decimal resultConstructionDuration)
+                            || decimal.TryParse(constructionDurationText, System.Globalization.NumberStyles.Number, System.Globalization.CultureInfo.InvariantCulture, out resultConstructionDuration))
                         {
                             tIndustrialObject.ConstructionDuration = resultConstructionDuration;
                         }
@@ -477,13 +502,13 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                         break;
 
                     case ExplanatoryNoteObjType.NonIndustrialObject:
-                        var nonIndustrialObject = new tNonIndustrialObject();
-                        ExplanatoryNote.Item = nonIndustrialObject;
+                        // Формы для этого типа нет: сохраняем загруженный объект, иначе его данные терялись бы.
+                        ExplanatoryNote.Item = ExplanatoryNote.Item as tNonIndustrialObject ?? new tNonIndustrialObject();
                         break;
 
                     case ExplanatoryNoteObjType.LinearObject:
-                        var linearObject = new tLinearObject();
-                        ExplanatoryNote.Item = linearObject;
+                        // Формы для этого типа нет: сохраняем загруженный объект, иначе его данные терялись бы.
+                        ExplanatoryNote.Item = ExplanatoryNote.Item as tLinearObject ?? new tLinearObject();
                         break;
 
                     default:
