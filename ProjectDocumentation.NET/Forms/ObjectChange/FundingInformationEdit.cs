@@ -71,7 +71,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
 
                             try
                             {
-                                var region = ConclusionEdit.GetEnumByAttributeValue<TRegionsRf>(addressData.region_kladr_id?.Replace("0", string.Empty));
+                                var region = ConclusionEdit.GetEnumByAttributeValue<TRegionsRf>(addressData.region_kladr_id.GetKladrRegionCode(), isNullAble: false);
                                 address.Region = region;
                             }
                             catch (Exception)
@@ -106,6 +106,8 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
 
                 Finance.FinanceType = financeType;
                 Finance.FinanceOwner = null;
+                // BudgetType — необязательный элемент: без флага Specified вид бюджета не попадал в XML.
+                Finance.BudgetTypeSpecified = false;
 
                 switch (financeType)
                 {
@@ -113,6 +115,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                         Finance.BudgetType = ConclusionEdit.GetEnumByAttributeValue<TBudgetType>(ConclusionEdit.GetValueGeneralizedDictionary(
                            cmbBudgetType,
                            message: "Заполните поле вид бюджета")?.Value);
+                        Finance.BudgetTypeSpecified = true;
                         break;
 
                     case TFinanceType.Item2:
@@ -172,6 +175,8 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                 }
 
                 Finance.FinanceSize = spinFinanceSize.Value;
+                // Необязательный элемент: без флага Specified размер финансирования не попадал в XML.
+                Finance.FinanceSizeSpecified = Finance.FinanceSize != 0;
             }
             catch (Exception ex)
             {
@@ -201,7 +206,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                         var data = party?.suggestions?.FirstOrDefault()?.data;
                         if (data != null)
                         {
-                            txtOrgFullName.EditValue = data.name?.full_with_opf ?? data.name.ToString();
+                            txtOrgFullName.EditValue = data.name?.full_with_opf ?? data.name?.full;
                             txtOrgOGRN.EditValue = data.ogrn;
                             txtOrgKPP.EditValue = data.kpp;
                             txtOrgINN.EditValue = data.inn;
@@ -223,7 +228,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
 
                                 try
                                 {
-                                    var region = ConclusionEdit.GetEnumByAttributeValue<TRegionsRf>(addressData.region_kladr_id?.Replace("0", string.Empty));
+                                    var region = ConclusionEdit.GetEnumByAttributeValue<TRegionsRf>(addressData.region_kladr_id.GetKladrRegionCode(), isNullAble: false);
                                     address.Region = region;
                                 }
                                 catch (Exception)
@@ -341,7 +346,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                   ?.Where(w => w.GeneralizedDictionary == GeneralizedDictionary.FinanceType)
                   ?.FirstOrDefault(f => f.ValueInt == Finance?.FinanceType.GetEnumXmlAttributeValueInt());
 
-            cmbBudgetType.EditValue = cmbBudgetType.Properties.Items
+            cmbBudgetType.EditValue = Finance?.BudgetTypeSpecified != true ? null : cmbBudgetType.Properties.Items
                   ?.Cast<GeneralizedDictionaryXPO>()
                   ?.Where(w => w.GeneralizedDictionary == GeneralizedDictionary.BudgetType)
                   ?.FirstOrDefault(f => f.ValueInt == Finance?.BudgetType.GetEnumXmlAttributeValueInt());
