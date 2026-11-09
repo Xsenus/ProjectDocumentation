@@ -182,7 +182,7 @@
 | `ObjPartEdit` | `TObjectPart` | Наименование, вид и функциональное назначение части объекта |
 | `ExpertEdit` | `TExpert` | ФИО, номер и срок действия аттестата, направление деятельности |
 | `ExpertProjectDocumentsEdit` | `TExpertProjectDocuments` | Направление, замечания (`TProjectDocumentsMismatches`), «опасные решения». Поля «описание решений» и «оперативные изменения» есть на форме, но не загружаются и не сохраняются (D-17) |
-| `ExpertEngineeringSurveyEdit` | `TExpertEngineeringSurveys` | Вид изысканий, программа, методы, условия, оперативные изменения |
+| `ExpertEngineeringSurveyEdit` | `TExpertEngineeringSurveys` | Вид изысканий и замечания. Поля программы, методов, условий и изменений закомментированы: в модели схемы 01.03 их нет |
 | `EstimateMismatchEdit` | `TEstimateMismatches` | Замечания по смете |
 | `WorkPersonEdit` | `tWorkPerson` | ФИО, должность, признаки реестров |
 | `TextBlockEdit` | `tTextBlock` | Текст, таблицы (`TableEdit`), рисунки (`ImageEdit`) |
