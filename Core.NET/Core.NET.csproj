@@ -71,6 +71,7 @@
     <Compile Include="Controllers\SessionController.cs" />
     <Compile Include="DaDataObj\DaDataObj.cs" />
     <Compile Include="Extensions\AppExtensions.cs" />
+    <Compile Include="Extensions\ModelValidator.cs" />
     <Compile Include="Extensions\ObjectExtension.cs" />
     <Compile Include="Extensions\ByteExtension.cs" />
     <Compile Include="Extensions\ConclusionTextExtension.cs" />

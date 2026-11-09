@@ -97,6 +97,35 @@ namespace ProjectDocumentation.NET.Forms
         }
 
         /// <summary>
+        /// Перед выгрузкой заключение проверяется по ограничениям схемы из модели (обязательность, длина, формат).
+        /// При замечаниях пользователь решает, сохранять ли файл: ведомственная система может его не принять.
+        /// </summary>
+        private static bool ConfirmSchemaRemarks(string xml)
+        {
+            var conclusion = ConclusionController.GetConclusionByString(xml);
+            var remarks = ModelValidator.Validate(conclusion);
+            if (remarks.Count == 0)
+            {
+                return true;
+            }
+
+            const int shown = 15;
+            var text = string.Join(Environment.NewLine, remarks.Take(shown).Select(remark => "• " + remark));
+            if (remarks.Count > shown)
+            {
+                text += Environment.NewLine + $"… и ещё {remarks.Count - shown}.";
+            }
+
+            return XtraMessageBox.Show(
+                $"Заключение не соответствует ограничениям схемы (замечаний: {remarks.Count}):" + Environment.NewLine + Environment.NewLine +
+                text + Environment.NewLine + Environment.NewLine +
+                "Такой XML может не принять система, в которую он загружается. Всё равно сформировать файл?",
+                "Проверка заключения",
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Warning) == DialogResult.Yes;
+        }
+
+        /// <summary>
         /// Старая версия при каждом пересохранении удваивала списки заключения.
         /// Если в документе есть одинаковые записи, предлагаем удалить повторы до открытия формы;
         /// в базу изменения попадут только при сохранении формы.
@@ -261,6 +290,11 @@ namespace ProjectDocumentation.NET.Forms
                 if (gridView.GetRow(gridView.FocusedRowHandle) is XmlObjXPO xmlObjXPO)
                 {
                     var xmlFileName = $"{fileName}_{xmlObjXPO.Guid}.xml";
+
+                    if (xmlObjXPO is ConclusionXPO && !ConfirmSchemaRemarks(xmlObjXPO.GetObj()))
+                    {
+                        return;
+                    }
 
                     using (var fbd = new FolderBrowserDialog())
                     {
