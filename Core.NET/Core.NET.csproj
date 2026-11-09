@@ -58,6 +58,7 @@
     <Compile Include="Algorithms\ComputeHash.cs" />
     <Compile Include="Algorithms\CRC32.cs" />
     <Compile Include="AutoModels\ConclusionObj\Conclusion.cs" />
+    <Compile Include="AutoModels\ExplanatoryNoteObj\ExplanatoryNoteObjects.cs" />
     <Compile Include="AutoModels\ExplanatoryNoteObj\ExplanatoryNoteObjType.cs" />
     <Compile Include="AutoModels\ExplanatoryNoteObj\ExplanatoryNote.cs" />
     <Compile Include="AutoModels\ExplanatoryNoteObj\tWorkPerson.cs" />
