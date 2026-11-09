@@ -43,7 +43,9 @@
 - В этом проекте миграций нет: SQLite-база `xml.s3db` создаётся и обновляется автоматически средствами DevExpress XPO (`AutoCreateOption.DatabaseAndSchema` в `Core.NET/Controllers/SessionController.cs`) по классам `Core.NET/Models/XPO`. Изменения этих классов меняют схему у пользователей — опиши их в PR.
 
 ### Проверки перед PR
-CI (`.github/workflows`) в репозитории нет, тестов и линтеров тоже нет — проверяй хотя бы сборку. Новые инструменты без согласования не добавлять.
+Тестов и линтеров в репозитории нет — проверяй хотя бы сборку. Новые инструменты без согласования не добавлять.
+
+CI: workflow `Windows build` (`.github/workflows/windows-build.yml`) собирает решение на Windows-ПК владельца (self-hosted runner, метка `github-pc`) при каждом PR и push в `master`. Резерва на GitHub-hosted runner нет: DevExpress там отсутствует. Подробности — `docs/WINDOWS_RUNNERS.md`. PR вливается только при зелёном check `Build (Release)`; job в очереди (ПК недоступен) — не результат.
 
 Решение `ProjectDocumentation.sln` (.NET Framework 4.7.2, WinForms, DevExpress 24.2, пакеты через `packages.config`) собирается только на Windows с установленным и лицензированным DevExpress 24.2 и Visual Studio / Build Tools:
 

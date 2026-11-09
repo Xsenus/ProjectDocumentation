@@ -1,0 +1,61 @@
+# Сборка решения на Windows-ПК владельца (self-hosted runner с меткой github-pc).
+# Подробности, ограничения и порядок действий — docs/WINDOWS_RUNNERS.md.
+name: Windows build
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: windows-build-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  build:
+    name: Build (Release)
+    # DevExpress 24.2 подключён из GAC (не NuGet) и требует лицензии: на образах GitHub его нет,
+    # поэтому сборка выполняется только на ПК. Резервного запуска на GitHub нет — если ПК недоступен,
+    # job ждёт в очереди. Код PR из форков на ПК не выполняется.
+    if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: [self-hosted, Windows, X64, github-pc]
+    timeout-minutes: 30
+    defaults:
+      run:
+        shell: pwsh
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+
+      - name: Locate MSBuild
+        id: msbuild
+        run: |
+          $vswhere = Join-Path ${env:ProgramFiles(x86)} 'Microsoft Visual Studio\Installer\vswhere.exe'
+          if (-not (Test-Path -LiteralPath $vswhere)) {
+            throw "Не найден vswhere.exe: на ПК нужна Visual Studio или Build Tools с MSBuild."
+          }
+          $msbuild = & $vswhere -latest -products * -requires Microsoft.Component.MSBuild -find 'MSBuild\**\Bin\MSBuild.exe' | Select-Object -First 1
+          if (-not $msbuild) {
+            throw 'Не найден MSBuild.exe.'
+          }
+          & $msbuild -version -nologo
+          "path=$msbuild" | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append
+
+      - name: Restore NuGet packages (packages.config)
+        env:
+          MSBUILD: ${{ steps.msbuild.outputs.path }}
+        run: |
+          & $env:MSBUILD ProjectDocumentation.sln -t:Restore -p:RestorePackagesConfig=true -nologo -verbosity:minimal
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+
+      - name: Build
+        env:
+          MSBUILD: ${{ steps.msbuild.outputs.path }}
+        run: |
+          & $env:MSBUILD ProjectDocumentation.sln -p:Configuration=Release -m -nologo -verbosity:minimal
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
