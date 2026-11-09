@@ -72,6 +72,7 @@
     <Compile Include="Extensions\AppExtensions.cs" />
     <Compile Include="Extensions\ObjectExtension.cs" />
     <Compile Include="Extensions\ByteExtension.cs" />
+    <Compile Include="Extensions\ConclusionTextExtension.cs" />
     <Compile Include="Extensions\EnumExtension.cs" />
     <Compile Include="Extensions\Utf8StringSerialize.cs" />
     <Compile Include="Extensions\StringExtension.cs" />

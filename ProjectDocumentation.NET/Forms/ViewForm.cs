@@ -37,8 +37,9 @@ namespace ProjectDocumentation.NET.Forms
                 // Раздел может отсутствовать в импортированном файле: пустой объект вместо NullReferenceException.
                 var examinationObject = conclusion.ExaminationObject ?? new TExaminationObject();
 
-                var examinationResult = await GetValueXPOAsync(GeneralizedDictionary.ExaminationResult, examinationObject.ExaminationResult);
-                AddValueToString($"{examinationResult?.Replace("ый", "ое")} заключение повторной негосударственной экспертизы");
+                // Форма и стадия берутся из данных (раньше формулировка была зашита в код).
+                var stage = examinationObject.ExaminationStage.GetStageAdjective();
+                AddValueToString(examinationObject.GetConclusionTitle());
                 AddValueToString();
 
                 AddValueToString($"Наименование объекта экспертизы:");
@@ -63,7 +64,7 @@ namespace ProjectDocumentation.NET.Forms
                 AddValueToString($"I. Общие положения и сведения о заключении экспертизы");
                 AddValueToString();
 
-                AddValueToString($"1.1. Сведения об организации по проведению повторной экспертизы");
+                AddValueToString($"1.1. Сведения об организации по проведению {stage}экспертизы");
                 AddValueToString($"{conclusion.ExpertOrganization?.GetCounterPartyDescription()}");
                 AddValueToString();
 
@@ -71,7 +72,7 @@ namespace ProjectDocumentation.NET.Forms
                 //AddValueToString($"{conclusion.Declarant?.Item?.GetCounterPartyDescription()}");
                 AddValueToString();
 
-                AddValueToString($"1.3. Основания для проведения повторной экспертизы");
+                AddValueToString($"1.3. Основания для проведения {stage}экспертизы");
                 var documentCount = 0;
 
                 if (conclusion.Documents != null)
@@ -115,7 +116,7 @@ namespace ProjectDocumentation.NET.Forms
                 }
                 AddValueToString();
 
-                AddValueToString($"1.5. Сведения о составе документов, представленных для проведения повторной экспертизы");
+                AddValueToString($"1.5. Сведения о составе документов, представленных для проведения {stage}экспертизы");
                 documentCount = 0;
                 if (conclusion?.Documents != null)
                 {
@@ -136,7 +137,7 @@ namespace ProjectDocumentation.NET.Forms
                 }
                 AddValueToString();
 
-                AddValueToString($"1.6. Сведения о ранее выданных заключениях экспертизы проектной документации и (или) результатов инженерных изысканий в отношении объекта капитального строительства, проектная документация и (или) результаты инженерных изысканий по которому представлены для проведения повторной экспертизы");
+                AddValueToString($"1.6. Сведения о ранее выданных заключениях экспертизы проектной документации и (или) результатов инженерных изысканий в отношении объекта капитального строительства, проектная документация и (или) результаты инженерных изысканий по которому представлены для проведения {stage}экспертизы");
                 if (conclusion?.Documents != null)
                 {
                     foreach (var document in conclusion.Documents)
@@ -156,7 +157,7 @@ namespace ProjectDocumentation.NET.Forms
                 }
                 AddValueToString();
 
-                AddValueToString($"II. Сведения, содержащиеся в документах, представленных для проведения повторной экспертизы проектной документации");
+                AddValueToString($"II. Сведения, содержащиеся в документах, представленных для проведения {stage}экспертизы проектной документации");
                 AddValueToString();
 
                 AddValueToString($"2.1. Сведения об объекте капитального строительства, применительно к которому подготовлена проектная документация");
