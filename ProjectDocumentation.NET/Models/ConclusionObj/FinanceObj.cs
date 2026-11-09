@@ -4,6 +4,7 @@ using Core.NET.Extensions;
 using Core.NET.Models.XPO;
 using DevExpress.Xpo;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace ProjectDocumentation.NET.Models.ConclusionObj
 {
@@ -27,21 +28,21 @@ namespace ProjectDocumentation.NET.Models.ConclusionObj
             TFinance = tFinance;
         }
 
-        public async void SetEnumObj()
+        public void SetEnumObj()
         {
             var session = SessionController.GetSession();
 
             if (TFinance != null)
             {
-                var financeType = await new XPQuery<GeneralizedDictionaryXPO>(session)?
-                .FirstOrDefaultAsync(f => f.GeneralizedDictionary == GeneralizedDictionary.FinanceType
+                var financeType = new XPQuery<GeneralizedDictionaryXPO>(session)?
+                .FirstOrDefault(f => f.GeneralizedDictionary == GeneralizedDictionary.FinanceType
                     && f.Value == TFinance.FinanceType.GetEnumXmlAttributeValue().ToString());
                 FinanceType = financeType?.Name;
 
                 if (TFinance.FinanceType == TFinanceType.Item1)
                 {
-                    var budgetType = await new XPQuery<GeneralizedDictionaryXPO>(session)?
-                        .FirstOrDefaultAsync(f => f.GeneralizedDictionary == GeneralizedDictionary.BudgetType
+                    var budgetType = new XPQuery<GeneralizedDictionaryXPO>(session)?
+                        .FirstOrDefault(f => f.GeneralizedDictionary == GeneralizedDictionary.BudgetType
                             && f.Value == TFinance.BudgetType.GetEnumXmlAttributeValue().ToString());
                     BudgetType = budgetType?.Name;
                 }

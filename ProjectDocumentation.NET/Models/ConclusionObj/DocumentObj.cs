@@ -5,6 +5,7 @@ using Core.NET.Models.XPO;
 using DevExpress.Xpo;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace ProjectDocumentation.NET.Models.ConclusionObj
 {
@@ -28,14 +29,14 @@ namespace ProjectDocumentation.NET.Models.ConclusionObj
             this.Document = TDocument;
         }
 
-        public async void SetEnumObj()
+        public void SetEnumObj()
         {
             var session = SessionController.GetSession();
 
             if (Document != null)
             {
-                var docType = await new XPQuery<GeneralizedDictionaryXPO>(session)?
-                .FirstOrDefaultAsync(f => f.GeneralizedDictionary == GeneralizedDictionary.DocumentType
+                var docType = new XPQuery<GeneralizedDictionaryXPO>(session)?
+                .FirstOrDefault(f => f.GeneralizedDictionary == GeneralizedDictionary.DocumentType
                     && f.Value == Document.DocType.GetEnumXmlAttributeValue().ToString());
                 DocTypeName = docType?.Name;
 
