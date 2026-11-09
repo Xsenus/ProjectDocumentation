@@ -80,7 +80,9 @@ namespace Core.NET.Extensions
                 if (!lenient) return default;
                 try
                 {
-                    var xml = File.ReadAllText(path, Encoding.UTF8);
+                    // Кодировку определяет XML-декларация файла (например, windows-1251),
+                    // а не жёстко заданный UTF-8.
+                    var xml = XDocument.Load(path, LoadOptions.PreserveWhitespace).ToString(SaveOptions.DisableFormatting);
                     var cleaned = NormalizeProblematicEnums(xml);
                     using (var sr = new StringReader(cleaned)) 
                     {
