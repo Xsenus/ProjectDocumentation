@@ -14,6 +14,7 @@ namespace ProjectDocumentation.NET.Services
     internal static class SchemaXmlDocument
     {
         public const int MaxXmlBytes = 32 * 1024 * 1024;
+        private const int UnableToRemoveReplacedFile = unchecked((int)0x80070497);
 
         public static string ReadVersion(string xml, string rootName)
         {
@@ -172,6 +173,9 @@ namespace ProjectDocumentation.NET.Services
         }
 
         public static void WriteExport(string path, string xml, string rootName, string schema)
+            => WriteExportAsync(path, xml, rootName, schema).GetAwaiter().GetResult();
+
+        private static async Task WriteExportAsync(string path, string xml, string rootName, string schema)
         {
             var document = Parse(xml, rootName);
             var xsi = XNamespace.Get("http://www.w3.org/2001/XMLSchema-instance");
@@ -197,7 +201,19 @@ namespace ProjectDocumentation.NET.Services
 
                 if (File.Exists(path))
                 {
-                    File.Replace(temporary, path, null);
+                    // Win32 error 1175 leaves both filenames intact, so the same atomic replacement can be retried.
+                    for (var attempt = 0; ; attempt++)
+                    {
+                        try
+                        {
+                            File.Replace(temporary, path, null);
+                            break;
+                        }
+                        catch (IOException error) when (error.HResult == UnableToRemoveReplacedFile && attempt < 4)
+                        {
+                            await Task.Delay(100 * (attempt + 1)).ConfigureAwait(false);
+                        }
+                    }
                 }
                 else
                 {
@@ -232,7 +248,7 @@ namespace ProjectDocumentation.NET.Services
                 await WriteMissingAssetAsync(paths[index], assets[index]);
             }
 
-            WriteExport(path, xml, rootName, schema);
+            await WriteExportAsync(path, xml, rootName, schema);
         }
 
         private static void CheckExistingAsset(string path, byte[] expected)
