@@ -35,7 +35,7 @@ namespace ProjectDocumentation.NET.Services
             Add(fields, "OGRN", CommonValue(matching, party => IsDigits(party.ogrn, 13) ? party.ogrn : null));
             Add(fields, "INN", inn);
             // One INN can identify multiple branches. Only return a KPP shared by the exact matches.
-            Add(fields, "KPP", CommonValue(matching, party => party.kpp));
+            Add(fields, "KPP", CommonValue(matching, party => IsDigits(party.kpp, 9) ? party.kpp : null));
             return fields;
         }
 
@@ -50,7 +50,7 @@ namespace ProjectDocumentation.NET.Services
 
             var fields = new Dictionary<string, string>();
             var region = address.region_kladr_id.GetKladrRegionCode();
-            Add(fields, "RegionCode", region == "00" ? null : region);
+            Add(fields, "RegionCode", IsDigits(region, 2) && region != "00" ? region : null);
             Add(fields, "PostIndex", IsDigits(address.postal_code, 6) ? address.postal_code : null);
             if (IsDigits(address.oktmo, 8) || IsDigits(address.oktmo, 11))
             {

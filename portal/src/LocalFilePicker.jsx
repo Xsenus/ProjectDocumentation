@@ -35,6 +35,7 @@ function LocalFilePicker({ label, accept, multiple, onSelect, beginRead }) {
   const operation = useRef(null);
   const [reading, setReading] = useState(false);
   const [problem, setProblem] = useState('');
+  const [notice, setNotice] = useState('');
   useEffect(() => () => operation.current?.abort(), []);
 
   async function select(event) {
@@ -46,8 +47,10 @@ function LocalFilePicker({ label, accept, multiple, onSelect, beginRead }) {
     const finishRead = beginRead();
     setReading(true);
     setProblem('');
+    setNotice('');
     try {
-      await onSelect(files, controller.signal);
+      const message = await onSelect(files, controller.signal);
+      if (message && !controller.signal.aborted) setNotice(message);
     } catch (error) {
       if (!controller.signal.aborted) setProblem(error.message || 'Не удалось прочитать выбранный файл.');
     } finally {
@@ -63,6 +66,7 @@ function LocalFilePicker({ label, accept, multiple, onSelect, beginRead }) {
       <input ref={input} type="file" aria-label={label} hidden disabled={reading} accept={accept} multiple={multiple} onChange={select} />
       {reading && <p className="field-hint" role="status">Читаю выбранные файлы…</p>}
       {problem && <p className="lookup-error" role="alert">{problem}</p>}
+      {notice && <p className="field-hint" role="status">{notice}</p>}
     </div>
   );
 }
@@ -93,12 +97,17 @@ export function FileMetadataPicker({ element, type, fields, context, parentParti
       throw new Error('Поля файла изменились во время чтения. Выберите файл снова.');
     }
 
+    const oldChecksum = before[fields.findIndex(field => field.name === 'FileChecksum')]?.trim().toLowerCase();
+    const outdatedSignatures = !adding && oldChecksum !== metadata[0].FileChecksum
+      ? directElements(element, new Set(['SignFile'])) : [];
     context.change(() => {
       for (const values of metadata) {
         const target = adding ? insertElement(element, spec, parentParticle, context.types) : element;
         for (const field of fields) setField(target, field, type, context.types, values[field.name]);
       }
+      outdatedSignatures.forEach(signature => signature.remove());
     });
+    if (outdatedSignatures.length) return 'Файл заменён. Добавьте подписи к новому файлу.';
   }
 
   return <LocalFilePicker label={label} multiple={repeatable} onSelect={select} beginRead={context.beginFileRead} />;

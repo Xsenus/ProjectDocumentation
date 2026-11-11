@@ -2,7 +2,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import SchemaForm, { groupLabelsFor, normalPath, sectionFor, sectionProgress } from './SchemaForm.jsx';
 import { documentFamilies, familyForDocument, familyForId, familyRequest } from './documentFamilies.js';
-import { api, downloadXml, parseXml, readXmlFile, schemaVersion, serializeXml } from './xml.js';
+import { api, downloadXml, encodeXmlBytes, parseXml, readXmlFile, schemaVersion, serializeXml, xmlBlobFromBase64 } from './xml.js';
 import './styles.css';
 
 const host = window.chrome?.webview;
@@ -72,7 +72,7 @@ function exportCopy(document, family, version) {
   return serializeXml(copy);
 }
 
-function ValidationPanel({ validation, onField }) {
+function ValidationPanel({ validation, onField, navigationDisabled }) {
   if (!validation) return null;
   const errors = validation.errors || [];
   return (
@@ -90,7 +90,7 @@ function ValidationPanel({ validation, onField }) {
           {errors.map((error, index) => (
             <li key={index}>
               {error.path ? (
-                <button type="button" className="error-path" onClick={() => onField(error.path)}>
+                <button type="button" className="error-path" disabled={navigationDisabled} onClick={() => onField(error.path)}>
                   {error.path}{error.line && ' · строка ' + error.line}
                 </button>
               ) : error.line ? <span className="error-path">Строка {error.line}</span> : null}
@@ -308,8 +308,13 @@ function App() {
 
   function newDocument(requestedFamily = family) {
     if (!permitReplacement()) return;
+    const serial = revision.current;
     run(requestedFamily.createProgress, async () => {
       const { xml } = await api(familyRequest('new', requestedFamily));
+      if (!isExactRevision(revision, serial)) {
+        setNotice('Документ изменился во время создания. Повторите создание нового документа.');
+        return;
+      }
       replaceDocument(xml, requestedFamily.newTitle);
       setShowDrafts(false);
     });
@@ -319,9 +324,14 @@ function App() {
     const file = event.target.files?.[0];
     event.target.value = '';
     if (!file) return;
+    const serial = revision.current;
     run('Читаю XML', async () => {
-      const xml = await readXmlFile(file);
-      replaceDocument(xml, nameFromFile(file.name), { original: { xml, file, name: nameFromFile(file.name) } });
+      const { xml, bytes } = await readXmlFile(file);
+      if (!isExactRevision(revision, serial)) {
+        setNotice('Документ изменился во время чтения файла. Откройте XML ещё раз.');
+        return;
+      }
+      replaceDocument(xml, nameFromFile(file.name), { original: { bytes, file, name: nameFromFile(file.name) } });
       setShowDrafts(false);
       setNotice('Файл открыт. Версия схемы: ' + versionLabel(schemaVersion(documentRef.current)) + '.');
     });
@@ -460,13 +470,17 @@ function App() {
 
   function saveDraft() {
     const id = activeDraft || crypto.randomUUID();
-    const draft = {
-      id, name: name.trim() || defaultName(document), xml: serializeXml(document), updatedAt: new Date().toISOString(),
-      original: original ? { xml: original.xml, name: original.name } : undefined,
-      warnings: conversionWarnings,
-    };
-    const updated = [draft, ...drafts.filter(item => item.id !== id)];
     try {
+      const draft = {
+        id, name: name.trim() || defaultName(document), xml: serializeXml(document), updatedAt: new Date().toISOString(),
+        original: original ? {
+          name: original.name,
+          base64: original.bytes ? encodeXmlBytes(original.bytes) : original.base64,
+          xml: original.xml,
+        } : undefined,
+        warnings: conversionWarnings,
+      };
+      const updated = [draft, ...drafts.filter(item => item.id !== id)];
       localStorage.setItem(family.draftsKey, JSON.stringify(updated));
       setDraftsByFamily(previous => ({ ...previous, [family.id]: updated }));
       setActiveDraft(id);
@@ -503,6 +517,7 @@ function App() {
   }
 
   function navigateError(path) {
+    if (rawDirty || readingFiles) return;
     if (!formReady) {
       openXmlView();
       return;
@@ -516,18 +531,18 @@ function App() {
     const elementName = normalized.slice(slash + 1).replace(/\[\d+\]$/, '');
     function reveal(remainingFrames) {
       const matches = Array.from(window.document.querySelectorAll('.schema-form [data-xml-path]'));
-      const field = matches.find(node => node.dataset.xmlPath === normalized && node.classList.contains('field'));
-      if (field) {
-        field.scrollIntoView({ block: 'center' });
-        field.querySelector('input, select, textarea')?.focus({ preventScroll: true });
-        return;
-      }
       const ancestors = matches.filter(node => normalized === node.dataset.xmlPath ||
         normalized.startsWith(node.dataset.xmlPath + '/'));
       const closed = ancestors.find(node => node.tagName === 'DETAILS' && !node.open);
       if (closed && remainingFrames > 0) {
         closed.open = true;
         requestAnimationFrame(() => reveal(remainingFrames - 1));
+        return;
+      }
+      const field = matches.find(node => node.dataset.xmlPath === normalized && node.classList.contains('field'));
+      if (field) {
+        field.scrollIntoView({ block: 'center' });
+        field.querySelector('input, select, textarea')?.focus({ preventScroll: true });
         return;
       }
 
@@ -683,8 +698,11 @@ function App() {
                       <button type="button" className="text-button" disabled={actionsDisabled} onClick={exportCurrent}>Выгрузить XML</button>
                     )}
                     {original && <button type="button" className="text-button" onClick={() => {
-                      try { downloadXml(original.file || serializeXml(parseXml(original.xml)), original.name + ' (исходный)'); }
-                      catch (error) { setProblem(error.message); }
+                      try {
+                        const source = original.file || (typeof original.base64 === 'string'
+                          ? xmlBlobFromBase64(original.base64) : serializeXml(parseXml(original.xml)));
+                        downloadXml(source, original.name + ' (исходный)');
+                      } catch (error) { setProblem(error.message); }
                     }}>Скачать исходный XML</button>}
                     <button type="button" className="text-button" disabled={actionsDisabled}
                       onClick={() => downloadXml(serializeXml(document), name + ' (черновик)')}>Скачать черновик</button>
@@ -699,7 +717,7 @@ function App() {
                   <ul>{conversionWarnings.map((warning, index) => <li key={index}>{warning}</li>)}</ul>
                 </details>
               )}
-              <ValidationPanel validation={validation} onField={navigateError} />
+              <ValidationPanel validation={validation} onField={navigateError} navigationDisabled={rawDirty || readingFiles} />
 
               <section className="paper editor">
                 <div className="editor-heading">

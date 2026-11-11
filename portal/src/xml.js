@@ -11,7 +11,8 @@ export function parseXml(xml) {
   const xml10 = xml.replace(/(^\uFEFF?\s*<\?xml\s+version\s*=\s*["'])1\.1(["'])/, '$11.0$2');
   const document = new DOMParser().parseFromString(xml10, 'application/xml');
   if (document.documentElement?.localName === 'parsererror' ||
-      document.getElementsByTagNameNS('http://www.mozilla.org/newlayout/xml/parsererror.xml', 'parsererror').length) {
+      document.getElementsByTagNameNS('http://www.mozilla.org/newlayout/xml/parsererror.xml', 'parsererror').length ||
+      document.getElementsByTagNameNS('http://www.w3.org/1999/xhtml', 'parsererror').length) {
     throw new Error('Проверьте структуру XML. Документ не удалось прочитать.');
   }
   if (!familyForRoot(document.documentElement?.localName)) {
@@ -41,7 +42,20 @@ export async function readXmlFile(file) {
     const header = new TextDecoder('windows-1252').decode(bytes.slice(0, 250)).replace(/^ï»¿/, '');
     encoding = /^<\?xml\s+[^?]*\bencoding\s*=\s*['"]([^'"]+)['"]/i.exec(header)?.[1] || 'utf-8';
   }
-  return new TextDecoder(encoding, { fatal: true }).decode(bytes);
+  return { xml: new TextDecoder(encoding, { fatal: true }).decode(bytes), bytes };
+}
+
+export function encodeXmlBytes(bytes) {
+  const chunks = [];
+  for (let offset = 0; offset < bytes.length; offset += 32768) {
+    chunks.push(String.fromCharCode(...bytes.subarray(offset, offset + 32768)));
+  }
+  return btoa(chunks.join(''));
+}
+
+export function xmlBlobFromBase64(base64) {
+  const bytes = Uint8Array.from(atob(base64), character => character.charCodeAt(0));
+  return new Blob([bytes], { type: 'application/xml' });
 }
 
 export function fileNameFor(name) {
