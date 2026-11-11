@@ -50,6 +50,22 @@ namespace ProjectDocumentation.NET.Forms
                 }
             }
 
+            OpenConclusionImport(document, name, guid, warnings, replace);
+        }
+
+        private async Task ImportHistoricalConclusionAsync(XDocument document, string name)
+        {
+            if (conclusionSchema == null)
+            {
+                throw new InvalidOperationException("Редактор заключений 01.04 недоступен.");
+            }
+
+            var migration = await conclusionSchema.MigrateAsync(document.ToString(SaveOptions.DisableFormatting), Conclusion0104Document.CurrentVersion);
+            OpenConclusionImport(Conclusion0104Document.Parse(migration.Xml), $"{name} (01.04)", Guid.NewGuid(), migration.Warnings);
+        }
+
+        private void OpenConclusionImport(XDocument document, string name, Guid guid, IReadOnlyList<string> warnings, ConclusionXPO replace = null)
+        {
             using (var editor = new Conclusion0104Form(conclusionSchema, Conclusion0104Document.WithGuid(document, guid), name,
                 (xml, title) => Conclusion0104Document.SaveAsync(conclusionSchema, xml, title, guid, replace), warnings: warnings))
             {

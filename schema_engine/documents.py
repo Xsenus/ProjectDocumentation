@@ -5,6 +5,7 @@ from pathlib import Path
 SCHEMA_DIRECTORY = Path(__file__).with_name('schemas')
 DEFAULT_FAMILY = 'conclusion'
 LEGACY_NOTE_VERSION = '01.03'
+LEGACY_CONCLUSION_VERSIONS = ('01.00', '01.02')
 SCHEMA_LOCATION = '{http://www.w3.org/2001/XMLSchema-instance}noNamespaceSchemaLocation'
 
 
@@ -21,6 +22,11 @@ DOCUMENTS = {
     'explanatorynote': DocumentFamily('ExplanatoryNote', 'id', '01.07', ('01.03', '01.05', '01.07')),
 }
 FAMILIES_BY_ROOT = {document.root: family for family, document in DOCUMENTS.items()}
+
+
+def source_versions(family):
+    versions = DOCUMENTS[family].versions
+    return LEGACY_CONCLUSION_VERSIONS + versions if family == 'conclusion' else versions
 
 
 def resolve_version(family, version=None):
@@ -66,4 +72,4 @@ SCHEMA_ASSETS = frozenset(
     for version in document.versions
     if not legacy_note_format(family, version)
     for extension in ('.xsd', '.xsl')
-)
+) | frozenset(schema_filename('conclusion', version) for version in LEGACY_CONCLUSION_VERSIONS)

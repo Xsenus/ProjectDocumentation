@@ -93,7 +93,6 @@ namespace ProjectDocumentation.NET.Forms
                     return;
                 }
 
-                var isConclusion = radioGroupType.EditValue?.ToString() == "Conclusion";
                 ImportResult result;
                 switch (radioGroupType.EditValue?.ToString())
                 {
@@ -106,13 +105,19 @@ namespace ProjectDocumentation.NET.Forms
                             return;
                         }
 
-                        if (version != null && version != Conclusion0104Document.LegacyVersion)
+                        if (Conclusion0104Document.IsHistoricalVersion(version))
+                        {
+                            await ImportHistoricalConclusionAsync(document, name);
+                            return;
+                        }
+
+                        if (!Conclusion0104Document.CanUseLegacyEditor(version))
                         {
                             throw new InvalidOperationException($"Версия заключения {version} не поддерживается.");
                         }
 
                         result = await ConclusionController.ImportConclusionAsync(filePath, name, existing => AskImportConflict(existing,
-                            existing is ConclusionXPO && Conclusion0104Document.ReadVersion(existing.GetObj()) != Conclusion0104Document.CurrentVersion));
+                            existing is ConclusionXPO && Conclusion0104Document.CanUseLegacyEditor(Conclusion0104Document.ReadVersion(existing.GetObj()))));
                         break;
                     case "ExplanatoryNote":
                         var noteVersion = ExplanatoryNote0107Document.ReadFileVersion(filePath);

@@ -12,6 +12,12 @@ namespace ProjectDocumentation.NET.Services
         private const string RootName = "Conclusion";
         private const string GuidAttribute = "ConclusionGUID";
 
+        public static bool IsHistoricalVersion(string version) => version == "01.00" || version == "01.02";
+
+        public static bool CanMigrate(string version) => IsHistoricalVersion(version) || version == LegacyVersion;
+
+        public static bool CanUseLegacyEditor(string version) => version == null || version == LegacyVersion;
+
         public static string ReadVersion(string xml) => SchemaXmlDocument.ReadVersion(xml, RootName);
 
         public static XDocument ReadFile(string path) => SchemaXmlDocument.ReadFile(path, RootName);

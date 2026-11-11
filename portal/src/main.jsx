@@ -65,8 +65,10 @@ function exportCopy(document, family, version) {
   Array.from(copy.childNodes)
     .filter(node => node.nodeType === Node.PROCESSING_INSTRUCTION_NODE && node.target === 'xml-stylesheet')
     .forEach(node => node.remove());
-  const style = copy.createProcessingInstruction('xml-stylesheet', 'type="text/xsl" href="' + base + '.xsl"');
-  copy.insertBefore(style, copy.documentElement);
+  if (family.stylesheetVersions.includes(version)) {
+    const style = copy.createProcessingInstruction('xml-stylesheet', 'type="text/xsl" href="' + base + '.xsl"');
+    copy.insertBefore(style, copy.documentElement);
+  }
   return serializeXml(copy);
 }
 
@@ -399,7 +401,7 @@ function App() {
       if (result?.valid) {
         downloadXml(xml, name + ' ' + currentDocumentVersion);
         setNotice(family.schemaVersions.includes(currentDocumentVersion)
-          ? 'XML выгружен. Схема и стиль доступны в разделе «Файлы схемы».'
+          ? 'XML выгружен. Схему можно скачать в разделе «Файлы схемы».'
           : 'XML выгружен в исходном формате приложения.');
       } else if (result) {
         setNotice('Исправьте ошибки перед выгрузкой или скачайте черновик.');
@@ -547,6 +549,7 @@ function App() {
   const actionsDisabled = Boolean(busy || desktopSaving || readingFiles || rawDirty || !document);
   const editorLocked = readOnly || desktopSaving;
   const hasSchemaAssets = family.schemaVersions.includes(currentDocumentVersion);
+  const hasPreview = family.stylesheetVersions.includes(currentDocumentVersion);
   const assetVersion = hasSchemaAssets ? currentDocumentVersion : currentVersion;
   const assetBase = '/schemas/' + family.id + '-' + assetVersion.replace('.', '-');
   const context = { types: model?.types || {}, depth: 0, readOnly: editorLocked, lockGuid: Boolean(host),
@@ -606,7 +609,7 @@ function App() {
             <div className="sidebar-bottom">
               <h2>Файлы схемы</h2>
               <a href={assetBase + '.xsd'} download>Схема XSD {assetVersion}</a>
-              <a href={assetBase + '.xsl'} download>Стиль XSL {assetVersion}</a>
+              {family.stylesheetVersions.includes(assetVersion) && <a href={assetBase + '.xsl'} download>Стиль XSL {assetVersion}</a>}
             </div>
           </div>
         </aside>
@@ -705,7 +708,7 @@ function App() {
                     <button type="button" className={tab === 'form' ? 'selected' : ''} disabled={!formReady || rawDirty || readingFiles}
                       onClick={() => setTab('form')}>Форма</button>
                     <button type="button" className={tab === 'xml' || tab !== 'preview' && !hasFormVersion ? 'selected' : ''} disabled={readingFiles} onClick={openXmlView}>XML</button>
-                    <button type="button" className={tab === 'preview' ? 'selected' : ''} disabled={actionsDisabled || !hasSchemaAssets}
+                    <button type="button" className={tab === 'preview' ? 'selected' : ''} disabled={actionsDisabled || !hasPreview}
                       onClick={showPreview}>Предпросмотр</button>
                   </div>
                 </div>

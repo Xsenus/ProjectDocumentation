@@ -3,6 +3,7 @@ from xml.etree import ElementTree as ET
 
 MAX_XML_SIZE = 32 * 1024 * 1024
 MAX_XML_DEPTH = 128
+MAX_REQUEST_SIZE = MAX_XML_SIZE * 2 + 4096
 
 
 class _DocumentBuilder(ET.TreeBuilder):

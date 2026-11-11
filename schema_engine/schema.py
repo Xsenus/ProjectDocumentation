@@ -13,7 +13,7 @@ from xmlschema.validators.facets import (
 
 from .documents import (
     DEFAULT_FAMILY, DOCUMENTS, FAMILIES_BY_ROOT, SCHEMA_DIRECTORY, document_version,
-    legacy_note_format, resolve_version, schema_filename,
+    legacy_note_format, resolve_version, schema_filename, source_versions,
 )
 from .xmlio import parse_document
 
@@ -86,9 +86,10 @@ def validate_document(xml, expected_family=None):
     metadata = {'family': family, 'version': version}
     document = DOCUMENTS[family]
     path = '/' + document.root
-    if version not in document.versions:
+    versions = source_versions(family)
+    if version not in versions:
         return {'valid': False, **metadata, 'errors': [
-            {'path': path + '/@SchemaVersion', 'message': f'Укажите версию {", ".join(document.versions)}.'},
+            {'path': path + '/@SchemaVersion', 'message': f'Укажите версию {", ".join(versions)}.'},
         ]}
 
     metadata['validationBasis'] = 'legacy-wire' if legacy_note_format(family, version) else 'official-xsd'
