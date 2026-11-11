@@ -1,13 +1,21 @@
 ﻿using DevExpress.Xpo;
 using DevExpress.Xpo.DB;
 using DevExpress.Xpo.Metadata;
+using System;
+using System.IO;
 
 namespace Core.NET.Controllers
 {
     public static class SessionController
     {
         static readonly string _nameDataBase = "xml.s3db";
-        private static string ConnectionString => SQLiteConnectionProvider.GetConnectionString(_nameDataBase);
+
+        /// <summary>
+        /// База лежит рядом с программой, а не в текущей рабочей папке процесса:
+        /// иначе запуск из другого каталога создавал бы новую пустую базу.
+        /// </summary>
+        private static string DataBasePath => Path.Combine(AppDomain.CurrentDomain.BaseDirectory, _nameDataBase);
+        private static string ConnectionString => SQLiteConnectionProvider.GetConnectionString(DataBasePath);
         private static string ConnectionPoolString => XpoDefault.GetConnectionPoolString(ConnectionString);
         private static IDataStore IDataStore => XpoDefault.GetConnectionProvider(ConnectionPoolString, AutoCreateOption.DatabaseAndSchema);
         private static readonly XPDictionary _xPDictionary = new ReflectionDictionary();
@@ -31,7 +39,11 @@ namespace Core.NET.Controllers
             return _session;
         }
 
-        private async static void CreateDataBase()
+        /// <summary>
+        /// Создаёт базу и обновляет схему синхронно: первые запросы приложения
+        /// не должны выполняться раньше, чем схема готова.
+        /// </summary>
+        private static void CreateDataBase()
         {
             var simpleDataLayer = new SimpleDataLayer(_xPDictionary, IDataStore);
             using (var session = new Session(simpleDataLayer, null)
@@ -40,8 +52,8 @@ namespace Core.NET.Controllers
                 TrackPropertiesModifications = true
             })
             {
-                await session.CreateObjectTypeRecordsAsync();
-                await session.UpdateSchemaAsync();
+                session.CreateObjectTypeRecords();
+                session.UpdateSchema();
             }
         }
     }

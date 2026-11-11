@@ -10,14 +10,10 @@ namespace Core.NET.Extensions
     {
         public static IEnumerable<byte> ReadStream(Stream input)
         {
-            var buffer = new byte[input.Length];
-            using (MemoryStream ms = new MemoryStream())
+            // CopyTo не требует Stream.Length, поэтому работает и с потоками без поддержки поиска.
+            using (var ms = new MemoryStream())
             {
-                int read;
-                while ((read = input.Read(buffer, 0, buffer.Length)) > 0)
-                {
-                    ms.Write(buffer, 0, read);
-                }
+                input.CopyTo(ms);
                 return ms.ToArray();
             }
         }
@@ -42,27 +38,34 @@ namespace Core.NET.Extensions
             }
         }
 
+        /// <summary>
+        /// Побайтовый XOR массивов. Длина результата — длина первого массива; более короткие массивы
+        /// участвуют своими байтами. Входные массивы не изменяются.
+        /// </summary>
         public static byte[] GetXORSum(this IEnumerable<byte[]> list)
         {
             byte[] result = null;
             foreach (var bytes in list)
             {
-                try
+                if (bytes is null)
                 {
-                    if (result == null)
-                    {
-                        result = bytes;
-                    }
-                    else
-                    {
-                        for (int i = 0; i < bytes.Length; i++)
-                        {
-                            result[i] ^= bytes[i];
-                        }
-                    }
+                    continue;
                 }
-                catch (Exception) { }
+
+                if (result is null)
+                {
+                    // Копия: раньше первый массив списка изменялся на месте.
+                    result = (byte[])bytes.Clone();
+                    continue;
+                }
+
+                var length = Math.Min(result.Length, bytes.Length);
+                for (int i = 0; i < length; i++)
+                {
+                    result[i] ^= bytes[i];
+                }
             }
+
             return result;
         }
     }

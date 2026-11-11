@@ -60,13 +60,15 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
         private void barBtnDeclarantAdd_ItemClick(object sender, ItemClickEventArgs e)
         {
-            var form = new DeclarantEdit();
-            form.ShowDialog();
-            if (form.IsSave)
+            using (var form = new DeclarantEdit())
             {
-                _TDeclarants.Add(form.Declarant);
-                gridControlDeclarant.DataSource = PersonObjController.GetPersonObjByDeclarator(_TDeclarants).ToArray();
-                gridControlDeclarant.RefreshDataSource();
+                form.ShowDialog();
+                if (form.IsSave)
+                {
+                    _TDeclarants.Add(form.Declarant);
+                    gridControlDeclarant.DataSource = PersonObjController.GetPersonObjByDeclarator(_TDeclarants).ToArray();
+                    gridControlDeclarant.RefreshDataSource();
+                }
             }
         }
 
@@ -96,12 +98,14 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
         {
             if (gridViewDeclarant.GetRow(gridViewDeclarant.FocusedRowHandle) is PersonObj obj)
             {
-                var form = new DeclarantEdit(obj.BaseObj);
-                form.ShowDialog();
-                if (form.IsSave)
+                using (var form = new DeclarantEdit(obj.BaseObj))
                 {
-                    gridControlDeclarant.DataSource = PersonObjController.GetPersonObjByDeclarator(_TDeclarants).ToArray();
-                    gridControlDeclarant.RefreshDataSource();
+                    form.ShowDialog();
+                    if (form.IsSave)
+                    {
+                        gridControlDeclarant.DataSource = PersonObjController.GetPersonObjByDeclarator(_TDeclarants).ToArray();
+                        gridControlDeclarant.RefreshDataSource();
+                    }
                 }
             }
         }

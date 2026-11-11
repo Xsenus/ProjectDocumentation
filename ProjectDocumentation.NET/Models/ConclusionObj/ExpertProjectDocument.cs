@@ -4,6 +4,7 @@ using Core.NET.Extensions;
 using Core.NET.Models.XPO;
 using DevExpress.Xpo;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace ProjectDocumentation.NET.Models.ConclusionObj
 {
@@ -27,14 +28,14 @@ namespace ProjectDocumentation.NET.Models.ConclusionObj
             ExpertProjectDocuments = tExpertProjectDocuments;
         }
 
-        public async void SetEnumObj()
+        public void SetEnumObj()
         {
             var session = SessionController.GetSession();
 
             if (ExpertProjectDocuments != null)
             {
-                var expertType = await new XPQuery<GeneralizedDictionaryXPO>(session)?
-                .FirstOrDefaultAsync(f => f.GeneralizedDictionary == GeneralizedDictionary.ExpertType
+                var expertType = new XPQuery<GeneralizedDictionaryXPO>(session)?
+                .FirstOrDefault(f => f.GeneralizedDictionary == GeneralizedDictionary.ExpertType
                     && f.Value == ExpertProjectDocuments.ExpertType.GetEnumXmlAttributeValue().ToString());
                 ExpertType = expertType?.Name;
             }

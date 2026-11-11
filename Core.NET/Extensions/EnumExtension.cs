@@ -57,6 +57,33 @@ namespace Core.NET.Extensions
             return genericEnum.ToString();
         }
 
+        /// <summary>
+        /// Ищет значение перечисления <typeparamref name="T"/> по имени из <see cref="XmlEnumAttribute"/>
+        /// (или по имени константы, если атрибута нет).
+        /// </summary>
+        /// <returns><c>true</c>, если значение найдено; иначе <c>false</c> и <paramref name="result"/> = <c>default</c>.</returns>
+        public static bool TryGetEnumByXmlAttributeValue<T>(string value, out T result)
+        {
+            result = default;
+
+            if (string.IsNullOrWhiteSpace(value) || !typeof(T).IsEnum)
+            {
+                return false;
+            }
+
+            foreach (var item in Enum.GetValues(typeof(T)))
+            {
+                var itemValue = ((Enum)item).GetEnumXmlAttributeValue()?.ToString();
+                if (string.Equals(itemValue, value, StringComparison.Ordinal))
+                {
+                    result = (T)item;
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
         public static T GetDefaultEnum<T>(string text) where T : Enum
         {
             if (!string.IsNullOrWhiteSpace(text))

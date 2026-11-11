@@ -40,8 +40,9 @@ namespace Core.NET.Extensions
         /// <summary>
         /// Десериализация со «смягчением»: при ошибке enum-значений
         /// XML нормализуется и попытка повторяется.
+        /// В <paramref name="warnings"/> (если передан) попадают описания удалённых при нормализации элементов.
         /// </summary>
-        public static T DeSerializeObjectByString<T>(string xml, bool lenient = true)
+        public static T DeSerializeObjectByString<T>(string xml, bool lenient = true, ICollection<string> warnings = null)
         {
             try
             {
@@ -50,7 +51,7 @@ namespace Core.NET.Extensions
             catch
             {
                 if (!lenient) return default;
-                var cleaned = NormalizeProblematicEnums(xml);
+                var cleaned = NormalizeProblematicEnums(xml, warnings);
                 try
                 {
                     return DeserializeStrict<T>(cleaned);
@@ -64,8 +65,9 @@ namespace Core.NET.Extensions
 
         /// <summary>
         /// Десериализация из файла, с тем же поведением.
+        /// В <paramref name="warnings"/> (если передан) попадают описания удалённых при нормализации элементов.
         /// </summary>
-        public static T DeSerializeObject<T>(string path, bool lenient = true)
+        public static T DeSerializeObject<T>(string path, bool lenient = true, ICollection<string> warnings = null)
         {
             try
             {
@@ -80,8 +82,10 @@ namespace Core.NET.Extensions
                 if (!lenient) return default;
                 try
                 {
-                    var xml = File.ReadAllText(path, Encoding.UTF8);
-                    var cleaned = NormalizeProblematicEnums(xml);
+                    // Кодировку определяет XML-декларация файла (например, windows-1251),
+                    // а не жёстко заданный UTF-8.
+                    var xml = XDocument.Load(path, LoadOptions.PreserveWhitespace).ToString(SaveOptions.DisableFormatting);
+                    var cleaned = NormalizeProblematicEnums(xml, warnings);
                     using (var sr = new StringReader(cleaned)) 
                     {
                         var serializer = new XmlSerializer(typeof(T));
@@ -111,7 +115,7 @@ namespace Core.NET.Extensions
         /// 1) заменяет «сокращённые»/неформальные тексты на валидные XmlEnum-имена;
         /// 2) удаляет элементы с неподдерживаемыми значениями (чтобы сериализатор не падал).
         /// </summary>
-        private static string NormalizeProblematicEnums(string xml)
+        private static string NormalizeProblematicEnums(string xml, ICollection<string> warnings = null)
         {
             var doc = XDocument.Parse(xml, LoadOptions.PreserveWhitespace);
             var ns = doc.Root?.Name.Namespace ?? XNamespace.None;
@@ -179,6 +183,7 @@ namespace Core.NET.Extensions
                     // 4.2 Если значение пустое — удаляем элемент.
                     if (string.IsNullOrWhiteSpace(original))
                     {
+                        warnings?.Add($"{element.LocalName}: пустое значение — элемент удалён.");
                         node.Remove();
                         continue;
                     }
@@ -186,6 +191,7 @@ namespace Core.NET.Extensions
                     // 4.3 Если значение не из XmlEnum-списка — удаляем элемент.
                     if (!allowed.Contains(original))
                     {
+                        warnings?.Add($"{element.LocalName}: значение «{original}» отсутствует в схеме — элемент удалён.");
                         node.Remove();
                     }
                 }

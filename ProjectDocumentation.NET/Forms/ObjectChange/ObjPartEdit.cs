@@ -1,6 +1,7 @@
 ﻿using Core.NET.AutoModels.ConclusionObj;
 using Core.NET.Controllers;
 using Core.NET.DaDataObj;
+using Core.NET.Extensions;
 using Core.NET.Models.XPO;
 using DevExpress.Xpo;
 using DevExpress.XtraBars;
@@ -174,12 +175,15 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                     {
                         form = new AddressEdit();
                     }
-                    form.ShowDialog();
-
-                    if (form.IsSave)
+                    using (form)
                     {
-                        buttonEdit.EditValue = form.Address;
-                        buttonEdit.Refresh();
+                        form.ShowDialog();
+
+                        if (form.IsSave)
+                        {
+                            buttonEdit.EditValue = form.Address;
+                            buttonEdit.Refresh();
+                        }
                     }
                 }
                 else if (e.Button.Kind == ButtonPredefines.Search)
@@ -204,7 +208,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
 
                             try
                             {
-                                var region = ConclusionEdit.GetEnumByAttributeValue<TRegionsRf>(addressData.region_kladr_id?.Replace("0", string.Empty));
+                                var region = ConclusionEdit.GetEnumByAttributeValue<TRegionsRf>(addressData.region_kladr_id.GetKladrRegionCode(), isNullAble: false);
                                 address.Region = region;
                             }
                             catch (Exception)

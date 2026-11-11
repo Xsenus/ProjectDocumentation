@@ -4,6 +4,7 @@ using Core.NET.Extensions;
 using Core.NET.Models.XPO;
 using DevExpress.Xpo;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace ProjectDocumentation.NET.Models.ConclusionObj
 {
@@ -31,14 +32,14 @@ namespace ProjectDocumentation.NET.Models.ConclusionObj
             //EngineeringSurveyChanges = tExpertEngineeringSurveys.EngineeringSurveyChanges;
         }
 
-        public async void SetEnumObj()
+        public void SetEnumObj()
         {
             var session = SessionController.GetSession();
 
             if (ExpertEngineeringSurveys != null)
             {
-                var engineeringSurveyType = await new XPQuery<GeneralizedDictionaryXPO>(session)?
-                 .FirstOrDefaultAsync(f => f.GeneralizedDictionary == GeneralizedDictionary.EngineeringSurveyType
+                var engineeringSurveyType = new XPQuery<GeneralizedDictionaryXPO>(session)?
+                 .FirstOrDefault(f => f.GeneralizedDictionary == GeneralizedDictionary.EngineeringSurveyType
                      && f.Value == ExpertEngineeringSurveys.EngineeringSurveyType.GetEnumXmlAttributeValue().ToString());
                 EngineeringSurveyType = engineeringSurveyType?.Name;
             }
