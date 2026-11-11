@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Conclusion ConclusionGUID="37b80f3e-5884-457e-813b-111111111111" SchemaVersion="01.04">
+  <ExpertOrganization>
+    <FullName>Тестовая экспертная организация</FullName>
+    <OGRN>0000000000000</OGRN>
+    <INN>0000000000</INN>
+    <KPP>000000000</KPP>
+    <Address><RussianAddress><RegionCode>54</RegionCode><OKTMOCode>00000000</OKTMOCode><OKTMOName>Тестовое муниципальное образование</OKTMOName><Note>Тестовый адрес</Note></RussianAddress></Address>
+  </ExpertOrganization>
+  <Approver><Surname>Тестов</Surname><Name>Тест</Name><Position>Руководитель</Position></Approver>
+  <ExaminationObject>
+    <ExaminationForm>2</ExaminationForm><ExaminationResult>1</ExaminationResult>
+    <ExaminationObjectType>1</ExaminationObjectType><ExaminationType>1</ExaminationType>
+    <ConstructionType>1</ConstructionType><ExaminationStage>1</ExaminationStage>
+    <Name>Тестовое заключение</Name><EngineeringSurveysIM>нет</EngineeringSurveysIM>
+  </ExaminationObject>
+  <Documents><Document>
+    <DocType>06.01</DocType><DocName>Тестовые инженерные изыскания</DocName><DocNumber>Т-1</DocNumber><DocDate>2026-01-01</DocDate>
+    <FullDocIssueAuthor><Organization>
+      <FullName>Тестовый автор</FullName><OGRN>0000000000000</OGRN><INN>0000000000</INN><KPP>000000000</KPP>
+      <Address><RussianAddress><RegionCode>54</RegionCode><OKTMOCode>00000000</OKTMOCode><OKTMOName>Тестовое муниципальное образование</OKTMOName><Note>Тестовый адрес</Note></RussianAddress></Address>
+    </Organization></FullDocIssueAuthor>
+    <Included>В составе тестового комплекта</Included>
+  </Document></Documents>
+  <Object DangerousAndComplex="нет" Unique="нет">
+    <Name>Тестовый объект</Name>
+    <Address><RussianAddress><RegionCode>54</RegionCode><OKTMOCode>00000000</OKTMOCode><OKTMOName>Тестовое муниципальное образование</OKTMOName><Note>Тестовый адрес</Note></RussianAddress></Address>
+    <Type>1</Type><FunctionsClass>12.01.006.001</FunctionsClass>
+  </Object>
+  <EcologyExpertise><NeedExpertise>нет</NeedExpertise></EcologyExpertise>
+  <Declarant><Organization>
+    <FullName>Тестовый заявитель</FullName><OGRN>0000000000000</OGRN><INN>0000000000</INN><KPP>000000000</KPP>
+    <Address><RussianAddress><RegionCode>54</RegionCode><OKTMOCode>00000000</OKTMOCode><OKTMOName>Тестовое муниципальное образование</OKTMOName><Note>Тестовый адрес</Note></RussianAddress></Address>
+  </Organization></Declarant>
+  <Finance><FinanceType>3</FinanceType></Finance>
+  <ClimateConditions><ClimateDistrict>I</ClimateDistrict><GeologicalConditions>I</GeologicalConditions><WindDistrict>I</WindDistrict><SnowDistrict>I</SnowDistrict><SeismicActivity>5</SeismicActivity></ClimateConditions>
+  <EngineeringSurveyAddress><EngineeringSurveyRegion>54</EngineeringSurveyRegion><EngineeringSurveyDistrict>Тестовый район</EngineeringSurveyDistrict></EngineeringSurveyAddress>
+  <EngineeringSurveyDeveloper><Organization>
+    <FullName>Тестовый застройщик</FullName><OGRN>0000000000000</OGRN><INN>0000000000</INN><KPP>000000000</KPP>
+    <Address><RussianAddress><RegionCode>54</RegionCode><OKTMOCode>00000000</OKTMOCode><OKTMOName>Тестовое муниципальное образование</OKTMOName><Note>Тестовый адрес</Note></RussianAddress></Address>
+  </Organization></EngineeringSurveyDeveloper>
+  <Summary>
+    <EngineeringSurveySummary>Результаты инженерных изысканий соответствуют требованиям технических регламентов.</EngineeringSurveySummary>
+    <ExaminationSummary><EngineeringSurveysResultsSummary>Результаты инженерных изысканий, выполненных для подготовки проектной документации, соответствуют требованиям технических регламентов.</EngineeringSurveysResultsSummary></ExaminationSummary>
+  </Summary>
+  <Experts><Expert>
+    <Surname>Тестов</Surname><Name>Тест</Name><SNILS>000-000-000 00</SNILS><ExpertType>1.1.</ExpertType>
+    <ExpertCertificate>МС-Э-1-1-0000</ExpertCertificate><ExpertCertificateBeginDate>2024-01-01</ExpertCertificateBeginDate><ExpertCertificateEndDate>2029-01-01</ExpertCertificateEndDate>
+  </Expert></Experts>
+</Conclusion>

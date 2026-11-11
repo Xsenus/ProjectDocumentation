@@ -2,7 +2,9 @@
 using Core.NET.Models.XPO;
 using DevExpress.XtraEditors;
 using DevExpress.XtraEditors.Controls;
+using ProjectDocumentation.NET.Services;
 using System;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace ProjectDocumentation.NET.Forms
@@ -11,8 +13,11 @@ namespace ProjectDocumentation.NET.Forms
     {
         public XmlObjXPO ObjXPO { get; private set; }
 
-        public FileLoad()
+        public FileLoad() : this(null) { }
+
+        internal FileLoad(ConclusionSchemaService conclusionSchema)
         {
+            this.conclusionSchema = conclusionSchema;
             InitializeComponent();
         }
 
@@ -40,6 +45,26 @@ namespace ProjectDocumentation.NET.Forms
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
         private async void btnSave_Click(object sender, EventArgs e)
+        {
+            btnSave.Enabled = false;
+            try
+            {
+                await ImportSelectedFileAsync();
+            }
+            catch (Exception error)
+            {
+                XtraMessageBox.Show(this, error.Message, "Ошибка загрузки XML", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            finally
+            {
+                if (!IsDisposed && !Disposing)
+                {
+                    btnSave.Enabled = true;
+                }
+            }
+        }
+
+        private async Task ImportSelectedFileAsync()
         {
             var name = txtName.EditValue?.ToString();
             var filePath = btnFile.EditValue?.ToString();
@@ -73,10 +98,24 @@ namespace ProjectDocumentation.NET.Forms
                 switch (radioGroupType.EditValue?.ToString())
                 {
                     case "Conclusion":
-                        result = await ConclusionController.ImportConclusionAsync(filePath, name, existing => AskImportConflict(existing, isConclusion));
+                        var document = Conclusion0104Document.ReadFile(filePath);
+                        var version = (string)document.Root.Attribute("SchemaVersion");
+                        if (version == Conclusion0104Document.CurrentVersion)
+                        {
+                            await ImportCurrentConclusionAsync(document, name);
+                            return;
+                        }
+
+                        if (version != null && version != Conclusion0104Document.LegacyVersion)
+                        {
+                            throw new InvalidOperationException($"Версия заключения {version} не поддерживается.");
+                        }
+
+                        result = await ConclusionController.ImportConclusionAsync(filePath, name, existing => AskImportConflict(existing,
+                            existing is ConclusionXPO && Conclusion0104Document.ReadVersion(existing.GetObj()) != Conclusion0104Document.CurrentVersion));
                         break;
                     case "ExplanatoryNote":
-                        result = await ExplanatoryNoteController.ImportExplanatoryNoteAsync(filePath, name, existing => AskImportConflict(existing, isConclusion));
+                        result = await ExplanatoryNoteController.ImportExplanatoryNoteAsync(filePath, name, existing => AskImportConflict(existing, existing is ExplanatoryNoteXPO));
                         break;
                     default:
                         result = new ImportResult();
@@ -131,9 +170,8 @@ namespace ProjectDocumentation.NET.Forms
         /// <summary>
         /// В базе уже есть документ с тем же ID: заменить его (только тот же тип), загрузить копию или отменить.
         /// </summary>
-        private static ImportConflictAction AskImportConflict(XmlObjXPO existing, bool isConclusion)
+        private static ImportConflictAction AskImportConflict(XmlObjXPO existing, bool isSameType)
         {
-            var isSameType = isConclusion ? existing is ConclusionXPO : existing is ExplanatoryNoteXPO;
             var header = $"Документ с ID {existing.Guid} уже загружен: «{existing.Name}» от {existing.DateCreate:dd.MM.yyyy HH:mm}.";
 
             if (isSameType)
@@ -159,7 +197,7 @@ namespace ProjectDocumentation.NET.Forms
             }
 
             var copyAnswer = XtraMessageBox.Show(
-                header + Environment.NewLine + "Это документ другого типа. Загрузить файл как новый документ с новым ID?",
+                header + Environment.NewLine + "Тип или версия существующего документа отличается. Загрузить файл как новый документ с новым ID?",
                 "Документ уже загружен",
                 MessageBoxButtons.OKCancel,
                 MessageBoxIcon.Question);

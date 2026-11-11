@@ -363,3 +363,7 @@ MigrationBackup/
 FodyWeavers.xsd
 # Резервные копии файлов проекта (Visual Studio / ручные)
 *.bak
+
+# Local desktop release packages
+/artifacts/
+/.venv/
