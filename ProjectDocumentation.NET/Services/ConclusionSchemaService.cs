@@ -89,9 +89,10 @@ namespace ProjectDocumentation.NET.Services
             }
         }
 
-        public async Task<string> CreateAsync()
+        public async Task<string> CreateAsync(string family = null)
         {
-            var document = await RequestAsync<JObject>("api/new", null);
+            var route = string.IsNullOrEmpty(family) ? "api/new" : "api/new?family=" + Uri.EscapeDataString(family);
+            var document = await RequestAsync<JObject>(route, null);
             return document.Value<string>("xml");
         }
 

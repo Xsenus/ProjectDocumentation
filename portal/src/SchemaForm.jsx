@@ -1,8 +1,9 @@
 import { useId, useState } from 'react';
 import DesktopLookup from './DesktopLookup.jsx';
+import { familyForDocument } from './documentFamilies.js';
 import { addBranch, directElements, insertElement, knownAttributeNames, leafNames, pathFor, readElementText, writeElementText } from './xml.js';
 
-export const groupLabels = {
+const conclusionGroupLabels = {
   details: 'Реквизиты',
   object: 'Объект экспертизы',
   people: 'Участники',
@@ -11,7 +12,7 @@ export const groupLabels = {
   results: 'Выводы и эксперты',
 };
 
-const fieldsByGroup = {
+const conclusionFields = {
   details: ['ExpertOrganization', 'Approver', 'ExaminationObject'],
   object: ['Object', 'EcologyExpertise', 'CadastralNumber', 'ClimateConditions', 'ClimateConditionsNote', 'EngineeringSurveyAddress'],
   people: ['Declarant', 'ProjectDocumentsDeveloper', 'ProjectDocumentsTechnicalCustomer', 'ProjectDocumentsOtherOrganization',
@@ -21,7 +22,46 @@ const fieldsByGroup = {
   results: ['ExpertEngineeringSurveys', 'ExpertProjectDocuments', 'ExpertEstimate', 'Summary', 'Experts'],
 };
 
+const noteGroupLabels = {
+  details: 'Реквизиты',
+  people: 'Авторы и участники',
+  object: 'Объект строительства',
+  documents: 'Документы и нормы',
+  finance: 'Финансирование',
+  results: 'Пояснения и заверение',
+};
+
+const noteFields = {
+  details: ['ExplanatoryNoteNumber', 'ExplanatoryNoteYear', 'ExplanatoryNoteModifications'],
+  people: ['IssueAuthor', 'ProjectDocumentationAuthors', 'Signers', 'Developer', 'TechnicalCustomer'],
+  object: ['NonIndustrialObject', 'IndustrialObject', 'LinearObject'],
+  documents: ['UsedNorms', 'ProjectDecisionDocuments', 'ProjectInitialDocuments', 'EngineeringSurveyDocuments'],
+  finance: ['FinanceSources'],
+  results: ['UsedAbbreviations', 'AdditionalData', 'DesignerNote', 'DesignerAssurance'],
+};
+
 const labels = {
+  ExplanatoryNoteNumber: 'Номер пояснительной записки',
+  ExplanatoryNoteYear: 'Год подготовки',
+  ExplanatoryNoteModifications: 'Изменения записки',
+  IssueAuthor: 'Лицо, подготовившее документацию',
+  ProjectDocumentationAuthors: 'Авторы проектной документации',
+  Signers: 'Подписанты',
+  Developer: 'Застройщик',
+  TechnicalCustomer: 'Технический заказчик',
+  UsedAbbreviations: 'Сокращения',
+  UsedNorms: 'Нормативные документы',
+  ProjectDecisionDocuments: 'Документы для подготовки проектных решений',
+  ProjectInitialDocuments: 'Исходные документы',
+  EngineeringSurveyDocuments: 'Документы инженерных изысканий',
+  AdditionalData: 'Дополнительные сведения',
+  FinanceSources: 'Источники финансирования',
+  NonIndustrialObject: 'Объект непроизводственного назначения',
+  IndustrialObject: 'Объект производственного назначения',
+  LinearObject: 'Линейный объект',
+  DesignerNote: 'Пояснения проектировщика',
+  DesignerAssurance: 'Заверение проектировщика',
+  id: 'Идентификатор записки',
   SchemaVersion: 'Версия схемы',
   ConclusionGUID: 'Идентификатор заключения',
   ExpertOrganization: 'Экспертная организация',
@@ -55,8 +95,13 @@ const labels = {
   Experts: 'Эксперты',
 };
 
-export function sectionFor(name) {
-  return Object.keys(fieldsByGroup).find(group => fieldsByGroup[group].includes(name)) || 'details';
+export function groupLabelsFor(familyId) {
+  return familyId === 'explanatorynote' ? noteGroupLabels : conclusionGroupLabels;
+}
+
+export function sectionFor(name, familyId) {
+  const fields = familyId === 'explanatorynote' ? noteFields : conclusionFields;
+  return Object.keys(fields).find(group => fields[group].includes(name)) || 'details';
 }
 
 export function titleFor(spec, types) {
@@ -69,7 +114,8 @@ export function normalPath(path) {
 
 export function sectionProgress(model, document, section) {
   const root = model.types[model.root.type];
-  const particles = topParticles(root?.particle).filter(part => sectionFor([...leafNames(part)][0]) === section);
+  const familyId = familyForDocument(document)?.id;
+  const particles = topParticles(root?.particle).filter(part => sectionFor([...leafNames(part)][0], familyId) === section);
   return particles.reduce((total, part) => total + directElements(document.documentElement, leafNames(part)).length, 0);
 }
 
@@ -94,10 +140,11 @@ function choicesFor(spec, types) {
   return [];
 }
 
-function Field({ spec, types, value, onChange, readOnly, path, errorPaths, onRemove }) {
+function Field({ spec, types, value, onChange, readOnly, path, errorPaths, onRemove, occurrence }) {
   const id = useId();
-  const fieldTitle = titleFor(spec, types);
-  const doc = spec.documentation && spec.documentation !== fieldTitle ? spec.documentation : undefined;
+  const title = titleFor(spec, types);
+  const fieldTitle = occurrence ? title + ' ' + occurrence : title;
+  const doc = spec.documentation && spec.documentation !== title ? spec.documentation : undefined;
   const fixed = spec.fixed !== undefined && spec.fixed !== null;
   const invalid = errorPaths.has(normalPath(path));
   const blank = value == null ? '' : String(value);
@@ -108,7 +155,8 @@ function Field({ spec, types, value, onChange, readOnly, path, errorPaths, onRem
   const common = { id, value: blank, 'aria-invalid': invalid || undefined,
     'aria-describedby': doc ? id + '-hint' : undefined, 'aria-required': Boolean(spec.required), readOnly: readOnly || fixed,
     onChange: event => onChange(event.target.value) };
-  const multiline = spec.type?.match(/(?:1000|2000|4000|8000|Text|Description)/i) || blank.includes('\n') || blank.length > 150;
+  const multiline = spec.name === 'Text' || inputType === 'base64Binary' ||
+    spec.type?.match(/(?:1000|2000|4000|8000|Text|Description)/i) || blank.includes('\n') || blank.length > 150;
   let control;
   if (choices.length && !readOnly && !fixed) {
     control = (
@@ -152,7 +200,7 @@ function Attributes({ element, type, context }) {
     <div className="field-grid attributes">
       {attributes.map(spec => (
         <Field key={spec.name} spec={spec} types={context.types} value={element.getAttribute(spec.name)}
-          readOnly={context.readOnly || (context.lockGuid && !element.parentElement && spec.name === 'ConclusionGUID')}
+          readOnly={context.readOnly || (context.lockGuid && !element.parentElement && spec.name === context.idAttribute)}
           path={pathFor(element) + '/@' + spec.name} errorPaths={context.errorPaths}
           onChange={value => context.change(() => {
             if (value === '' && !spec.required) element.removeAttribute(spec.name);
@@ -268,6 +316,37 @@ function branchLabel(spec, types, index) {
   return first.length ? first.map(name => labels[name] || name).join(' / ') : 'Вариант ' + (index + 1);
 }
 
+function OrderedChoiceEntries({ parent, branches, spec, context }) {
+  const byName = new Map(branches.map(branch => [branch.name, branch]));
+  const entries = Array.from(parent.children).filter(element => byName.has(element.localName));
+  const removable = entries.length > spec.min;
+
+  return entries.map((element, index) => {
+    const branch = byName.get(element.localName);
+    const type = context.types[branch.type];
+    const title = titleFor(branch, context.types);
+    return (
+      <div className="choice-selection" key={context.keyFor(element)}>
+        {type?.kind === 'complex'
+          ? <ComplexInstance element={element} spec={{ ...branch, min: 0 }} type={type} index={index}
+              repeatable removable={removable} context={context} />
+          : <Field spec={branch} occurrence={index + 1} types={context.types}
+              value={readElementText(element)} readOnly={context.readOnly} path={pathFor(element)}
+              errorPaths={context.errorPaths} onChange={value => context.change(() => writeElementText(element, value))}
+              onRemove={removable ? () => context.change(() => element.remove()) : undefined} />}
+        {!context.readOnly && entries.length > 1 && (
+          <div className="inline-actions">
+            <button className="text-button" type="button" disabled={index === 0} aria-label={'Переместить вверх ' + title + ' ' + (index + 1)}
+              onClick={() => context.change(() => parent.insertBefore(element, entries[index - 1]))}>Вверх</button>
+            <button className="text-button" type="button" disabled={index === entries.length - 1} aria-label={'Переместить вниз ' + title + ' ' + (index + 1)}
+              onClick={() => context.change(() => parent.insertBefore(element, entries[index + 1].nextSibling))}>Вниз</button>
+          </div>
+        )}
+      </div>
+    );
+  });
+}
+
 function ChoiceEditor({ parent, spec, parentParticle, context }) {
   const [selection, setSelection] = useState('');
   const [clearing, setClearing] = useState(false);
@@ -275,6 +354,7 @@ function ChoiceEditor({ parent, spec, parentParticle, context }) {
   const branches = spec.children || [];
   const present = branches.map(branch => directElements(parent, leafNames(branch)));
   const multiple = spec.max === null || spec.max > 1;
+  const ordered = multiple && branches.every(branch => branch.kind === 'element');
   const count = present.reduce((total, matches, index) => total +
     (multiple && branches[index].kind === 'element' ? matches.length : Number(matches.length > 0)), 0);
   const selected = selection === '' ? null : Number(selection);
@@ -289,7 +369,7 @@ function ChoiceEditor({ parent, spec, parentParticle, context }) {
   if (context.readOnly && !count) return null;
   return (
     <div className="choice-block field-wide">
-      {activeBranches.map(index => {
+      {ordered ? <OrderedChoiceEntries parent={parent} branches={branches} spec={spec} context={context} /> : activeBranches.map(index => {
         const branch = branches[index];
         const activeSpec = branch.kind === 'element' && multiple ? { ...branch, min: 0, max: spec.max } : branch;
         return (
@@ -342,7 +422,8 @@ export default function SchemaForm({ model, document, section, context }) {
   const element = document.documentElement;
   const type = model.types[model.root.type];
   if (!type) return <p className="empty-state">В схеме отсутствует модель корневого элемента.</p>;
-  const particles = topParticles(type.particle).filter(part => sectionFor([...leafNames(part)][0]) === section);
+  const familyId = familyForDocument(document)?.id;
+  const particles = topParticles(type.particle).filter(part => sectionFor([...leafNames(part)][0], familyId) === section);
   const unknown = Array.from(element.children).filter(child => !leafNames(type.particle).has(child.localName));
   return (
     <div className="schema-form">

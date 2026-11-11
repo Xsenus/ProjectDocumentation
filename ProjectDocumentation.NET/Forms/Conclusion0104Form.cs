@@ -14,17 +14,18 @@ using System.Windows.Forms;
 
 namespace ProjectDocumentation.NET.Forms
 {
-    internal sealed class Conclusion0104Form : XtraForm
+    internal class SchemaDocumentForm : XtraForm
     {
         private readonly ConclusionSchemaService service;
-        private readonly Func<string, string, Task<ConclusionXPO>> save;
+        private readonly Func<string, string, Task<XmlObjXPO>> save;
+        private readonly string family;
         private readonly string initialXml;
         private readonly string initialName;
         private readonly string section;
         private readonly IReadOnlyList<string> warnings;
         private readonly WebView2 browser = new WebView2 { Dock = DockStyle.Fill, Visible = false };
         private readonly Label loading = new Label { Dock = DockStyle.Fill, TextAlign = ContentAlignment.MiddleCenter,
-            Text = "Загрузка редактора заключения…" };
+            Text = "Загрузка редактора XML…" };
 
         private Uri address;
         private bool ready;
@@ -32,18 +33,19 @@ namespace ProjectDocumentation.NET.Forms
         private bool saving;
         private bool lookingUp;
 
-        public ConclusionXPO Document { get; private set; }
+        public XmlObjXPO Document { get; private set; }
 
-        public Conclusion0104Form(ConclusionSchemaService service, string xml, string name,
-            Func<string, string, Task<ConclusionXPO>> save = null, string section = null, IReadOnlyList<string> warnings = null)
+        protected SchemaDocumentForm(ConclusionSchemaService service, string xml, string name,
+            Func<string, string, Task<XmlObjXPO>> save, string family, string title, string section, IReadOnlyList<string> warnings)
         {
             this.service = service;
+            this.family = family;
             initialXml = xml;
             initialName = name;
             this.save = save;
             this.section = section;
             this.warnings = warnings;
-            Text = save == null ? "Просмотр заключения экспертизы 01.04" : "Заключение экспертизы 01.04";
+            Text = title;
             StartPosition = FormStartPosition.CenterParent;
             MinimumSize = new Size(760, 520);
             ClientSize = new Size(1200, 800);
@@ -56,7 +58,8 @@ namespace ProjectDocumentation.NET.Forms
             base.OnShown(e);
             try
             {
-                address = await service.GetAddressAsync();
+                var origin = await service.GetAddressAsync();
+                address = family == null ? origin : new Uri(origin, "?family=" + Uri.EscapeDataString(family));
                 if (IsDisposed || Disposing)
                 {
                     return;
@@ -88,7 +91,7 @@ namespace ProjectDocumentation.NET.Forms
                 {
                     if (!navigation.IsSuccess && navigation.WebErrorStatus != CoreWebView2WebErrorStatus.OperationCanceled)
                     {
-                        loading.Text = "Не удалось загрузить редактор заключения. Проверьте комплект установки.";
+                        loading.Text = "Не удалось загрузить редактор XML. Проверьте комплект установки.";
                     }
                 };
                 web.WebMessageReceived += HandleMessage;
@@ -98,7 +101,7 @@ namespace ProjectDocumentation.NET.Forms
             {
                 if (!IsDisposed && !Disposing)
                 {
-                    loading.Text = "Не удалось запустить редактор заключения." + Environment.NewLine + error.Message;
+                    loading.Text = "Не удалось запустить редактор XML." + Environment.NewLine + error.Message;
                 }
             }
         }
@@ -118,7 +121,7 @@ namespace ProjectDocumentation.NET.Forms
         {
             return address != null && Uri.TryCreate(source, UriKind.Absolute, out var uri)
                 && uri.Scheme == address.Scheme && uri.Host == address.Host && uri.Port == address.Port
-                && uri.AbsolutePath == "/" && uri.UserInfo.Length == 0 && uri.Query.Length == 0;
+                && uri.AbsolutePath == "/" && uri.UserInfo.Length == 0 && uri.Query == address.Query;
         }
 
         private async void HandleMessage(object sender, CoreWebView2WebMessageReceivedEventArgs e)
@@ -131,7 +134,7 @@ namespace ProjectDocumentation.NET.Forms
             JObject message;
             try
             {
-                if (e.WebMessageAsJson.Length > Conclusion0104Document.MaxXmlCharacters * 6L + 65536)
+                if (e.WebMessageAsJson.Length > SchemaXmlDocument.MaxXmlCharacters * 6L + 65536)
                 {
                     return;
                 }
@@ -155,7 +158,7 @@ namespace ProjectDocumentation.NET.Forms
                     if (!ready)
                     {
                         ready = true;
-                        Send(new { type = "load", xml = initialXml, name = initialName, readOnly = save == null, section, warnings });
+                        Send(new { type = "load", xml = initialXml, name = initialName, readOnly = save == null, family, section, warnings });
                         loading.Visible = false;
                         browser.Visible = true;
                     }
@@ -263,6 +266,26 @@ namespace ProjectDocumentation.NET.Forms
         private void Send(object payload)
         {
             browser.CoreWebView2.PostWebMessageAsJson(JsonConvert.SerializeObject(payload));
+        }
+    }
+
+    internal sealed class Conclusion0104Form : SchemaDocumentForm
+    {
+        public Conclusion0104Form(ConclusionSchemaService service, string xml, string name,
+            Func<string, string, Task<ConclusionXPO>> save = null, string section = null, IReadOnlyList<string> warnings = null)
+            : base(service, xml, name, save == null ? (Func<string, string, Task<XmlObjXPO>>)null : async (document, title) => await save(document, title),
+                null, save == null ? "Просмотр заключения экспертизы 01.04" : "Заключение экспертизы 01.04", section, warnings)
+        {
+        }
+    }
+
+    internal sealed class ExplanatoryNote0107Form : SchemaDocumentForm
+    {
+        public ExplanatoryNote0107Form(ConclusionSchemaService service, string xml, string name,
+            Func<string, string, Task<ExplanatoryNoteXPO>> save = null, IReadOnlyList<string> warnings = null)
+            : base(service, xml, name, save == null ? (Func<string, string, Task<XmlObjXPO>>)null : async (document, title) => await save(document, title),
+                ExplanatoryNote0107Document.Family, $"Пояснительная записка {ExplanatoryNote0107Document.ReadVersion(xml)}", null, warnings)
+        {
         }
     }
 }

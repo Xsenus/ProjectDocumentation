@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ExplanatoryNote id="37b80f3e-5884-457e-813b-222222222222" SchemaVersion="01.07">
+  <ExplanatoryNoteNumber>ПЗ-Т1</ExplanatoryNoteNumber>
+  <ExplanatoryNoteYear>2026</ExplanatoryNoteYear>
+  <IssueAuthor>
+    <Organization NOPRIZNumber="П-000-000000000000-0000">
+      <FullName>Тестовый автор записки</FullName>
+      <OGRN>0000000000000</OGRN>
+      <INN>0000000000</INN>
+      <KPP>000000000</KPP>
+      <Address><RussianAddress><RegionCode>54</RegionCode><OKTMOCode>00000000</OKTMOCode><OKTMOName>Тестовое муниципальное образование</OKTMOName><Note>Тестовый адрес автора</Note></RussianAddress></Address>
+    </Organization>
+  </IssueAuthor>
+  <Signers>
+    <ChiefProjectEngineer role="Разработка">
+      <Surname>Тестов</Surname><Name>Тест</Name><SNILS>000-000-000 00</SNILS><NOPRIZNumber>П-000000</NOPRIZNumber>
+    </ChiefProjectEngineer>
+  </Signers>
+  <Developer><Organization>
+    <FullName>Тестовый застройщик</FullName><OGRN>0000000000000</OGRN><INN>0000000000</INN><KPP>000000000</KPP>
+    <Address><RussianAddress><RegionCode>54</RegionCode><OKTMOCode>00000000</OKTMOCode><OKTMOName>Тестовое муниципальное образование</OKTMOName><Note>Тестовый адрес застройщика</Note></RussianAddress></Address>
+  </Organization></Developer>
+  <UsedNorms><UsedNorm>Тестовое обозначение норматива</UsedNorm></UsedNorms>
+  <ProjectDecisionDocuments><Document>
+    <DocType>01.99</DocType><DocName>Тестовое решение</DocName><DocNumber>Т-1</DocNumber><DocDate>2026-01-01</DocDate>
+    <DocIssueAuthor>Тестовый автор решения</DocIssueAuthor><Included>Тестовый комплект</Included>
+  </Document></ProjectDecisionDocuments>
+  <ProjectInitialDocuments><Document>
+    <DocType>01.99</DocType><DocName>Тестовый исходный документ</DocName><DocNumber>Т-2</DocNumber><DocDate>2026-01-02</DocDate>
+    <DocIssueAuthor>Тестовый автор исходного документа</DocIssueAuthor><Included>Тестовый комплект</Included>
+  </Document></ProjectInitialDocuments>
+  <NonIndustrialObject ObjectID="object-test" Placement="1" DangerousAndComplex="0" Unique="0">
+    <Name>Тестовый объект записки</Name>
+    <ConstructionType>1</ConstructionType>
+    <Address><RussianAddress><RegionCode>54</RegionCode><OKTMOCode>00000000</OKTMOCode><OKTMOName>Тестовое муниципальное образование</OKTMOName><Note>Тестовый адрес объекта</Note></RussianAddress></Address>
+    <Functions><FunctionsClass>12.01.006.001</FunctionsClass></Functions>
+    <FunctionsFeatures><Text>Тестовое описание особенностей</Text></FunctionsFeatures>
+    <PowerIndicator><Name>Тестовый показатель</Name><Measure>-</Measure><Value>1</Value></PowerIndicator>
+    <EnergyEfficiency><EnergyEfficiencyClass>Не классифицируется</EnergyEfficiencyClass></EnergyEfficiency>
+    <FireDangerCategory>Категория не устанавливается</FireDangerCategory>
+    <PeoplePermanentStay><Text>Тестовое описание помещений</Text></PeoplePermanentStay>
+    <ResponsibilityLevel>нормальный</ResponsibilityLevel>
+    <Resources/>
+    <LandCategory>2</LandCategory>
+    <ProjectDocumentation>
+      <Section2><NotDeveloped>Раздел не разрабатывался</NotDeveloped></Section2>
+      <Section3><NotDeveloped>Раздел не разрабатывался</NotDeveloped></Section3>
+      <Section4><NotDeveloped>Раздел не разрабатывался</NotDeveloped></Section4>
+      <Section5><NotDeveloped>Раздел не разрабатывался</NotDeveloped></Section5>
+      <Section6><NotDeveloped>Раздел не разрабатывался</NotDeveloped></Section6>
+      <Section7><NotDeveloped>Раздел не разрабатывался</NotDeveloped></Section7>
+      <Section8><NotDeveloped>Раздел не разрабатывался</NotDeveloped></Section8>
+      <Section9><NotDeveloped>Раздел не разрабатывался</NotDeveloped></Section9>
+      <Section10><NotDeveloped>Раздел не разрабатывался</NotDeveloped></Section10>
+      <Section11><NotDeveloped>Раздел не разрабатывался</NotDeveloped></Section11>
+      <Section12><NotDeveloped>Раздел не разрабатывался</NotDeveloped></Section12>
+      <Section13><NotDeveloped>Раздел не разрабатывался</NotDeveloped></Section13>
+    </ProjectDocumentation>
+  </NonIndustrialObject>
+  <DesignerAssurance><Text>Тестовое заверение проектировщика</Text></DesignerAssurance>
+</ExplanatoryNote>

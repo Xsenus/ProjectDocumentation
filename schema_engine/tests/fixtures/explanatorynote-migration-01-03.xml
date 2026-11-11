@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ExplanatoryNote SchemaVersion="01.03" id="92bff3b8-a87f-46f2-a7a4-8a9333c62dc5">
+  <ExplanatoryNoteNumber>ТЕСТ-03</ExplanatoryNoteNumber>
+  <ExplanatoryNoteYear>2026</ExplanatoryNoteYear>
+  <IssueAuthor>
+    <ForeignOrganization>
+      <Address><Country>Беларусь</Country><Region>00</Region><Street>Тестовая</Street></Address>
+      <OrgFullName>Тестовый филиал</OrgFullName><OrgINN>0000000000</OrgINN><OrgKPP>000000000</OrgKPP>
+    </ForeignOrganization>
+    <SROMembership><SRO SROType="Саморегулируемая организация в области инженерных изысканий">Тестовая запись</SRO></SROMembership>
+  </IssueAuthor>
+  <Signers>
+    <Signer constructionRegistry="да">
+      <FamilyName>Тестов</FamilyName><FirstName>Тест</FirstName><Position>Инженер</Position>
+    </Signer>
+  </Signers>
+  <Developer>
+    <Person>
+      <FamilyName>Тестов</FamilyName><FirstName>Тест</FirstName>
+      <PostAddress><City>Новосибирск</City><PostIndex>630000</PostIndex><Region>54</Region></PostAddress>
+      <SNILS>000-000-000 00</SNILS>
+    </Person>
+  </Developer>
+  <UsedNorms><UsedNorm>Тестовая норма</UsedNorm></UsedNorms>
+  <ProjectDecisionDocuments>
+    <Document><DocType>01.01</DocType><DocName>Тестовое решение</DocName><DocNumber>Т-1</DocNumber><DocDate>2026-01-01</DocDate><DocIssueAuthor>Тестовый автор</DocIssueAuthor><Included>Приложено</Included></Document>
+  </ProjectDecisionDocuments>
+  <FinanceSources>
+    <StateCustomerSource><Owner><Organization><OrgFullName>Тестовый заказчик</OrgFullName><OrgINN>0000000000</OrgINN><OrgKPP>000000000</OrgKPP><OrgOGRN>0000000000000</OrgOGRN></Organization></Owner><SourceRatio>50</SourceRatio></StateCustomerSource>
+  </FinanceSources>
+  <IndustrialObject ObjectID="test-object" Placement="1" DangerousAndComplex="1" Unique="1">
+    <Name>Тестовый объект</Name><ConstructionType>1</ConstructionType><ConstructionDuration>1</ConstructionDuration>
+    <Address><City>Новосибирск</City><Region>54</Region></Address>
+    <DangerousIndustrialObject>Не относится к опасным производственным объектам</DangerousIndustrialObject>
+    <ObjectParts>
+      <ComplexPart ObjectID="test-part"><Name>Тестовая часть</Name><DangerousIndustrialObject>Не относится к опасным производственным объектам</DangerousIndustrialObject></ComplexPart>
+    </ObjectParts>
+    <LandCategory>1</LandCategory>
+    <ProjectDocumentation>
+      <Section2>
+        <Document ObjectIDREFS="test-object test-part"><DocName>Тестовый документ</DocName><DocNumber>Т-2</DocNumber></Document>
+        <SubSection Name="Тестовый подраздел"><Document><DocName>Вложенный тестовый документ</DocName><DocNumber>Т-3</DocNumber></Document></SubSection>
+      </Section2>
+      <Section12>
+        <ObjectLocalEstimates>
+          <SubSection Name="Объектные сметы"><Document><DocName>Тестовая объектная смета</DocName><DocNumber>С-1</DocNumber></Document></SubSection>
+          <Document><DocName>Тестовая смета без категории</DocName><DocNumber>С-2</DocNumber></Document>
+        </ObjectLocalEstimates>
+      </Section12>
+    </ProjectDocumentation>
+  </IndustrialObject>
+  <DesignerAssurance>
+    <Assurance Title="Тестовое заверение"><Text>Текст заверения</Text><SubTitle>Подзаголовок</SubTitle><Text>Второй текст</Text></Assurance>
+    <Signer><FamilyName>Тестов</FamilyName><FirstName>Тест</FirstName><Position>Проектировщик</Position></Signer>
+  </DesignerAssurance>
+</ExplanatoryNote>

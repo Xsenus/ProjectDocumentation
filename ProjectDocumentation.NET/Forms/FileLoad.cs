@@ -115,7 +115,20 @@ namespace ProjectDocumentation.NET.Forms
                             existing is ConclusionXPO && Conclusion0104Document.ReadVersion(existing.GetObj()) != Conclusion0104Document.CurrentVersion));
                         break;
                     case "ExplanatoryNote":
-                        result = await ExplanatoryNoteController.ImportExplanatoryNoteAsync(filePath, name, existing => AskImportConflict(existing, existing is ExplanatoryNoteXPO));
+                        var noteVersion = ExplanatoryNote0107Document.ReadFileVersion(filePath);
+                        if (noteVersion == ExplanatoryNote0107Document.CurrentVersion || noteVersion == ExplanatoryNote0107Document.CompatibleVersion)
+                        {
+                            await ImportExplanatoryNoteAsync(ExplanatoryNote0107Document.ReadFile(filePath), noteVersion, filePath, name);
+                            return;
+                        }
+
+                        if (!string.IsNullOrWhiteSpace(noteVersion) && noteVersion != ExplanatoryNote0107Document.LegacyVersion)
+                        {
+                            throw new InvalidOperationException($"Версия пояснительной записки {noteVersion} не поддерживается.");
+                        }
+
+                        result = await ExplanatoryNoteController.ImportExplanatoryNoteAsync(filePath, name, existing => AskImportConflict(existing,
+                            existing is ExplanatoryNoteXPO && ExplanatoryNoteController.IsLegacyXml(existing.GetObj())));
                         break;
                     default:
                         result = new ImportResult();

@@ -1,20 +1,17 @@
-"""Loss-aware conversion between the two supported conclusion XML versions."""
+"""Loss-aware conversion between supported document versions."""
 
 from collections import Counter
 from dataclasses import dataclass
 from datetime import date
 from functools import lru_cache
-from pathlib import Path
 import re
 from xml.etree import ElementTree as ET
 
+from .documents import DOCUMENTS, FAMILIES_BY_ROOT, SCHEMA_DIRECTORY, SCHEMA_LOCATION, document_version, resolve_version, schema_filename
 from .xmlio import parse_document
 
 
 XSD = '{http://www.w3.org/2001/XMLSchema}'
-SCHEMA_LOCATION = '{http://www.w3.org/2001/XMLSchema-instance}noNamespaceSchemaLocation'
-VERSIONS = frozenset({'01.03', '01.04'})
-SCHEMA_DIR = Path(__file__).resolve().parent / 'schemas'
 PARTICLES = {XSD + name for name in ('all', 'choice', 'element', 'group', 'sequence')}
 PERSON_AND_ORGANIZATION_NAMES = {
     'FamilyName': 'Surname', 'FirstName': 'Name', 'SecondName': 'Patronymic',
@@ -48,7 +45,7 @@ class _Particle:
 
 class _Schema:
     def __init__(self, version: str):
-        schema = ET.parse(SCHEMA_DIR / f'conclusion-{version.replace(".", "-")}.xsd').getroot()
+        schema = ET.parse(SCHEMA_DIRECTORY / schema_filename('conclusion', version)).getroot()
         self.root = schema.find(f'{XSD}element[@name="Conclusion"]')
         self.complex_types = self._named(schema, 'complexType')
         self.simple_types = self._named(schema, 'simpleType')
@@ -427,24 +424,30 @@ def _project(source, name, definition, schema, forward, path, warnings):
     return result
 
 
-def migrate_xml(xml: str, target_version: str = '01.04') -> dict:
+def migrate_xml(xml: str, target_version: str | None = None) -> dict:
     """Return a converted draft and field warnings; callers retain the input XML."""
-    if not isinstance(target_version, str) or target_version not in VERSIONS:
-        raise ValueError('Поддерживаются только версии заключения 01.03 и 01.04.')
     try:
         root = parse_document(xml)
     except ET.ParseError as error:
-        raise ValueError(f'Некорректный XML заключения: {error}.') from error
-    if root.tag != 'Conclusion':
-        raise ValueError('Ожидается XML заключения с корневым элементом Conclusion.')
-    source_version = root.get('SchemaVersion')
-    if source_version not in VERSIONS:
-        raise ValueError('У заключения отсутствует поддерживаемый атрибут SchemaVersion (01.03 или 01.04).')
+        raise ValueError(f'Некорректный XML документа: {error}.') from error
+    family = FAMILIES_BY_ROOT.get(root.tag)
+    if family is None:
+        raise ValueError('Ожидается XML с корневым элементом Conclusion или ExplanatoryNote.')
+    document = DOCUMENTS[family]
+    target_version = resolve_version(family, target_version)
+    source_version = document_version(root, family)
+    if source_version not in document.versions:
+        raise ValueError(f'У {document.root} отсутствует поддерживаемый атрибут SchemaVersion ({", ".join(document.versions)}).')
     warnings: list[str] = []
     if source_version != target_version:
-        schema = _schema(target_version)
-        result = _project(root, 'Conclusion', schema.root, schema, target_version == '01.04', '/Conclusion', warnings)
+        if family == 'explanatorynote':
+            from .note_migration import migrate_note
+
+            result, warnings = migrate_note(root, source_version, target_version)
+        else:
+            schema = _schema(target_version)
+            result = _project(root, 'Conclusion', schema.root, schema, target_version == '01.04', '/Conclusion', warnings)
         result.set('SchemaVersion', target_version)
         ET.indent(result, space='  ')
         xml = ET.tostring(result, encoding='unicode', xml_declaration=True)
-    return {'xml': xml, 'warnings': warnings, 'sourceVersion': source_version, 'targetVersion': target_version}
+    return {'xml': xml, 'family': family, 'warnings': warnings, 'sourceVersion': source_version, 'targetVersion': target_version}

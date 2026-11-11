@@ -1,0 +1,1835 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="ExplanatoryNote" nillable="true">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" maxOccurs="1" name="ExplanatoryNoteNumber" type="xs:string" />
+        <xs:element minOccurs="0" maxOccurs="1" name="ExplanatoryNoteYear" type="xs:integer" />
+        <xs:element minOccurs="0" maxOccurs="1" name="ExplanatoryNoteModifications" type="ArrayOfTModification" />
+        <xs:element minOccurs="0" maxOccurs="1" name="IssueAuthor" type="tAuthor" />
+        <xs:element minOccurs="0" maxOccurs="1" name="ProjectDocumentationAuthors" type="ArrayOfTAuthor" />
+        <xs:element minOccurs="0" maxOccurs="1" name="Signers" type="ArrayOfTWorkPerson" />
+        <xs:choice minOccurs="0" maxOccurs="unbounded">
+          <xs:element minOccurs="0" maxOccurs="1" name="Developer" type="tDeveloper" />
+          <xs:element minOccurs="0" maxOccurs="1" name="TechnicalCustomer" type="TTechnicalCustomer" />
+        </xs:choice>
+        <xs:element minOccurs="0" maxOccurs="1" name="UsedAbbreviations" type="tTextBlock" />
+        <xs:element minOccurs="0" maxOccurs="1" name="UsedNorms" type="tUsedNorms" />
+        <xs:element minOccurs="0" maxOccurs="1" name="ProjectDecisionDocuments" type="ArrayOfTDocument" />
+        <xs:element minOccurs="0" maxOccurs="1" name="ProjectInitialDocuments" type="ArrayOfTDocument" />
+        <xs:element minOccurs="0" maxOccurs="1" name="EngineeringSurveyDocuments" type="ArrayOfTEngineeringSurveyDocument" />
+        <xs:element minOccurs="0" maxOccurs="1" name="AdditionalData" type="ArrayOfTData" />
+        <xs:element minOccurs="0" maxOccurs="1" name="FinanceSources" type="tFinanceSources" />
+        <xs:choice minOccurs="1" maxOccurs="1">
+          <xs:element minOccurs="0" maxOccurs="1" name="IndustrialObject" type="tIndustrialObject" />
+          <xs:element minOccurs="0" maxOccurs="1" name="LinearObject" type="tLinearObject" />
+          <xs:element minOccurs="0" maxOccurs="1" name="NonIndustrialObject" type="tNonIndustrialObject" />
+        </xs:choice>
+        <xs:element minOccurs="0" maxOccurs="unbounded" name="DesignerNote" type="tTextBlock" />
+        <xs:element minOccurs="0" maxOccurs="1" name="DesignerAssurance" type="tDesignerAssurance" />
+      </xs:sequence>
+      <xs:attribute name="SchemaVersion" type="xs:string" />
+      <xs:attribute name="SchemaLink" type="xs:string" />
+      <xs:attribute name="id" type="xs:string" />
+      <xs:attribute name="AccessRestriction" type="xs:string" />
+    </xs:complexType>
+  </xs:element>
+  <xs:complexType name="ArrayOfTModification">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Modification" type="tModification" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="tModification">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="ModificationNumber" type="xs:integer" />
+      <xs:element minOccurs="1" maxOccurs="1" name="ModificationDate" type="xs:date" />
+      <xs:element minOccurs="0" maxOccurs="1" name="ModificationNote" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="tAuthor">
+    <xs:sequence>
+      <xs:choice minOccurs="1" maxOccurs="1">
+        <xs:element minOccurs="0" maxOccurs="1" name="ForeignOrganization" type="tForeignOrganization" />
+        <xs:element minOccurs="0" maxOccurs="1" name="IP" type="tIP" />
+        <xs:element minOccurs="0" maxOccurs="1" name="Organization" type="tOrganization" />
+      </xs:choice>
+      <xs:element minOccurs="0" maxOccurs="1" name="SROMembership" type="ArrayOfTSRO" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="tForeignOrganization">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="Address" type="tAddress" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Email" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="OrgFullName" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="OrgINN" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="OrgKPP" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="tAddress">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="Building" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="City" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Country" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="District" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Note" type="xs:string" />
+      <xs:element minOccurs="1" maxOccurs="1" name="Region" type="tRegionsRF" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Room" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Settlement" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Street" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:simpleType name="tRegionsRF">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="00" />
+      <xs:enumeration value="01" />
+      <xs:enumeration value="02" />
+      <xs:enumeration value="03" />
+      <xs:enumeration value="04" />
+      <xs:enumeration value="05" />
+      <xs:enumeration value="06" />
+      <xs:enumeration value="07" />
+      <xs:enumeration value="08" />
+      <xs:enumeration value="09" />
+      <xs:enumeration value="10" />
+      <xs:enumeration value="11" />
+      <xs:enumeration value="12" />
+      <xs:enumeration value="13" />
+      <xs:enumeration value="14" />
+      <xs:enumeration value="15" />
+      <xs:enumeration value="16" />
+      <xs:enumeration value="17" />
+      <xs:enumeration value="18" />
+      <xs:enumeration value="19" />
+      <xs:enumeration value="20" />
+      <xs:enumeration value="21" />
+      <xs:enumeration value="22" />
+      <xs:enumeration value="23" />
+      <xs:enumeration value="24" />
+      <xs:enumeration value="25" />
+      <xs:enumeration value="26" />
+      <xs:enumeration value="27" />
+      <xs:enumeration value="28" />
+      <xs:enumeration value="29" />
+      <xs:enumeration value="30" />
+      <xs:enumeration value="31" />
+      <xs:enumeration value="32" />
+      <xs:enumeration value="33" />
+      <xs:enumeration value="34" />
+      <xs:enumeration value="35" />
+      <xs:enumeration value="36" />
+      <xs:enumeration value="37" />
+      <xs:enumeration value="38" />
+      <xs:enumeration value="39" />
+      <xs:enumeration value="40" />
+      <xs:enumeration value="41" />
+      <xs:enumeration value="42" />
+      <xs:enumeration value="43" />
+      <xs:enumeration value="44" />
+      <xs:enumeration value="45" />
+      <xs:enumeration value="46" />
+      <xs:enumeration value="47" />
+      <xs:enumeration value="48" />
+      <xs:enumeration value="49" />
+      <xs:enumeration value="50" />
+      <xs:enumeration value="51" />
+      <xs:enumeration value="52" />
+      <xs:enumeration value="53" />
+      <xs:enumeration value="54" />
+      <xs:enumeration value="55" />
+      <xs:enumeration value="56" />
+      <xs:enumeration value="57" />
+      <xs:enumeration value="58" />
+      <xs:enumeration value="59" />
+      <xs:enumeration value="60" />
+      <xs:enumeration value="61" />
+      <xs:enumeration value="62" />
+      <xs:enumeration value="63" />
+      <xs:enumeration value="64" />
+      <xs:enumeration value="65" />
+      <xs:enumeration value="66" />
+      <xs:enumeration value="67" />
+      <xs:enumeration value="68" />
+      <xs:enumeration value="69" />
+      <xs:enumeration value="70" />
+      <xs:enumeration value="71" />
+      <xs:enumeration value="72" />
+      <xs:enumeration value="73" />
+      <xs:enumeration value="74" />
+      <xs:enumeration value="75" />
+      <xs:enumeration value="76" />
+      <xs:enumeration value="77" />
+      <xs:enumeration value="78" />
+      <xs:enumeration value="79" />
+      <xs:enumeration value="83" />
+      <xs:enumeration value="86" />
+      <xs:enumeration value="87" />
+      <xs:enumeration value="89" />
+      <xs:enumeration value="91" />
+      <xs:enumeration value="92" />
+      <xs:enumeration value="80" />
+      <xs:enumeration value="81" />
+      <xs:enumeration value="84" />
+      <xs:enumeration value="85" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="tIP">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="Email" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="FamilyName" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="FirstName" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="OGRNIP" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="PostAddress" type="tPostAddress" />
+      <xs:element minOccurs="0" maxOccurs="1" name="SecondName" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="tPostAddress">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="Building" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="City" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Country" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="District" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Note" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="PostIndex" type="xs:string" />
+      <xs:element minOccurs="1" maxOccurs="1" name="Region" type="tRegionsRF" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Room" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Settlement" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Street" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="tOrganization">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="Address" type="tAddress" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Email" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="OrgFullName" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="OrgINN" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="OrgKPP" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="OrgOGRN" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="ArrayOfTSRO">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="SRO" type="tSRO" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="tSRO">
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute name="SROType" type="tSROType" use="required" />
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:simpleType name="tSROType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Саморегулируемая организация в области инженерных изысканий" />
+      <xs:enumeration value="Саморегулируемая организация в области архитектурно-строительного проектирования" />
+      <xs:enumeration value="Саморегулируемая организация в области строительства" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="ArrayOfTAuthor">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="ProjectDocumentationAuthor" type="tAuthor" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="ArrayOfTWorkPerson">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Signer" type="tWorkPerson" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="tWorkPerson">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="FamilyName" type="xs:normalizedString" />
+      <xs:element minOccurs="0" maxOccurs="1" name="FirstName" type="xs:normalizedString" />
+      <xs:element minOccurs="0" maxOccurs="1" name="SecondName" type="xs:normalizedString" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Position" type="xs:normalizedString" />
+    </xs:sequence>
+    <xs:attribute name="engineeringRegistry" type="tYesNo" />
+    <xs:attribute name="constructionRegistry" type="tYesNo" />
+  </xs:complexType>
+  <xs:simpleType name="tYesNo">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="да" />
+      <xs:enumeration value="нет" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="tDeveloper">
+    <xs:sequence>
+      <xs:choice minOccurs="1" maxOccurs="1">
+        <xs:element minOccurs="0" maxOccurs="1" name="ForeignOrganization" type="tForeignOrganization" />
+        <xs:element minOccurs="0" maxOccurs="1" name="IP" type="tIP" />
+        <xs:element minOccurs="0" maxOccurs="1" name="Organization" type="tOrganization" />
+        <xs:element minOccurs="0" maxOccurs="1" name="Person" type="tPerson" />
+      </xs:choice>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="tPerson">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="Email" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="FamilyName" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="FirstName" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="PostAddress" type="tPostAddress" />
+      <xs:element minOccurs="0" maxOccurs="1" name="SecondName" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="SNILS" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="TTechnicalCustomer">
+    <xs:sequence>
+      <xs:choice minOccurs="1" maxOccurs="1">
+        <xs:element minOccurs="0" maxOccurs="1" name="ForeignOrganization" type="tForeignOrganization" />
+        <xs:element minOccurs="0" maxOccurs="1" name="Organization" type="tOrganization" />
+      </xs:choice>
+      <xs:element minOccurs="0" maxOccurs="1" name="SROMembership" type="ArrayOfTSRO" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="tTextBlock">
+    <xs:sequence>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element minOccurs="0" maxOccurs="1" name="Image" type="tImage" />
+        <xs:element minOccurs="0" maxOccurs="1" name="SubTitle" type="xs:string" />
+        <xs:element minOccurs="0" maxOccurs="1" name="Table" type="tTable" />
+        <xs:element minOccurs="0" maxOccurs="1" name="Text" type="xs:string" />
+      </xs:choice>
+    </xs:sequence>
+    <xs:attribute name="Title" type="xs:string" />
+  </xs:complexType>
+  <xs:complexType name="tImage">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="ImageData" type="xs:base64Binary" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Comment" type="xs:string" />
+    </xs:sequence>
+    <xs:attribute name="Type" type="tImageTypes" use="required" />
+  </xs:complexType>
+  <xs:simpleType name="tImageTypes">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="jpg" />
+      <xs:enumeration value="gif" />
+      <xs:enumeration value="png" />
+      <xs:enumeration value="jpeg" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="tTable">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="TitleRow" type="ArrayOfTCell" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Row" type="ArrayOfTCell" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="ArrayOfTCell">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Cell" nillable="true" type="tCell" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="tCell">
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute name="align" type="tAlignTypes" />
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:simpleType name="tAlignTypes">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="left" />
+      <xs:enumeration value="right" />
+      <xs:enumeration value="center" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="tUsedNorms">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="UsedNorm" type="tUsedNorm" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="tUsedNorm">
+    <xs:simpleContent>
+      <xs:extension base="xs:string" />
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="ArrayOfTDocument">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Document" type="tDocument" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="tDocument">
+    <xs:sequence>
+      <xs:element minOccurs="1" maxOccurs="1" name="DocType" type="tDocumentType" />
+      <xs:element minOccurs="0" maxOccurs="1" name="DocName" type="xs:normalizedString" />
+      <xs:element minOccurs="0" maxOccurs="1" name="DocNumber" type="xs:normalizedString" />
+      <xs:element minOccurs="1" maxOccurs="1" name="DocDate" type="xs:date" />
+      <xs:element minOccurs="0" maxOccurs="1" name="DocIssueAuthor" type="xs:normalizedString" />
+      <xs:element minOccurs="0" maxOccurs="1" name="DocChanges" type="xs:normalizedString" />
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element minOccurs="0" maxOccurs="1" name="File" type="tFile" />
+        <xs:element minOccurs="0" maxOccurs="1" name="Included" type="xs:string" />
+        <xs:element minOccurs="0" maxOccurs="1" name="Link" type="xs:string" />
+      </xs:choice>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:simpleType name="tDocumentType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="01.01" />
+      <xs:enumeration value="01.02" />
+      <xs:enumeration value="01.03" />
+      <xs:enumeration value="01.99" />
+      <xs:enumeration value="02.01" />
+      <xs:enumeration value="02.02" />
+      <xs:enumeration value="02.04" />
+      <xs:enumeration value="02.05" />
+      <xs:enumeration value="02.06" />
+      <xs:enumeration value="02.07" />
+      <xs:enumeration value="02.08" />
+      <xs:enumeration value="02.09" />
+      <xs:enumeration value="02.99" />
+      <xs:enumeration value="03.01" />
+      <xs:enumeration value="03.02" />
+      <xs:enumeration value="03.03" />
+      <xs:enumeration value="03.04" />
+      <xs:enumeration value="03.05" />
+      <xs:enumeration value="03.06" />
+      <xs:enumeration value="03.99" />
+      <xs:enumeration value="04.01" />
+      <xs:enumeration value="04.02" />
+      <xs:enumeration value="04.03" />
+      <xs:enumeration value="04.99" />
+      <xs:enumeration value="05.01" />
+      <xs:enumeration value="05.02" />
+      <xs:enumeration value="05.03" />
+      <xs:enumeration value="05.99" />
+      <xs:enumeration value="06.01" />
+      <xs:enumeration value="06.02" />
+      <xs:enumeration value="06.03" />
+      <xs:enumeration value="06.04" />
+      <xs:enumeration value="06.05" />
+      <xs:enumeration value="06.06" />
+      <xs:enumeration value="06.07" />
+      <xs:enumeration value="06.08" />
+      <xs:enumeration value="06.09" />
+      <xs:enumeration value="06.10" />
+      <xs:enumeration value="06.11" />
+      <xs:enumeration value="06.99" />
+      <xs:enumeration value="07.01" />
+      <xs:enumeration value="07.02" />
+      <xs:enumeration value="07.03" />
+      <xs:enumeration value="07.04" />
+      <xs:enumeration value="07.05" />
+      <xs:enumeration value="07.06" />
+      <xs:enumeration value="07.07" />
+      <xs:enumeration value="07.08" />
+      <xs:enumeration value="07.09" />
+      <xs:enumeration value="07.10" />
+      <xs:enumeration value="07.11" />
+      <xs:enumeration value="07.12" />
+      <xs:enumeration value="07.13" />
+      <xs:enumeration value="07.14" />
+      <xs:enumeration value="07.15" />
+      <xs:enumeration value="07.16" />
+      <xs:enumeration value="07.17" />
+      <xs:enumeration value="07.19" />
+      <xs:enumeration value="07.20" />
+      <xs:enumeration value="07.21" />
+      <xs:enumeration value="07.22" />
+      <xs:enumeration value="07.23" />
+      <xs:enumeration value="07.24" />
+      <xs:enumeration value="07.25" />
+      <xs:enumeration value="07.26" />
+      <xs:enumeration value="07.27" />
+      <xs:enumeration value="07.28" />
+      <xs:enumeration value="07.29" />
+      <xs:enumeration value="07.30" />
+      <xs:enumeration value="07.31" />
+      <xs:enumeration value="07.32" />
+      <xs:enumeration value="07.33" />
+      <xs:enumeration value="07.34" />
+      <xs:enumeration value="07.35" />
+      <xs:enumeration value="07.37" />
+      <xs:enumeration value="08.01" />
+      <xs:enumeration value="08.02" />
+      <xs:enumeration value="08.03" />
+      <xs:enumeration value="08.04" />
+      <xs:enumeration value="08.05" />
+      <xs:enumeration value="08.06" />
+      <xs:enumeration value="08.07" />
+      <xs:enumeration value="08.08" />
+      <xs:enumeration value="08.10" />
+      <xs:enumeration value="08.11" />
+      <xs:enumeration value="08.12" />
+      <xs:enumeration value="08.13" />
+      <xs:enumeration value="08.14" />
+      <xs:enumeration value="08.15" />
+      <xs:enumeration value="08.16" />
+      <xs:enumeration value="08.17" />
+      <xs:enumeration value="08.18" />
+      <xs:enumeration value="08.20" />
+      <xs:enumeration value="09.01" />
+      <xs:enumeration value="09.02" />
+      <xs:enumeration value="09.99" />
+      <xs:enumeration value="10.01" />
+      <xs:enumeration value="10.99" />
+      <xs:enumeration value="11.01" />
+      <xs:enumeration value="11.02" />
+      <xs:enumeration value="11.03" />
+      <xs:enumeration value="11.04" />
+      <xs:enumeration value="11.05" />
+      <xs:enumeration value="11.06" />
+      <xs:enumeration value="11.99" />
+      <xs:enumeration value="12.01" />
+      <xs:enumeration value="12.02" />
+      <xs:enumeration value="12.03" />
+      <xs:enumeration value="12.99" />
+      <xs:enumeration value="13.01" />
+      <xs:enumeration value="13.02" />
+      <xs:enumeration value="13.03" />
+      <xs:enumeration value="13.04" />
+      <xs:enumeration value="13.05" />
+      <xs:enumeration value="13.06" />
+      <xs:enumeration value="13.99" />
+      <xs:enumeration value="14.01" />
+      <xs:enumeration value="14.02" />
+      <xs:enumeration value="14.03" />
+      <xs:enumeration value="14.04" />
+      <xs:enumeration value="14.99" />
+      <xs:enumeration value="15.01" />
+      <xs:enumeration value="15.02" />
+      <xs:enumeration value="15.03" />
+      <xs:enumeration value="15.04" />
+      <xs:enumeration value="15.05" />
+      <xs:enumeration value="15.06" />
+      <xs:enumeration value="15.07" />
+      <xs:enumeration value="15.08" />
+      <xs:enumeration value="15.99" />
+      <xs:enumeration value="16.01" />
+      <xs:enumeration value="16.02" />
+      <xs:enumeration value="16.99" />
+      <xs:enumeration value="17.01" />
+      <xs:enumeration value="17.99" />
+      <xs:enumeration value="18.01" />
+      <xs:enumeration value="18.02" />
+      <xs:enumeration value="18.03" />
+      <xs:enumeration value="18.99" />
+      <xs:enumeration value="19.01" />
+      <xs:enumeration value="19.02" />
+      <xs:enumeration value="19.03" />
+      <xs:enumeration value="19.99" />
+      <xs:enumeration value="20.01" />
+      <xs:enumeration value="20.02" />
+      <xs:enumeration value="20.03" />
+      <xs:enumeration value="20.04" />
+      <xs:enumeration value="20.05" />
+      <xs:enumeration value="20.06" />
+      <xs:enumeration value="20.07" />
+      <xs:enumeration value="20.99" />
+      <xs:enumeration value="21.01" />
+      <xs:enumeration value="21.02" />
+      <xs:enumeration value="21.03" />
+      <xs:enumeration value="21.04" />
+      <xs:enumeration value="21.05" />
+      <xs:enumeration value="21.06" />
+      <xs:enumeration value="21.07" />
+      <xs:enumeration value="21.08" />
+      <xs:enumeration value="21.09" />
+      <xs:enumeration value="21.10" />
+      <xs:enumeration value="21.11" />
+      <xs:enumeration value="21.12" />
+      <xs:enumeration value="21.13" />
+      <xs:enumeration value="21.99" />
+      <xs:enumeration value="22.01" />
+      <xs:enumeration value="22.02" />
+      <xs:enumeration value="22.03" />
+      <xs:enumeration value="22.04" />
+      <xs:enumeration value="22.05" />
+      <xs:enumeration value="22.99" />
+      <xs:enumeration value="23.01" />
+      <xs:enumeration value="23.02" />
+      <xs:enumeration value="23.99" />
+      <xs:enumeration value="24.01" />
+      <xs:enumeration value="25.01" />
+      <xs:enumeration value="25.02" />
+      <xs:enumeration value="25.03" />
+      <xs:enumeration value="25.04" />
+      <xs:enumeration value="25.05" />
+      <xs:enumeration value="25.06" />
+      <xs:enumeration value="26.01" />
+      <xs:enumeration value="26.02" />
+      <xs:enumeration value="26.03" />
+      <xs:enumeration value="26.04" />
+      <xs:enumeration value="99.01" />
+      <xs:enumeration value="99.02" />
+      <xs:enumeration value="99.03" />
+      <xs:enumeration value="99.99" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="tFile">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="FileName" type="xs:normalizedString" />
+      <xs:element minOccurs="0" maxOccurs="1" name="FileFormat" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="FileRelativePath" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="FileChecksum" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="SignFile" type="tSignFile" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="tSignFile">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="FileName" type="xs:normalizedString" />
+      <xs:element minOccurs="0" maxOccurs="1" name="FileFormat" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="RelativePath" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="FileChecksum" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="ArrayOfTEngineeringSurveyDocument">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Document" type="tEngineeringSurveyDocument" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="tEngineeringSurveyDocument">
+    <xs:sequence>
+      <xs:element minOccurs="1" maxOccurs="1" name="DocType" type="tEngineeringSurveyDocumentType" />
+      <xs:element minOccurs="0" maxOccurs="1" name="DocName" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="DocNumber" type="xs:normalizedString" />
+      <xs:element minOccurs="1" maxOccurs="1" name="DocDate" type="xs:date" />
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="FullDocIssueAuthor" type="tAuthor" />
+      <xs:element minOccurs="0" maxOccurs="1" name="DocChanges" type="xs:normalizedString" />
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="File" type="tFile" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:simpleType name="tEngineeringSurveyDocumentType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="06.01" />
+      <xs:enumeration value="06.02" />
+      <xs:enumeration value="06.03" />
+      <xs:enumeration value="06.04" />
+      <xs:enumeration value="06.05" />
+      <xs:enumeration value="06.06" />
+      <xs:enumeration value="06.07" />
+      <xs:enumeration value="06.08" />
+      <xs:enumeration value="06.09" />
+      <xs:enumeration value="06.10" />
+      <xs:enumeration value="06.11" />
+      <xs:enumeration value="06.99" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="ArrayOfTData">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Data" type="tData" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="tData">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="DataDescription" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="File" type="tFile" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="tFinanceSources">
+    <xs:sequence>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element minOccurs="0" maxOccurs="1" name="BudgetSource" type="tBudgetSource" />
+        <xs:element minOccurs="0" maxOccurs="1" name="PrivateSource" type="tPrivateSource" />
+        <xs:element minOccurs="0" maxOccurs="1" name="StateCustomerSource" type="tStateCustomerSource" />
+      </xs:choice>
+      <xs:element minOccurs="0" maxOccurs="1" name="FinanceComment" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="tBudgetSource">
+    <xs:sequence>
+      <xs:element minOccurs="1" maxOccurs="1" name="BudgetLevel" type="tBudgetLevel" />
+      <xs:element minOccurs="0" maxOccurs="1" name="SourceRatio" type="xs:double" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:simpleType name="tBudgetLevel">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Федеральный бюджет" />
+      <xs:enumeration value="Бюджет субъекта Российской Федерации" />
+      <xs:enumeration value="Местный бюджет" />
+      <xs:enumeration value="Бюджет государственного внебюджетного фонда Российской Федерации" />
+      <xs:enumeration value="Бюджет территориального государственного внебюджетного фонда" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="tPrivateSource">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="SourceRatio" type="xs:double" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="tStateCustomerSource">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="Owner" type="TTechnicalCustomer" />
+      <xs:element minOccurs="0" maxOccurs="1" name="SourceRatio" type="xs:double" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="tIndustrialObject">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="Name" type="xs:string" />
+      <xs:element minOccurs="1" maxOccurs="1" name="ConstructionType" type="tConstructionType" />
+      <xs:element minOccurs="1" maxOccurs="1" name="ConstructionDuration" type="xs:decimal" />
+      <xs:element minOccurs="0" maxOccurs="1" name="ConstructionDates" type="tConstructionDates" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Address" type="tAddress" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Functions" type="tFunctions" />
+      <xs:element minOccurs="0" maxOccurs="1" name="FunctionsFeatures" type="tTextBlock" />
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="PowerIndicator" type="tTEI" />
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="TEI" type="tTEI" />
+      <xs:element minOccurs="0" maxOccurs="1" name="EnergyEfficiency" type="tEnergyEfficiency" />
+      <xs:element minOccurs="1" maxOccurs="1" name="DangerousIndustrialObject" type="tDangerIndustrialClass" />
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element minOccurs="1" maxOccurs="1" name="FireDangerCategory" type="tFireDangerCategory" />
+        <xs:element minOccurs="0" maxOccurs="1" name="ObjectParts" type="tObjectParts" />
+        <xs:element minOccurs="0" maxOccurs="1" name="PeoplePermanentStay" type="tTextBlock" />
+        <xs:element minOccurs="1" maxOccurs="1" name="ResponsibilityLevel" type="tResponsibilityLevel" />
+      </xs:choice>
+      <xs:element minOccurs="0" maxOccurs="1" name="ClimateConditions" type="tClimateConditions" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Resources" type="tResources" />
+      <xs:element minOccurs="0" maxOccurs="1" name="RawResources" type="tResources" />
+      <xs:element minOccurs="0" maxOccurs="1" name="ResourceUseInfo" type="tTextBlock" />
+      <xs:element minOccurs="0" maxOccurs="1" name="RenewableSourceInfo" type="tTextBlock" />
+      <xs:element minOccurs="1" maxOccurs="1" name="LandCategory" type="tLandCategory" />
+      <xs:element minOccurs="0" maxOccurs="1" name="LandInfo" type="tLandInfo" />
+      <xs:element minOccurs="0" maxOccurs="1" name="LandFunds" type="tTextBlock" />
+      <xs:element minOccurs="0" maxOccurs="1" name="PatentsUsed" type="tTextBlock" />
+      <xs:element minOccurs="0" maxOccurs="1" name="SpecialRequirements" type="tTextBlock" />
+      <xs:element minOccurs="0" maxOccurs="1" name="SoftwareUsed" type="tSoftwareUsed" />
+      <xs:element minOccurs="0" maxOccurs="1" name="StagesInfo" type="tStagesInfo" />
+      <xs:element minOccurs="0" maxOccurs="1" name="DestroyFunds" type="tTextBlock" />
+      <xs:element minOccurs="0" maxOccurs="1" name="EnergyEfficiencyLinks" type="ArrayOfTProjectDocumentationLink" />
+      <xs:element minOccurs="0" maxOccurs="1" name="IndustrialSafetyLinks" type="ArrayOfTProjectDocumentationLink" />
+      <xs:element minOccurs="0" maxOccurs="1" name="LandReclamationLink" type="tTextBlock" />
+      <xs:element minOccurs="0" maxOccurs="1" name="NuclearPlantFeatures" type="tNuclearPlantFeatures" />
+      <xs:element minOccurs="0" maxOccurs="1" name="ProjectDocumentation" type="tNonLinearProjectDocumentContent" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Model" type="tModel" />
+    </xs:sequence>
+    <xs:attribute name="ObjectID" type="xs:ID" />
+    <xs:attribute name="Placement" type="tPlacement" use="required" />
+    <xs:attribute name="DangerousAndComplex" type="tDangerousAndComplex" />
+    <xs:attribute name="Unique" type="tUnique" />
+  </xs:complexType>
+  <xs:simpleType name="tConstructionType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="1" />
+      <xs:enumeration value="2" />
+      <xs:enumeration value="3" />
+      <xs:enumeration value="4" />
+      <xs:enumeration value="5" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="tConstructionDates">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="BeginDate" type="xs:date" />
+      <xs:element minOccurs="0" maxOccurs="1" name="EndDate" type="xs:date" />
+      <xs:element minOccurs="0" maxOccurs="1" name="OperationDate" type="xs:date" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="tFunctions">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="FunctionsNote" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="FunctionsClass" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="ProductsNote" type="tTextBlock" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="tTEI">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="Name" type="xs:string" />
+      <xs:element minOccurs="1" maxOccurs="1" name="Measure" type="tOKEI" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Value" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="OldValue" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:simpleType name="tOKEI">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="-" />
+      <xs:enumeration value="003" />
+      <xs:enumeration value="004" />
+      <xs:enumeration value="005" />
+      <xs:enumeration value="006" />
+      <xs:enumeration value="008" />
+      <xs:enumeration value="009" />
+      <xs:enumeration value="039" />
+      <xs:enumeration value="041" />
+      <xs:enumeration value="043" />
+      <xs:enumeration value="047" />
+      <xs:enumeration value="050" />
+      <xs:enumeration value="051" />
+      <xs:enumeration value="053" />
+      <xs:enumeration value="055" />
+      <xs:enumeration value="058" />
+      <xs:enumeration value="059" />
+      <xs:enumeration value="061" />
+      <xs:enumeration value="071" />
+      <xs:enumeration value="073" />
+      <xs:enumeration value="075" />
+      <xs:enumeration value="109" />
+      <xs:enumeration value="110" />
+      <xs:enumeration value="111" />
+      <xs:enumeration value="112" />
+      <xs:enumeration value="113" />
+      <xs:enumeration value="118" />
+      <xs:enumeration value="122" />
+      <xs:enumeration value="126" />
+      <xs:enumeration value="131" />
+      <xs:enumeration value="132" />
+      <xs:enumeration value="133" />
+      <xs:enumeration value="159" />
+      <xs:enumeration value="160" />
+      <xs:enumeration value="161" />
+      <xs:enumeration value="162" />
+      <xs:enumeration value="163" />
+      <xs:enumeration value="166" />
+      <xs:enumeration value="168" />
+      <xs:enumeration value="170" />
+      <xs:enumeration value="173" />
+      <xs:enumeration value="181" />
+      <xs:enumeration value="185" />
+      <xs:enumeration value="206" />
+      <xs:enumeration value="212" />
+      <xs:enumeration value="214" />
+      <xs:enumeration value="215" />
+      <xs:enumeration value="222" />
+      <xs:enumeration value="223" />
+      <xs:enumeration value="227" />
+      <xs:enumeration value="228" />
+      <xs:enumeration value="230" />
+      <xs:enumeration value="243" />
+      <xs:enumeration value="245" />
+      <xs:enumeration value="246" />
+      <xs:enumeration value="247" />
+      <xs:enumeration value="260" />
+      <xs:enumeration value="263" />
+      <xs:enumeration value="264" />
+      <xs:enumeration value="270" />
+      <xs:enumeration value="271" />
+      <xs:enumeration value="273" />
+      <xs:enumeration value="274" />
+      <xs:enumeration value="280" />
+      <xs:enumeration value="281" />
+      <xs:enumeration value="282" />
+      <xs:enumeration value="283" />
+      <xs:enumeration value="284" />
+      <xs:enumeration value="288" />
+      <xs:enumeration value="289" />
+      <xs:enumeration value="290" />
+      <xs:enumeration value="291" />
+      <xs:enumeration value="292" />
+      <xs:enumeration value="294" />
+      <xs:enumeration value="296" />
+      <xs:enumeration value="297" />
+      <xs:enumeration value="298" />
+      <xs:enumeration value="300" />
+      <xs:enumeration value="301" />
+      <xs:enumeration value="302" />
+      <xs:enumeration value="304" />
+      <xs:enumeration value="305" />
+      <xs:enumeration value="306" />
+      <xs:enumeration value="308" />
+      <xs:enumeration value="309" />
+      <xs:enumeration value="310" />
+      <xs:enumeration value="312" />
+      <xs:enumeration value="314" />
+      <xs:enumeration value="316" />
+      <xs:enumeration value="323" />
+      <xs:enumeration value="324" />
+      <xs:enumeration value="327" />
+      <xs:enumeration value="328" />
+      <xs:enumeration value="330" />
+      <xs:enumeration value="331" />
+      <xs:enumeration value="333" />
+      <xs:enumeration value="335" />
+      <xs:enumeration value="349" />
+      <xs:enumeration value="354" />
+      <xs:enumeration value="355" />
+      <xs:enumeration value="356" />
+      <xs:enumeration value="359" />
+      <xs:enumeration value="360" />
+      <xs:enumeration value="361" />
+      <xs:enumeration value="362" />
+      <xs:enumeration value="364" />
+      <xs:enumeration value="365" />
+      <xs:enumeration value="366" />
+      <xs:enumeration value="368" />
+      <xs:enumeration value="499" />
+      <xs:enumeration value="533" />
+      <xs:enumeration value="596" />
+      <xs:enumeration value="598" />
+      <xs:enumeration value="599" />
+      <xs:enumeration value="616" />
+      <xs:enumeration value="625" />
+      <xs:enumeration value="626" />
+      <xs:enumeration value="630" />
+      <xs:enumeration value="641" />
+      <xs:enumeration value="657" />
+      <xs:enumeration value="683" />
+      <xs:enumeration value="704" />
+      <xs:enumeration value="715" />
+      <xs:enumeration value="730" />
+      <xs:enumeration value="732" />
+      <xs:enumeration value="733" />
+      <xs:enumeration value="734" />
+      <xs:enumeration value="735" />
+      <xs:enumeration value="736" />
+      <xs:enumeration value="737" />
+      <xs:enumeration value="740" />
+      <xs:enumeration value="745" />
+      <xs:enumeration value="778" />
+      <xs:enumeration value="780" />
+      <xs:enumeration value="781" />
+      <xs:enumeration value="796" />
+      <xs:enumeration value="797" />
+      <xs:enumeration value="798" />
+      <xs:enumeration value="799" />
+      <xs:enumeration value="800" />
+      <xs:enumeration value="801" />
+      <xs:enumeration value="802" />
+      <xs:enumeration value="820" />
+      <xs:enumeration value="821" />
+      <xs:enumeration value="831" />
+      <xs:enumeration value="833" />
+      <xs:enumeration value="841" />
+      <xs:enumeration value="845" />
+      <xs:enumeration value="847" />
+      <xs:enumeration value="852" />
+      <xs:enumeration value="859" />
+      <xs:enumeration value="861" />
+      <xs:enumeration value="863" />
+      <xs:enumeration value="865" />
+      <xs:enumeration value="867" />
+      <xs:enumeration value="018" />
+      <xs:enumeration value="019" />
+      <xs:enumeration value="020" />
+      <xs:enumeration value="048" />
+      <xs:enumeration value="049" />
+      <xs:enumeration value="054" />
+      <xs:enumeration value="056" />
+      <xs:enumeration value="057" />
+      <xs:enumeration value="060" />
+      <xs:enumeration value="062" />
+      <xs:enumeration value="063" />
+      <xs:enumeration value="064" />
+      <xs:enumeration value="081" />
+      <xs:enumeration value="082" />
+      <xs:enumeration value="083" />
+      <xs:enumeration value="084" />
+      <xs:enumeration value="085" />
+      <xs:enumeration value="086" />
+      <xs:enumeration value="087" />
+      <xs:enumeration value="088" />
+      <xs:enumeration value="089" />
+      <xs:enumeration value="114" />
+      <xs:enumeration value="115" />
+      <xs:enumeration value="116" />
+      <xs:enumeration value="119" />
+      <xs:enumeration value="120" />
+      <xs:enumeration value="121" />
+      <xs:enumeration value="123" />
+      <xs:enumeration value="124" />
+      <xs:enumeration value="125" />
+      <xs:enumeration value="127" />
+      <xs:enumeration value="128" />
+      <xs:enumeration value="129" />
+      <xs:enumeration value="130" />
+      <xs:enumeration value="165" />
+      <xs:enumeration value="167" />
+      <xs:enumeration value="169" />
+      <xs:enumeration value="171" />
+      <xs:enumeration value="172" />
+      <xs:enumeration value="175" />
+      <xs:enumeration value="176" />
+      <xs:enumeration value="177" />
+      <xs:enumeration value="178" />
+      <xs:enumeration value="179" />
+      <xs:enumeration value="207" />
+      <xs:enumeration value="226" />
+      <xs:enumeration value="231" />
+      <xs:enumeration value="232" />
+      <xs:enumeration value="233" />
+      <xs:enumeration value="234" />
+      <xs:enumeration value="235" />
+      <xs:enumeration value="236" />
+      <xs:enumeration value="237" />
+      <xs:enumeration value="238" />
+      <xs:enumeration value="239" />
+      <xs:enumeration value="241" />
+      <xs:enumeration value="242" />
+      <xs:enumeration value="248" />
+      <xs:enumeration value="249" />
+      <xs:enumeration value="250" />
+      <xs:enumeration value="251" />
+      <xs:enumeration value="252" />
+      <xs:enumeration value="253" />
+      <xs:enumeration value="254" />
+      <xs:enumeration value="255" />
+      <xs:enumeration value="256" />
+      <xs:enumeration value="257" />
+      <xs:enumeration value="258" />
+      <xs:enumeration value="287" />
+      <xs:enumeration value="313" />
+      <xs:enumeration value="317" />
+      <xs:enumeration value="337" />
+      <xs:enumeration value="338" />
+      <xs:enumeration value="339" />
+      <xs:enumeration value="352" />
+      <xs:enumeration value="353" />
+      <xs:enumeration value="383" />
+      <xs:enumeration value="384" />
+      <xs:enumeration value="385" />
+      <xs:enumeration value="386" />
+      <xs:enumeration value="387" />
+      <xs:enumeration value="388" />
+      <xs:enumeration value="414" />
+      <xs:enumeration value="421" />
+      <xs:enumeration value="423" />
+      <xs:enumeration value="424" />
+      <xs:enumeration value="427" />
+      <xs:enumeration value="449" />
+      <xs:enumeration value="450" />
+      <xs:enumeration value="451" />
+      <xs:enumeration value="479" />
+      <xs:enumeration value="510" />
+      <xs:enumeration value="511" />
+      <xs:enumeration value="512" />
+      <xs:enumeration value="513" />
+      <xs:enumeration value="514" />
+      <xs:enumeration value="515" />
+      <xs:enumeration value="516" />
+      <xs:enumeration value="521" />
+      <xs:enumeration value="522" />
+      <xs:enumeration value="534" />
+      <xs:enumeration value="535" />
+      <xs:enumeration value="536" />
+      <xs:enumeration value="537" />
+      <xs:enumeration value="538" />
+      <xs:enumeration value="539" />
+      <xs:enumeration value="540" />
+      <xs:enumeration value="541" />
+      <xs:enumeration value="542" />
+      <xs:enumeration value="543" />
+      <xs:enumeration value="544" />
+      <xs:enumeration value="545" />
+      <xs:enumeration value="546" />
+      <xs:enumeration value="547" />
+      <xs:enumeration value="548" />
+      <xs:enumeration value="550" />
+      <xs:enumeration value="552" />
+      <xs:enumeration value="553" />
+      <xs:enumeration value="554" />
+      <xs:enumeration value="555" />
+      <xs:enumeration value="556" />
+      <xs:enumeration value="557" />
+      <xs:enumeration value="558" />
+      <xs:enumeration value="559" />
+      <xs:enumeration value="2541" />
+      <xs:enumeration value="2543" />
+      <xs:enumeration value="561" />
+      <xs:enumeration value="562" />
+      <xs:enumeration value="563" />
+      <xs:enumeration value="639" />
+      <xs:enumeration value="640" />
+      <xs:enumeration value="642" />
+      <xs:enumeration value="643" />
+      <xs:enumeration value="644" />
+      <xs:enumeration value="661" />
+      <xs:enumeration value="673" />
+      <xs:enumeration value="698" />
+      <xs:enumeration value="699" />
+      <xs:enumeration value="709" />
+      <xs:enumeration value="724" />
+      <xs:enumeration value="729" />
+      <xs:enumeration value="744" />
+      <xs:enumeration value="746" />
+      <xs:enumeration value="751" />
+      <xs:enumeration value="761" />
+      <xs:enumeration value="762" />
+      <xs:enumeration value="775" />
+      <xs:enumeration value="776" />
+      <xs:enumeration value="779" />
+      <xs:enumeration value="782" />
+      <xs:enumeration value="792" />
+      <xs:enumeration value="793" />
+      <xs:enumeration value="794" />
+      <xs:enumeration value="808" />
+      <xs:enumeration value="810" />
+      <xs:enumeration value="812" />
+      <xs:enumeration value="836" />
+      <xs:enumeration value="837" />
+      <xs:enumeration value="838" />
+      <xs:enumeration value="839" />
+      <xs:enumeration value="840" />
+      <xs:enumeration value="868" />
+      <xs:enumeration value="869" />
+      <xs:enumeration value="870" />
+      <xs:enumeration value="871" />
+      <xs:enumeration value="872" />
+      <xs:enumeration value="873" />
+      <xs:enumeration value="874" />
+      <xs:enumeration value="875" />
+      <xs:enumeration value="876" />
+      <xs:enumeration value="877" />
+      <xs:enumeration value="878" />
+      <xs:enumeration value="879" />
+      <xs:enumeration value="880" />
+      <xs:enumeration value="881" />
+      <xs:enumeration value="882" />
+      <xs:enumeration value="883" />
+      <xs:enumeration value="884" />
+      <xs:enumeration value="885" />
+      <xs:enumeration value="886" />
+      <xs:enumeration value="887" />
+      <xs:enumeration value="888" />
+      <xs:enumeration value="889" />
+      <xs:enumeration value="890" />
+      <xs:enumeration value="891" />
+      <xs:enumeration value="892" />
+      <xs:enumeration value="893" />
+      <xs:enumeration value="894" />
+      <xs:enumeration value="895" />
+      <xs:enumeration value="896" />
+      <xs:enumeration value="897" />
+      <xs:enumeration value="898" />
+      <xs:enumeration value="899" />
+      <xs:enumeration value="900" />
+      <xs:enumeration value="901" />
+      <xs:enumeration value="902" />
+      <xs:enumeration value="903" />
+      <xs:enumeration value="904" />
+      <xs:enumeration value="905" />
+      <xs:enumeration value="906" />
+      <xs:enumeration value="907" />
+      <xs:enumeration value="908" />
+      <xs:enumeration value="909" />
+      <xs:enumeration value="910" />
+      <xs:enumeration value="911" />
+      <xs:enumeration value="912" />
+      <xs:enumeration value="913" />
+      <xs:enumeration value="914" />
+      <xs:enumeration value="915" />
+      <xs:enumeration value="916" />
+      <xs:enumeration value="917" />
+      <xs:enumeration value="918" />
+      <xs:enumeration value="920" />
+      <xs:enumeration value="921" />
+      <xs:enumeration value="922" />
+      <xs:enumeration value="923" />
+      <xs:enumeration value="924" />
+      <xs:enumeration value="925" />
+      <xs:enumeration value="930" />
+      <xs:enumeration value="937" />
+      <xs:enumeration value="949" />
+      <xs:enumeration value="950" />
+      <xs:enumeration value="951" />
+      <xs:enumeration value="952" />
+      <xs:enumeration value="953" />
+      <xs:enumeration value="954" />
+      <xs:enumeration value="955" />
+      <xs:enumeration value="956" />
+      <xs:enumeration value="957" />
+      <xs:enumeration value="958" />
+      <xs:enumeration value="959" />
+      <xs:enumeration value="960" />
+      <xs:enumeration value="961" />
+      <xs:enumeration value="962" />
+      <xs:enumeration value="963" />
+      <xs:enumeration value="964" />
+      <xs:enumeration value="965" />
+      <xs:enumeration value="966" />
+      <xs:enumeration value="967" />
+      <xs:enumeration value="968" />
+      <xs:enumeration value="969" />
+      <xs:enumeration value="970" />
+      <xs:enumeration value="971" />
+      <xs:enumeration value="972" />
+      <xs:enumeration value="973" />
+      <xs:enumeration value="974" />
+      <xs:enumeration value="975" />
+      <xs:enumeration value="976" />
+      <xs:enumeration value="977" />
+      <xs:enumeration value="978" />
+      <xs:enumeration value="979" />
+      <xs:enumeration value="980" />
+      <xs:enumeration value="981" />
+      <xs:enumeration value="982" />
+      <xs:enumeration value="983" />
+      <xs:enumeration value="017" />
+      <xs:enumeration value="045" />
+      <xs:enumeration value="077" />
+      <xs:enumeration value="079" />
+      <xs:enumeration value="135" />
+      <xs:enumeration value="136" />
+      <xs:enumeration value="137" />
+      <xs:enumeration value="138" />
+      <xs:enumeration value="139" />
+      <xs:enumeration value="140" />
+      <xs:enumeration value="141" />
+      <xs:enumeration value="142" />
+      <xs:enumeration value="143" />
+      <xs:enumeration value="144" />
+      <xs:enumeration value="145" />
+      <xs:enumeration value="146" />
+      <xs:enumeration value="147" />
+      <xs:enumeration value="148" />
+      <xs:enumeration value="149" />
+      <xs:enumeration value="150" />
+      <xs:enumeration value="151" />
+      <xs:enumeration value="152" />
+      <xs:enumeration value="153" />
+      <xs:enumeration value="154" />
+      <xs:enumeration value="182" />
+      <xs:enumeration value="183" />
+      <xs:enumeration value="184" />
+      <xs:enumeration value="186" />
+      <xs:enumeration value="187" />
+      <xs:enumeration value="188" />
+      <xs:enumeration value="189" />
+      <xs:enumeration value="190" />
+      <xs:enumeration value="191" />
+      <xs:enumeration value="192" />
+      <xs:enumeration value="193" />
+      <xs:enumeration value="194" />
+      <xs:enumeration value="195" />
+      <xs:enumeration value="196" />
+      <xs:enumeration value="197" />
+      <xs:enumeration value="198" />
+      <xs:enumeration value="199" />
+      <xs:enumeration value="200" />
+      <xs:enumeration value="201" />
+      <xs:enumeration value="202" />
+      <xs:enumeration value="213" />
+      <xs:enumeration value="275" />
+      <xs:enumeration value="638" />
+      <xs:enumeration value="731" />
+      <xs:enumeration value="738" />
+      <xs:enumeration value="835" />
+      <xs:enumeration value="851" />
+      <xs:enumeration value="853" />
+      <xs:enumeration value="2545" />
+      <xs:enumeration value="2547" />
+      <xs:enumeration value="2551" />
+      <xs:enumeration value="2552" />
+      <xs:enumeration value="2561" />
+      <xs:enumeration value="2571" />
+      <xs:enumeration value="2581" />
+      <xs:enumeration value="276" />
+      <xs:enumeration value="3135" />
+      <xs:enumeration value="7923" />
+      <xs:enumeration value="9061" />
+      <xs:enumeration value="9062" />
+      <xs:enumeration value="9557" />
+      <xs:enumeration value="9642" />
+      <xs:enumeration value="9802" />
+      <xs:enumeration value="984" />
+      <xs:enumeration value="985" />
+      <xs:enumeration value="986" />
+      <xs:enumeration value="987" />
+      <xs:enumeration value="988" />
+      <xs:enumeration value="989" />
+      <xs:enumeration value="990" />
+      <xs:enumeration value="991" />
+      <xs:enumeration value="2553" />
+      <xs:enumeration value="2554" />
+      <xs:enumeration value="2555" />
+      <xs:enumeration value="2556" />
+      <xs:enumeration value="2557" />
+      <xs:enumeration value="2558" />
+      <xs:enumeration value="3831" />
+      <xs:enumeration value="5401" />
+      <xs:enumeration value="5423" />
+      <xs:enumeration value="5451" />
+      <xs:enumeration value="5562" />
+      <xs:enumeration value="6421" />
+      <xs:enumeration value="6422" />
+      <xs:enumeration value="6424" />
+      <xs:enumeration value="8361" />
+      <xs:enumeration value="8751" />
+      <xs:enumeration value="9111" />
+      <xs:enumeration value="9113" />
+      <xs:enumeration value="9245" />
+      <xs:enumeration value="9246" />
+      <xs:enumeration value="9491" />
+      <xs:enumeration value="9501" />
+      <xs:enumeration value="9641" />
+      <xs:enumeration value="9803" />
+      <xs:enumeration value="9805" />
+      <xs:enumeration value="6423" />
+      <xs:enumeration value="508" />
+      <xs:enumeration value="164" />
+      <xs:enumeration value="303" />
+      <xs:enumeration value="307" />
+      <xs:enumeration value="320" />
+      <xs:enumeration value="9910" />
+      <xs:enumeration value="9911" />
+      <xs:enumeration value="9912" />
+      <xs:enumeration value="9913" />
+      <xs:enumeration value="9914" />
+      <xs:enumeration value="9915" />
+      <xs:enumeration value="9916" />
+      <xs:enumeration value="9917" />
+      <xs:enumeration value="9918" />
+      <xs:enumeration value="9920" />
+      <xs:enumeration value="9921" />
+      <xs:enumeration value="9922" />
+      <xs:enumeration value="9923" />
+      <xs:enumeration value="9924" />
+      <xs:enumeration value="9925" />
+      <xs:enumeration value="9926" />
+      <xs:enumeration value="9927" />
+      <xs:enumeration value="9930" />
+      <xs:enumeration value="9931" />
+      <xs:enumeration value="9940" />
+      <xs:enumeration value="9941" />
+      <xs:enumeration value="9950" />
+      <xs:enumeration value="9951" />
+      <xs:enumeration value="9960" />
+      <xs:enumeration value="9961" />
+      <xs:enumeration value="9962" />
+      <xs:enumeration value="9970" />
+      <xs:enumeration value="9971" />
+      <xs:enumeration value="9980" />
+      <xs:enumeration value="9981" />
+      <xs:enumeration value="9982" />
+      <xs:enumeration value="9983" />
+      <xs:enumeration value="9985" />
+      <xs:enumeration value="9986" />
+      <xs:enumeration value="9987" />
+      <xs:enumeration value="9988" />
+      <xs:enumeration value="9990" />
+      <xs:enumeration value="9991" />
+      <xs:enumeration value="728" />
+      <xs:enumeration value="509" />
+      <xs:enumeration value="277" />
+      <xs:enumeration value="278" />
+      <xs:enumeration value="279" />
+      <xs:enumeration value="293" />
+      <xs:enumeration value="295" />
+      <xs:enumeration value="351" />
+      <xs:enumeration value="318" />
+      <xs:enumeration value="319" />
+      <xs:enumeration value="321" />
+      <xs:enumeration value="348" />
+      <xs:enumeration value="350" />
+      <xs:enumeration value="2311" />
+      <xs:enumeration value="2312" />
+      <xs:enumeration value="2313" />
+      <xs:enumeration value="2314" />
+      <xs:enumeration value="2315" />
+      <xs:enumeration value="2316" />
+      <xs:enumeration value="2351" />
+      <xs:enumeration value="2352" />
+      <xs:enumeration value="2353" />
+      <xs:enumeration value="2354" />
+      <xs:enumeration value="2355" />
+      <xs:enumeration value="2356" />
+      <xs:enumeration value="2357" />
+      <xs:enumeration value="426" />
+      <xs:enumeration value="747" />
+      <xs:enumeration value="340" />
+      <xs:enumeration value="341" />
+      <xs:enumeration value="9823" />
+      <xs:enumeration value="9822" />
+      <xs:enumeration value="3181" />
+      <xs:enumeration value="3231" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="tEnergyEfficiency">
+    <xs:sequence>
+      <xs:element minOccurs="1" maxOccurs="1" name="EnergyEfficiencyClass" type="tEfficiencyClass" />
+      <xs:element minOccurs="0" maxOccurs="1" name="EnergyEfficiencyImproving" type="tTextBlock" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:simpleType name="tEfficiencyClass">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="A++" />
+      <xs:enumeration value="A+" />
+      <xs:enumeration value="A" />
+      <xs:enumeration value="B" />
+      <xs:enumeration value="C" />
+      <xs:enumeration value="D" />
+      <xs:enumeration value="E" />
+      <xs:enumeration value="F" />
+      <xs:enumeration value="G" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="tDangerIndustrialClass">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Не относится к опасным производственным объектам" />
+      <xs:enumeration value="I" />
+      <xs:enumeration value="II" />
+      <xs:enumeration value="III" />
+      <xs:enumeration value="IV" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="tFireDangerCategory">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Категория не устанавливается" />
+      <xs:enumeration value="А" />
+      <xs:enumeration value="Б" />
+      <xs:enumeration value="В" />
+      <xs:enumeration value="Г" />
+      <xs:enumeration value="Д" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="tObjectParts">
+    <xs:sequence>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element minOccurs="0" maxOccurs="1" name="ComplexPart" type="tComplexPart" />
+        <xs:element minOccurs="0" maxOccurs="1" name="OKS" type="tOKS" />
+      </xs:choice>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="tComplexPart">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="Name" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Address" type="tAddress" />
+      <xs:element minOccurs="0" maxOccurs="1" name="FunctionsClass" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="FunctionsFeatures" type="tTextBlock" />
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="PowerIndicator" type="tTEI" />
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="TEI" type="tTEI" />
+      <xs:element minOccurs="1" maxOccurs="1" name="DangerousIndustrialObject" type="tDangerIndustrialClass" />
+      <xs:element minOccurs="0" maxOccurs="1" name="ObjectParts" type="ArrayOfChoice1" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Model" type="tModel" />
+    </xs:sequence>
+    <xs:attribute name="ObjectID" type="xs:ID" />
+  </xs:complexType>
+  <xs:complexType name="ArrayOfChoice1">
+    <xs:choice minOccurs="0" maxOccurs="unbounded">
+      <xs:element minOccurs="0" maxOccurs="1" name="ComplexPart" type="tComplexPart" />
+      <xs:element minOccurs="0" maxOccurs="1" name="OKS" type="tOKS" />
+    </xs:choice>
+  </xs:complexType>
+  <xs:complexType name="tOKS">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="Name" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Address" type="tAddress" />
+      <xs:element minOccurs="0" maxOccurs="1" name="FunctionsClass" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="FunctionsFeatures" type="tTextBlock" />
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="PowerIndicator" type="tTEI" />
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="TEI" type="tTEI" />
+      <xs:element minOccurs="0" maxOccurs="1" name="EnergyEfficiency" type="tEnergyEfficiency" />
+      <xs:element minOccurs="1" maxOccurs="1" name="DangerousIndustrialObject" type="tDangerIndustrialClass" />
+      <xs:element minOccurs="1" maxOccurs="1" name="FireDangerCategory" type="tFireDangerCategory" />
+      <xs:element minOccurs="0" maxOccurs="1" name="PeoplePermanentStay" type="tTextBlock" />
+      <xs:element minOccurs="1" maxOccurs="1" name="ResponsibilityLevel" type="tResponsibilityLevel" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Model" type="tModel" />
+    </xs:sequence>
+    <xs:attribute name="ObjectID" type="xs:ID" />
+  </xs:complexType>
+  <xs:simpleType name="tResponsibilityLevel">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="повышенный" />
+      <xs:enumeration value="нормальный" />
+      <xs:enumeration value="пониженный" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="tModel">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="Description" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="ModelFile" type="tModelFile" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="tModelFile">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="FileName" type="xs:normalizedString" />
+      <xs:element minOccurs="1" maxOccurs="1" name="FileFormat" type="tModelFormat" />
+      <xs:element minOccurs="0" maxOccurs="1" name="FileRelativePath" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="FileChecksum" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="SignFile" type="tSignFile" />
+    </xs:sequence>
+    <xs:attribute name="description" type="xs:string" />
+  </xs:complexType>
+  <xs:simpleType name="tModelFormat">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="IFC" />
+      <xs:enumeration value="XML" />
+      <xs:enumeration value="LandXML" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="tClimateConditions">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="ClimateNote" type="tTextBlock" />
+      <xs:element minOccurs="0" maxOccurs="1" name="DangerousNatureProcesses" type="tTextBlock" />
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="ClimateDistrict" type="tClimateDistrict" />
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="GeologicalConditions" type="tGeologicalConditions" />
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="WindDistrict" type="tWindDistrict" />
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="SnowDistrict" type="tSnowDistrict" />
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="SeismicActivity" type="tSeismicActivity" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:simpleType name="tClimateDistrict">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="I" />
+      <xs:enumeration value="IА" />
+      <xs:enumeration value="IБ" />
+      <xs:enumeration value="IВ" />
+      <xs:enumeration value="IГ" />
+      <xs:enumeration value="IД" />
+      <xs:enumeration value="II" />
+      <xs:enumeration value="IIА" />
+      <xs:enumeration value="IIБ" />
+      <xs:enumeration value="IIВ" />
+      <xs:enumeration value="IIГ" />
+      <xs:enumeration value="III" />
+      <xs:enumeration value="IIIА" />
+      <xs:enumeration value="IIIБ" />
+      <xs:enumeration value="IIIВ" />
+      <xs:enumeration value="IV" />
+      <xs:enumeration value="IVА" />
+      <xs:enumeration value="IVБ" />
+      <xs:enumeration value="IVВ" />
+      <xs:enumeration value="IVГ" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="tGeologicalConditions">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="I" />
+      <xs:enumeration value="II" />
+      <xs:enumeration value="III" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="tWindDistrict">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Iа" />
+      <xs:enumeration value="I" />
+      <xs:enumeration value="II" />
+      <xs:enumeration value="III" />
+      <xs:enumeration value="IV" />
+      <xs:enumeration value="V" />
+      <xs:enumeration value="VI" />
+      <xs:enumeration value="VII" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="tSnowDistrict">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="I" />
+      <xs:enumeration value="II" />
+      <xs:enumeration value="III" />
+      <xs:enumeration value="IV" />
+      <xs:enumeration value="V" />
+      <xs:enumeration value="VI" />
+      <xs:enumeration value="VII" />
+      <xs:enumeration value="VIII" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="tSeismicActivity">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="5" />
+      <xs:enumeration value="6" />
+      <xs:enumeration value="7" />
+      <xs:enumeration value="8" />
+      <xs:enumeration value="9" />
+      <xs:enumeration value="10" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="tResources">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="Note" type="tTextBlock" />
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Resource" type="tResource" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="tResource">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="Name" type="xs:string" />
+      <xs:element minOccurs="1" maxOccurs="1" name="Measure" type="tOKEI" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Value" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:simpleType name="tLandCategory">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="1" />
+      <xs:enumeration value="2" />
+      <xs:enumeration value="3" />
+      <xs:enumeration value="4" />
+      <xs:enumeration value="5" />
+      <xs:enumeration value="6" />
+      <xs:enumeration value="7" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="tLandInfo">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="CommonLandInfo" type="tTextBlock" />
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="LandAreaInfo" type="tLandAreaInfo" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="tLandAreaInfo">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="CadastralNumber" type="xs:string" />
+      <xs:element minOccurs="1" maxOccurs="1" name="LandCategory" type="tLandCategory" />
+      <xs:element minOccurs="0" maxOccurs="1" name="UsingNote" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="tSoftwareUsed">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="SoftwareNote" type="tTextBlock" />
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Software" type="tSoftware" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="tSoftware">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="Name" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Version" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="UsingNote" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="tStagesInfo">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="ReasonNote" type="tTextBlock" />
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Stage" type="tStage" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="tStage">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="Number" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="BeginDate" type="xs:date" />
+      <xs:element minOccurs="0" maxOccurs="1" name="EndDate" type="xs:date" />
+      <xs:element minOccurs="0" maxOccurs="1" name="OperationDate" type="xs:date" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Note" type="tTextBlock" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="ArrayOfTProjectDocumentationLink">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="ProjectDocumentationLink" type="tProjectDocumentationLink" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="tProjectDocumentationLink">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="DocNumber" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="DocSectionLink" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="tNuclearPlantFeatures">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="ObjectList" type="tTextBlock" />
+      <xs:element minOccurs="0" maxOccurs="1" name="NuclearSafety" type="tTextBlock" />
+      <xs:element minOccurs="0" maxOccurs="1" name="OperationalLimits" type="tTextBlock" />
+      <xs:element minOccurs="0" maxOccurs="1" name="NuclearPlantControl" type="tTextBlock" />
+      <xs:element minOccurs="0" maxOccurs="1" name="ReactorPlant" type="tTextBlock" />
+      <xs:element minOccurs="0" maxOccurs="1" name="NuclearSafitySoftware" type="tTextBlock" />
+      <xs:element minOccurs="0" maxOccurs="1" name="MonitoringPrograms" type="tMonitoringPrograms" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="tMonitoringPrograms">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="GeotechnicalMonitoring" type="tTextBlock" />
+      <xs:element minOccurs="0" maxOccurs="1" name="HydrogeologicalMonitoring" type="tTextBlock" />
+      <xs:element minOccurs="0" maxOccurs="1" name="SeismologicalMonitoring" type="tTextBlock" />
+      <xs:element minOccurs="0" maxOccurs="1" name="MeteorologicalMonitoring" type="tTextBlock" />
+      <xs:element minOccurs="0" maxOccurs="1" name="AerologicalMonitoring" type="tTextBlock" />
+      <xs:element minOccurs="0" maxOccurs="1" name="HydrologicalMonitoring" type="tTextBlock" />
+      <xs:element minOccurs="0" maxOccurs="1" name="GeodynamicalMonitoring" type="tTextBlock" />
+      <xs:element minOccurs="0" maxOccurs="1" name="TechnogenicMonitoring" type="tTextBlock" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="tNonLinearProjectDocumentContent">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="Section2" type="tProjectDocumentSection" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Section3" type="tProjectDocumentSection" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Section4" type="tProjectDocumentSection" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Section5" type="tSection5" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Section6" type="tProjectDocumentSection" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Section7" type="tProjectDocumentSection" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Section8" type="tProjectDocumentSection" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Section9" type="tProjectDocumentSection" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Section10" type="tProjectDocumentSection" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Section11" type="tProjectDocumentSection" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Section12" type="tSectionEstimate" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Section13" type="tOtherDocumentsSection" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="tProjectDocumentSection">
+    <xs:sequence>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element minOccurs="0" maxOccurs="1" name="Document" type="tProjectDocument" />
+        <xs:element minOccurs="0" maxOccurs="1" name="SubSection" type="tProjectDocumentSubSection" />
+      </xs:choice>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="tProjectDocument">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="DocName" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="DocNumber" type="xs:normalizedString" />
+      <xs:element minOccurs="0" maxOccurs="1" name="DocChanges" type="xs:normalizedString" />
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="File" type="tFile" />
+    </xs:sequence>
+    <xs:attribute name="ObjectIDREFS" type="xs:IDREFS" />
+  </xs:complexType>
+  <xs:complexType name="tProjectDocumentSubSection">
+    <xs:sequence>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element minOccurs="0" maxOccurs="1" name="Document" type="tProjectDocument" />
+        <xs:element minOccurs="0" maxOccurs="1" name="SubSection" type="tProjectDocumentSubSection" />
+      </xs:choice>
+    </xs:sequence>
+    <xs:attribute name="Name" type="xs:string" />
+  </xs:complexType>
+  <xs:complexType name="tSection5">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="ElectricitySupply" type="tProjectDocumentSection" />
+      <xs:element minOccurs="0" maxOccurs="1" name="WaterSupply" type="tProjectDocumentSection" />
+      <xs:element minOccurs="0" maxOccurs="1" name="WaterRemoval" type="tProjectDocumentSection" />
+      <xs:element minOccurs="0" maxOccurs="1" name="HeatingVentilation" type="tProjectDocumentSection" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Communication" type="tProjectDocumentSection" />
+      <xs:element minOccurs="0" maxOccurs="1" name="GasSupply" type="tProjectDocumentSection" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="tSectionEstimate">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="EstimateExplanatoryNote" type="tProjectDocumentSection" />
+      <xs:element minOccurs="0" maxOccurs="1" name="CostSummary" type="tProjectDocumentSection" />
+      <xs:element minOccurs="0" maxOccurs="1" name="SummaryEstimate" type="tProjectDocumentSection" />
+      <xs:element minOccurs="0" maxOccurs="1" name="ObjectLocalEstimates" type="tProjectDocumentSection" />
+      <xs:element minOccurs="0" maxOccurs="1" name="CostsEstimates" type="tProjectDocumentSection" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="tOtherDocumentsSection">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="IndustrialSafetyDeclaration" type="tProjectDocumentSection" />
+      <xs:element minOccurs="0" maxOccurs="1" name="HydraulicStructuresSafetyDeclaration" type="tProjectDocumentSection" />
+      <xs:element minOccurs="0" maxOccurs="1" name="EventsList" type="tProjectDocumentSection" />
+      <xs:element minOccurs="0" maxOccurs="1" name="OtherDocuments" type="tProjectDocumentSection" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:simpleType name="tPlacement">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="1" />
+      <xs:enumeration value="2" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="tDangerousAndComplex">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="1" />
+      <xs:enumeration value="2" />
+      <xs:enumeration value="3" />
+      <xs:enumeration value="4" />
+      <xs:enumeration value="5" />
+      <xs:enumeration value="6" />
+      <xs:enumeration value="7" />
+      <xs:enumeration value="8" />
+      <xs:enumeration value="9" />
+      <xs:enumeration value="10" />
+      <xs:enumeration value="11" />
+      <xs:enumeration value="12" />
+      <xs:enumeration value="13" />
+      <xs:enumeration value="14" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="tUnique">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="1" />
+      <xs:enumeration value="2" />
+      <xs:enumeration value="3" />
+      <xs:enumeration value="4" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="tLinearObject">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="Name" type="xs:string" />
+      <xs:element minOccurs="1" maxOccurs="1" name="ConstructionType" type="tConstructionType" />
+      <xs:element minOccurs="1" maxOccurs="1" name="ConstructionDuration" type="xs:decimal" />
+      <xs:element minOccurs="0" maxOccurs="1" name="ConstructionDates" type="tConstructionDates" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Address" type="tAddress" />
+      <xs:element minOccurs="0" maxOccurs="1" name="FinishAddress" type="tAddress" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Functions" type="tFunctions" />
+      <xs:element minOccurs="0" maxOccurs="1" name="FunctionsFeatures" type="tTextBlock" />
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="PowerIndicator" type="tTEI" />
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="TEI" type="tTEI" />
+      <xs:element minOccurs="1" maxOccurs="1" name="DangerousIndustrialObject" type="tDangerIndustrialClass" />
+      <xs:element minOccurs="0" maxOccurs="1" name="LinearObjectCategory" type="tTextBlock" />
+      <xs:element minOccurs="0" maxOccurs="1" name="LinearObjectClass" type="tTextBlock" />
+      <xs:element minOccurs="0" maxOccurs="1" name="LinearObjectNote" type="tTextBlock" />
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element minOccurs="1" maxOccurs="1" name="FireDangerCategory" type="tFireDangerCategory" />
+        <xs:element minOccurs="0" maxOccurs="1" name="ObjectParts" type="tObjectParts" />
+        <xs:element minOccurs="0" maxOccurs="1" name="PeoplePermanentStay" type="tTextBlock" />
+        <xs:element minOccurs="1" maxOccurs="1" name="ResponsibilityLevel" type="tResponsibilityLevel" />
+      </xs:choice>
+      <xs:element minOccurs="0" maxOccurs="1" name="ClimateConditions" type="tClimateConditions" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Routes" type="tRoutes" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Resources" type="tResources" />
+      <xs:element minOccurs="0" maxOccurs="1" name="ResourceUseInfo" type="tTextBlock" />
+      <xs:element minOccurs="0" maxOccurs="1" name="RenewableSourceInfo" type="tTextBlock" />
+      <xs:element minOccurs="1" maxOccurs="1" name="LandCategory" type="tLandCategory" />
+      <xs:element minOccurs="0" maxOccurs="1" name="LandInfo" type="tLandInfo" />
+      <xs:element minOccurs="0" maxOccurs="1" name="PatentsUsed" type="tTextBlock" />
+      <xs:element minOccurs="0" maxOccurs="1" name="SpecialRequirements" type="tTextBlock" />
+      <xs:element minOccurs="0" maxOccurs="1" name="SoftwareUsed" type="tSoftwareUsed" />
+      <xs:element minOccurs="0" maxOccurs="1" name="StagesInfo" type="tStagesInfo" />
+      <xs:element minOccurs="0" maxOccurs="1" name="DestroyFunds" type="tTextBlock" />
+      <xs:element minOccurs="0" maxOccurs="1" name="IndustrialSafetyLinks" type="ArrayOfTProjectDocumentationLink" />
+      <xs:element minOccurs="0" maxOccurs="1" name="LandReclamationLink" type="tTextBlock" />
+      <xs:element minOccurs="0" maxOccurs="1" name="GasNetworksFeatures" type="tGasNetworksFeatures" />
+      <xs:element minOccurs="0" maxOccurs="1" name="EngineeringTerritoryProtection" type="tTextBlock" />
+      <xs:element minOccurs="0" maxOccurs="1" name="ProjectDocumentation" type="tLinearProjectDocumentContent" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Model" type="tModel" />
+    </xs:sequence>
+    <xs:attribute name="ObjectID" type="xs:ID" />
+    <xs:attribute name="Placement" type="tPlacement" use="required" />
+    <xs:attribute name="DangerousAndComplex" type="tDangerousAndComplex" />
+    <xs:attribute name="Unique" type="tUnique" />
+  </xs:complexType>
+  <xs:complexType name="tRoutes">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="RoutesNote" type="tTextBlock" />
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Route" type="tRoute" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="tRoute">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="Name" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Note" type="tTextBlock" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="tGasNetworksFeatures">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="StrengthCalculation" type="tTextBlock" />
+      <xs:element minOccurs="0" maxOccurs="1" name="EnvironmentalProtection" type="tTextBlock" />
+      <xs:element minOccurs="0" maxOccurs="1" name="FireSafety" type="tTextBlock" />
+      <xs:element minOccurs="0" maxOccurs="1" name="OperationalSafety" type="tTextBlock" />
+      <xs:element minOccurs="0" maxOccurs="1" name="PerairFrequency" type="tTextBlock" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="tLinearProjectDocumentContent">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="Section2" type="tProjectDocumentSection" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Section3" type="tProjectDocumentSection" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Section4" type="tProjectDocumentSection" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Section5" type="tProjectDocumentSection" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Section6" type="tProjectDocumentSection" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Section7" type="tProjectDocumentSection" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Section8" type="tProjectDocumentSection" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Section9" type="tSectionEstimate" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Section10" type="tOtherDocumentsSection" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="tNonIndustrialObject">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="Name" type="xs:string" />
+      <xs:element minOccurs="1" maxOccurs="1" name="ConstructionType" type="tConstructionType" />
+      <xs:element minOccurs="1" maxOccurs="1" name="ConstructionDuration" type="xs:decimal" />
+      <xs:element minOccurs="0" maxOccurs="1" name="ConstructionDates" type="tConstructionDates" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Address" type="tAddress" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Functions" type="tFunctions" />
+      <xs:element minOccurs="0" maxOccurs="1" name="FunctionsFeatures" type="tTextBlock" />
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="PowerIndicator" type="tTEI" />
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="TEI" type="tTEI" />
+      <xs:element minOccurs="0" maxOccurs="1" name="EnergyEfficiency" type="tEnergyEfficiency" />
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element minOccurs="1" maxOccurs="1" name="FireDangerCategory" type="tFireDangerCategory" />
+        <xs:element minOccurs="0" maxOccurs="1" name="ObjectParts" type="tObjectParts" />
+        <xs:element minOccurs="0" maxOccurs="1" name="PeoplePermanentStay" type="tTextBlock" />
+        <xs:element minOccurs="1" maxOccurs="1" name="ResponsibilityLevel" type="tResponsibilityLevel" />
+      </xs:choice>
+      <xs:element minOccurs="0" maxOccurs="1" name="ClimateConditions" type="tClimateConditions" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Resources" type="tResources" />
+      <xs:element minOccurs="0" maxOccurs="1" name="RenewableSourceInfo" type="tTextBlock" />
+      <xs:element minOccurs="1" maxOccurs="1" name="LandCategory" type="tLandCategory" />
+      <xs:element minOccurs="0" maxOccurs="1" name="LandInfo" type="tLandInfo" />
+      <xs:element minOccurs="0" maxOccurs="1" name="LandFunds" type="tTextBlock" />
+      <xs:element minOccurs="0" maxOccurs="1" name="PatentsUsed" type="tTextBlock" />
+      <xs:element minOccurs="0" maxOccurs="1" name="SpecialRequirements" type="tTextBlock" />
+      <xs:element minOccurs="0" maxOccurs="1" name="StaffNote" type="tTextBlock" />
+      <xs:element minOccurs="0" maxOccurs="1" name="SoftwareUsed" type="tSoftwareUsed" />
+      <xs:element minOccurs="0" maxOccurs="1" name="StagesInfo" type="tStagesInfo" />
+      <xs:element minOccurs="0" maxOccurs="1" name="DestroyFunds" type="tTextBlock" />
+      <xs:element minOccurs="0" maxOccurs="1" name="EnergyEfficiencyLinks" type="ArrayOfTProjectDocumentationLink" />
+      <xs:element minOccurs="0" maxOccurs="1" name="LandReclamationLink" type="tTextBlock" />
+      <xs:element minOccurs="0" maxOccurs="1" name="ProjectDocumentation" type="tNonLinearProjectDocumentContent" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Model" type="tModel" />
+    </xs:sequence>
+    <xs:attribute name="ObjectID" type="xs:ID" />
+    <xs:attribute name="Placement" type="tPlacement" use="required" />
+    <xs:attribute name="DangerousAndComplex" type="tDangerousAndComplex" />
+    <xs:attribute name="Unique" type="tUnique" />
+  </xs:complexType>
+  <xs:complexType name="tDesignerAssurance">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="Assurance" type="tTextBlock" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Signer" type="tWorkPerson" />
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>

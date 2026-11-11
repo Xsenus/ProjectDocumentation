@@ -44,6 +44,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
         public ExplanatoryNoteEdit()
         {
             InitializeComponent();
+            txtVersion.Properties.ReadOnly = true;
 
             foreach (ExplanatoryNoteObjType item in Enum.GetValues(typeof(ExplanatoryNoteObjType)))
             {
@@ -140,7 +141,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                 cmbExplanatoryNoteObjType.SelectedIndex = 0;
             }
 
-            txtVersion.EditValue = ExplanatoryNote.SchemaVersion;
+            txtVersion.EditValue = "01.03";
 
             #region Page General Information
             txtExplanatoryNoteNumber.EditValue = ExplanatoryNote?.ExplanatoryNoteNumber;
@@ -393,12 +394,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
 
             try
             {
-                var schemaVersion = txtVersion.EditValue?.ToString()?.Trim();
-                if (string.IsNullOrWhiteSpace(schemaVersion))
-                {
-                    schemaVersion = "01.03";
-                }
-                ExplanatoryNote.SchemaVersion = schemaVersion;
+                ExplanatoryNote.SchemaVersion = "01.03";
 
                 #region Page General Information
                 ExplanatoryNote.ExplanatoryNoteNumber = ConclusionEdit.GetStringValue(txtExplanatoryNoteNumber.EditValue, txtExplanatoryNoteNumber, "Заполните шифр пояснительной записки");

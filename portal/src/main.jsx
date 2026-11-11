@@ -1,24 +1,26 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { createRoot } from 'react-dom/client';
-import SchemaForm, { groupLabels, normalPath, sectionFor, sectionProgress } from './SchemaForm.jsx';
+import SchemaForm, { groupLabelsFor, normalPath, sectionFor, sectionProgress } from './SchemaForm.jsx';
+import { documentFamilies, familyForDocument, familyForId, familyRequest } from './documentFamilies.js';
 import { api, downloadXml, parseXml, readXmlFile, schemaVersion, serializeXml } from './xml.js';
 import './styles.css';
 
 const host = window.chrome?.webview;
-const currentVersion = '01.04';
-const supportedVersions = new Set(['01.03', currentVersion]);
-const draftsKey = 'project-documentation:conclusion-drafts:v1';
+const initialFamily = familyForId(new URLSearchParams(window.location.search).get('family'));
 const previewCsp = `<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; img-src data:; base-uri 'none'; form-action 'none'">`;
 
-function getDrafts() {
-  if (host) return [];
-  try {
-    const saved = JSON.parse(localStorage.getItem(draftsKey) || '[]');
-    return Array.isArray(saved) ? saved.filter(item => typeof item.id === 'string' &&
-      typeof item.name === 'string' && typeof item.xml === 'string') : [];
-  } catch {
-    return [];
-  }
+function loadDrafts() {
+  if (host) return {};
+  return Object.fromEntries(Object.values(documentFamilies).map(family => {
+    try {
+      const saved = JSON.parse(localStorage.getItem(family.draftsKey) || '[]');
+      const documents = Array.isArray(saved) ? saved.filter(item => item && typeof item.id === 'string' &&
+        typeof item.name === 'string' && typeof item.xml === 'string') : [];
+      return [family.id, documents];
+    } catch {
+      return [family.id, []];
+    }
+  }));
 }
 
 function requestMessage(error) {
@@ -30,9 +32,15 @@ function versionLabel(version) {
 }
 
 function defaultName(document) {
-  const object = Array.from(document.documentElement.children).find(node => node.localName === 'Object');
+  const family = familyForDocument(document);
+  const children = Array.from(document.documentElement.children);
+  if (family.id === 'explanatorynote') {
+    const number = children.find(node => node.localName === 'ExplanatoryNoteNumber')?.textContent?.trim();
+    return number ? family.title + ' № ' + number : family.title;
+  }
+  const object = children.find(node => node.localName === 'Object');
   const name = object && Array.from(object.children).find(node => /^(Name|ObjectName)$/i.test(node.localName))?.textContent?.trim();
-  return name || 'Заключение экспертизы';
+  return name || family.title;
 }
 
 function nameFromFile(name) {
@@ -48,10 +56,10 @@ function sandboxedPreview(html) {
   return head.test(html) ? html.replace(head, match => match + previewCsp) : previewCsp + html;
 }
 
-function exportCopy(document, version) {
-  if (!supportedVersions.has(version)) return serializeXml(document);
+function exportCopy(document, family, version) {
+  if (!family.schemaVersions.includes(version)) return serializeXml(document);
   const copy = document.cloneNode(true);
-  const base = 'conclusion-' + version.replace('.', '-');
+  const base = family.id + '-' + version.replace('.', '-');
   const xsi = 'http://www.w3.org/2001/XMLSchema-instance';
   copy.documentElement.setAttributeNS(xsi, 'xsi:noNamespaceSchemaLocation', base + '.xsd');
   Array.from(copy.childNodes)
@@ -71,7 +79,8 @@ function ValidationPanel({ validation, onField }) {
         <span className="validation-icon" aria-hidden="true">{validation.valid ? '✓' : '!'}</span>
         <div>
           <strong>{validation.valid ? 'XML прошёл проверку' : 'XML требует исправлений'}</strong>
-          <p>{validation.valid ? 'Схема ' + versionLabel(validation.version) : 'Ошибок: ' + errors.length}</p>
+          <p>{validation.validationBasis === 'legacy-wire' ? 'Совместимость с форматом приложения 01.03' :
+            validation.valid ? 'Схема ' + versionLabel(validation.version) : 'Ошибок: ' + errors.length}</p>
         </div>
       </div>
       {errors.length > 0 && (
@@ -115,7 +124,8 @@ function MigrationPanel({ result, onApply, onCancel }) {
 }
 
 function App() {
-  const [model, setModel] = useState(null);
+  const [profiles, setProfiles] = useState({});
+  const [selectedFamily, setSelectedFamily] = useState(initialFamily);
   const [document, setDocument] = useState(null);
   const [name, setName] = useState('');
   const [section, setSection] = useState('details');
@@ -132,7 +142,7 @@ function App() {
   const [original, setOriginal] = useState(null);
   const [raw, setRaw] = useState('');
   const [rawBase, setRawBase] = useState('');
-  const [drafts, setDrafts] = useState(getDrafts);
+  const [draftsByFamily, setDraftsByFamily] = useState(loadDrafts);
   const [activeDraft, setActiveDraft] = useState(null);
   const [showDrafts, setShowDrafts] = useState(false);
   const [, refresh] = useState(0);
@@ -142,8 +152,18 @@ function App() {
   const documentRef = useRef(null);
   const keys = useRef(new WeakMap());
   const nextKey = useRef(0);
+  const family = familyForDocument(document) || selectedFamily;
+  const currentVersion = family.latestVersion;
   const currentDocumentVersion = schemaVersion(document);
+  const profileVersion = family.formVersions.includes(currentDocumentVersion) ? currentDocumentVersion : currentVersion;
+  const profileKey = family.id + '@' + profileVersion;
+  const model = profiles[profileKey];
   const formReady = Boolean(model && document && model.version === currentDocumentVersion);
+  const groupLabels = groupLabelsFor(family.id);
+  const drafts = draftsByFamily[family.id] || [];
+  const migrationTarget = Object.hasOwn(family.migrationTargets, currentDocumentVersion)
+    ? family.migrationTargets[currentDocumentVersion]
+    : !currentDocumentVersion && family.id === 'explanatorynote' ? currentVersion : undefined;
   const rawDirty = raw !== rawBase;
   const errorPaths = useMemo(() => new Set((validation?.errors || []).map(error => normalPath(error.path))), [validation]);
 
@@ -154,14 +174,16 @@ function App() {
 
   function replaceDocument(xml, title, options = {}) {
     const next = parseXml(xml);
+    const nextFamily = familyForDocument(next);
     const canonical = serializeXml(next);
     documentRef.current = next;
     revision.current++;
+    setSelectedFamily(nextFamily);
     setDocument(next);
     setName(title?.trim() || defaultName(next));
     setReadOnly(Boolean(options.readOnly));
-    setSection(options.section ? sectionFor(options.section) : 'details');
-    setTab(schemaVersion(next) === currentVersion ? 'form' : 'xml');
+    setSection(options.section ? sectionFor(options.section, nextFamily.id) : 'details');
+    setTab(nextFamily.formVersions.includes(schemaVersion(next)) ? 'form' : 'xml');
     setValidation(null);
     setPreview('');
     setMigration(null);
@@ -176,15 +198,30 @@ function App() {
   }
 
   useEffect(() => {
+    window.document.title = family.collection;
+  }, [family]);
+
+  useEffect(() => {
+    if (model) return undefined;
     const controller = new AbortController();
-    api('schema', undefined, controller.signal).then(schema => {
-      setModel(schema);
-      if (host || documentRef.current) return;
-      return api('new', undefined, controller.signal).then(({ xml }) => {
-        if (!documentRef.current) replaceDocument(xml, 'Новое заключение');
-      });
+    api(familyRequest('schema', family, profileVersion), undefined, controller.signal).then(profile => {
+      if (profile.version !== profileVersion || profile.root?.name !== family.root) {
+        throw new Error('Сервис вернул профиль другой схемы.');
+      }
+      setProfiles(previous => ({ ...previous, [profileKey]: profile }));
     }).catch(error => {
       if (error.name !== 'AbortError') setProblem(requestMessage(error));
+    });
+    return () => controller.abort();
+  }, [family, profileVersion, profileKey, model]);
+
+  useEffect(() => {
+    if (host) return undefined;
+    const controller = new AbortController();
+    api(familyRequest('new', initialFamily), undefined, controller.signal).then(({ xml }) => {
+      if (!documentRef.current && !operation.current) replaceDocument(xml, initialFamily.newTitle);
+    }).catch(error => {
+      if (error.name !== 'AbortError' && !documentRef.current) setProblem(requestMessage(error));
     });
     return () => controller.abort();
   }, []);
@@ -200,12 +237,15 @@ function App() {
         if (typeof message.xml === 'string' && message.xml.trim()) {
           try { replaceDocument(message.xml, message.name, message); } catch (error) { setProblem(error.message); }
         } else {
-          api('new').then(({ xml }) => replaceDocument(xml, message.name, message)).catch(error => setProblem(requestMessage(error)));
+          const requestedFamily = message.family ? familyForId(message.family) : initialFamily;
+          api(familyRequest('new', requestedFamily))
+            .then(({ xml }) => replaceDocument(xml, message.name || requestedFamily.newTitle, message))
+            .catch(error => setProblem(requestMessage(error)));
         }
       } else if (message?.type === 'error') {
-        setProblem(message.message || 'Не удалось сохранить заключение.');
+        setProblem(message.message || 'Не удалось сохранить документ.');
       } else if (message?.type === 'saved') {
-        setNotice('Заключение сохранено.');
+        setNotice('Документ сохранён.');
         setDirty(false);
       }
     };
@@ -257,11 +297,11 @@ function App() {
     }
   }
 
-  function newDocument() {
+  function newDocument(requestedFamily = family) {
     if (!permitReplacement()) return;
-    run('Создаю заключение', async () => {
-      const { xml } = await api('new');
-      replaceDocument(xml, 'Новое заключение');
+    run(requestedFamily.createProgress, async () => {
+      const { xml } = await api(familyRequest('new', requestedFamily));
+      replaceDocument(xml, requestedFamily.newTitle);
       setShowDrafts(false);
     });
   }
@@ -290,6 +330,15 @@ function App() {
   function applyRaw() {
     try {
       const next = parseXml(raw);
+      const nextFamily = familyForDocument(next);
+      if (nextFamily.id !== family.id) {
+        if (host) throw new Error('Тип открытого документа нельзя изменить.');
+        setSelectedFamily(nextFamily);
+        setSection('details');
+        setActiveDraft(null);
+        setOriginal(null);
+        setConversionWarnings([]);
+      }
       const canonical = serializeXml(next);
       documentRef.current = next;
       setDocument(next);
@@ -335,11 +384,13 @@ function App() {
 
   function exportCurrent() {
     run('Проверяю перед выгрузкой', async () => {
-      const xml = exportCopy(document, currentDocumentVersion);
+      const xml = exportCopy(document, family, currentDocumentVersion);
       const result = await validateSnapshot(xml, revision.current);
       if (result?.valid) {
         downloadXml(xml, name + ' ' + currentDocumentVersion);
-        setNotice('XML выгружен. Схема и стиль доступны в разделе «Файлы схемы».');
+        setNotice(family.schemaVersions.includes(currentDocumentVersion)
+          ? 'XML выгружен. Схема и стиль доступны в разделе «Файлы схемы».'
+          : 'XML выгружен в исходном формате приложения.');
       } else if (result) {
         setNotice('Исправьте ошибки перед выгрузкой или скачайте черновик.');
       }
@@ -360,9 +411,9 @@ function App() {
   function previewMigration() {
     const serial = revision.current;
     const snapshot = serializeXml(document);
-    const targetVersion = currentDocumentVersion === currentVersion ? '01.03' : currentVersion;
+    if (!migrationTarget) return;
     run('Преобразую XML', async () => {
-      const result = await api('migrate', { xml: snapshot, targetVersion });
+      const result = await api('migrate', { xml: snapshot, targetVersion: migrationTarget });
       if (isExactRevision(revision, serial)) setMigration({ ...result, snapshot, serial });
     });
   }
@@ -384,11 +435,15 @@ function App() {
 
   function saveDraft() {
     const id = activeDraft || crypto.randomUUID();
-    const draft = { id, name: name.trim() || defaultName(document), xml: serializeXml(document), updatedAt: new Date().toISOString() };
+    const draft = {
+      id, name: name.trim() || defaultName(document), xml: serializeXml(document), updatedAt: new Date().toISOString(),
+      original: original ? { xml: original.xml, name: original.name } : undefined,
+      warnings: conversionWarnings,
+    };
     const updated = [draft, ...drafts.filter(item => item.id !== id)];
     try {
-      localStorage.setItem(draftsKey, JSON.stringify(updated));
-      setDrafts(updated);
+      localStorage.setItem(family.draftsKey, JSON.stringify(updated));
+      setDraftsByFamily(previous => ({ ...previous, [family.id]: updated }));
       setActiveDraft(id);
       setDirty(false);
       setNotice('Черновик сохранён в этом браузере.');
@@ -400,7 +455,7 @@ function App() {
   function openDraft(draft) {
     if (!permitReplacement()) return;
     try {
-      replaceDocument(draft.xml, draft.name, { draftId: draft.id });
+      replaceDocument(draft.xml, draft.name, { draftId: draft.id, original: draft.original, warnings: draft.warnings });
       setShowDrafts(false);
     } catch (error) {
       setProblem(error.message);
@@ -411,8 +466,8 @@ function App() {
     if (!window.confirm('Удалить черновик «' + draft.name + '» из браузера?')) return;
     const updated = drafts.filter(item => item.id !== draft.id);
     try {
-      localStorage.setItem(draftsKey, JSON.stringify(updated));
-      setDrafts(updated);
+      localStorage.setItem(family.draftsKey, JSON.stringify(updated));
+      setDraftsByFamily(previous => ({ ...previous, [family.id]: updated }));
       if (activeDraft === draft.id) {
         setActiveDraft(null);
         setDirty(true);
@@ -429,7 +484,7 @@ function App() {
     }
     const normalized = normalPath(path);
     const name = normalized.split('/').filter(Boolean)[1]?.replace(/\[\d+\]/g, '');
-    setSection(sectionFor(name));
+    setSection(sectionFor(name, family.id));
     setTab('form');
     requestAnimationFrame(function reveal() {
       let frames = 0;
@@ -456,20 +511,29 @@ function App() {
   }
 
   const actionsDisabled = Boolean(busy || rawDirty || !document);
-  const versionSuffix = supportedVersions.has(currentDocumentVersion) ? currentDocumentVersion.replace('.', '-') : '01-04';
-  const context = { types: model?.types || {}, depth: 0, readOnly, lockGuid: Boolean(host), bridge: host, errorPaths, change, keyFor };
+  const hasSchemaAssets = family.schemaVersions.includes(currentDocumentVersion);
+  const assetVersion = hasSchemaAssets ? currentDocumentVersion : currentVersion;
+  const assetBase = '/schemas/' + family.id + '-' + assetVersion.replace('.', '-');
+  const context = { types: model?.types || {}, depth: 0, readOnly, lockGuid: Boolean(host),
+    idAttribute: family.idAttribute, bridge: host, errorPaths, change, keyFor };
 
   return (
     <div className="application">
       <header className="app-header">
         <div className="brand">
           <span className="brand-symbol" aria-hidden="true"><i></i><i></i><i></i></span>
-          <div><strong>Проектная документация</strong><span>Заключения экспертизы</span></div>
+          <div><strong>Проектная документация</strong><span>{family.collection}</span></div>
         </div>
         <div className="header-actions">
           {!host && (
             <>
-              <button type="button" className="header-button" disabled={Boolean(busy)} onClick={newDocument}>Новое заключение</button>
+              <select className="header-family" aria-label="Вид документа" value={family.id} disabled={Boolean(busy)}
+                onChange={event => newDocument(familyForId(event.target.value))}>
+                {Object.values(documentFamilies).map(option => (
+                  <option key={option.id} value={option.id}>{option.title}</option>
+                ))}
+              </select>
+              <button type="button" className="header-button" disabled={Boolean(busy)} onClick={() => newDocument()}>{family.newAction}</button>
               <button type="button" className="header-button header-primary" disabled={Boolean(busy)}
                 onClick={() => permitReplacement() && fileInput.current.click()}>Открыть XML</button>
             </>
@@ -487,8 +551,8 @@ function App() {
                 <button className={showDrafts ? 'selected' : ''} type="button" onClick={() => setShowDrafts(true)}>Черновики <span>{drafts.length}</span></button>
               </div>
             )}
-            <h2>Разделы заключения</h2>
-            <nav className="section-nav" aria-label="Разделы заключения">
+            <h2>{family.sectionsTitle}</h2>
+            <nav className="section-nav" aria-label={family.sectionsTitle}>
               {Object.entries(groupLabels).map(([id, label]) => (
                 <button type="button" key={id} className={!showDrafts && tab === 'form' && section === id ? 'active' : ''}
                   aria-current={!showDrafts && tab === 'form' && section === id ? 'page' : undefined}
@@ -501,8 +565,8 @@ function App() {
             </nav>
             <div className="sidebar-bottom">
               <h2>Файлы схемы</h2>
-              <a href={'/schemas/conclusion-' + versionSuffix + '.xsd'} download>Схема XSD {versionLabel(currentDocumentVersion || currentVersion)}</a>
-              <a href={'/schemas/conclusion-' + versionSuffix + '.xsl'} download>Стиль просмотра XSL</a>
+              <a href={assetBase + '.xsd'} download>Схема XSD {assetVersion}</a>
+              <a href={assetBase + '.xsl'} download>Стиль XSL {assetVersion}</a>
             </div>
           </div>
         </aside>
@@ -515,7 +579,7 @@ function App() {
           {showDrafts ? (
             <section className="paper library">
               <h1>Черновики</h1>
-              <p className="muted">Документы, сохранённые в этом браузере.</p>
+              <p className="muted">{family.collection}, сохранённые в этом браузере.</p>
               {drafts.length ? <ul className="draft-list">{drafts.map(draft => (
                 <li key={draft.id}>
                   <button type="button" className="draft-item" onClick={() => openDraft(draft)}>
@@ -528,10 +592,11 @@ function App() {
             </section>
           ) : !document ? (
             <section className="paper empty-document">
-              <h1>Заключение экспертизы</h1>
-              <p className="muted">{host ? 'Открываю документ…' : 'Создайте заключение или откройте XML версии 01.03 или 01.04.'}</p>
+              <h1>{family.title}</h1>
+              <p className="muted">{host ? 'Открываю документ…' : 'Создайте документ или откройте XML.'}</p>
               {!host && <div className="inline-actions">
-                <button className="button button-primary" type="button" disabled={Boolean(busy)} onClick={newDocument}>Создать заключение</button>
+                <button className="button button-primary" type="button" disabled={Boolean(busy)}
+                  onClick={() => newDocument()}>{family.createAction}</button>
                 <button className="button button-quiet" type="button" disabled={Boolean(busy)} onClick={() => fileInput.current.click()}>Открыть XML</button>
               </div>}
             </section>
@@ -543,7 +608,7 @@ function App() {
                     <span className="version-label">XML {versionLabel(currentDocumentVersion)}</span>
                     {(dirty || rawDirty) && <span>Есть несохранённые изменения</span>}
                   </div>
-                  <h1>{name.trim() || 'Заключение экспертизы'}</h1>
+                  <h1>{name.trim() || family.title}</h1>
                 </div>
                 <div className="document-actions">
                   <button type="button" className="button button-quiet" disabled={actionsDisabled} onClick={validateCurrent}>Проверить XML</button>
@@ -566,10 +631,13 @@ function App() {
                   </label>
                   <div className="utility-actions">
                     {!host && <button type="button" className="text-button" disabled={actionsDisabled} onClick={saveDraft}>Сохранить в браузере</button>}
-                    {supportedVersions.has(currentDocumentVersion) && (
+                    {migrationTarget && (
                       <button type="button" className="text-button" disabled={actionsDisabled} onClick={previewMigration}>
-                        {currentDocumentVersion === currentVersion ? 'Преобразовать в 01.03' : 'Преобразовать в 01.04'}
+                        Преобразовать в {migrationTarget}
                       </button>
+                    )}
+                    {host && currentDocumentVersion !== currentVersion && (
+                      <button type="button" className="text-button" disabled={actionsDisabled} onClick={exportCurrent}>Выгрузить XML</button>
                     )}
                     {original && <button type="button" className="text-button" onClick={() => {
                       try { downloadXml(original.file || serializeXml(parseXml(original.xml)), original.name + ' (исходный)'); }
@@ -597,19 +665,22 @@ function App() {
                     <button type="button" className={tab === 'form' ? 'selected' : ''} disabled={!formReady || rawDirty}
                       onClick={() => setTab('form')}>Форма</button>
                     <button type="button" className={tab === 'xml' || tab !== 'preview' && !formReady ? 'selected' : ''} onClick={openXmlView}>XML</button>
-                    <button type="button" className={tab === 'preview' ? 'selected' : ''} disabled={actionsDisabled || !supportedVersions.has(currentDocumentVersion)}
+                    <button type="button" className={tab === 'preview' ? 'selected' : ''} disabled={actionsDisabled || !hasSchemaAssets}
                       onClick={showPreview}>Предпросмотр</button>
                   </div>
                 </div>
                 {tab === 'preview' ? (
-                  <iframe className="print-preview" title="Предпросмотр заключения" sandbox="" referrerPolicy="no-referrer"
+                  <iframe className="print-preview" title={family.previewTitle} sandbox="" referrerPolicy="no-referrer"
                     srcDoc={sandboxedPreview(preview)} />
                 ) : tab === 'form' && formReady ? (
                   <SchemaForm key={keyFor(document.documentElement)} model={model} document={document} section={section} context={context} />
                 ) : (
                   <div className="raw-panel">
-                    {currentDocumentVersion !== currentVersion && (
-                      <p className="feedback feedback-info">Форма доступна для 01.04. Этот документ можно проверить, открыть как XML и преобразовать в 01.04.</p>
+                    {!family.formVersions.includes(currentDocumentVersion) && (
+                      <p className="feedback feedback-info">
+                        Форма доступна для {family.formVersions.join(' и ')}. Этот документ можно открыть как XML
+                        {migrationTarget && ' и преобразовать в ' + migrationTarget}.
+                      </p>
                     )}
                     <textarea className="raw-editor" aria-label="Содержимое XML" value={raw} spellCheck={false} readOnly={readOnly}
                       onChange={event => { setRaw(event.target.value); setMigration(null); revision.current++; }} />

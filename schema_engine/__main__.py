@@ -5,17 +5,17 @@ import json
 import mimetypes
 from pathlib import Path
 from threading import Thread
-from urllib.parse import unquote, urlsplit
+from urllib.parse import parse_qs, unquote, urlsplit
 import webbrowser
 
-from schema_engine.schema import CONCLUSION_SCHEMAS, SCHEMA_DIRECTORY, form_schema, new_conclusion, validate_conclusion
+from schema_engine.documents import DEFAULT_FAMILY, DOCUMENTS, SCHEMA_ASSETS, SCHEMA_DIRECTORY, resolve_version
+from schema_engine.schema import form_schema, new_document, validate_document
 from schema_engine.xmlio import MAX_XML_SIZE
 
 
 PORTAL = SCHEMA_DIRECTORY.parent.parent / 'portal' / 'dist'
 MAX_REQUEST_SIZE = MAX_XML_SIZE * 2 + 4096
 DEVELOPMENT_ORIGINS = {'http://127.0.0.1:5173', 'http://localhost:5173'}
-SCHEMA_ASSETS = {*CONCLUSION_SCHEMAS.values(), *(name.replace('.xsd', '.xsl') for name in CONCLUSION_SCHEMAS.values())}
 
 
 class Handler(BaseHTTPRequestHandler):
@@ -64,11 +64,20 @@ class Handler(BaseHTTPRequestHandler):
     def do_GET(self):
         if not self._trusted_request():
             return
-        path = urlsplit(self.path).path
-        if path == '/api/schema':
-            self._json(form_schema())
-        elif path == '/api/new':
-            self._json({'xml': new_conclusion()})
+        request = urlsplit(self.path)
+        path = request.path
+        if path in {'/api/schema', '/api/new'}:
+            try:
+                parameters = parse_qs(request.query, keep_blank_values=True, max_num_fields=16)
+                family = parameters.get('family', [DEFAULT_FAMILY])[0]
+                version = resolve_version(family, parameters.get('version', [None])[0])
+                result = form_schema(family, version) if path == '/api/schema' else {
+                    'xml': new_document(family, version), 'family': family, 'version': version,
+                }
+            except ValueError as error:
+                self._json({'error': str(error)}, HTTPStatus.BAD_REQUEST)
+            else:
+                self._json(result)
         elif path.startswith('/schemas/') and (asset := path.removeprefix('/schemas/')) in SCHEMA_ASSETS:
             self._file(SCHEMA_DIRECTORY / asset, attachment=True)
         elif path.startswith(('/api/', '/schemas/')):
@@ -112,7 +121,7 @@ class Handler(BaseHTTPRequestHandler):
             return
 
         if path == '/api/validate':
-            self._json(validate_conclusion(body['xml']))
+            self._json(validate_document(body['xml']))
             return
 
         try:
@@ -121,7 +130,7 @@ class Handler(BaseHTTPRequestHandler):
                 result = {'html': render_preview(body['xml'])}
             else:
                 from schema_engine.migration import migrate_xml
-                result = migrate_xml(body['xml'], body.get('targetVersion', '01.04'))
+                result = migrate_xml(body['xml'], body.get('targetVersion'))
         except ValueError as error:
             self._json({'error': str(error)}, HTTPStatus.BAD_REQUEST)
         else:
@@ -129,12 +138,13 @@ class Handler(BaseHTTPRequestHandler):
 
 
 def main():
-    parser = ArgumentParser(description='Локальный сервис XML-заключений и React-портала.')
+    parser = ArgumentParser(description='Локальный сервис проектной документации и React-портала.')
     parser.add_argument('--host', choices=['127.0.0.1'], default='127.0.0.1')
     parser.add_argument('--port', type=int, default=8765)
     parser.add_argument('--open-browser', action='store_true')
     options = parser.parse_args()
-    form_schema()
+    for family in DOCUMENTS:
+        form_schema(family)
     with ThreadingHTTPServer((options.host, options.port), Handler) as server:
         server.portal = PORTAL.resolve()
         url = f'http://{options.host}:{server.server_port}'

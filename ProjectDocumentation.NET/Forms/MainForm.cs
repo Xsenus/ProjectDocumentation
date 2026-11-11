@@ -28,6 +28,7 @@ namespace ProjectDocumentation.NET.Forms
         {
             InitializeComponent();
             InitializeConclusionCommands();
+            InitializeExplanatoryNoteCommands();
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
@@ -53,6 +54,7 @@ namespace ProjectDocumentation.NET.Forms
                 }
 
                 UpdateConclusionCommands(gridView.GetFocusedRow());
+                UpdateExplanatoryNoteCommands(gridView.GetFocusedRow());
                 popupMenu.ShowPopup(new Point(Cursor.Position.X, Cursor.Position.Y));
             }
         }
@@ -65,7 +67,7 @@ namespace ProjectDocumentation.NET.Forms
                 form.ShowDialog();
                 if (form.ObjXPO != null)
                 {
-                    await UpdateGridDataSourceAsync(nameof(XmlObjXPO.Guid), form.ObjXPO);
+                    await UpdateGridDataSourceAsync(nameof(XmlObjXPO.Guid), form.ObjXPO.Guid);
                 }
             }
         }
@@ -305,6 +307,22 @@ namespace ProjectDocumentation.NET.Forms
                     }
                 }
 
+                if (gridView.GetFocusedRow() is ExplanatoryNoteXPO note)
+                {
+                    var xml = note.GetObj();
+                    var version = ExplanatoryNote0107Document.ReadVersion(xml);
+                    if (CanPreviewExplanatoryNote(version))
+                    {
+                        await ExportSchemaDocumentAsync(xml, version, note.Guid, "ExplanatoryNote", ExplanatoryNote0107Document.Family);
+                        return;
+                    }
+
+                    if (!ExplanatoryNoteController.IsLegacyXml(xml))
+                    {
+                        throw new InvalidOperationException("Не удалось определить поддерживаемую версию пояснительной записки.");
+                    }
+                }
+
                 var fileName = default(string);
                 if (gridView.GetRow(gridView.FocusedRowHandle) is ConclusionXPO conclusionXPO)
                 {
@@ -379,29 +397,7 @@ namespace ProjectDocumentation.NET.Forms
 
         private async void barBtnAddExplanatoryNote_ItemClick(object sender, ItemClickEventArgs e)
         {
-            using (var form = new ExplanatoryNoteEdit())
-            {
-                form.ShowDialog();
-
-                if (form.IsSave)
-                {
-                    var explanatoryNoteXPO = new ExplanatoryNoteXPO(Session)
-                    {
-                        Name = form.FileName
-                    };
-
-                    var xml = form.ExplanatoryNote.GetSerializeExplanatoryNote();
-                    if (!CheckSerialized(xml))
-                    {
-                        return;
-                    }
-
-                    explanatoryNoteXPO.SetObj(xml);
-                    await Session.SaveAsync(explanatoryNoteXPO);
-
-                    await UpdateGridDataSourceAsync(nameof(XmlObjXPO.Guid), explanatoryNoteXPO.Guid);
-                }
-            }
+            await AddCurrentExplanatoryNoteAsync();
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
@@ -456,6 +452,19 @@ namespace ProjectDocumentation.NET.Forms
             else if (gridView.GetRow(gridView.FocusedRowHandle) is ExplanatoryNoteXPO explanatoryNoteXPO)
             {
                 var xml = explanatoryNoteXPO.GetObj();
+                var version = ExplanatoryNote0107Document.ReadVersion(xml);
+                if (version == ExplanatoryNote0107Document.CurrentVersion)
+                {
+                    await EditCurrentExplanatoryNoteAsync(explanatoryNoteXPO);
+                    return;
+                }
+
+                if (version == ExplanatoryNote0107Document.CompatibleVersion)
+                {
+                    await ConvertExplanatoryNoteAsync(explanatoryNoteXPO);
+                    return;
+                }
+
                 var explanatoryNote = ExplanatoryNoteController.GetExplanatoryNoteByString(xml);
                 if (!CheckDeserialized(explanatoryNote))
                 {
@@ -531,6 +540,13 @@ namespace ProjectDocumentation.NET.Forms
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
         private void barBtnView_ItemClick(object sender, ItemClickEventArgs e)
         {
+            if (gridView.GetFocusedRow() is ExplanatoryNoteXPO note &&
+                CanPreviewExplanatoryNote(ExplanatoryNote0107Document.ReadVersion(note.GetObj())))
+            {
+                ViewExplanatoryNote(note);
+                return;
+            }
+
             if (gridView.GetRow(gridView.FocusedRowHandle) is ConclusionXPO conclusionXPO)
             {
                 var xml = conclusionXPO.GetObj();

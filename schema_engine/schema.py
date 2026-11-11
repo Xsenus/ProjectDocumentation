@@ -1,36 +1,64 @@
 from functools import lru_cache
 from itertools import islice
-from pathlib import Path
 from uuid import uuid4
 from xml.etree import ElementTree as ET
 
+from lxml import etree
 from xmlschema import XMLSchema11
 from xmlschema.validators import XsdAssert, XsdElement, XsdGroup
 
+from .documents import (
+    DEFAULT_FAMILY, DOCUMENTS, FAMILIES_BY_ROOT, SCHEMA_DIRECTORY, document_version,
+    legacy_note_format, resolve_version, schema_filename,
+)
 from .xmlio import parse_document
 
 
-CURRENT_VERSION = '01.04'
-SCHEMA_DIRECTORY = Path(__file__).with_name('schemas')
-CONCLUSION_SCHEMAS = {
-    '01.03': 'conclusion-01-03.xsd',
-    '01.04': 'conclusion-01-04.xsd',
-}
 XSD = '{http://www.w3.org/2001/XMLSchema}'
+XML_ID = '{http://www.w3.org/XML/1998/namespace}id'
 MAX_VALIDATION_ERRORS = 200
 
 
-@lru_cache(maxsize=len(CONCLUSION_SCHEMAS))
-def conclusion_schema(version):
-    return XMLSchema11(SCHEMA_DIRECTORY / CONCLUSION_SCHEMAS[version], allow='local', defuse='always')
+@lru_cache(maxsize=None)
+def _compiled_schema(family, version):
+    source = SCHEMA_DIRECTORY / schema_filename(family, version)
+    if family == 'explanatorynote' and not legacy_note_format(family, version):
+        source = _note_validation_source(source)
+    return XMLSchema11(source, allow='local', defuse='always')
 
 
-def new_conclusion():
-    root = ET.Element('Conclusion', {'ConclusionGUID': str(uuid4()), 'SchemaVersion': CURRENT_VERSION})
+def _note_validation_source(path):
+    # The official note schemas repeat Name and Symbol xml:ids in documentation.
+    # Keep the original files for download, and preserve all validation rules here.
+    parser = etree.XMLParser(collect_ids=False, resolve_entities=False, no_network=True, load_dtd=False)
+    root = etree.parse(str(path), parser).getroot()
+    documentation_ids = {}
+    for node in root.iter(XSD + 'documentation'):
+        if value := node.get(XML_ID):
+            documentation_ids.setdefault(value, []).append(node)
+    for nodes in documentation_ids.values():
+        if len(nodes) > 1:
+            for node in nodes:
+                del node.attrib[XML_ID]
+    return etree.tostring(root, encoding='utf-8')
+
+
+def new_document(family=DEFAULT_FAMILY, version=None):
+    version = resolve_version(family, version)
+    document = DOCUMENTS[family]
+    root = ET.Element(document.root, {document.id_attribute: str(uuid4()), 'SchemaVersion': version})
     return ET.tostring(root, encoding='utf-8', xml_declaration=True).decode('utf-8')
 
 
+def new_conclusion():
+    return new_document()
+
+
 def validate_conclusion(xml):
+    return validate_document(xml, expected_family=DEFAULT_FAMILY)
+
+
+def validate_document(xml, expected_family=None):
     try:
         root = parse_document(xml)
     except ET.ParseError as error:
@@ -40,23 +68,30 @@ def validate_conclusion(xml):
     except (ValueError, UnicodeError) as error:
         return {'valid': False, 'version': None, 'errors': [{'path': '/', 'message': str(error)}]}
 
-    version = root.get('SchemaVersion')
-    if root.tag != 'Conclusion':
-        return {'valid': False, 'version': version, 'errors': [
-            {'path': '/', 'message': 'Ожидается корневой элемент Conclusion без пространства имён.'},
-        ]}
-    if version not in CONCLUSION_SCHEMAS:
-        return {'valid': False, 'version': version, 'errors': [
-            {'path': '/Conclusion/@SchemaVersion', 'message': 'Укажите версию заключения 01.03 или 01.04.'},
+    family = FAMILIES_BY_ROOT.get(root.tag)
+    if family is None or (expected_family is not None and family != expected_family):
+        expected = DOCUMENTS[expected_family].root if expected_family else 'Conclusion или ExplanatoryNote'
+        return {'valid': False, 'version': root.get('SchemaVersion'), 'errors': [
+            {'path': '/', 'message': f'Ожидается корневой элемент {expected} без пространства имён.'},
         ]}
 
-    validation_errors = conclusion_schema(version).iter_errors(root, use_defaults=False)
-    errors = [_validation_error(error) for error in islice(validation_errors, MAX_VALIDATION_ERRORS + 1)]
+    version = document_version(root, family)
+    metadata = {'family': family, 'version': version}
+    document = DOCUMENTS[family]
+    path = '/' + document.root
+    if version not in document.versions:
+        return {'valid': False, **metadata, 'errors': [
+            {'path': path + '/@SchemaVersion', 'message': f'Укажите версию {", ".join(document.versions)}.'},
+        ]}
+
+    metadata['validationBasis'] = 'legacy-wire' if legacy_note_format(family, version) else 'official-xsd'
+    validation_errors = _compiled_schema(family, version).iter_errors(root, use_defaults=False)
+    errors = [_validation_error(error, path) for error in islice(validation_errors, MAX_VALIDATION_ERRORS + 1)]
     if len(errors) > MAX_VALIDATION_ERRORS:
         errors[MAX_VALIDATION_ERRORS:] = [
-            {'path': '/Conclusion', 'message': 'Показаны первые 200 ошибок. После исправления запустите проверку ещё раз.'},
+            {'path': path, 'message': 'Показаны первые 200 ошибок. После исправления запустите проверку ещё раз.'},
         ]
-    return {'valid': not errors, 'version': version, 'errors': errors}
+    return {'valid': not errors, **metadata, 'errors': errors}
 
 
 def _documentation(component):
@@ -68,8 +103,8 @@ def _documentation(component):
     )
 
 
-def _validation_error(error):
-    result = {'path': error.path or '/Conclusion', 'message': error.reason or error.message}
+def _validation_error(error, root_path):
+    result = {'path': error.path or root_path, 'message': error.reason or error.message}
     if isinstance(error.validator, XsdAssert):
         result['code'] = 'xsd-assertion'
         result['message'] = _documentation(error.validator) or result['message']
@@ -138,8 +173,12 @@ class _FormSchema:
         return key
 
 
-@lru_cache(maxsize=1)
-def form_schema():
+def form_schema(family=DEFAULT_FAMILY, version=None):
+    return _form_schema(family, resolve_version(family, version))
+
+
+@lru_cache(maxsize=None)
+def _form_schema(family, version):
     profile = _FormSchema()
-    root = profile.element(conclusion_schema(CURRENT_VERSION).elements['Conclusion'])
-    return {'version': CURRENT_VERSION, 'root': root, 'types': profile.types}
+    root = profile.element(_compiled_schema(family, version).elements[DOCUMENTS[family].root])
+    return {'family': family, 'version': version, 'root': root, 'types': profile.types}

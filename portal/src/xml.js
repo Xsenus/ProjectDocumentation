@@ -1,3 +1,5 @@
+import { familyForRoot } from './documentFamilies.js';
+
 const XML_HEADER = '<?xml version="1.0" encoding="UTF-8"?>';
 const unsafeDeclarations = /<!\s*(DOCTYPE|ENTITY)\b/i;
 const declaration = /^\uFEFF?\s*<\?xml\s+[^?]*\?>\s*/i;
@@ -12,8 +14,8 @@ export function parseXml(xml) {
       document.getElementsByTagNameNS('http://www.mozilla.org/newlayout/xml/parsererror.xml', 'parsererror').length) {
     throw new Error('Проверьте структуру XML. Документ не удалось прочитать.');
   }
-  if (document.documentElement?.localName !== 'Conclusion') {
-    throw new Error('Нужен XML заключения экспертизы с корневым элементом Conclusion.');
+  if (!familyForRoot(document.documentElement?.localName)) {
+    throw new Error('Нужен XML заключения экспертизы (Conclusion) или пояснительной записки (ExplanatoryNote).');
   }
   return document;
 }

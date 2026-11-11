@@ -268,3 +268,19 @@ button.error-path:hover { text-decoration: underline; }
 .lookup-results dt { font-weight: 650; font-size: .81rem; }
 .lookup-results dd { margin: 3px 0 0; font-size: .86rem; overflow-wrap: anywhere; }
 @media (max-width: 530px) { .lookup-query, .lookup-results dl { grid-template-columns: minmax(0,1fr); } }
+.header-family {
+  width: auto;
+  max-width: 210px;
+  min-height: 40px;
+  flex: 1 1 170px;
+  padding: 8px 11px;
+  background: #25455e;
+  border-color: #57748e;
+  color: #edf6ff;
+  font-size: .85rem;
+}
+@media (max-width: 650px) {
+  .app-header { flex-wrap: wrap; }
+  .header-actions { width: 100%; flex-wrap: wrap; }
+  .header-family { max-width: none; }
+}
