@@ -67,16 +67,9 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
         {
             try
             {
-                ObjectPart.Name = ConclusionEdit.GetStringValue(memoObjectName.Text, memoObjectName, "Заполните поле наименование объекта капитального строительства");
-                //ObjectPart.Type = ConclusionEdit.GetEnumByAttributeValue<tObjectType>(ConclusionEdit.GetValueGeneralizedDictionary(
-                //   cmbObjectType,
-                //   message: "Заполните поле вид объекта капитального строительства")?.Value);
-                ObjectPart.FunctionsClass = ConclusionEdit.GetStringValue(cmbFunctionsClass.EditValue?.ToString(), cmbFunctionsClass, "Функциональное назначение объекта капитального строительства (код по классификатору)");
-                if (cmbObjectAddress.EditValue is TAddress objectAddress)
-                {
-                    ObjectPart.Address.Add(objectAddress);
-                }
-                else
+                gridViewTEI.PostEditor();
+                gridViewTEI.UpdateCurrentRow();
+                if (!(cmbObjectAddress.EditValue is TAddress objectAddress))
                 {
                     XtraMessageBox.Show("Укажите адрес объекта.", "Информационное сообщение", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     cmbObjectAddress.Focus();
@@ -117,14 +110,15 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                         }
                     }
 
-                    if (_tTEIs != null)
-                    {
-                        foreach (var item in _tTEIs)
-                        {
-                            ObjectPart.Tei.Add(item);
-                        }
-                    }
                 }
+
+                ObjectPart.Name = ConclusionEdit.GetStringValue(memoObjectName.Text, memoObjectName, "Заполните поле наименование объекта капитального строительства");
+                ObjectPart.FunctionsClass = ConclusionEdit.GetStringValue(cmbFunctionsClass.EditValue, cmbFunctionsClass,
+                    "Функциональное назначение объекта капитального строительства (код по классификатору)");
+                if (ObjectPart.Address.Count == 0) ObjectPart.Address.Add(objectAddress);
+                else ObjectPart.Address[0] = objectAddress;
+                ObjectPart.Tei.Clear();
+                foreach (var item in _tTEIs) ObjectPart.Tei.Add(item);
             }
             catch (Exception ex)
             {
@@ -259,7 +253,12 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
             //  ?.FirstOrDefault(f => f.ValueInt == ObjectPart?.Type.GetEnumXmlAttributeValueInt());
             cmbFunctionsClass.EditValue = ObjectPart?.FunctionsClass;
             cmbObjectAddress.EditValue = ObjectPart?.Address?.FirstOrDefault();
-            _tTEIs = ObjectPart?.Tei?.ToList() ?? new List<Ttei>();
+            _tTEIs = ObjectPart.Tei.Select(item => new Ttei
+            {
+                Name = item.Name,
+                Measure = item.Measure,
+                Value = item.Value
+            }).ToList();
             gridControlTEI.DataSource = _tTEIs;
             if (gridViewTEI.Columns[nameof(Ttei.Name)] is GridColumn gridTEIName)
             {

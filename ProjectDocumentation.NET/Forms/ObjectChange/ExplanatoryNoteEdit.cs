@@ -17,6 +17,7 @@ using ProjectDocumentation.NET.Models.ExplanatoryNoteObj;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -397,6 +398,10 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
 
             try
             {
+                gridViewModifications.PostEditor();
+                gridViewModifications.UpdateCurrentRow();
+                gridViewUsedNorms.PostEditor();
+                gridViewUsedNorms.UpdateCurrentRow();
                 ExplanatoryNote.SchemaVersion = "01.03";
 
                 #region Page General Information
@@ -492,13 +497,14 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                     noteObject.ConstructionType = ConclusionEdit.GetEnumByAttributeValue<tConstructionType>(ConclusionEdit.GetValueGeneralizedDictionary(
                         cmbConstructionType,
                         message: "Заполните поле вид работ, на который разрабатывается проектная документация")?.Value);
-                    // Продолжительность — decimal (например, 1,5 месяца): int.TryParse отбрасывал такие значения.
-                    var constructionDurationText = ConclusionEdit.GetStringValue(txtConstructionDuration.EditValue, txtConstructionDuration, "Заполните поле продолжительность работ, месяц");
-                    if (decimal.TryParse(constructionDurationText, System.Globalization.NumberStyles.Number, System.Globalization.CultureInfo.CurrentCulture, out decimal resultConstructionDuration)
-                        || decimal.TryParse(constructionDurationText, System.Globalization.NumberStyles.Number, System.Globalization.CultureInfo.InvariantCulture, out resultConstructionDuration))
+                    var constructionDurationText = txtConstructionDuration.Text.Trim().Replace(',', '.');
+                    if (!decimal.TryParse(constructionDurationText, NumberStyles.AllowDecimalPoint | NumberStyles.AllowLeadingSign,
+                        CultureInfo.InvariantCulture, out var constructionDuration))
                     {
-                        noteObject.ConstructionDuration = resultConstructionDuration;
+                        txtConstructionDuration.Focus();
+                        throw new InvalidOperationException("Введите продолжительность работ в месяцах. Например, 1,5.");
                     }
+                    noteObject.ConstructionDuration = constructionDuration;
                     if (noteObject is IDangerousIndustrialObject dangerousIndustrialObject)
                     {
                         dangerousIndustrialObject.DangerousIndustrialObject = ConclusionEdit.GetEnumByAttributeValue<tDangerIndustrialClass>(ConclusionEdit.GetValueGeneralizedDictionary(
@@ -936,7 +942,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
 
         private void barBtnUsedNormsDel_ItemClick(object sender, ItemClickEventArgs e)
         {
-            if (gridViewModifications.GetRow(gridViewModifications.FocusedRowHandle) is tUsedNorm obj)
+            if (gridViewUsedNorms.GetFocusedRow() is tUsedNorm obj)
             {
                 if (XtraMessageBox.Show(
                     "Вы действительно хотите удалить выделенный объект?",

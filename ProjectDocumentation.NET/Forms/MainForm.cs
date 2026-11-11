@@ -13,15 +13,23 @@ using DevExpress.XtraGrid.Views.Grid;
 using ProjectDocumentation.NET.Forms.ObjectChange;
 using ProjectDocumentation.NET.Services;
 using System;
+using System.ComponentModel;
+using System.Diagnostics;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Xml.Linq;
 
 namespace ProjectDocumentation.NET.Forms
 {
     public partial class MainForm : XtraForm
     {
+        private BarButtonItem validateDocument;
+        private BarButtonItem editLegacyFields;
+        private bool checkingDocument;
+
         private Session Session => SessionController.GetSession();
 
         public MainForm()
@@ -41,27 +49,44 @@ namespace ProjectDocumentation.NET.Forms
             var addNote = new BarButtonItem(barManager, "Добавить пояснительную записку 01.03");
             addNote.ItemClick += AddClassicExplanatoryNote_ItemClick;
             classic.AddItem(addNote);
+            editLegacyFields = new BarButtonItem(barManager, "Все поля выбранного документа 01.03…");
+            editLegacyFields.ItemClick += EditLegacyFields_ItemClick;
+            classic.AddItem(editLegacyFields).BeginGroup = true;
             popupMenu.AddItem(classic);
 
-            var toolbar = new Bar { BarName = "Документы" };
+            var checks = new BarSubItem(barManager, "Проверка и реестр");
+            validateDocument = new BarButtonItem(barManager, "Проверить выбранный XML");
+            validateDocument.ItemClick += ValidateSelectedDocument_ItemClick;
+            checks.AddItem(validateDocument);
+            var externalCheck = new BarButtonItem(barManager, "Открыть проверку Главгосэкспертизы");
+            externalCheck.ItemClick += (_, __) => OpenExternalService("https://checkxml.gge.ru/");
+            checks.AddItem(externalCheck);
+            var registry = new BarButtonItem(barManager, "Открыть поиск в ЕГРЗ");
+            registry.ItemClick += (_, __) => OpenExternalService("https://egrz.ru/organisation/reestr-advance/latest");
+            checks.AddItem(registry);
+
+            AddDocumentBar("Документы", 0, barBtnAddConclusion, barBtnAddExplanatoryNote, classic, barBtnLoad);
+            AddDocumentBar("Действия с документом", 1, barBtnView, barBtnEdit, barBtnFill, checks);
+
+            gridView.FocusedRowChanged += (_, __) => UpdateDocumentCommands(gridView.GetFocusedRow());
+            popupMenu.CloseUp += (_, __) => UpdateDocumentCommands(gridView.GetFocusedRow());
+            UpdateDocumentCommands(null);
+        }
+
+        private void AddDocumentBar(string name, int row, params BarItem[] commands)
+        {
+            var toolbar = new Bar { BarName = name };
             toolbar.OptionsBar.AllowQuickCustomization = false;
             toolbar.OptionsBar.DrawDragBorder = false;
             toolbar.OptionsBar.UseWholeRow = true;
             barManager.Bars.Add(toolbar);
             toolbar.DockStyle = BarDockStyle.Top;
-            foreach (var item in new BarItem[]
-            {
-                barBtnAddConclusion, barBtnAddExplanatoryNote, classic, barBtnLoad,
-                barBtnView, barBtnEdit, barBtnFill
-            })
+            toolbar.DockRow = row;
+            foreach (var item in commands)
             {
                 item.PaintStyle = BarItemPaintStyle.CaptionGlyph;
                 toolbar.AddItem(item);
             }
-
-            gridView.FocusedRowChanged += (_, __) => UpdateDocumentCommands(gridView.GetFocusedRow());
-            popupMenu.CloseUp += (_, __) => UpdateDocumentCommands(gridView.GetFocusedRow());
-            UpdateDocumentCommands(null);
         }
 
         private void UpdateDocumentCommands(object row)
@@ -72,8 +97,115 @@ namespace ProjectDocumentation.NET.Forms
             barBtnEdit.Enabled = isDocument;
             barBtnDel.Enabled = isDocument;
             barBtnFill.Enabled = isDocument;
+            validateDocument.Enabled = isDocument && !checkingDocument;
+            editLegacyFields.Enabled = row is XmlObjXPO record && CanEditLegacyFields(record, record.GetObj());
             UpdateConclusionCommands(row);
             UpdateExplanatoryNoteCommands(row);
+        }
+
+        private static bool CanEditLegacyFields(XmlObjXPO record, string xml)
+        {
+            if (record is ConclusionXPO)
+                return Conclusion0104Document.CanUseLegacyEditor(Conclusion0104Document.ReadVersion(xml));
+
+            return record is ExplanatoryNoteXPO && ExplanatoryNoteController.IsLegacyXml(xml);
+        }
+
+        private async void EditLegacyFields_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            if (!(gridView.GetFocusedRow() is XmlObjXPO record)) return;
+
+            try
+            {
+                var originalXml = record.GetObj();
+                if (!CanEditLegacyFields(record, originalXml)) return;
+
+                var originalName = record.Name;
+                var guid = record.Guid ?? throw new InvalidOperationException("У записи отсутствует идентификатор в базе данных.");
+                var note = record is ExplanatoryNoteXPO;
+                var root = note ? ExplanatoryNote0107Document.RootName : Conclusion0104Document.RootName;
+                var document = SchemaXmlDocument.Parse(originalXml, root);
+                var version = (string)document.Root.Attribute("SchemaVersion");
+                if (string.IsNullOrWhiteSpace(version)) document.Root.SetAttributeValue("SchemaVersion", "01.03");
+                var xml = document.ToString(SaveOptions.DisableFormatting);
+                using (var editor = new LegacySchemaDocumentForm(conclusionSchema, xml, originalName,
+                    note ? ExplanatoryNote0107Document.Family : "conclusion",
+                    (value, title) => SchemaXmlDocument.PersistAsync(value, title, guid,
+                        create: null, existing: record, previousName: originalName, previousXml: originalXml)))
+                {
+                    if (editor.ShowDialog(this) == DialogResult.OK && editor.Document != null)
+                        await UpdateGridDataSourceAsync(nameof(XmlObjXPO.Guid), guid);
+                }
+            }
+            catch (Exception error)
+            {
+                if (record is ExplanatoryNoteXPO) ShowExplanatoryNoteError(error);
+                else ShowConclusionError(error);
+            }
+        }
+
+        private async void ValidateSelectedDocument_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            if (checkingDocument || !(gridView.GetFocusedRow() is XmlObjXPO record)) return;
+
+            var name = record.Name;
+            var xml = record.GetObj();
+            checkingDocument = true;
+            validateDocument.Enabled = false;
+            try
+            {
+                var result = await conclusionSchema.ValidateAsync(xml);
+                if (IsDisposed || Disposing) return;
+                var basis = result.ValidationBasis == "legacy-wire" ? "локальный формат совместимости" : "комплектная XSD";
+                var version = result.Version ?? "не определена";
+                var newline = Environment.NewLine;
+                var header = $"Документ: {name}{newline}Версия: {version}";
+                if (result.ValidationBasis != null) header += $"{newline}Проверка: {basis}";
+                var details = result.Valid
+                    ? "Ошибок формата не найдено."
+                    : string.Join(newline + newline, result.Errors.Select(error => $"{error.Path}{newline}{error.Message}"));
+                using (var report = new XtraForm
+                {
+                    Text = "Результат проверки XML",
+                    StartPosition = FormStartPosition.CenterParent,
+                    Size = new Size(720, result.Valid ? 220 : 520),
+                    MinimumSize = new Size(450, 210)
+                })
+                {
+                    var memo = new MemoEdit { Dock = DockStyle.Fill, Text = header + newline + newline + details };
+                    memo.Properties.ReadOnly = true;
+                    var close = new SimpleButton { Dock = DockStyle.Bottom, Text = "Закрыть", DialogResult = DialogResult.OK, TabIndex = 0 };
+                    memo.TabIndex = 1;
+                    report.Controls.Add(memo);
+                    report.Controls.Add(close);
+                    report.AcceptButton = close;
+                    report.CancelButton = close;
+                    report.ActiveControl = close;
+                    report.ShowDialog(this);
+                }
+            }
+            catch (Exception error)
+            {
+                if (!IsDisposed && !Disposing)
+                    XtraMessageBox.Show(this, error.Message, "Ошибка проверки XML", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            finally
+            {
+                checkingDocument = false;
+                if (!IsDisposed && !Disposing) UpdateDocumentCommands(gridView.GetFocusedRow());
+            }
+        }
+
+        private void OpenExternalService(string address)
+        {
+            try
+            {
+                Process.Start(new ProcessStartInfo(address) { UseShellExecute = true })?.Dispose();
+            }
+            catch (Win32Exception error)
+            {
+                XtraMessageBox.Show(this, error.Message, "Не удалось открыть браузер", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]

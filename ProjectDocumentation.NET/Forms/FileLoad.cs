@@ -4,8 +4,10 @@ using DevExpress.XtraEditors;
 using DevExpress.XtraEditors.Controls;
 using ProjectDocumentation.NET.Services;
 using System;
+using System.IO;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Xml;
 
 namespace ProjectDocumentation.NET.Forms
 {
@@ -13,12 +15,65 @@ namespace ProjectDocumentation.NET.Forms
     {
         public XmlObjXPO ObjXPO { get; private set; }
 
+        private string suggestedName;
+        private bool importing;
+
         public FileLoad() : this(null) { }
 
         internal FileLoad(ConclusionSchemaService conclusionSchema)
         {
             this.conclusionSchema = conclusionSchema;
             InitializeComponent();
+            btnFile.EditValueChanged += (_, __) => txtDocumentType.EditValue = null;
+            btnFile.Validated += (_, __) => DescribeSelectedFile();
+            FormClosing += (_, e) =>
+            {
+                if (importing && ObjXPO == null && e.CloseReason == CloseReason.UserClosing) e.Cancel = true;
+            };
+        }
+
+        private void DescribeSelectedFile()
+        {
+            var path = btnFile.EditValue?.ToString()?.Trim();
+            if (string.IsNullOrWhiteSpace(path)) return;
+
+            try
+            {
+                var (rootName, version) = SchemaXmlDocument.ReadFileHeader(path);
+                DescribeFile(path, rootName, version);
+            }
+            catch (Exception error) when (error is IOException || error is UnauthorizedAccessException ||
+                error is XmlException || error is InvalidOperationException || error is ArgumentException || error is NotSupportedException)
+            {
+                txtDocumentType.EditValue = "Не удалось определить тип XML";
+                txtDocumentType.ToolTip = error.Message;
+            }
+        }
+
+        private void DescribeFile(string path, string rootName, string version)
+        {
+            string kind;
+            switch (rootName)
+            {
+                case Conclusion0104Document.RootName:
+                    kind = "Заключение";
+                    break;
+                case ExplanatoryNote0107Document.RootName:
+                    kind = "Пояснительная записка";
+                    break;
+                default:
+                    throw new InvalidOperationException("Выберите XML заключения или пояснительной записки.");
+            }
+
+            txtDocumentType.EditValue = string.IsNullOrWhiteSpace(version)
+                ? $"{kind} (версия в XML не указана)"
+                : $"{kind} {version}";
+            txtDocumentType.ToolTip = string.Empty;
+            if (string.IsNullOrWhiteSpace(txtName.Text) || txtName.Text == suggestedName)
+            {
+                suggestedName = Path.GetFileNameWithoutExtension(path);
+                txtName.Text = suggestedName;
+            }
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
@@ -37,6 +92,7 @@ namespace ProjectDocumentation.NET.Forms
                         if (ofd.ShowDialog() == DialogResult.OK)
                         {
                             buttonEdit.EditValue = ofd.FileName;
+                            DescribeSelectedFile();
                         }
                     }
                 }
@@ -46,28 +102,38 @@ namespace ProjectDocumentation.NET.Forms
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
         private async void btnSave_Click(object sender, EventArgs e)
         {
-            btnSave.Enabled = false;
+            if (importing) return;
+            SetImporting(true);
             try
             {
                 await ImportSelectedFileAsync();
             }
             catch (Exception error)
             {
-                XtraMessageBox.Show(this, error.Message, "Ошибка загрузки XML", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                if (!IsDisposed && !Disposing)
+                    XtraMessageBox.Show(this, error.Message, "Ошибка загрузки XML", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             finally
             {
                 if (!IsDisposed && !Disposing)
                 {
-                    btnSave.Enabled = true;
+                    SetImporting(false);
                 }
             }
         }
 
+        private void SetImporting(bool active)
+        {
+            importing = active;
+            btnSave.Enabled = !active;
+            btnCancel.Enabled = !active;
+            btnFile.Properties.ReadOnly = active;
+            txtName.Properties.ReadOnly = active;
+        }
+
         private async Task ImportSelectedFileAsync()
         {
-            var name = txtName.EditValue?.ToString();
-            var filePath = btnFile.EditValue?.ToString();
+            var filePath = btnFile.EditValue?.ToString()?.Trim();
 
             if (string.IsNullOrWhiteSpace(filePath))
             {
@@ -82,6 +148,12 @@ namespace ProjectDocumentation.NET.Forms
 
             if (FileController.CheckFile(filePath))
             {
+                var document = SchemaXmlDocument.ReadFile(filePath);
+                var rootName = document.Root.Name.NamespaceName.Length == 0 ? document.Root.Name.LocalName : null;
+                var version = (string)document.Root.Attribute("SchemaVersion");
+                DescribeFile(filePath, rootName, version);
+                var name = txtName.Text.Trim();
+
                 if (string.IsNullOrWhiteSpace(name))
                 {
                     XtraMessageBox.Show("Укажите наименование для сохранения.",
@@ -94,11 +166,9 @@ namespace ProjectDocumentation.NET.Forms
                 }
 
                 ImportResult result;
-                switch (radioGroupType.EditValue?.ToString())
+                switch (rootName)
                 {
-                    case "Conclusion":
-                        var document = Conclusion0104Document.ReadFile(filePath);
-                        var version = (string)document.Root.Attribute("SchemaVersion");
+                    case Conclusion0104Document.RootName:
                         if (version == Conclusion0104Document.CurrentVersion)
                         {
                             await ImportCurrentConclusionAsync(document, name);
@@ -122,25 +192,23 @@ namespace ProjectDocumentation.NET.Forms
                             ? await ConclusionController.ImportConclusionAsync(document, filePath, name, resolveConflict)
                             : await ConclusionController.ImportConclusionAsync(filePath, name, resolveConflict);
                         break;
-                    case "ExplanatoryNote":
-                        var noteVersion = ExplanatoryNote0107Document.ReadFileVersion(filePath);
-                        if (noteVersion == ExplanatoryNote0107Document.CurrentVersion || noteVersion == ExplanatoryNote0107Document.CompatibleVersion)
+                    case ExplanatoryNote0107Document.RootName:
+                        if (version == ExplanatoryNote0107Document.CurrentVersion || version == ExplanatoryNote0107Document.CompatibleVersion)
                         {
-                            await ImportExplanatoryNoteAsync(ExplanatoryNote0107Document.ReadFile(filePath), noteVersion, filePath, name);
+                            await ImportExplanatoryNoteAsync(document, version, filePath, name);
                             return;
                         }
 
-                        if (!string.IsNullOrWhiteSpace(noteVersion) && noteVersion != ExplanatoryNote0107Document.LegacyVersion)
+                        if (!string.IsNullOrWhiteSpace(version) && version != ExplanatoryNote0107Document.LegacyVersion)
                         {
-                            throw new InvalidOperationException($"Версия пояснительной записки {noteVersion} не поддерживается.");
+                            throw new InvalidOperationException($"Версия пояснительной записки {version} не поддерживается.");
                         }
 
                         result = await ExplanatoryNoteController.ImportExplanatoryNoteAsync(filePath, name, existing => AskImportConflict(existing,
                             existing is ExplanatoryNoteXPO && ExplanatoryNoteController.IsLegacyXml(existing.GetObj())));
                         break;
                     default:
-                        result = new ImportResult();
-                        break;
+                        throw new InvalidOperationException("Выберите XML заключения или пояснительной записки.");
                 }
 
                 if (result.IsCancelled)

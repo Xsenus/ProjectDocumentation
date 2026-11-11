@@ -86,6 +86,8 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
         {
             try
             {
+                gridViewItems.PostEditor();
+                gridViewItems.UpdateCurrentRow();
                 TextBlock.Title = ConclusionEdit.GetStringValue(memoEditTitle.EditValue, memoEditTitle, "Заполните заголовок");
 
                 if (_items.Count > 0)

@@ -254,7 +254,7 @@ namespace ProjectDocumentation.NET.Forms
         }
 
         private IEnumerable<NativeSchemaChild> VisibleChildren(NativeSchemaNode node)
-            => IsSectionView && node.Element == document.Root
+            => IsNil(node.Element) ? Enumerable.Empty<NativeSchemaChild>() : IsSectionView && node.Element == document.Root
                 ? node.Children.Where(child => SectionFor(child.Field.Name) == sectionTabs.SelectedTabPage)
                 : node.Children;
 

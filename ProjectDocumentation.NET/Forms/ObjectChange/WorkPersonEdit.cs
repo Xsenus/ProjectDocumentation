@@ -45,15 +45,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                 if (cmbEngineeringRegistry.EditValue is GeneralizedDictionaryXPO valueEngineeringRegistry)
                 {
                     WorkPerson.engineeringRegistrySpecified = true;
-
-                    if (valueEngineeringRegistry.Value == TYesNo.Да.GetEnumDescription())
-                    {
-                        WorkPerson.engineeringRegistry = TYesNo.Да;
-                    }
-                    else
-                    {
-                        WorkPerson.engineeringRegistry = TYesNo.Нет;
-                    }
+                    WorkPerson.engineeringRegistry = ConclusionEdit.GetEnumByAttributeValue<TYesNo>(valueEngineeringRegistry.Value);
                 }
                 else
                 {
@@ -63,15 +55,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                 if (cmbConstructionRegistry.EditValue is GeneralizedDictionaryXPO valueConstructionRegistry)
                 {
                     WorkPerson.constructionRegistrySpecified = true;
-
-                    if (valueConstructionRegistry.Value == TYesNo.Да.GetEnumDescription())
-                    {
-                        WorkPerson.constructionRegistry = TYesNo.Да;
-                    }
-                    else
-                    {
-                        WorkPerson.constructionRegistry = TYesNo.Нет;
-                    }
+                    WorkPerson.constructionRegistry = ConclusionEdit.GetEnumByAttributeValue<TYesNo>(valueConstructionRegistry.Value);
                 }
                 else
                 {

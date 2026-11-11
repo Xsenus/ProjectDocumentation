@@ -68,23 +68,15 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
         {
             try
             {
+                gridViewMismatches.PostEditor();
+                gridViewMismatches.UpdateCurrentRow();
                 ExpertEngineeringSurvey.EngineeringSurveyType = ConclusionEdit.GetEnumByAttributeValue<TEngineeringSurveyType>(ConclusionEdit.GetValueGeneralizedDictionary(
                     cmbEngineeringSurveyType,
                     message: "Заполните поле вид инженерных изысканий")?.Value);
-                //ExpertEngineeringSurvey.EngineeringSurveyConditions = ConclusionEdit.GetStringValue(memoEngineeringSurveyConditions.EditValue,
-                //    memoEngineeringSurveyConditions, "Заполните поле.", isNullAble: true);
-                //ExpertEngineeringSurvey.EngineeringSurveyProgramNote = ConclusionEdit.GetStringValue(memoEngineeringSurveyProgramNote.EditValue,
-                //    memoEngineeringSurveyProgramNote, "Заполните поле.", isNullAble: true);
-                //ExpertEngineeringSurvey.EngineeringSurveyMethods = ConclusionEdit.GetStringValue(memoEngineeringSurveyMethods.EditValue,
-                //    memoEngineeringSurveyMethods, "Заполните поле.", isNullAble: true);
-                //ExpertEngineeringSurvey.EngineeringSurveyChanges = ConclusionEdit.GetStringValue(memoEngineeringSurveyChanges.EditValue,
-                //    memoEngineeringSurveyChanges, "Заполните поле.", isNullAble: true);
-                if (_tMismatches.Count > 0)
+                ExpertEngineeringSurvey.Mismatches.Clear();
+                foreach (var item in _tMismatches)
                 {
-                    foreach (var item in _tMismatches)
-                    {
-                        ExpertEngineeringSurvey.Mismatches.Add(item);
-                    }
+                    ExpertEngineeringSurvey.Mismatches.Add(item);
                 }
             }
             catch (Exception ex)
@@ -139,11 +131,12 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                     ?.Cast<GeneralizedDictionaryXPO>()
                     ?.Where(w => w.GeneralizedDictionary == GeneralizedDictionary.EngineeringSurveyType)
                     ?.FirstOrDefault(f => f.Value == ExpertEngineeringSurvey?.EngineeringSurveyType.GetEnumXmlAttributeValue().ToString());
-            //memoEngineeringSurveyConditions.EditValue = ExpertEngineeringSurvey.EngineeringSurveyConditions;
-            //memoEngineeringSurveyProgramNote.EditValue = ExpertEngineeringSurvey.EngineeringSurveyProgramNote;
-            //memoEngineeringSurveyMethods.EditValue = ExpertEngineeringSurvey.EngineeringSurveyMethods;
-            //memoEngineeringSurveyChanges.EditValue = ExpertEngineeringSurvey.EngineeringSurveyChanges;
-            _tMismatches = ExpertEngineeringSurvey.Mismatches?.ToList() ?? new List<TMismatch>();
+            _tMismatches = ExpertEngineeringSurvey.Mismatches.Select(item => new TMismatch
+            {
+                Summary = item.Summary,
+                Part = item.Part,
+                Link = item.Link
+            }).ToList();
             gridControlMismatches.DataSource = _tMismatches;
             foreach (GridColumn column in gridViewMismatches.Columns.Cast<GridColumn>())
             {

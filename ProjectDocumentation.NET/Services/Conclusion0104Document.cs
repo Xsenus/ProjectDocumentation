@@ -9,7 +9,7 @@ namespace ProjectDocumentation.NET.Services
     {
         public const string CurrentVersion = "01.04";
         public const string LegacyVersion = "01.03";
-        private const string RootName = "Conclusion";
+        internal const string RootName = "Conclusion";
         private const string GuidAttribute = "ConclusionGUID";
 
         public static bool IsHistoricalVersion(string version) => version == "01.00" || version == "01.02";
@@ -19,8 +19,6 @@ namespace ProjectDocumentation.NET.Services
         public static bool CanUseLegacyEditor(string version) => version == null || version == LegacyVersion;
 
         public static string ReadVersion(string xml) => SchemaXmlDocument.ReadVersion(xml, RootName);
-
-        public static XDocument ReadFile(string path) => SchemaXmlDocument.ReadFile(path, RootName);
 
         public static XDocument Parse(string xml) => SchemaXmlDocument.Parse(xml, RootName);
 

@@ -14,14 +14,10 @@ namespace ProjectDocumentation.NET.Services
         public const string CurrentVersion = "01.07";
         public const string CompatibleVersion = "01.05";
         public const string LegacyVersion = "01.03";
-        private const string RootName = "ExplanatoryNote";
+        internal const string RootName = "ExplanatoryNote";
         private const string GuidAttribute = "id";
 
         public static string ReadVersion(string xml) => SchemaXmlDocument.ReadVersion(xml, RootName);
-
-        public static string ReadFileVersion(string path) => SchemaXmlDocument.ReadFileVersion(path, RootName);
-
-        public static XDocument ReadFile(string path) => SchemaXmlDocument.ReadFile(path, RootName);
 
         public static XDocument Parse(string xml) => SchemaXmlDocument.Parse(xml, RootName);
 

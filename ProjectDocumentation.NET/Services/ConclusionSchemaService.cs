@@ -238,6 +238,7 @@ namespace ProjectDocumentation.NET.Services
     {
         public bool Valid { get; set; }
         public string Version { get; set; }
+        public string ValidationBasis { get; set; }
         public List<ConclusionValidationError> Errors { get; set; }
     }
 

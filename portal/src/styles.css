@@ -104,6 +104,19 @@ textarea { resize: vertical; line-height: 1.5; }
   color: #193d5a; background: #fff; box-shadow: 0 1px 3px #20334a20;
 }
 .workspace-switch button span { margin-left: 4px; color: #466580; }
+.field-search { display: grid; gap: 5px; margin: 0 0 16px; }
+.field-search label { color: #314e65; font-size: .86rem; font-weight: 650; }
+.field-search input { min-width: 0; }
+.field-search-count { color: var(--muted); font-size: .78rem; }
+.field-search-results { list-style: none; margin: 0; padding: 0; max-height: 290px; overflow: auto; }
+.field-search-results button {
+  display: grid; gap: 4px; width: 100%; text-align: left; padding: 8px;
+  border: 1px solid #d3e0e9; border-radius: 6px; background: white; color: #24445d;
+  overflow-wrap: anywhere;
+}
+.field-search-results button:hover { background: #eaf2f8; }
+.field-search-results button span, .field-search-results button small { color: var(--muted); font-size: .75rem; }
+.field-search-results li + li { margin-top: 4px; }
 .section-nav { display: grid; gap: 5px; }
 .section-nav button {
   min-height: 45px; width: 100%; display: flex; gap: 10px; align-items: center; text-align: left;
@@ -163,6 +176,7 @@ h2 { font-size: 1.21rem; line-height: 1.27; letter-spacing: -.015em; }
 .field label, .choice-picker label { font-size: .88rem; line-height: 1.35; font-weight: 650; color: #28465d; overflow-wrap: anywhere; }
 .field-remove { padding: 0; color: var(--danger); flex-shrink: 0; }
 .field-hint { font-size: .78rem; line-height: 1.45; color: var(--muted); }
+.field-error { color: var(--danger); font-size: .82rem; line-height: 1.4; }
 .required { color: #8d303e; }
 .attributes { margin-bottom: 16px; }
 .element-group { min-width: 0; display: grid; gap: 8px; align-items: start; }
@@ -178,6 +192,16 @@ h2 { font-size: 1.21rem; line-height: 1.27; letter-spacing: -.015em; }
 .complex-content { display: grid; gap: 12px; padding: 14px; min-width: 0; }
 .complex-content .attributes { margin-bottom: 0; }
 .complex-content > .button-danger { justify-self: start; }
+.table-editor { display: grid; gap: 12px; min-width: 0; }
+.table-scroll { overflow: auto; }
+.xml-table { border-collapse: collapse; width: 100%; }
+.xml-table :is(th, td) { border: 1px solid #d9e5ee; padding: 8px; text-align: left; vertical-align: top; }
+.xml-table th { color: #234864; background: #f3f7fa; font-size: .83rem; }
+.xml-table td { min-width: 155px; }
+.xml-table .field label { font-size: .78rem; }
+.xml-table .attributes { grid-template-columns: minmax(0, 1fr); margin-top: 7px; }
+.xml-table thead .text-button { display: block; color: var(--danger); }
+.table-row-actions { display: grid; justify-items: start; width: max-content; }
 .choice-block { border-left: 2px solid #c4dce9; padding: 3px 0 3px 10px; display: grid; gap: 8px; min-width: 0; }
 .choice-selection { display: grid; gap: 8px; }
 .choice-picker { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 7px; align-items: end; }

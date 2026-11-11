@@ -41,6 +41,15 @@ class FormDiagnosticsTests(unittest.TestCase):
         self.assertTrue(any(error['path'] == '/ExplanatoryNote/ProjectInitialDocuments/Document[2]/DocDate'
                             for error in result['errors']), result['errors'])
 
+    def test_year_error_explains_the_numeric_limit_at_the_field(self):
+        root = ET.parse(FIXTURES / 'explanatorynote-01-07.xml').getroot()
+        for year, message in (('2020', 'не меньше 2021'), ('10000', 'не больше 9999')):
+            with self.subTest(year=year):
+                root.find('ExplanatoryNoteYear').text = year
+                errors = validate_document(ET.tostring(root, encoding='unicode'))['errors']
+                self.assertTrue(any(error['path'] == '/ExplanatoryNote/ExplanatoryNoteYear'
+                                    and message in error['message'] for error in errors), errors)
+
     def test_missing_snils_points_to_the_required_field_before_expert_type(self):
         root = ET.parse(FIXTURES / 'conclusion-01-04.xml').getroot()
         expert = root.find('Experts/Expert')

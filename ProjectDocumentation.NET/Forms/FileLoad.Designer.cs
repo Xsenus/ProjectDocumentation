@@ -40,7 +40,7 @@
             this.layoutControlItemCancel = new DevExpress.XtraLayout.LayoutControlItem();
             this.layoutControlItemSave = new DevExpress.XtraLayout.LayoutControlItem();
             this.emptySpaceItemCancel = new DevExpress.XtraLayout.EmptySpaceItem();
-            this.radioGroupType = new DevExpress.XtraEditors.RadioGroup();
+            this.txtDocumentType = new DevExpress.XtraEditors.TextEdit();
             this.layoutControlItemType = new DevExpress.XtraLayout.LayoutControlItem();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControl)).BeginInit();
             this.layoutControl.SuspendLayout();
@@ -53,7 +53,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemCancel)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemSave)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.emptySpaceItemCancel)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.radioGroupType.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.txtDocumentType.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemType)).BeginInit();
             this.SuspendLayout();
             // 
@@ -64,13 +64,13 @@
             this.layoutControl.Controls.Add(this.txtName);
             this.layoutControl.Controls.Add(this.btnCancel);
             this.layoutControl.Controls.Add(this.btnSave);
-            this.layoutControl.Controls.Add(this.radioGroupType);
+            this.layoutControl.Controls.Add(this.txtDocumentType);
             this.layoutControl.Dock = System.Windows.Forms.DockStyle.Fill;
             this.layoutControl.Location = new System.Drawing.Point(0, 0);
             this.layoutControl.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.layoutControl.Name = "layoutControl";
             this.layoutControl.Root = this.Root;
-            this.layoutControl.Size = new System.Drawing.Size(648, 143);
+            this.layoutControl.Size = new System.Drawing.Size(648, 106);
             this.layoutControl.TabIndex = 0;
             this.layoutControl.Text = "layoutControl1";
             // 
@@ -98,7 +98,7 @@
             // 
             // btnCancel
             // 
-            this.btnCancel.Location = new System.Drawing.Point(485, 115);
+            this.btnCancel.Location = new System.Drawing.Point(485, 78);
             this.btnCancel.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(157, 22);
@@ -109,13 +109,13 @@
             // 
             // btnSave
             // 
-            this.btnSave.Location = new System.Drawing.Point(326, 115);
+            this.btnSave.Location = new System.Drawing.Point(326, 78);
             this.btnSave.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btnSave.Name = "btnSave";
             this.btnSave.Size = new System.Drawing.Size(155, 22);
             this.btnSave.StyleController = this.layoutControl;
             this.btnSave.TabIndex = 7;
-            this.btnSave.Text = "Сохранить";
+            this.btnSave.Text = "Загрузить";
             this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
             // 
             // Root
@@ -136,7 +136,7 @@
             this.layoutControlItemType});
             this.Root.Name = "Root";
             this.Root.Padding = new DevExpress.XtraLayout.Utils.Padding(4, 4, 4, 4);
-            this.Root.Size = new System.Drawing.Size(648, 143);
+            this.Root.Size = new System.Drawing.Size(648, 106);
             this.Root.TextVisible = false;
             // 
             // layoutControlItemFile
@@ -160,7 +160,7 @@
             // emptySpaceItemSave
             // 
             this.emptySpaceItemSave.AllowHotTrack = false;
-            this.emptySpaceItemSave.Location = new System.Drawing.Point(0, 109);
+            this.emptySpaceItemSave.Location = new System.Drawing.Point(0, 72);
             this.emptySpaceItemSave.Name = "emptySpaceItemSave";
             this.emptySpaceItemSave.Size = new System.Drawing.Size(159, 26);
             this.emptySpaceItemSave.TextSize = new System.Drawing.Size(0, 0);
@@ -168,7 +168,7 @@
             // layoutControlItemCancel
             // 
             this.layoutControlItemCancel.Control = this.btnCancel;
-            this.layoutControlItemCancel.Location = new System.Drawing.Point(479, 109);
+            this.layoutControlItemCancel.Location = new System.Drawing.Point(479, 72);
             this.layoutControlItemCancel.Name = "layoutControlItemCancel";
             this.layoutControlItemCancel.Size = new System.Drawing.Size(161, 26);
             this.layoutControlItemCancel.TextSize = new System.Drawing.Size(0, 0);
@@ -177,7 +177,7 @@
             // layoutControlItemSave
             // 
             this.layoutControlItemSave.Control = this.btnSave;
-            this.layoutControlItemSave.Location = new System.Drawing.Point(320, 109);
+            this.layoutControlItemSave.Location = new System.Drawing.Point(320, 72);
             this.layoutControlItemSave.Name = "layoutControlItemSave";
             this.layoutControlItemSave.Size = new System.Drawing.Size(159, 26);
             this.layoutControlItemSave.TextSize = new System.Drawing.Size(0, 0);
@@ -186,29 +186,26 @@
             // emptySpaceItemCancel
             // 
             this.emptySpaceItemCancel.AllowHotTrack = false;
-            this.emptySpaceItemCancel.Location = new System.Drawing.Point(159, 109);
+            this.emptySpaceItemCancel.Location = new System.Drawing.Point(159, 72);
             this.emptySpaceItemCancel.Name = "emptySpaceItemCancel";
             this.emptySpaceItemCancel.Size = new System.Drawing.Size(161, 26);
             this.emptySpaceItemCancel.TextSize = new System.Drawing.Size(0, 0);
             // 
-            // radioGroupType
+            // txtDocumentType
             // 
-            this.radioGroupType.EditValue = "Conclusion";
-            this.radioGroupType.Location = new System.Drawing.Point(94, 54);
-            this.radioGroupType.Name = "radioGroupType";
-            this.radioGroupType.Properties.Items.AddRange(new DevExpress.XtraEditors.Controls.RadioGroupItem[] {
-            new DevExpress.XtraEditors.Controls.RadioGroupItem("Conclusion", "Заключение"),
-            new DevExpress.XtraEditors.Controls.RadioGroupItem("ExplanatoryNote", "Пояснительная записка")});
-            this.radioGroupType.Size = new System.Drawing.Size(548, 57);
-            this.radioGroupType.StyleController = this.layoutControl;
-            this.radioGroupType.TabIndex = 8;
+            this.txtDocumentType.Location = new System.Drawing.Point(94, 54);
+            this.txtDocumentType.Name = "txtDocumentType";
+            this.txtDocumentType.Properties.ReadOnly = true;
+            this.txtDocumentType.Size = new System.Drawing.Size(548, 20);
+            this.txtDocumentType.StyleController = this.layoutControl;
+            this.txtDocumentType.TabStop = false;
             // 
             // layoutControlItemType
             // 
-            this.layoutControlItemType.Control = this.radioGroupType;
+            this.layoutControlItemType.Control = this.txtDocumentType;
             this.layoutControlItemType.Location = new System.Drawing.Point(0, 48);
             this.layoutControlItemType.Name = "layoutControlItemType";
-            this.layoutControlItemType.Size = new System.Drawing.Size(640, 61);
+            this.layoutControlItemType.Size = new System.Drawing.Size(640, 24);
             this.layoutControlItemType.Text = "Тип файла";
             this.layoutControlItemType.TextSize = new System.Drawing.Size(76, 12);
             // 
@@ -216,11 +213,11 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(648, 143);
+            this.ClientSize = new System.Drawing.Size(648, 106);
             this.Controls.Add(this.layoutControl);
             this.IconOptions.Image = global::ProjectDocumentation.NET.Properties.Resources.icon;
             this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.MinimumSize = new System.Drawing.Size(650, 175);
+            this.MinimumSize = new System.Drawing.Size(650, 138);
             this.Name = "FileLoad";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Загрузка файла";
@@ -235,7 +232,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemCancel)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemSave)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.emptySpaceItemCancel)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.radioGroupType.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.txtDocumentType.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemType)).EndInit();
             this.ResumeLayout(false);
 
@@ -255,7 +252,7 @@
         private DevExpress.XtraLayout.LayoutControlItem layoutControlItemCancel;
         private DevExpress.XtraLayout.LayoutControlItem layoutControlItemSave;
         private DevExpress.XtraLayout.EmptySpaceItem emptySpaceItemCancel;
-        private DevExpress.XtraEditors.RadioGroup radioGroupType;
+        private DevExpress.XtraEditors.TextEdit txtDocumentType;
         private DevExpress.XtraLayout.LayoutControlItem layoutControlItemType;
     }
 }
