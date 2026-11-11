@@ -42,3 +42,5 @@ msbuild ProjectDocumentation.sln /p:Configuration=Release /m
 ## Правила разработки
 
 Правила работы с git и PR для людей и агентов — в [AGENTS.md](AGENTS.md).
+
+<!-- Temporary CI schedule verification. -->
