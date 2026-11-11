@@ -4,7 +4,10 @@ using Core.NET.Models.XPO;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using System.Xml;
+using System.Xml.Linq;
 
 namespace Core.NET.Controllers
 {
@@ -53,7 +56,22 @@ namespace Core.NET.Controllers
         {
             if (FileController.CheckFile(path))
             {
-                return Utf8StringSerialize.DeSerializeObject<ExplanatoryNote>(path, warnings: warnings);
+                try
+                {
+                    using (var source = File.OpenRead(path))
+                    using (var reader = XmlReader.Create(source, LegacyReaderSettings()))
+                    {
+                        return DeserializeLegacyNote(reader, warnings);
+                    }
+                }
+                catch (IOException)
+                {
+                    return default;
+                }
+                catch (UnauthorizedAccessException)
+                {
+                    return default;
+                }
             }
 
             return default;
@@ -66,8 +84,86 @@ namespace Core.NET.Controllers
                 return default;
             }
 
-            return Utf8StringSerialize.DeSerializeObjectByString<ExplanatoryNote>(obj);
+            using (var source = new StringReader(obj))
+            using (var reader = XmlReader.Create(source, LegacyReaderSettings()))
+            {
+                return DeserializeLegacyNote(reader);
+            }
         }
+
+        private static ExplanatoryNote DeserializeLegacyNote(XmlReader reader, ICollection<string> warnings = null)
+        {
+            if (!IsLegacyXml(reader))
+            {
+                return default;
+            }
+
+            try
+            {
+                var xml = XDocument.Load(reader, LoadOptions.PreserveWhitespace).ToString(SaveOptions.DisableFormatting);
+                return Utf8StringSerialize.DeSerializeObjectByString<ExplanatoryNote>(xml, warnings: warnings);
+            }
+            catch (XmlException)
+            {
+                return default;
+            }
+        }
+
+        /// <summary>Only send legacy XML to the 01.03 serializer, which ignores elements of newer schemas.</summary>
+        public static bool IsLegacyXml(string xml)
+        {
+            if (string.IsNullOrWhiteSpace(xml))
+            {
+                return false;
+            }
+
+            using (var source = new StringReader(xml))
+            using (var reader = XmlReader.Create(source, LegacyReaderSettings()))
+            {
+                return IsLegacyXml(reader);
+            }
+        }
+
+        private static bool IsLegacyXml(XmlReader reader)
+        {
+            try
+            {
+                if (reader.MoveToContent() != XmlNodeType.Element || reader.Name != "ExplanatoryNote" || reader.NamespaceURI.Length != 0)
+                {
+                    return false;
+                }
+
+                var version = reader.GetAttribute("SchemaVersion");
+                var versionless = string.IsNullOrWhiteSpace(version);
+                return (versionless || version == "01.03")
+                    && IsLegacyHint(reader.GetAttribute("SchemaLink"), versionless)
+                    && IsLegacyHint(reader.GetAttribute("noNamespaceSchemaLocation", "http://www.w3.org/2001/XMLSchema-instance"), versionless);
+            }
+            catch (XmlException)
+            {
+                return false;
+            }
+        }
+
+        private static bool IsLegacyHint(string hint, bool versionless)
+        {
+            if (string.IsNullOrWhiteSpace(hint))
+            {
+                return true;
+            }
+
+            var parts = hint.Trim().Split('?', '#')[0].Split('/', '\\');
+            var filename = parts[parts.Length - 1];
+            return versionless
+                ? filename.Equals("explanatorynote-01-03.xsd", StringComparison.OrdinalIgnoreCase)
+                : !Regex.IsMatch(filename, @"\b0?1[._-]0?[4-9]\b");
+        }
+
+        private static XmlReaderSettings LegacyReaderSettings() => new XmlReaderSettings
+        {
+            DtdProcessing = DtdProcessing.Prohibit,
+            XmlResolver = null
+        };
 
         public static string GetSerializeExplanatoryNote(this ExplanatoryNote explanatoryNote)
         {

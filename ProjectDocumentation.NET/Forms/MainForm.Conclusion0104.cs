@@ -138,9 +138,13 @@ namespace ProjectDocumentation.NET.Forms
             }
         }
 
-        private async Task ExportConclusionAsync(string xml, string version, Guid? guid, System.Collections.Generic.IReadOnlyList<string> warnings = null)
+        private Task ExportConclusionAsync(string xml, string version, Guid? guid, System.Collections.Generic.IReadOnlyList<string> warnings = null)
+            => ExportSchemaDocumentAsync(xml, version, guid, "Conclusion", "conclusion", warnings);
+
+        private async Task ExportSchemaDocumentAsync(string xml, string version, Guid? guid, string rootName, string prefix,
+            System.Collections.Generic.IReadOnlyList<string> warnings = null)
         {
-            Conclusion0104Document.RequireValid(await conclusionSchema.ValidateAsync(xml), version);
+            SchemaXmlDocument.RequireValid(await conclusionSchema.ValidateAsync(xml), version);
             if (warnings != null && warnings.Count > 0)
             {
                 var text = string.Join(Environment.NewLine, warnings.Take(10));
@@ -150,14 +154,14 @@ namespace ProjectDocumentation.NET.Forms
                 }
 
                 if (XtraMessageBox.Show(this, text + Environment.NewLine + Environment.NewLine + "Выгрузить совместимую копию?",
-                    "Преобразование заключения", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) != DialogResult.Yes)
+                    "Преобразование XML", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) != DialogResult.Yes)
                 {
                     return;
                 }
             }
 
             using (var picker = new SaveFileDialog { Filter = "XML (*.xml)|*.xml", DefaultExt = "xml", AddExtension = true,
-                FileName = $"conclusion_{guid:D}.xml" })
+                FileName = $"{prefix}_{guid:D}.xml" })
             {
                 if (picker.ShowDialog(this) != DialogResult.OK)
                 {
@@ -165,7 +169,7 @@ namespace ProjectDocumentation.NET.Forms
                 }
 
                 var directory = Path.GetDirectoryName(picker.FileName);
-                var schema = version == Conclusion0104Document.CurrentVersion ? "conclusion-01-04" : "conclusion-01-03";
+                var schema = $"{prefix}-{version.Replace('.', '-')}";
                 foreach (var filename in new[] { schema + ".xsd", schema + ".xsl" })
                 {
                     var path = Path.Combine(directory, filename);
@@ -179,7 +183,7 @@ namespace ProjectDocumentation.NET.Forms
                     }
                 }
 
-                Conclusion0104Document.WriteExport(picker.FileName, xml, version);
+                SchemaXmlDocument.WriteExport(picker.FileName, xml, rootName, schema);
             }
         }
 

@@ -126,9 +126,13 @@
     <Compile Include="Services\ConclusionSchemaService.cs" />
     <Compile Include="Services\ConclusionDaData.cs" />
     <Compile Include="Services\Conclusion0104Document.cs" />
+    <Compile Include="Services\ExplanatoryNote0107Document.cs" />
+    <Compile Include="Services\SchemaXmlDocument.cs" />
     <Compile Include="Forms\Conclusion0104Form.cs" />
     <Compile Include="Forms\MainForm.Conclusion0104.cs" />
     <Compile Include="Forms\FileLoad.Conclusion0104.cs" />
+    <Compile Include="Forms\MainForm.ExplanatoryNote0107.cs" />
+    <Compile Include="Forms\FileLoad.ExplanatoryNote0107.cs" />
     <Compile Include="Forms\FileLoad.cs">
       <SubType>Form</SubType>
     </Compile>
