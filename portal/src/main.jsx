@@ -1,8 +1,10 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import SchemaForm, { formFieldIndex, groupLabelsFor, normalPath, sectionFor, sectionProgress } from './SchemaForm.jsx';
+import FileHistory from './FileHistory.jsx';
 import { documentFamilies, familyForDocument, familyForId, familyRequest } from './documentFamilies.js';
-import { api, downloadXml, encodeXmlBytes, parseXml, readXmlFile, schemaVersion, serializeXml, xmlBlobFromBase64 } from './xml.js';
+import { historyDiagnostics, loadFileHistory, mergeFileHistory, saveFileOperation } from './fileHistory.js';
+import { api, downloadXml, encodeXmlBytes, fileNameFor, parseXml, readXmlFile, schemaVersion, serializeXml, xmlBlobFromBase64 } from './xml.js';
 import './styles.css';
 
 const host = window.chrome?.webview;
@@ -209,6 +211,29 @@ function MigrationPanel({ result, onApply, onCancel }) {
   );
 }
 
+function FileActions({ children }) {
+  const menu = useRef(null);
+  const summary = useRef(null);
+  function closeMenu() {
+    menu.current.open = false;
+    summary.current.focus();
+  }
+  return (
+    <details className="file-actions" ref={menu}
+      onBlur={event => { if (!event.currentTarget.contains(event.relatedTarget)) event.currentTarget.open = false; }}
+      onKeyDown={event => {
+        if (event.key !== 'Escape' || !menu.current.open) return;
+        event.preventDefault();
+        closeMenu();
+      }}>
+      <summary className="button button-quiet" ref={summary}>Файлы</summary>
+      <div className="file-actions-list" onClick={event => {
+        if (event.target.closest('button:not(:disabled)')) closeMenu();
+      }}>{children}</div>
+    </details>
+  );
+}
+
 function App() {
   const [profiles, setProfiles] = useState({});
   const [selectedFamily, setSelectedFamily] = useState(initialFamily);
@@ -232,7 +257,9 @@ function App() {
   const [rawBase, setRawBase] = useState('');
   const [draftsByFamily, setDraftsByFamily] = useState(loadDrafts);
   const [activeDraft, setActiveDraft] = useState(null);
-  const [showDrafts, setShowDrafts] = useState(false);
+  const [workspace, setWorkspace] = useState('editor');
+  const [fileHistory, setFileHistory] = useState([]);
+  const [historyProblem, setHistoryProblem] = useState('');
   const [, refresh] = useState(0);
   const revision = useRef(0);
   const navigationRequest = useRef(0);
@@ -252,6 +279,8 @@ function App() {
   const formReady = Boolean(model && document && model.version === currentDocumentVersion);
   const groupLabels = groupLabelsFor(family.id);
   const drafts = draftsByFamily[family.id] || [];
+  const showDrafts = workspace === 'drafts';
+  const showHistory = workspace === 'history';
   const migrationTarget = Object.hasOwn(family.migrationTargets, currentDocumentVersion)
     ? family.migrationTargets[currentDocumentVersion]
     : !currentDocumentVersion && family.id === 'explanatorynote' ? currentVersion : undefined;
@@ -274,8 +303,11 @@ function App() {
     return keys.current.get(element);
   }
 
-  function replaceDocument(xml, title, options = {}) {
-    const next = parseXml(xml);
+  function replaceDocument(xml, title, options) {
+    openDocument(parseXml(xml), title, options);
+  }
+
+  function openDocument(next, title, options = {}) {
     const nextFamily = familyForDocument(next);
     const canonical = serializeXml(next);
     documentRef.current = next;
@@ -297,6 +329,46 @@ function App() {
     setActiveDraft(options.draftId || null);
     setProblem('');
     setNotice('');
+  }
+
+  async function refreshFileHistory() {
+    try {
+      const stored = await loadFileHistory();
+      setFileHistory(current => mergeFileHistory(stored, current));
+    } catch {
+      setHistoryProblem('Браузер не смог прочитать журнал. Записи этой вкладки доступны до перезагрузки.');
+    }
+  }
+
+  function showFileHistory() {
+    navigationRequest.current++;
+    setWorkspace('history');
+    setProblem('');
+    setNotice('');
+    refreshFileHistory();
+  }
+
+  async function recordFileOperation(entry) {
+    setFileHistory(current => mergeFileHistory(current, [entry]));
+    try {
+      await saveFileOperation(entry);
+    } catch {
+      setHistoryProblem('Браузер не смог записать историю. Несохранённые операции доступны до перезагрузки.');
+    }
+  }
+
+  function beginFileOperation(file) {
+    if (host) return async () => {};
+    const entry = {
+      ...file, id: crypto.randomUUID(), createdAt: Date.now(), finishedAt: 0,
+      outcome: 'started', message: 'Итог операции ещё не записан.',
+    };
+    const recorded = recordFileOperation(entry);
+    let completed;
+    return (outcome, details) => {
+      completed ??= recorded.then(() => recordFileOperation({ ...entry, ...details, outcome, finishedAt: Date.now() }));
+      return completed;
+    };
   }
 
   useEffect(() => {
@@ -386,7 +458,11 @@ function App() {
     return !dirty && !rawDirty || window.confirm('Открыть другой документ? Несохранённые изменения будут потеряны.');
   }
 
-  async function run(label, work) {
+  function openFilePicker() {
+    if (permitReplacement()) fileInput.current.click();
+  }
+
+  async function run(label, work, onFailure) {
     if (operation.current) return;
     operation.current = label;
     setBusy(label);
@@ -395,6 +471,7 @@ function App() {
     try {
       await work();
     } catch (error) {
+      await onFailure?.(error);
       setProblem(requestMessage(error));
     } finally {
       operation.current = '';
@@ -412,7 +489,7 @@ function App() {
         return;
       }
       replaceDocument(xml, requestedFamily.newTitle);
-      setShowDrafts(false);
+      setWorkspace('editor');
     });
   }
 
@@ -420,16 +497,71 @@ function App() {
     const file = event.target.files?.[0];
     event.target.value = '';
     if (!file) return;
+    const finish = beginFileOperation({ operation: 'import', fileName: file.name });
+    if (operation.current) {
+      finish('cancelled', { message: 'Другой запрос уже выполняется. Выберите XML заново.' });
+      return;
+    }
     const serial = revision.current;
     run('Читаю XML', async () => {
-      const { xml, bytes } = await readXmlFile(file);
+      const interrupted = 'Документ изменился во время чтения файла. Откройте XML ещё раз.';
+      let source;
+      try {
+        source = await readXmlFile(file);
+      } catch (error) {
+        const message = 'Не удалось прочитать файл в указанной кодировке.';
+        await finish('failed', { message, diagnostics: historyDiagnostics(null, error.message || message) });
+        throw new Error(message);
+      }
       if (!isExactRevision(revision, serial)) {
-        setNotice('Документ изменился во время чтения файла. Откройте XML ещё раз.');
+        await finish('cancelled', { message: interrupted });
+        setNotice(interrupted);
         return;
       }
-      replaceDocument(xml, nameFromFile(file.name), { original: { bytes, file, name: nameFromFile(file.name) } });
-      setShowDrafts(false);
-      setNotice('Файл открыт. Версия схемы: ' + versionLabel(schemaVersion(documentRef.current)) + '.');
+
+      let parsed, parseError, result, validationError;
+      try {
+        parsed = parseXml(source.xml);
+      } catch (error) {
+        parseError = error;
+      }
+      try {
+        result = await api('validate', { xml: parsed ? serializeXml(parsed) : source.xml });
+      } catch (error) {
+        validationError = requestMessage(error);
+      }
+      const familyId = familyForDocument(parsed)?.id || result?.family;
+      const version = schemaVersion(parsed) || result?.version;
+      if (!isExactRevision(revision, serial)) {
+        await finish('cancelled', { family: familyId, version, message: interrupted });
+        setNotice(interrupted);
+        return;
+      }
+      if (parseError) {
+        await finish('failed', { family: familyId, version, message: parseError.message,
+          diagnostics: historyDiagnostics(result, parseError.message) });
+        throw parseError;
+      }
+
+      const title = nameFromFile(file.name);
+      openDocument(parsed, title, { original: { bytes: source.bytes, file, name: title, familyId, version } });
+      setWorkspace('editor');
+      let outcome = 'opened';
+      let message = 'Документ открыт. Проверка XML прошла.';
+      if (validationError) {
+        outcome = 'unchecked';
+        message = 'Документ открыт. Повторите проверку XML после запуска службы.';
+      } else if (!result.valid) {
+        outcome = 'warnings';
+        message = 'Документ открыт. Замечания к исходному файлу сохранены в истории.';
+        setValidation(result);
+      }
+      await finish(outcome, { family: familyId, version, message, diagnostics: historyDiagnostics(result, validationError) });
+      setNotice('Файл открыт. Версия схемы: ' + versionLabel(version) + '.' +
+        (outcome === 'opened' ? '' : ' ' + message));
+    }, error => {
+      const message = requestMessage(error);
+      return finish('failed', { message, diagnostics: historyDiagnostics(null, message) });
     });
   }
 
@@ -501,18 +633,47 @@ function App() {
   }
 
   function exportCurrent() {
+    if (operation.current) return;
+    const base = name + ' ' + currentDocumentVersion;
+    const finish = beginFileOperation({ operation: 'export', variant: 'checked', fileName: fileNameFor(base),
+      family: family.id, version: currentDocumentVersion });
     run('Проверяю перед выгрузкой', async () => {
-      const xml = exportCopy(document, family, currentDocumentVersion);
-      const result = await validateSnapshot(xml, revision.current);
-      if (result?.valid) {
-        downloadXml(xml, name + ' ' + currentDocumentVersion);
-        setNotice(family.schemaVersions.includes(currentDocumentVersion)
-          ? 'XML выгружен. Схему можно скачать в разделе «Файлы схемы».'
-          : 'XML выгружен в исходном формате приложения.');
-      } else if (result) {
-        setNotice('Исправьте ошибки перед выгрузкой или скачайте черновик.');
+      try {
+        const xml = exportCopy(document, family, currentDocumentVersion);
+        const result = await validateSnapshot(xml, revision.current);
+        if (!result) {
+          await finish('cancelled', { message: 'Документ изменился во время проверки. Повторите выгрузку.' });
+        } else if (result.valid) {
+          downloadXml(xml, base);
+          await finish('download', { message: 'XML передан браузеру для скачивания.' });
+          setNotice('Скачивание XML запущено.');
+        } else {
+          const message = 'Исправьте ошибки перед выгрузкой или скачайте черновик.';
+          await finish('blocked', { message, diagnostics: historyDiagnostics(result) });
+          setNotice(message);
+        }
+      } catch (error) {
+        const message = requestMessage(error);
+        await finish('failed', { message, diagnostics: historyDiagnostics(null, message) });
+        throw error;
       }
     });
+  }
+
+  async function exportLocal(variant) {
+    const source = variant === 'original' ? original : null;
+    const base = source ? (source.name || name) + ' (исходный)' : name + ' (черновик)';
+    const finish = beginFileOperation({ operation: 'export', variant, fileName: fileNameFor(base),
+      family: source ? source.familyId : family.id, version: source ? source.version : currentDocumentVersion });
+    try {
+      const xml = !source ? serializeXml(document) : source.file || (typeof source.base64 === 'string'
+        ? xmlBlobFromBase64(source.base64) : serializeXml(parseXml(source.xml)));
+      downloadXml(xml, base);
+      await finish('download', { message: 'XML передан браузеру для скачивания.' });
+    } catch (error) {
+      await finish('failed', { message: error.message, diagnostics: historyDiagnostics(null, error.message) });
+      setProblem(error.message);
+    }
   }
 
   function finishDesktopSave() {
@@ -554,7 +715,7 @@ function App() {
     try {
       replaceDocument(migration.xml, name, {
         warnings: migration.warnings,
-        original: original || { xml: migration.snapshot, name },
+        original: original || { xml: migration.snapshot, name, familyId: family.id, version: currentDocumentVersion },
         dirty: true,
         draftId: activeDraft,
       });
@@ -571,6 +732,8 @@ function App() {
         id, name: name.trim() || defaultName(document), xml: serializeXml(document), updatedAt: new Date().toISOString(),
         original: original ? {
           name: original.name,
+          familyId: original.familyId,
+          version: original.version,
           base64: original.bytes ? encodeXmlBytes(original.bytes) : original.base64,
           xml: original.xml,
         } : undefined,
@@ -591,7 +754,7 @@ function App() {
     if (!permitReplacement()) return;
     try {
       replaceDocument(draft.xml, draft.name, { draftId: draft.id, original: draft.original, warnings: draft.warnings });
-      setShowDrafts(false);
+      setWorkspace('editor');
     } catch (error) {
       setProblem(error.message);
     }
@@ -614,7 +777,7 @@ function App() {
 
   function navigateField(path) {
     if (rawDirty || readingFiles) return;
-    setShowDrafts(false);
+    setWorkspace('editor');
     if (!formReady) {
       openXmlView();
       requestAnimationFrame(() => window.document.querySelector('.raw-editor')?.focus());
@@ -695,7 +858,7 @@ function App() {
               </select>
               <button type="button" className="header-button" disabled={Boolean(busy || readingFiles)} onClick={() => newDocument()}>{family.newAction}</button>
               <button type="button" className="header-button header-primary" disabled={Boolean(busy || readingFiles)}
-                onClick={() => permitReplacement() && fileInput.current.click()}>Открыть XML</button>
+                onClick={openFilePicker}>Открыть XML</button>
             </>
           )}
           {host && <span className="header-mode">{readOnly ? 'Просмотр' : 'Редактирование'}</span>}
@@ -704,22 +867,26 @@ function App() {
       </header>
       <div className="app-layout">
         <aside className="sidebar" aria-label="Рабочая область">
-          <div className="sidebar-inner">
+          <div className={'sidebar-inner' + (showHistory ? ' history-sidebar' : '')}>
             {!host && (
               <div className="workspace-switch" role="group" aria-label="Рабочая область">
-                <button className={!showDrafts ? 'selected' : ''} type="button" onClick={() => setShowDrafts(false)}>Редактор</button>
-                <button className={showDrafts ? 'selected' : ''} type="button" disabled={readingFiles} onClick={() => setShowDrafts(true)}>Черновики <span>{drafts.length}</span></button>
+                <button className={workspace === 'editor' ? 'selected' : ''} aria-pressed={workspace === 'editor'}
+                  type="button" onClick={() => setWorkspace('editor')}>Редактор</button>
+                <button className={showDrafts ? 'selected' : ''} aria-pressed={showDrafts}
+                  type="button" disabled={readingFiles} onClick={() => setWorkspace('drafts')}>Черновики <span>{drafts.length}</span></button>
+                <button className={'workspace-history' + (showHistory ? ' selected' : '')} aria-pressed={showHistory}
+                  type="button" onClick={showFileHistory}>История файлов</button>
               </div>
             )}
-            {formReady && <FieldSearch key={profileKey} index={fieldIndex} onField={navigateField}
+            {formReady && !showHistory && <FieldSearch key={profileKey} index={fieldIndex} onField={navigateField}
               onSearchFocus={() => { navigationRequest.current++; }} disabled={rawDirty || readingFiles} />}
             <h2>{family.sectionsTitle}</h2>
             <nav className="section-nav" aria-label={family.sectionsTitle}>
               {Object.entries(groupLabels).map(([id, label]) => (
-                <button type="button" key={id} className={!showDrafts && tab === 'form' && section === id ? 'active' : ''}
-                  aria-current={!showDrafts && tab === 'form' && section === id ? 'page' : undefined}
+                <button type="button" key={id} className={workspace === 'editor' && tab === 'form' && section === id ? 'active' : ''}
+                  aria-current={workspace === 'editor' && tab === 'form' && section === id ? 'page' : undefined}
                   disabled={!formReady || rawDirty || readingFiles}
-                  onClick={() => { setShowDrafts(false); setSection(id); setTab('form'); }}>
+                  onClick={() => { setWorkspace('editor'); setSection(id); setTab('form'); }}>
                   <span>{label}</span>
                   {formReady && sectionProgress(model, document, id) > 0 && <span className="nav-dot" aria-hidden="true"></span>}
                 </button>
@@ -741,9 +908,12 @@ function App() {
         <main className="main-content">
           {problem && <div className="feedback feedback-error" role="alert">{problem}</div>}
           {notice && <div className="feedback feedback-info" role="status">{notice}</div>}
+          {historyProblem && <div className="feedback feedback-error" role="alert">{historyProblem}</div>}
           {(busy || desktopSaving) && <p className="live-progress" role="status"><span aria-hidden="true"></span>{busy || 'Сохраняю в приложении'}…</p>}
 
-          {showDrafts ? (
+          {showHistory ? (
+            <FileHistory entries={fileHistory} onReopen={openFilePicker} busy={Boolean(busy || readingFiles)} />
+          ) : showDrafts ? (
             <section className="paper library">
               <h1>Черновики</h1>
               <p className="muted">{family.collection}, сохранённые в этом браузере.</p>
@@ -764,7 +934,7 @@ function App() {
               {!host && <div className="inline-actions">
                 <button className="button button-primary" type="button" disabled={Boolean(busy)}
                   onClick={() => newDocument()}>{family.createAction}</button>
-                <button className="button button-quiet" type="button" disabled={Boolean(busy)} onClick={() => fileInput.current.click()}>Открыть XML</button>
+                <button className="button button-quiet" type="button" disabled={Boolean(busy)} onClick={openFilePicker}>Открыть XML</button>
               </div>}
             </section>
           ) : (
@@ -797,24 +967,19 @@ function App() {
                     }} />
                   </label>
                   <div className="utility-actions">
-                    {!host && <button type="button" className="text-button" disabled={actionsDisabled} onClick={saveDraft}>Сохранить в браузере</button>}
                     {migrationTarget && (
                       <button type="button" className="text-button" disabled={actionsDisabled} onClick={previewMigration}>
                         Преобразовать в {migrationTarget}
                       </button>
                     )}
-                    {host && currentDocumentVersion !== currentVersion && (
-                      <button type="button" className="text-button" disabled={actionsDisabled} onClick={exportCurrent}>Выгрузить XML</button>
-                    )}
-                    {original && <button type="button" className="text-button" onClick={() => {
-                      try {
-                        const source = original.file || (typeof original.base64 === 'string'
-                          ? xmlBlobFromBase64(original.base64) : serializeXml(parseXml(original.xml)));
-                        downloadXml(source, original.name + ' (исходный)');
-                      } catch (error) { setProblem(error.message); }
-                    }}>Скачать исходный XML</button>}
-                    <button type="button" className="text-button" disabled={actionsDisabled}
-                      onClick={() => downloadXml(serializeXml(document), name + ' (черновик)')}>Скачать черновик</button>
+                    <FileActions>
+                      {!host && <button type="button" disabled={actionsDisabled} onClick={saveDraft}>Сохранить в браузере</button>}
+                      {host && currentDocumentVersion !== currentVersion && (
+                        <button type="button" disabled={actionsDisabled} onClick={exportCurrent}>Выгрузить XML</button>
+                      )}
+                      {original && <button type="button" onClick={() => exportLocal('original')}>Скачать исходный XML</button>}
+                      <button type="button" disabled={actionsDisabled} onClick={() => exportLocal('draft')}>Скачать черновик</button>
+                    </FileActions>
                   </div>
                 </div>
               )}

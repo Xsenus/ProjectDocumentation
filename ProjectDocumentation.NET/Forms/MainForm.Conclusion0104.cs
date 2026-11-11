@@ -1,3 +1,4 @@
+using Core.NET.Controllers;
 using Core.NET.Models.XPO;
 using DevExpress.XtraBars;
 using DevExpress.XtraEditors;
@@ -152,14 +153,18 @@ namespace ProjectDocumentation.NET.Forms
             }
         }
 
-        private void ExportHistoricalConclusion(ConclusionXPO record)
+        private async Task ExportHistoricalConclusionAsync(XmlObjXPO record, string xml, FileOperationEntry attempt)
         {
+            var original = record.Obj;
+            await FileOperationJournal.ObserveSchemaAsync(attempt, conclusionSchema, xml);
             using (var picker = new SaveFileDialog { Filter = "XML (*.xml)|*.xml", DefaultExt = "xml", AddExtension = true,
-                FileName = $"conclusion_{record.Guid:D}.xml" })
+                FileName = attempt.FileName })
             {
                 if (picker.ShowDialog(this) == DialogResult.OK)
                 {
-                    File.WriteAllBytes(picker.FileName, record.Obj);
+                    SetExportPath(attempt, picker.FileName);
+                    File.WriteAllBytes(attempt.FilePath, original);
+                    CompleteExport(attempt, "Исходный XML выгружен без преобразования.");
                 }
             }
         }
@@ -174,8 +179,11 @@ namespace ProjectDocumentation.NET.Forms
 
             try
             {
-                var migration = await conclusionSchema.MigrateAsync(record.GetObj(), Conclusion0104Document.LegacyVersion);
-                await ExportConclusionAsync(migration.Xml, Conclusion0104Document.LegacyVersion, record.Guid, migration.Warnings);
+                await TrackExportAsync(record, "conclusion", Conclusion0104Document.LegacyVersion, async attempt =>
+                {
+                    var migration = await conclusionSchema.MigrateAsync(record.GetObj(), attempt.Version);
+                    await ExportSchemaDocumentAsync(migration.Xml, attempt, Conclusion0104Document.RootName, migration.Warnings);
+                });
             }
             catch (Exception error)
             {
@@ -183,24 +191,28 @@ namespace ProjectDocumentation.NET.Forms
             }
         }
 
-        private Task ExportConclusionAsync(string xml, string version, Guid? guid, System.Collections.Generic.IReadOnlyList<string> warnings = null,
-            bool allowClassicDraft = false)
-            => ExportSchemaDocumentAsync(xml, version, guid, "Conclusion", "conclusion", warnings, allowClassicDraft);
-
-        private async Task ExportSchemaDocumentAsync(string xml, string version, Guid? guid, string rootName, string prefix,
+        private async Task ExportSchemaDocumentAsync(string xml, FileOperationEntry attempt, string rootName,
             System.Collections.Generic.IReadOnlyList<string> warnings = null, bool allowClassicDraft = false)
         {
+            var version = attempt.Version;
+            if (warnings != null)
+                foreach (var warning in warnings) FileOperationJournal.AddDiagnostic(attempt, warning);
+
             var validation = await conclusionSchema.ValidateAsync(xml);
+            FileOperationJournal.AddValidation(attempt, validation);
             var isClassicDraft = allowClassicDraft && validation.Version == version && !validation.Valid;
             if (isClassicDraft)
             {
                 if (!ConfirmClassicDraft(validation, ClassicConclusionFormat, "Выгрузить XML как черновик?"))
                 {
+                    attempt.Summary = "Выгрузка черновика отменена после проверки XML.";
                     return;
                 }
             }
-            else
+            else if (!validation.Valid || validation.Version != version)
             {
+                attempt.Status = FileOperationStatus.Rejected;
+                attempt.Summary = $"XML не прошёл проверку по схеме {version}.";
                 SchemaXmlDocument.RequireValid(validation, version);
             }
             if (warnings != null && warnings.Count > 0)
@@ -214,20 +226,24 @@ namespace ProjectDocumentation.NET.Forms
                 if (XtraMessageBox.Show(this, text + Environment.NewLine + Environment.NewLine + "Выгрузить совместимую копию?",
                     "Преобразование XML", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) != DialogResult.Yes)
                 {
+                    attempt.Summary = "Выгрузка совместимой копии отменена после просмотра замечаний.";
                     return;
                 }
             }
 
+            if (isClassicDraft) attempt.FileName = $"{attempt.Family}-draft_{attempt.DocumentId:D}.xml";
             using (var picker = new SaveFileDialog { Filter = "XML (*.xml)|*.xml", DefaultExt = "xml", AddExtension = true,
-                FileName = $"{prefix}{(isClassicDraft ? "-draft" : "")}_{guid:D}.xml" })
+                FileName = attempt.FileName })
             {
                 if (picker.ShowDialog(this) != DialogResult.OK)
                 {
                     return;
                 }
 
-                var schema = $"{prefix}-{version.Replace('.', '-')}";
-                await SchemaXmlDocument.WriteExportWithAssetsAsync(conclusionSchema, picker.FileName, xml, rootName, schema);
+                SetExportPath(attempt, picker.FileName);
+                var schema = $"{attempt.Family}-{version.Replace('.', '-')}";
+                await SchemaXmlDocument.WriteExportWithAssetsAsync(conclusionSchema, attempt.FilePath, xml, rootName, schema);
+                CompleteExport(attempt, isClassicDraft ? "Сохранён XML-черновик." : "XML выгружен.");
             }
         }
 

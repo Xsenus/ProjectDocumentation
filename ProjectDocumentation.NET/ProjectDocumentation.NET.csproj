@@ -124,6 +124,9 @@
     <Compile Include="Forms\NativeSchemaDocumentFields.cs" />
     <Compile Include="Forms\NativeSchemaDocumentSections.cs" />
     <Compile Include="Forms\MainForm.Conclusion0104.cs" />
+    <Compile Include="Forms\MainForm.FileHistory.cs" />
+    <Compile Include="Forms\FileOperationHistoryForm.cs" />
+    <Compile Include="Forms\FileOperationJournal.cs" />
     <Compile Include="Forms\FileLoad.Conclusion0104.cs" />
     <Compile Include="Forms\MainForm.ExplanatoryNote0107.cs" />
     <Compile Include="Forms\FileLoad.ExplanatoryNote0107.cs" />

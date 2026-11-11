@@ -14,7 +14,7 @@ namespace ProjectDocumentation.NET.Forms
     {
         private readonly ConclusionSchemaService conclusionSchema;
 
-        private async Task ImportCurrentConclusionAsync(XDocument document, string name)
+        private async Task ImportCurrentConclusionAsync(XDocument document, string name, FileOperationEntry attempt)
         {
             if (conclusionSchema == null)
             {
@@ -36,7 +36,7 @@ namespace ProjectDocumentation.NET.Forms
                 {
                     var sameVersion = existing is ConclusionXPO &&
                         Conclusion0104Document.ReadVersion(existing.GetObj()) == Conclusion0104Document.CurrentVersion;
-                    switch (AskImportConflict(existing, sameVersion))
+                    switch (ResolveImportConflict(existing, sameVersion, attempt))
                     {
                         case ImportConflictAction.Replace:
                             replace = (ConclusionXPO)existing;
@@ -50,10 +50,13 @@ namespace ProjectDocumentation.NET.Forms
                 }
             }
 
-            OpenConclusionImport(document, name, guid, warnings, replace);
+            var summary = replace != null ? "Содержимое существующего заключения заменено."
+                : incomingGuid.HasValue && guid != incomingGuid.Value ? "Заключение загружено как копия."
+                : "Заключение загружено.";
+            OpenConclusionImport(document, name, guid, warnings, attempt, summary, replace);
         }
 
-        private async Task ImportHistoricalConclusionAsync(XDocument document, string name)
+        private async Task ImportHistoricalConclusionAsync(XDocument document, string name, FileOperationEntry attempt)
         {
             if (conclusionSchema == null)
             {
@@ -61,18 +64,24 @@ namespace ProjectDocumentation.NET.Forms
             }
 
             var migration = await conclusionSchema.MigrateAsync(document.ToString(SaveOptions.DisableFormatting), Conclusion0104Document.CurrentVersion);
-            OpenConclusionImport(Conclusion0104Document.Parse(migration.Xml), $"{name} (01.04)", Guid.NewGuid(), migration.Warnings);
+            OpenConclusionImport(Conclusion0104Document.Parse(migration.Xml), $"{name} (01.04)", Guid.NewGuid(),
+                migration.Warnings, attempt, "Заключение преобразовано и загружено в версии 01.04.");
         }
 
-        private void OpenConclusionImport(XDocument document, string name, Guid guid, IReadOnlyList<string> warnings, ConclusionXPO replace = null)
+        private void OpenConclusionImport(XDocument document, string name, Guid guid, IReadOnlyList<string> warnings,
+            FileOperationEntry attempt, string summary, ConclusionXPO replace = null)
         {
+            if (warnings != null)
+                foreach (var warning in warnings) FileOperationJournal.AddDiagnostic(attempt, warning);
+
             using (var editor = new Conclusion0104Form(conclusionSchema, Conclusion0104Document.WithGuid(document, guid), name,
-                (xml, title) => Conclusion0104Document.SaveAsync(conclusionSchema, xml, title, guid, replace), warnings: warnings))
+                (xml, title) => Conclusion0104Document.SaveAsync(conclusionSchema, xml, title, guid, replace), warnings: warnings)
+                { ImportAttempt = attempt })
             {
                 if (editor.ShowDialog(this) == DialogResult.OK && editor.Document != null)
                 {
                     ObjXPO = editor.Document;
-                    Close();
+                    FinishImport(attempt, summary);
                 }
             }
         }
