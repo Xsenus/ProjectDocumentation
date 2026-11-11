@@ -110,7 +110,7 @@ export function titleFor(spec, types) {
 }
 
 export function normalPath(path) {
-  return (path || '').replace(/\[1\]/g, '').replace(/\{[^}]*\}/g, '');
+  return (path || '').replace(/\{[^}]*\}/g, '');
 }
 
 export function sectionProgress(model, document, section) {
@@ -141,6 +141,12 @@ function choicesFor(spec, types) {
   return [];
 }
 
+function dateInputValue(value) {
+  if (!/^(?!0000)\d{4}-\d{2}-\d{2}$/.test(value)) return false;
+  const date = new Date(value + 'T00:00:00Z');
+  return Number.isFinite(date.getTime()) && date.toISOString().slice(0, 10) === value;
+}
+
 function Field({ spec, types, value, onChange, readOnly, path, errorPaths, onRemove, occurrence }) {
   const id = useId();
   const title = titleFor(spec, types);
@@ -148,6 +154,7 @@ function Field({ spec, types, value, onChange, readOnly, path, errorPaths, onRem
   const doc = spec.documentation && spec.documentation !== title ? spec.documentation : undefined;
   const fixed = spec.fixed !== undefined && spec.fixed !== null;
   const invalid = errorPaths.has(normalPath(path));
+  const defaultValue = spec.default == null ? '' : String(spec.default);
   const blank = value == null ? '' : String(value);
   const inputType = primitive(spec.type, types);
   const choices = choicesFor(spec, types);
@@ -156,13 +163,14 @@ function Field({ spec, types, value, onChange, readOnly, path, errorPaths, onRem
   const common = { id, value: blank, 'aria-invalid': invalid || undefined,
     'aria-describedby': doc ? id + '-hint' : undefined, 'aria-required': Boolean(spec.required), readOnly: readOnly || fixed,
     onChange: event => onChange(event.target.value) };
-  const multiline = spec.name === 'Text' || inputType === 'base64Binary' ||
-    spec.type?.match(/(?:1000|2000|4000|8000|Text|Description)/i) || blank.includes('\n') || blank.length > 150;
+  const [initialMultiline] = useState(() => blank.includes('\n') || blank.length > 150);
+  const multiline = initialMultiline || spec.name === 'Text' || inputType === 'base64Binary' ||
+    spec.type?.match(/(?:1000|2000|4000|8000|Text|Description)/i);
   let control;
   if (choices.length && !readOnly && !fixed) {
     control = (
       <select {...common} readOnly={undefined} value={selected}>
-        <option value="">Выберите значение</option>
+        <option value="">{defaultValue ? 'По умолчанию: ' + (choices.find(item => item.value === defaultValue)?.label || defaultValue) : 'Выберите значение'}</option>
         {selected && !choices.some(item => String(item.value) === selected) && <option value={selected}>{selected}</option>}
         {choices.map(item => <option key={item.value} value={item.value}>{item.label || item.value}</option>)}
       </select>
@@ -171,7 +179,7 @@ function Field({ spec, types, value, onChange, readOnly, path, errorPaths, onRem
     control = <textarea {...common} rows={3} spellCheck={false} />;
   } else {
     const display = readOnly && choices.length ? choices.find(item => String(item.value) === selected)?.label || blank : blank;
-    const type = inputType === 'date' && (!blank || /^\d{4}-\d{2}-\d{2}$/.test(blank)) ? 'date' : 'text';
+    const type = inputType === 'date' && (!blank || dateInputValue(blank)) ? 'date' : 'text';
     const inputMode = inputType === 'decimal' || inputType === 'float' || inputType === 'double' ? 'decimal'
       : /integer|^int$|^long$|^short$/i.test(inputType || '') ? 'numeric' : undefined;
     control = <input {...common} type={type} inputMode={inputMode} value={display} spellCheck={false} />;
@@ -188,6 +196,9 @@ function Field({ spec, types, value, onChange, readOnly, path, errorPaths, onRem
       {doc && <small id={id + '-hint'} className="field-hint">{doc}</small>}
       {fixed && blank !== String(spec.fixed) && !readOnly && (
         <button type="button" className="text-button" onClick={() => onChange(String(spec.fixed))}>Установить {spec.fixed}</button>
+      )}
+      {!fixed && !blank && defaultValue && !readOnly && (
+        <button type="button" className="text-button" onClick={() => onChange(defaultValue)}>Установить значение по умолчанию ({defaultValue})</button>
       )}
     </div>
   );
@@ -295,11 +306,11 @@ function ElementEditor({ parent, spec, parentParticle, context }) {
 
   if (!nodes.length && context.readOnly) return null;
   return (
-    <div className="element-group field-wide">
+    <div className="element-group field-wide" data-xml-path={pathFor(parent) + '/' + spec.name}>
       {nodes.map((element, index) => isComplex
         ? <ComplexInstance key={context.keyFor(element)} element={element} spec={spec} type={type} index={index}
             repeatable={repeatable || nodes.length > 1} removable={nodes.length > spec.min} context={context} />
-        : <Field key={context.keyFor(element)} spec={{ ...fieldSpec, name: title + ' ' + (index + 1) }} types={context.types}
+        : <Field key={context.keyFor(element)} spec={fieldSpec} occurrence={index + 1} types={context.types}
             value={readElementText(element)} readOnly={context.readOnly} path={pathFor(element)} errorPaths={context.errorPaths}
             onChange={value => updateSimple(element, value)}
             onRemove={nodes.length > spec.min ? () => context.change(() => element.remove()) : undefined} />
@@ -354,6 +365,11 @@ function OrderedChoiceEntries({ parent, branches, spec, context }) {
   });
 }
 
+function initializesBranch(spec) {
+  if (!spec?.min || (spec.kind === 'choice' && spec.children?.length !== 1)) return false;
+  return spec.kind === 'element' || Boolean(spec.children?.some(initializesBranch));
+}
+
 function ChoiceEditor({ parent, spec, parentParticle, context }) {
   const [selection, setSelection] = useState('');
   const [clearing, setClearing] = useState(false);
@@ -378,7 +394,8 @@ function ChoiceEditor({ parent, spec, parentParticle, context }) {
   }
   if (context.readOnly && !count) return null;
   return (
-    <div className="choice-block field-wide">
+    <div className="choice-block field-wide" data-choice-parent-path={pathFor(parent)}
+      data-choice-elements={[...leafNames(spec)].join(' ')}>
       {ordered ? <OrderedChoiceEntries parent={parent} branches={branches} spec={spec} context={context} /> : activeBranches.map(index => {
         const branch = branches[index];
         const activeSpec = branch.kind === 'element' && multiple ? { ...branch, min: 0, max: spec.max } : branch;
@@ -396,7 +413,9 @@ function ChoiceEditor({ parent, spec, parentParticle, context }) {
             <option value="">Выберите вариант</option>
             {branches.map((branch, index) => <option key={index} value={index}>{branchLabel(branch, context.types, index)}</option>)}
           </select>
-          <button type="button" className="button button-quiet" disabled={selected === null} onClick={addSelected}>Добавить</button>
+          {(!selectedBranch || selectedBranch.kind === 'element' || initializesBranch(selectedBranch)) && (
+            <button type="button" className="button button-quiet" disabled={selected === null} onClick={addSelected}>Добавить</button>
+          )}
           {selectedFiles && <FileMetadataPicker key={selectedBranch.name} element={parent} type={selectedType}
             fields={selectedFiles} context={context} spec={selectedBranch} parentParticle={parentParticle} />}
         </div>
@@ -438,7 +457,7 @@ export default function SchemaForm({ model, document, section, context }) {
   const particles = topParticles(type.particle).filter(part => sectionFor([...leafNames(part)][0], familyId) === section);
   const unknown = Array.from(element.children).filter(child => !leafNames(type.particle).has(child.localName));
   return (
-    <div className="schema-form">
+    <div className="schema-form" data-xml-path={pathFor(element)}>
       {section === 'details' && <Attributes element={element} type={type} context={context} />}
       <div className="field-grid">
         {particles.map((part, index) => (

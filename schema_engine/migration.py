@@ -199,6 +199,13 @@ def _upgrade_address(element, target_type, path, warnings):
     russian_country = country.casefold() in RUSSIAN_NAMES
     foreign_country = bool(country) and not russian_country
     russian_region = region != '00' and region in _schema('01.03').enumerated_values('tRegionsRF')
+    if region == '00' and russian_country and target_type == 'tObjectAddress':
+        details = [child for child in element if child.tag in ADDRESS_LABELS or child.tag == 'Note']
+        for child in element:
+            if child not in details and child.tag not in {'Country', 'Region'}:
+                warnings.append(f'{path}/{child.tag}: поле не имеет аналога в морском адресе и доступно в оригинале.')
+        warnings.append(f'{path}/SeaRussianAddress: код 00 и страна Россия перенесены как морской адрес. Проверьте описание объекта.')
+        return _with_children(element, [_value_element('SeaRussianAddress', _address_description(details))])
     if (region == '00' and russian_country) or (russian_region and foreign_country):
         warnings.append(f'{path}: код региона и страна указывают на разные варианты адреса. Выберите правильный вариант по исходному документу.')
         return _with_children(element, [])
@@ -208,6 +215,8 @@ def _upgrade_address(element, target_type, path, warnings):
     if region == '00' or foreign_country:
         variant = ET.Element('ForeignAddress')
         variant.extend(element.findall('Country'))
+        if region == '00' and not country and target_type == 'tObjectAddress':
+            warnings.append(f'{path}: код 00 допускает зарубежный или морской адрес. Описание перенесено в незаполненный вариант ForeignAddress. Уточните тип адреса.')
         if region not in {'', '00'}:
             warnings.append(f'{path}/Region: исходный код региона не перенесён в иностранный адрес.')
         fields = [child for child in element if child.tag in ADDRESS_LABELS or child.tag == 'Note']
@@ -238,7 +247,7 @@ def _upgrade_address(element, target_type, path, warnings):
     return _with_children(element, [variant])
 
 
-def _downgrade_address(element, path, warnings):
+def _downgrade_address(element, target_type, path, warnings):
     variants = [child for child in element if child.tag in ADDRESS_VARIANTS]
     if not variants:
         return element
@@ -251,25 +260,30 @@ def _downgrade_address(element, path, warnings):
     for attribute in variant.attrib:
         warnings.append(f'{path}/{variant.tag}/@{attribute}: атрибут не перенесён в плоский адрес 01.03.')
     if variant.tag == 'SeaRussianAddress':
-        warnings.append(f'{path}: морской адрес перенесён в примечание. Код региона не определён.')
-        return _with_children(element, [_value_element('Note', variant.text or '')])
+        warnings.append(f'{path}: морской адрес перенесён в примечание с кодом 00. В 01.03 этот код также применяется для зарубежных адресов.')
+        return _with_children(element, [_value_element('Region', '00'), _value_element('Note', variant.text or '')])
     if variant.tag == 'ForeignAddress':
         if (variant.findtext('Country') or '').strip().casefold() in RUSSIAN_NAMES:
             warnings.append(f'{path}/Country: иностранный вариант содержит название России. Проверьте классификацию адреса.')
         return _with_children(element, [*variant, _value_element('Region', '00')])
     children = []
-    notes = [child for child in variant if child.tag in {'Note', 'Landmark'}]
+    note_tags = {'Note', 'Landmark'}
+    if target_type != 'tPostAddress':
+        note_tags.add('PostIndex')
+    notes = [child for child in variant if child.tag in note_tags]
     for child in variant:
         if child.tag == 'RegionCode':
             if (child.text or '').strip() == '00':
-                warnings.append(f'{path}/RegionCode: код 00 означает иностранный адрес в 01.03. Укажите регион российского адреса по оригиналу.')
+                warnings.append(f'{path}/RegionCode: код 00 в 01.03 относится к зарубежным и морским адресам. Укажите регион российского адреса по оригиналу.')
             else:
                 children.append(_renamed(child, 'Region'))
-        elif child.tag not in {'Note', 'Landmark'}:
+        elif child.tag not in note_tags:
             children.append(child)
-    if any(note.tag == 'Landmark' for note in notes):
+    folded_tags = dict.fromkeys(note.tag for note in notes if note.tag != 'Note')
+    if folded_tags:
         children.append(_value_element('Note', _address_description(notes)))
-        warnings.append(f'{path}/Landmark: ориентир перенесён в примечание 01.03.')
+        for tag in folded_tags:
+            warnings.append(f'{path}/{tag}: поле «{ADDRESS_LABELS[tag]}» перенесено в примечание 01.03.')
     else:
         children.extend(notes)
     return _with_children(element, children)
@@ -357,7 +371,7 @@ def _project(source, name, definition, schema, forward, path, warnings):
     if forward and type_name in {'tAddress', 'tObjectAddress', 'tPostAddress'}:
         source = _upgrade_address(source, type_name, path, warnings)
     elif not forward and type_name in {'tAddress', 'tPostAddress'}:
-        source = _downgrade_address(source, path, warnings)
+        source = _downgrade_address(source, type_name, path, warnings)
     if name in {'EngineeringSurveySummaryDate', 'ProjectDocumentsSummaryDate'}:
         source = (_upgrade_date if forward else _downgrade_date)(source, path, warnings)
     if name == 'FinanceOwner':
@@ -437,6 +451,9 @@ def migrate_xml(xml: str, target_version: str | None = None) -> dict:
     target_version = resolve_version(family, target_version)
     source_version = document_version(root, family)
     if source_version not in document.versions:
+        if source_version and re.fullmatch(r'[0-9]{2}\.[0-9]{2}', source_version):
+            raise ValueError(f'Версия {source_version} для {document.root} не поддерживается. '
+                             f'Доступные версии: {", ".join(document.versions)}.')
         raise ValueError(f'У {document.root} отсутствует поддерживаемый атрибут SchemaVersion ({", ".join(document.versions)}).')
     warnings: list[str] = []
     if source_version != target_version:

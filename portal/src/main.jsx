@@ -135,6 +135,8 @@ function App() {
   const [notice, setNotice] = useState('');
   const [dirty, setDirty] = useState(false);
   const [readOnly, setReadOnly] = useState(false);
+  const [desktopSaving, setDesktopSaving] = useState(false);
+  const [fileReads, setFileReads] = useState(0);
   const [validation, setValidation] = useState(null);
   const [preview, setPreview] = useState('');
   const [migration, setMigration] = useState(null);
@@ -148,6 +150,7 @@ function App() {
   const [, refresh] = useState(0);
   const revision = useRef(0);
   const operation = useRef('');
+  const desktopSavePending = useRef(false);
   const fileInput = useRef(null);
   const documentRef = useRef(null);
   const keys = useRef(new WeakMap());
@@ -155,7 +158,8 @@ function App() {
   const family = familyForDocument(document) || selectedFamily;
   const currentVersion = family.latestVersion;
   const currentDocumentVersion = schemaVersion(document);
-  const profileVersion = family.formVersions.includes(currentDocumentVersion) ? currentDocumentVersion : currentVersion;
+  const hasFormVersion = family.formVersions.includes(currentDocumentVersion);
+  const profileVersion = hasFormVersion ? currentDocumentVersion : currentVersion;
   const profileKey = family.id + '@' + profileVersion;
   const model = profiles[profileKey];
   const formReady = Boolean(model && document && model.version === currentDocumentVersion);
@@ -234,6 +238,7 @@ function App() {
         try { message = JSON.parse(data); } catch { return; }
       }
       if (message?.type === 'load') {
+        finishDesktopSave();
         if (typeof message.xml === 'string' && message.xml.trim()) {
           try { replaceDocument(message.xml, message.name, message); } catch (error) { setProblem(error.message); }
         } else {
@@ -243,8 +248,10 @@ function App() {
             .catch(error => setProblem(requestMessage(error)));
         }
       } else if (message?.type === 'error') {
+        finishDesktopSave();
         setProblem(message.message || 'Не удалось сохранить документ.');
       } else if (message?.type === 'saved') {
+        finishDesktopSave();
         setNotice('Документ сохранён.');
         setDirty(false);
       }
@@ -266,7 +273,7 @@ function App() {
   }, [dirty, rawDirty]);
 
   function change(callback) {
-    if (readOnly) return;
+    if (readOnly || desktopSavePending.current) return;
     callback();
     revision.current++;
     setDirty(true);
@@ -339,6 +346,9 @@ function App() {
         setOriginal(null);
         setConversionWarnings([]);
       }
+      if (host && next.documentElement.getAttribute(family.idAttribute) !== document.documentElement.getAttribute(family.idAttribute)) {
+        throw new Error('Идентификатор документа задаётся приложением. Восстановите его исходное значение в XML.');
+      }
       const canonical = serializeXml(next);
       documentRef.current = next;
       setDocument(next);
@@ -397,13 +407,26 @@ function App() {
     });
   }
 
+  function finishDesktopSave() {
+    desktopSavePending.current = false;
+    setDesktopSaving(false);
+  }
+
   function desktopSave() {
+    if (desktopSavePending.current || operation.current) return;
+    desktopSavePending.current = true;
+    setDesktopSaving(true);
     run('Проверяю перед сохранением', async () => {
-      const xml = serializeXml(document);
-      const result = await validateSnapshot(xml, revision.current);
-      if (result?.valid) {
-        host.postMessage({ type: 'save', xml, name: name.trim() || defaultName(document) });
-        setNotice('Документ передан на сохранение.');
+      let submitted = false;
+      try {
+        const xml = serializeXml(document);
+        const result = await validateSnapshot(xml, revision.current);
+        if (result?.valid) {
+          host.postMessage({ type: 'save', xml, name: name.trim() || defaultName(document) });
+          submitted = true;
+        }
+      } finally {
+        if (!submitted) finishDesktopSave();
       }
     });
   }
@@ -486,37 +509,53 @@ function App() {
     const name = normalized.split('/').filter(Boolean)[1]?.replace(/\[\d+\]/g, '');
     setSection(sectionFor(name, family.id));
     setTab('form');
-    requestAnimationFrame(function reveal() {
-      let frames = 0;
-      function nextFrame() {
-        const matches = Array.from(window.document.querySelectorAll('[data-xml-path]'));
-        const field = matches.find(node => node.dataset.xmlPath === normalized && node.classList.contains('field'));
-        if (field) {
-          field.scrollIntoView({ block: 'center' });
-          field.querySelector('input,select,textarea')?.focus({ preventScroll: true });
-          return;
-        }
-        const ancestor = matches.find(node => node.tagName === 'DETAILS' && !node.open &&
-          (normalized === node.dataset.xmlPath || normalized.startsWith(node.dataset.xmlPath + '/')));
-        if (ancestor) ancestor.open = true;
-        if (frames++ < 15 && ancestor) requestAnimationFrame(nextFrame);
-        else {
-          const closest = matches.filter(node => normalized.startsWith(node.dataset.xmlPath))
-            .sort((a, b) => b.dataset.xmlPath.length - a.dataset.xmlPath.length)[0];
-          closest?.scrollIntoView({ block: 'center' });
-        }
+    const slash = normalized.lastIndexOf('/');
+    const parentPath = normalized.slice(0, slash);
+    const elementName = normalized.slice(slash + 1).replace(/\[\d+\]$/, '');
+    function reveal(remainingFrames) {
+      const matches = Array.from(window.document.querySelectorAll('.schema-form [data-xml-path]'));
+      const field = matches.find(node => node.dataset.xmlPath === normalized && node.classList.contains('field'));
+      if (field) {
+        field.scrollIntoView({ block: 'center' });
+        field.querySelector('input, select, textarea')?.focus({ preventScroll: true });
+        return;
       }
-      nextFrame();
-    });
+      const ancestors = matches.filter(node => normalized === node.dataset.xmlPath ||
+        normalized.startsWith(node.dataset.xmlPath + '/'));
+      const closed = ancestors.find(node => node.tagName === 'DETAILS' && !node.open);
+      if (closed && remainingFrames > 0) {
+        closed.open = true;
+        requestAnimationFrame(() => reveal(remainingFrames - 1));
+        return;
+      }
+
+      const choice = Array.from(window.document.querySelectorAll('[data-choice-parent-path]')).find(node =>
+        node.dataset.choiceParentPath === parentPath && node.dataset.choiceElements.split(' ').includes(elementName));
+      const picker = choice?.querySelector(':scope > .choice-picker > select');
+      const group = matches.find(node => node.dataset.xmlPath === parentPath + '/' + elementName &&
+        node.classList.contains('element-group'));
+      const add = group?.querySelector(':scope > .button-add');
+      const closest = ancestors.sort((a, b) => b.dataset.xmlPath.length - a.dataset.xmlPath.length)[0];
+      const target = picker || add || closest || window.document.querySelector('.schema-form');
+      target?.scrollIntoView({ block: 'center' });
+      (picker || add)?.focus({ preventScroll: true });
+    }
+    requestAnimationFrame(() => reveal(60));
   }
 
-  const actionsDisabled = Boolean(busy || rawDirty || !document);
+  const readingFiles = fileReads > 0;
+  const actionsDisabled = Boolean(busy || desktopSaving || readingFiles || rawDirty || !document);
+  const editorLocked = readOnly || desktopSaving;
   const hasSchemaAssets = family.schemaVersions.includes(currentDocumentVersion);
   const assetVersion = hasSchemaAssets ? currentDocumentVersion : currentVersion;
   const assetBase = '/schemas/' + family.id + '-' + assetVersion.replace('.', '-');
-  const context = { types: model?.types || {}, depth: 0, readOnly, lockGuid: Boolean(host),
+  const context = { types: model?.types || {}, depth: 0, readOnly: editorLocked, lockGuid: Boolean(host),
     idAttribute: family.idAttribute, familyId: family.id, bridge: host, errorPaths, change, keyFor,
-    isCurrent: element => element.isConnected && element.ownerDocument === documentRef.current };
+    isCurrent: element => element.isConnected && element.ownerDocument === documentRef.current,
+    beginFileRead() {
+      setFileReads(count => count + 1);
+      return () => setFileReads(count => count - 1);
+    } };
 
   return (
     <div className="application">
@@ -528,14 +567,14 @@ function App() {
         <div className="header-actions">
           {!host && (
             <>
-              <select className="header-family" aria-label="Вид документа" value={family.id} disabled={Boolean(busy)}
+              <select className="header-family" aria-label="Вид документа" value={family.id} disabled={Boolean(busy || readingFiles)}
                 onChange={event => newDocument(familyForId(event.target.value))}>
                 {Object.values(documentFamilies).map(option => (
                   <option key={option.id} value={option.id}>{option.title}</option>
                 ))}
               </select>
-              <button type="button" className="header-button" disabled={Boolean(busy)} onClick={() => newDocument()}>{family.newAction}</button>
-              <button type="button" className="header-button header-primary" disabled={Boolean(busy)}
+              <button type="button" className="header-button" disabled={Boolean(busy || readingFiles)} onClick={() => newDocument()}>{family.newAction}</button>
+              <button type="button" className="header-button header-primary" disabled={Boolean(busy || readingFiles)}
                 onClick={() => permitReplacement() && fileInput.current.click()}>Открыть XML</button>
             </>
           )}
@@ -549,7 +588,7 @@ function App() {
             {!host && (
               <div className="workspace-switch" role="group" aria-label="Рабочая область">
                 <button className={!showDrafts ? 'selected' : ''} type="button" onClick={() => setShowDrafts(false)}>Редактор</button>
-                <button className={showDrafts ? 'selected' : ''} type="button" onClick={() => setShowDrafts(true)}>Черновики <span>{drafts.length}</span></button>
+                <button className={showDrafts ? 'selected' : ''} type="button" disabled={readingFiles} onClick={() => setShowDrafts(true)}>Черновики <span>{drafts.length}</span></button>
               </div>
             )}
             <h2>{family.sectionsTitle}</h2>
@@ -557,7 +596,7 @@ function App() {
               {Object.entries(groupLabels).map(([id, label]) => (
                 <button type="button" key={id} className={!showDrafts && tab === 'form' && section === id ? 'active' : ''}
                   aria-current={!showDrafts && tab === 'form' && section === id ? 'page' : undefined}
-                  disabled={!formReady || rawDirty}
+                  disabled={!formReady || rawDirty || readingFiles}
                   onClick={() => { setShowDrafts(false); setSection(id); setTab('form'); }}>
                   <span>{label}</span>
                   {formReady && sectionProgress(model, document, id) > 0 && <span className="nav-dot" aria-hidden="true"></span>}
@@ -575,7 +614,7 @@ function App() {
         <main className="main-content">
           {problem && <div className="feedback feedback-error" role="alert">{problem}</div>}
           {notice && <div className="feedback feedback-info" role="status">{notice}</div>}
-          {busy && <p className="live-progress" role="status"><span aria-hidden="true"></span>{busy}…</p>}
+          {(busy || desktopSaving) && <p className="live-progress" role="status"><span aria-hidden="true"></span>{busy || 'Сохраняю в приложении'}…</p>}
 
           {showDrafts ? (
             <section className="paper library">
@@ -623,7 +662,7 @@ function App() {
                 <div className="document-toolbar">
                   <label className="document-name">
                     <span>Название документа</span>
-                    <input value={name} onChange={event => {
+                    <input value={name} readOnly={editorLocked} onChange={event => {
                       setName(event.target.value);
                       revision.current++;
                       setDirty(true);
@@ -661,11 +700,11 @@ function App() {
 
               <section className="paper editor">
                 <div className="editor-heading">
-                  <h2>{tab === 'preview' ? 'Предпросмотр' : tab === 'form' && formReady ? groupLabels[section] : 'Исходный XML'}</h2>
+                  <h2>{tab === 'preview' ? 'Предпросмотр' : tab === 'form' && hasFormVersion ? groupLabels[section] : 'Исходный XML'}</h2>
                   <div className="editor-switch" role="group" aria-label="Вид редактора">
-                    <button type="button" className={tab === 'form' ? 'selected' : ''} disabled={!formReady || rawDirty}
+                    <button type="button" className={tab === 'form' ? 'selected' : ''} disabled={!formReady || rawDirty || readingFiles}
                       onClick={() => setTab('form')}>Форма</button>
-                    <button type="button" className={tab === 'xml' || tab !== 'preview' && !formReady ? 'selected' : ''} onClick={openXmlView}>XML</button>
+                    <button type="button" className={tab === 'xml' || tab !== 'preview' && !hasFormVersion ? 'selected' : ''} disabled={readingFiles} onClick={openXmlView}>XML</button>
                     <button type="button" className={tab === 'preview' ? 'selected' : ''} disabled={actionsDisabled || !hasSchemaAssets}
                       onClick={showPreview}>Предпросмотр</button>
                   </div>
@@ -673,8 +712,9 @@ function App() {
                 {tab === 'preview' ? (
                   <iframe className="print-preview" title={family.previewTitle} sandbox="" referrerPolicy="no-referrer"
                     srcDoc={sandboxedPreview(preview)} />
-                ) : tab === 'form' && formReady ? (
-                  <SchemaForm key={keyFor(document.documentElement)} model={model} document={document} section={section} context={context} />
+                ) : tab === 'form' && hasFormVersion ? (
+                  formReady ? <SchemaForm key={keyFor(document.documentElement)} model={model} document={document} section={section} context={context} />
+                    : <p className="empty-state">{problem ? 'Форма недоступна. Откройте вкладку XML.' : 'Загружаю поля схемы…'}</p>
                 ) : (
                   <div className="raw-panel">
                     {!family.formVersions.includes(currentDocumentVersion) && (
@@ -683,9 +723,9 @@ function App() {
                         {migrationTarget && ' и преобразовать в ' + migrationTarget}.
                       </p>
                     )}
-                    <textarea className="raw-editor" aria-label="Содержимое XML" value={raw} spellCheck={false} readOnly={readOnly}
+                    <textarea className="raw-editor" aria-label="Содержимое XML" value={raw} spellCheck={false} readOnly={editorLocked}
                       onChange={event => { setRaw(event.target.value); setMigration(null); revision.current++; }} />
-                    {rawDirty && !readOnly && (
+                    {rawDirty && !editorLocked && (
                       <div className="inline-actions">
                         <button className="button button-primary" type="button" onClick={applyRaw}>Применить XML</button>
                         <button className="button button-quiet" type="button" onClick={revertRaw}>Отменить изменения XML</button>
