@@ -32,7 +32,10 @@ def render_preview(xml):
     if family is None or version not in DOCUMENTS[family].versions or legacy_note_format(family, version):
         raise ValueError('Предпросмотр доступен для заключений 01.03 и 01.04, пояснительных записок 01.05 и 01.07.')
     try:
-        document = etree.fromstring(ET.tostring(root, encoding='utf-8'))
+        # parse_document already enforces size, depth and the DTD prohibition.
+        # Allow a base64 image to exceed libxml2's default text-node limit.
+        parser = etree.XMLParser(huge_tree=True, resolve_entities=False, no_network=True, load_dtd=False)
+        document = etree.fromstring(ET.tostring(root, encoding='utf-8'), parser)
         result = str(_stylesheet(family, version)(document))
     except etree.LxmlError as error:
         raise ValueError('Не удалось сформировать предпросмотр документа по XSL.') from error

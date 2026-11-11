@@ -1,11 +1,15 @@
 from functools import lru_cache
 from itertools import islice
+import re
 from uuid import uuid4
 from xml.etree import ElementTree as ET
 
 from lxml import etree
 from xmlschema import XMLSchema11
-from xmlschema.validators import XsdAssert, XsdElement, XsdGroup
+from xmlschema.validators import XMLSchemaChildrenValidationError, XsdAssert, XsdElement, XsdGroup
+from xmlschema.validators.facets import (
+    XsdEnumerationFacets, XsdLengthFacet, XsdMaxLengthFacet, XsdMinLengthFacet, XsdPatternFacets,
+)
 
 from .documents import (
     DEFAULT_FAMILY, DOCUMENTS, FAMILIES_BY_ROOT, SCHEMA_DIRECTORY, document_version,
@@ -17,6 +21,9 @@ from .xmlio import parse_document
 XSD = '{http://www.w3.org/2001/XMLSchema}'
 XML_ID = '{http://www.w3.org/XML/1998/namespace}id'
 MAX_VALIDATION_ERRORS = 200
+MISSING_ATTRIBUTE = re.compile(r"^missing required attribute '([^']+)'$")
+INVALID_ATTRIBUTE = re.compile(r"^attribute ([^=\s]+)=")
+FIXED_ATTRIBUTE = re.compile(r"^attribute '([^']+)' has a fixed value '([^']*)'$")
 
 
 @lru_cache(maxsize=None)
@@ -104,11 +111,74 @@ def _documentation(component):
 
 
 def _validation_error(error, root_path):
-    result = {'path': error.path or root_path, 'message': error.reason or error.message}
+    path = error.path or root_path
+    reason = error.reason or error.message
+    result = {'path': path, 'message': reason}
     if isinstance(error.validator, XsdAssert):
         result['code'] = 'xsd-assertion'
-        result['message'] = _documentation(error.validator) or result['message']
+        result['message'] = _documentation(error.validator) or reason
+        return result
+    if isinstance(error, XMLSchemaChildrenValidationError):
+        return _children_error(error, result)
+    if match := MISSING_ATTRIBUTE.fullmatch(reason):
+        name, = match.groups()
+        return {'path': f'{path}/@{name}', 'code': 'required-attribute', 'message': f'Заполните обязательный атрибут {name}.'}
+    if match := FIXED_ATTRIBUTE.fullmatch(reason):
+        name, value = match.groups()
+        return {'path': f'{path}/@{name}', 'code': 'fixed-value', 'message': f'Допустимое значение атрибута {name} — {value}.'}
+    if match := INVALID_ATTRIBUTE.match(reason):
+        name, = match.groups()
+        result['path'] = f'{path}/@{name}'
+    if message := _facet_message(error.validator):
+        result['message'] = message
     return result
+
+
+def _children_error(error, result):
+    expected = tuple(dict.fromkeys(element.local_name for element in error.expected or ()
+                                   if isinstance(element, XsdElement) and element.local_name))
+    child = error.invalid_child
+    children = list(error.elem) if error.elem is not None else []
+    known_names = {element.name for element in error.validator.iter_elements()}
+    if len(expected) == 1 and not any(node.tag == expected[0] for node in children) and (
+        child is None or child.tag in known_names
+    ):
+        name, = expected
+        return {'path': f'{result["path"]}/{name}', 'code': 'required-element', 'message': f'Заполните обязательный элемент {name}.'}
+    if child is not None:
+        siblings = [node for node in children if node.tag == child.tag]
+        suffix = f'[{siblings.index(child) + 1}]' if len(siblings) > 1 else ''
+        name = child.tag.rsplit('}', 1)[-1]
+        result['path'] = f'{result["path"]}/{name}{suffix}'
+        result['code'] = 'unexpected-element'
+        result['message'] = f'Элемент {name} недопустим в этой позиции.'
+        if expected:
+            result['message'] += f' Ожидается {", ".join(expected)}.'
+    elif expected:
+        result['code'] = 'incomplete-element'
+        result['message'] = f'Заполните вложенные элементы. Ожидается {", ".join(expected)}.'
+    return result
+
+
+def _facet_message(validator):
+    if isinstance(validator, XsdEnumerationFacets):
+        values = [str(value) for value in validator.enumeration]
+        if len(values) <= 8:
+            return f'Выберите допустимое значение: {", ".join(values)}.'
+        return 'Выберите значение из справочника.'
+    if isinstance(validator, XsdPatternFacets):
+        return 'Значение не соответствует формату, заданному в схеме.'
+    if isinstance(validator, XsdLengthFacet):
+        return f'Длина значения должна быть {validator.value}.'
+    if isinstance(validator, XsdMinLengthFacet):
+        return f'Минимальная длина значения — {validator.value}.'
+    if isinstance(validator, XsdMaxLengthFacet):
+        return f'Максимальная длина значения — {validator.value}.'
+    return ''
+
+
+def _declared_values(component):
+    return {name: value for name in ('default', 'fixed') if (value := getattr(component, name)) is not None}
 
 
 def _occurs(component):
@@ -123,7 +193,7 @@ class _FormSchema:
     def element(self, component):
         return {
             'kind': 'element', 'name': component.local_name, 'type': self.type_id(component.type),
-            'documentation': _documentation(component), **_occurs(component),
+            'documentation': _documentation(component), **_occurs(component), **_declared_values(component),
         }
 
     def particle(self, component):
@@ -137,15 +207,11 @@ class _FormSchema:
         raise TypeError(f'Unsupported XSD form particle: {type(component).__name__}')
 
     def attribute(self, component):
-        result = {
+        return {
             'name': component.local_name, 'type': self.type_id(component.type),
             'required': component.use == 'required', 'documentation': _documentation(component),
+            **_declared_values(component),
         }
-        for property_name in ('default', 'fixed'):
-            value = getattr(component, property_name)
-            if value is not None:
-                result[property_name] = value
-        return result
 
     def type_id(self, component):
         identity = id(component)

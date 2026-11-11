@@ -30,7 +30,7 @@ function setField(element, field, type, types, value) {
   writeElementText(child, value);
 }
 
-function LocalFilePicker({ label, accept, multiple, onSelect }) {
+function LocalFilePicker({ label, accept, multiple, onSelect, beginRead }) {
   const input = useRef(null);
   const operation = useRef(null);
   const [reading, setReading] = useState(false);
@@ -43,6 +43,7 @@ function LocalFilePicker({ label, accept, multiple, onSelect }) {
     if (!files.length || operation.current) return;
     const controller = new AbortController();
     operation.current = controller;
+    const finishRead = beginRead();
     setReading(true);
     setProblem('');
     try {
@@ -50,6 +51,7 @@ function LocalFilePicker({ label, accept, multiple, onSelect }) {
     } catch (error) {
       if (!controller.signal.aborted) setProblem(error.message || 'Не удалось прочитать выбранный файл.');
     } finally {
+      finishRead();
       operation.current = null;
       if (!controller.signal.aborted) setReading(false);
     }
@@ -99,7 +101,7 @@ export function FileMetadataPicker({ element, type, fields, context, parentParti
     });
   }
 
-  return <LocalFilePicker label={label} multiple={repeatable} onSelect={select} />;
+  return <LocalFilePicker label={label} multiple={repeatable} onSelect={select} beginRead={context.beginFileRead} />;
 }
 
 export function ImagePicker({ element, type, context }) {
@@ -136,5 +138,5 @@ export function ImagePicker({ element, type, context }) {
   }
 
   return <LocalFilePicker label={content() ? 'Заменить изображение' : 'Выбрать изображение'}
-    accept={allowed.map(format => '.' + format).join(',')} onSelect={select} />;
+    accept={allowed.map(format => '.' + format).join(',')} onSelect={select} beginRead={context.beginFileRead} />;
 }

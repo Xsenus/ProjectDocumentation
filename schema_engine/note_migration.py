@@ -66,7 +66,7 @@ def _convert_address(element, type_name, source_version, target_version, path, w
     if target_version == '01.07':
         converted = _upgrade_address(element, type_name, path, local_warnings)
     else:
-        converted = _downgrade_address(element, path, local_warnings)
+        converted = _downgrade_address(element, type_name, path, local_warnings)
     old_version = source_version if target_version == '01.07' else target_version
     warnings.extend(warning.replace('01.04', '01.07').replace('01.03', old_version) for warning in local_warnings)
     return converted
@@ -159,11 +159,13 @@ def _combine_estimates(children):
 
 def _flatten_other_subsections(element, path, warnings):
     children = []
-    for index, child in enumerate(element, start=1):
+    subsection_index = 0
+    for child in element:
         if child.tag != 'SubSection':
             children.append(child)
             continue
-        child_path = f'{path}/SubSection[{index}]'
+        subsection_index += 1
+        child_path = f'{path}/SubSection[{subsection_index}]'
         warnings.append(f'{child_path}: документы перенесены в родительский раздел. Заголовок и структура подраздела доступны в оригинале.')
         children.extend(_flatten_other_subsections(child, child_path, warnings))
     return _with_children(element, children)
@@ -223,6 +225,10 @@ def _candidate(child, fields, target_version, path, warnings):
             return 'ForeignOrganization'
     if name in fields:
         return name
+    if name == 'PerairFrequency' and 'RepairFrequency' in fields:
+        return 'RepairFrequency'
+    if name == 'RepairFrequency' and 'PerairFrequency' in fields:
+        return 'PerairFrequency'
     if target_version == '01.03' and name == 'OtherDocument' and 'Document' in fields:
         warnings.append(f'{path}: совместимые реквизиты перенесены в формат документа 01.03.')
         return 'Document'

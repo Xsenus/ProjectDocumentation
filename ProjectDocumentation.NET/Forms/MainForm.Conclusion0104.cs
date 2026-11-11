@@ -3,7 +3,6 @@ using DevExpress.XtraBars;
 using DevExpress.XtraEditors;
 using ProjectDocumentation.NET.Services;
 using System;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -168,22 +167,8 @@ namespace ProjectDocumentation.NET.Forms
                     return;
                 }
 
-                var directory = Path.GetDirectoryName(picker.FileName);
                 var schema = $"{prefix}-{version.Replace('.', '-')}";
-                foreach (var filename in new[] { schema + ".xsd", schema + ".xsl" })
-                {
-                    var path = Path.Combine(directory, filename);
-                    if (!File.Exists(path))
-                    {
-                        var bytes = await conclusionSchema.GetSchemaAssetAsync(filename);
-                        using (var stream = new FileStream(path, FileMode.CreateNew, FileAccess.Write, FileShare.None))
-                        {
-                            await stream.WriteAsync(bytes, 0, bytes.Length);
-                        }
-                    }
-                }
-
-                SchemaXmlDocument.WriteExport(picker.FileName, xml, rootName, schema);
+                await SchemaXmlDocument.WriteExportWithAssetsAsync(conclusionSchema, picker.FileName, xml, rootName, schema);
             }
         }
 

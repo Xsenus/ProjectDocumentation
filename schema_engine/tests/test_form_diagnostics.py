@@ -1,0 +1,48 @@
+import unittest
+from pathlib import Path
+
+from schema_engine.preview import render_preview
+from schema_engine.schema import new_document, validate_document
+
+
+FIXTURES = Path(__file__).with_name('fixtures')
+
+
+class FormDiagnosticsTests(unittest.TestCase):
+    def test_empty_and_partial_documents_identify_required_fields(self):
+        cases = (
+            ('conclusion', '/Conclusion/ExpertOrganization'),
+            ('explanatorynote', '/ExplanatoryNote/ExplanatoryNoteNumber'),
+        )
+        for family, path in cases:
+            with self.subTest(family=family):
+                result = validate_document(new_document(family))
+                self.assertFalse(result['valid'])
+                self.assertEqual(result['errors'][0]['path'], path)
+                self.assertEqual(result['errors'][0]['code'], 'required-element')
+
+        xml = (FIXTURES / 'explanatorynote-01-07.xml').read_text(encoding='utf-8')
+        xml = xml.replace('<Name>Тестовый объект записки</Name>', '')
+        xml = xml.replace(' ObjectID="object-test"', '').replace('Placement="1"', 'Placement="0"')
+        result = validate_document(xml)
+        self.assertFalse(result['valid'])
+        errors = {error['path']: error for error in result['errors']}
+        self.assertEqual(errors['/ExplanatoryNote/NonIndustrialObject/Name']['code'], 'required-element')
+        self.assertEqual(errors['/ExplanatoryNote/NonIndustrialObject/@ObjectID']['code'], 'required-attribute')
+        self.assertIn('допустимое', errors['/ExplanatoryNote/NonIndustrialObject/@Placement']['message'])
+
+    def test_invalid_value_in_second_document_keeps_its_index(self):
+        xml = (FIXTURES / 'explanatorynote-01-07.xml').read_text(encoding='utf-8')
+        fragment = xml.split('<ProjectInitialDocuments>', 1)[1].split('</ProjectInitialDocuments>', 1)[0]
+        xml = xml.replace('</ProjectInitialDocuments>', fragment.replace('2026-01-02', '2026-02-31') + '</ProjectInitialDocuments>')
+        result = validate_document(xml)
+        self.assertFalse(result['valid'])
+        self.assertTrue(any(error['path'] == '/ExplanatoryNote/ProjectInitialDocuments/Document[2]/DocDate'
+                            for error in result['errors']), result['errors'])
+
+    def test_preview_accepts_large_image_inside_xml_size_limit(self):
+        xml = (FIXTURES / 'explanatorynote-01-07.xml').read_text(encoding='utf-8')
+        data = 'A' * 10_000_004
+        xml = xml.replace('</DesignerAssurance>', f'<Image Type="png"><ImageData>{data}</ImageData></Image></DesignerAssurance>')
+        html = render_preview(xml)
+        self.assertIn(data, html)

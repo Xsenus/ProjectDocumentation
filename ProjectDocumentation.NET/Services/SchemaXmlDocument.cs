@@ -13,11 +13,11 @@ namespace ProjectDocumentation.NET.Services
 {
     internal static class SchemaXmlDocument
     {
-        public const int MaxXmlCharacters = 8 * 1024 * 1024;
+        public const int MaxXmlBytes = 32 * 1024 * 1024;
 
         public static string ReadVersion(string xml, string rootName)
         {
-            if (string.IsNullOrWhiteSpace(xml) || xml.Length > MaxXmlCharacters)
+            if (string.IsNullOrWhiteSpace(xml))
             {
                 return null;
             }
@@ -62,9 +62,14 @@ namespace ProjectDocumentation.NET.Services
 
         public static XDocument Parse(string xml, string rootName)
         {
-            if (string.IsNullOrWhiteSpace(xml) || xml.Length > MaxXmlCharacters)
+            if (string.IsNullOrWhiteSpace(xml))
             {
-                throw new InvalidOperationException("Документ пустой или превышает допустимый размер XML.");
+                throw new InvalidOperationException("Документ XML пустой.");
+            }
+
+            if (xml.Length > MaxXmlBytes || Encoding.UTF8.GetByteCount(xml) > MaxXmlBytes)
+            {
+                throw new InvalidOperationException("Размер XML превышает 32 МиБ в UTF-8.");
             }
 
             using (var source = new StringReader(xml))
@@ -205,6 +210,71 @@ namespace ProjectDocumentation.NET.Services
             }
         }
 
+        public static async Task WriteExportWithAssetsAsync(ConclusionSchemaService service, string path, string xml, string rootName, string schema)
+        {
+            path = Path.GetFullPath(path);
+            var directory = Path.GetDirectoryName(path);
+            var names = new[] { schema + ".xsd", schema + ".xsl" };
+            var paths = names.Select(name => Path.Combine(directory, name)).ToArray();
+            if (paths.Contains(path, StringComparer.OrdinalIgnoreCase))
+            {
+                throw new InvalidOperationException("Выберите для XML имя, отличное от имени файла схемы или стиля.");
+            }
+
+            var assets = await Task.WhenAll(names.Select(service.GetSchemaAssetAsync));
+            for (var index = 0; index < paths.Length; index++)
+            {
+                CheckExistingAsset(paths[index], assets[index]);
+            }
+
+            for (var index = 0; index < paths.Length; index++)
+            {
+                await WriteMissingAssetAsync(paths[index], assets[index]);
+            }
+
+            WriteExport(path, xml, rootName, schema);
+        }
+
+        private static void CheckExistingAsset(string path, byte[] expected)
+        {
+            var info = new FileInfo(path);
+            if (info.Exists && (info.Length != expected.Length || !File.ReadAllBytes(path).SequenceEqual(expected)))
+            {
+                throw new InvalidOperationException($"В папке уже есть файл «{info.Name}», который отличается от официального. Выберите другую папку для выгрузки.");
+            }
+        }
+
+        private static async Task WriteMissingAssetAsync(string path, byte[] asset)
+        {
+            if (File.Exists(path))
+            {
+                CheckExistingAsset(path, asset);
+                return;
+            }
+
+            var temporary = Path.Combine(Path.GetDirectoryName(path), Guid.NewGuid().ToString("N") + ".tmp");
+            try
+            {
+                using (var stream = new FileStream(temporary, FileMode.CreateNew, FileAccess.Write, FileShare.None))
+                {
+                    await stream.WriteAsync(asset, 0, asset.Length);
+                }
+
+                try
+                {
+                    File.Move(temporary, path);
+                }
+                catch (IOException) when (File.Exists(path))
+                {
+                    CheckExistingAsset(path, asset);
+                }
+            }
+            finally
+            {
+                File.Delete(temporary);
+            }
+        }
+
         private static XDocument RequireRoot(XDocument document, string rootName)
         {
             if (document.Root?.Name != XName.Get(rootName))
@@ -221,7 +291,7 @@ namespace ProjectDocumentation.NET.Services
             {
                 DtdProcessing = DtdProcessing.Prohibit,
                 XmlResolver = null,
-                MaxCharactersInDocument = MaxXmlCharacters
+                MaxCharactersInDocument = MaxXmlBytes
             };
         }
     }

@@ -124,3 +124,50 @@ class NoteMigrationTests(unittest.TestCase):
         upgraded = ET.fromstring(migrate_xml(result['xml'])['xml'])
         for category, number in (('ObjectEstimates', 'С-1'), ('LocalEstimates', 'С-2')):
             self.assertEqual(upgraded.findtext(f'{section_path}/SectionContent/{category}/Document/DocNumber'), number)
+
+    def test_linear_object_migrates_both_addresses_and_renamed_repair_frequency(self):
+        original = '''<ExplanatoryNote SchemaVersion="01.03">
+          <LinearObject ObjectID="test-line" Placement="1" DangerousAndComplex="1" Unique="1">
+            <Name>Тестовый линейный объект</Name>
+            <ConstructionType>1</ConstructionType><ConstructionDuration>2.5</ConstructionDuration>
+            <Address><Country>Россия</Country><Note>Морской участок</Note><Region>00</Region></Address>
+            <FinishAddress><Country>Беларусь</Country><Note>Конец тестового участка</Note><Region>00</Region></FinishAddress>
+            <DangerousIndustrialObject>Не относится к опасным производственным объектам</DangerousIndustrialObject>
+            <LandCategory>1</LandCategory>
+            <GasNetworksFeatures><PerairFrequency><Text>Тестовый интервал ремонта</Text></PerairFrequency></GasNetworksFeatures>
+          </LinearObject>
+        </ExplanatoryNote>'''
+        validation = validate_document(original)
+        self.assertTrue(validation['valid'], validation['errors'])
+        middle = migrate_xml(original, '01.05')
+        for source in (original, middle['xml']):
+            with self.subTest(source=ET.fromstring(source).get('SchemaVersion')):
+                result = migrate_xml(source, '01.07')
+                modern = ET.fromstring(result['xml']).find('LinearObject')
+                self.assertEqual(modern.get('ObjectID'), 'test-line')
+                self.assertEqual(modern.findtext('Address/SeaRussianAddress'), 'Морской участок')
+                self.assertEqual(modern.findtext('FinishAddress/ForeignAddress/Country'), 'Беларусь')
+                self.assertEqual(modern.findtext('GasNetworksFeatures/RepairFrequency/Text'), 'Тестовый интервал ремонта')
+                self.assertFalse(any('PerairFrequency' in warning for warning in result['warnings']))
+                exported = migrate_xml(result['xml'], '01.03')
+                old = ET.fromstring(exported['xml']).find('LinearObject')
+                self.assertEqual(old.findtext('Address/Region'), '00')
+                self.assertEqual(old.findtext('FinishAddress/Country'), 'Беларусь')
+                self.assertEqual(old.findtext('GasNetworksFeatures/PerairFrequency/Text'), 'Тестовый интервал ремонта')
+
+    def test_legacy_safety_subsections_keep_all_documents_in_the_original_order(self):
+        original = '''<ExplanatoryNote SchemaVersion="01.03">
+          <NonIndustrialObject><ProjectDocumentation><Section13><IndustrialSafetyDeclaration>
+            <Document><DocNumber>Т-1</DocNumber></Document>
+            <SubSection Name="Тестовый"><Document><DocNumber>Т-2</DocNumber></Document>
+              <SubSection Name="Вложенный"><Document><DocNumber>Т-3</DocNumber></Document></SubSection>
+            </SubSection>
+          </IndustrialSafetyDeclaration></Section13></ProjectDocumentation></NonIndustrialObject>
+        </ExplanatoryNote>'''
+        result = migrate_xml(original)
+        modern = ET.fromstring(result['xml'])
+        safety_path = 'NonIndustrialObject/ProjectDocumentation/Section13/SectionContent/IndustrialSafetyDeclaration'
+        self.assertEqual([number.text for number in modern.findall(f'{safety_path}/Document/DocNumber')],
+                         ['Т-1', 'Т-2', 'Т-3'])
+        self.assertTrue(any(f'{safety_path}/SubSection[1]/SubSection[1]' in warning
+                            for warning in result['warnings']))

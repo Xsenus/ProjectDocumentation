@@ -134,12 +134,13 @@ namespace ProjectDocumentation.NET.Forms
             JObject message;
             try
             {
-                if (e.WebMessageAsJson.Length > SchemaXmlDocument.MaxXmlCharacters * 6L + 65536)
+                var json = e.WebMessageAsJson;
+                if (json.Length > SchemaXmlDocument.MaxXmlBytes * 6L + 65536)
                 {
                     return;
                 }
 
-                var token = JToken.Parse(e.WebMessageAsJson);
+                var token = JToken.Parse(json);
                 message = token.Type == JTokenType.String ? JObject.Parse(token.Value<string>()) : token as JObject;
             }
             catch (JsonException)
