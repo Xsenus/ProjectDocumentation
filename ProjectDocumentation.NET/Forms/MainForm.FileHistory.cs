@@ -32,17 +32,20 @@ namespace ProjectDocumentation.NET.Forms
             }
         }
 
-        private async Task TrackExportAsync(XmlObjXPO record, string family, string version, Func<FileOperationEntry, Task> export)
+        private Task TrackExportAsync(XmlObjXPO record, string family, string version, Func<FileOperationEntry, Task> export)
+            => TrackExportAsync(family, version, record.Guid, record.Name, export);
+
+        private async Task TrackExportAsync(string family, string version, Guid? guid, string name, Func<FileOperationEntry, Task> export)
         {
             var attempt = new FileOperationEntry
             {
                 Kind = FileOperationKind.Export,
                 Status = FileOperationStatus.Cancelled,
-                FileName = $"{family}_{record.Guid:D}.xml",
-                DocumentName = record.Name,
+                FileName = $"{family}_{guid:D}.xml",
+                DocumentName = name,
                 Family = family,
                 Version = version,
-                DocumentId = record.Guid,
+                DocumentId = guid,
                 Summary = "Выгрузка отменена."
             };
             try

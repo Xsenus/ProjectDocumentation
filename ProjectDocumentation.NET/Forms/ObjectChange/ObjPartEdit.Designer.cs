@@ -190,7 +190,6 @@
             this.gridViewTEI.OptionsView.ColumnHeaderAutoHeight = DevExpress.Utils.DefaultBoolean.True;
             this.gridViewTEI.OptionsView.RowAutoHeight = true;
             this.gridViewTEI.OptionsView.ShowGroupPanel = false;
-            this.gridViewTEI.PopupMenuShowing += new DevExpress.XtraGrid.Views.Grid.PopupMenuShowingEventHandler(this.gridViewTEI_PopupMenuShowing);
             // 
             // btnClose
             // 

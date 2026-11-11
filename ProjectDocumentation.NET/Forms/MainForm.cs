@@ -2,7 +2,6 @@
 using Core.NET.AutoModels.ConclusionObj;
 using Core.NET.AutoModels.ExplanatoryNoteObj;
 using Core.NET.Controllers;
-using Core.NET.Extensions;
 using Core.NET.Models.XPO;
 using DevExpress.Utils;
 using DevExpress.Xpo;
@@ -43,17 +42,12 @@ namespace ProjectDocumentation.NET.Forms
 
         private void InitializeDocumentToolbar()
         {
-            var classic = new BarSubItem(barManager, "Классические формы 01.03");
             var addConclusion = new BarButtonItem(barManager, "Добавить заключение 01.03");
             addConclusion.ItemClick += AddClassicConclusion_ItemClick;
-            classic.AddItem(addConclusion);
             var addNote = new BarButtonItem(barManager, "Добавить пояснительную записку 01.03");
             addNote.ItemClick += AddClassicExplanatoryNote_ItemClick;
-            classic.AddItem(addNote);
             editLegacyFields = new BarButtonItem(barManager, "Все поля выбранного документа 01.03…");
             editLegacyFields.ItemClick += EditLegacyFields_ItemClick;
-            classic.AddItem(editLegacyFields).BeginGroup = true;
-            popupMenu.AddItem(classic);
 
             var checks = new BarSubItem(barManager, "Проверка и реестр");
             validateDocument = new BarButtonItem(barManager, "Проверить выбранный XML");
@@ -69,8 +63,23 @@ namespace ProjectDocumentation.NET.Forms
             var create = new BarSubItem(barManager, "Создать");
             create.AddItem(barBtnAddConclusion);
             create.AddItem(barBtnAddExplanatoryNote);
-            create.AddItem(addConclusion).BeginGroup = true;
-            create.AddItem(addNote);
+            var addCompatibleNote = new BarButtonItem(barManager, "Добавить пояснительную записку 01.05");
+            addCompatibleNote.ItemClick += async (_, __) => await AddSchemaExplanatoryNoteAsync(ExplanatoryNote0107Document.CompatibleVersion);
+            create.AddItem(addCompatibleNote);
+
+            var classic = new BarSubItem(barManager, "Классические формы 01.03");
+            classic.AddItem(addConclusion);
+            classic.AddItem(addNote);
+            create.AddItem(classic).BeginGroup = true;
+
+            var fromSchema = new BarSubItem(barManager, "Все поля по схеме 01.03");
+            var addSchemaConclusion = new BarButtonItem(barManager, "Заключение 01.03");
+            addSchemaConclusion.ItemClick += async (_, __) => await AddLegacySchemaDocumentAsync("conclusion");
+            fromSchema.AddItem(addSchemaConclusion);
+            var addSchemaNote = new BarButtonItem(barManager, "Пояснительная записка 01.03");
+            addSchemaNote.ItemClick += async (_, __) => await AddLegacySchemaDocumentAsync(ExplanatoryNote0107Document.Family);
+            fromSchema.AddItem(addSchemaNote);
+            create.AddItem(fromSchema);
 
             var versions = new BarSubItem(barManager, "Версии XML");
             versions.AddItem(editLegacyFields);
@@ -92,9 +101,39 @@ namespace ProjectDocumentation.NET.Forms
             AddDocumentBar("Документы", 0, fileCommands.ToArray());
             AddDocumentBar("Действия с документом", 1, barBtnView, barBtnEdit, versions, checks);
 
+            InitializeDocumentContextMenus(create, versions, history);
             gridView.FocusedRowChanged += (_, __) => UpdateDocumentCommands(gridView.GetFocusedRow());
-            popupMenu.CloseUp += (_, __) => UpdateDocumentCommands(gridView.GetFocusedRow());
             UpdateDocumentCommands(null);
+        }
+
+        private void InitializeDocumentContextMenus(BarSubItem create, BarSubItem versions, BarButtonItem history)
+        {
+            var emptyMenu = new PopupMenu(components) { Manager = barManager };
+            emptyMenu.AddItem(create);
+            emptyMenu.AddItem(barBtnLoad);
+            emptyMenu.AddItem(history).BeginGroup = true;
+
+            var contextVersions = new BarSubItem(barManager, versions.Caption);
+            foreach (BarItemLink link in versions.ItemLinks) contextVersions.AddItem(link.Item);
+
+            popupMenu.AddItem(barBtnView);
+            popupMenu.AddItem(barBtnEdit);
+            popupMenu.AddItem(barBtnBaseSetting);
+            popupMenu.AddItem(validateDocument).BeginGroup = true;
+            popupMenu.AddItem(barBtnFill);
+            var versionsLink = popupMenu.AddItem(contextVersions);
+            popupMenu.AddItem(barBtnDel).BeginGroup = true;
+
+            GridContextMenus.Attach(gridView, hasRow =>
+            {
+                if (!hasRow) return emptyMenu;
+
+                UpdateDocumentCommands(gridView.GetFocusedRow());
+                foreach (BarItemLink link in contextVersions.ItemLinks) link.Visible = link.Item.Enabled;
+                foreach (BarItemLink link in popupMenu.ItemLinks) link.Visible = link.Item.Enabled;
+                versionsLink.Visible = contextVersions.ItemLinks.Cast<BarItemLink>().Any(link => link.Item.Enabled);
+                return popupMenu;
+            });
         }
 
         private void AddDocumentBar(string name, int row, params BarItem[] commands)
@@ -137,8 +176,11 @@ namespace ProjectDocumentation.NET.Forms
 
         private async void EditLegacyFields_ItemClick(object sender, ItemClickEventArgs e)
         {
-            if (!(gridView.GetFocusedRow() is XmlObjXPO record)) return;
+            if (gridView.GetFocusedRow() is XmlObjXPO record) await EditLegacyFieldsAsync(record);
+        }
 
+        private async Task EditLegacyFieldsAsync(XmlObjXPO record)
+        {
             try
             {
                 var originalXml = record.GetObj();
@@ -166,6 +208,23 @@ namespace ProjectDocumentation.NET.Forms
                 if (record is ExplanatoryNoteXPO) ShowExplanatoryNoteError(error);
                 else ShowConclusionError(error);
             }
+        }
+
+        private async Task<bool> OpenIncompleteClassicAsync(XmlObjXPO record, string xml)
+        {
+            try
+            {
+                var source = record is ConclusionXPO ? await conclusionSchema.NormalizeLegacyConclusionAsync(xml) : xml;
+                if ((await conclusionSchema.ValidateAsync(source)).Valid) return false;
+                // The schema editor retains missing values that the typed legacy models would default.
+                await EditLegacyFieldsAsync(record);
+            }
+            catch (Exception error)
+            {
+                if (record is ExplanatoryNoteXPO) ShowExplanatoryNoteError(error);
+                else ShowConclusionError(error);
+            }
+            return true;
         }
 
         private async void ValidateSelectedDocument_ItemClick(object sender, ItemClickEventArgs e)
@@ -252,25 +311,6 @@ namespace ProjectDocumentation.NET.Forms
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
-        private void gridView_PopupMenuShowing(object sender, PopupMenuShowingEventArgs e)
-        {
-            var clickedRow = e.HitInfo?.InDataRow == true;
-            if (!(sender is GridView view) || (!clickedRow && e.MenuType != GridMenuType.User))
-            {
-                return;
-            }
-
-            if (clickedRow)
-            {
-                view.FocusedRowHandle = e.HitInfo.RowHandle;
-            }
-
-            UpdateDocumentCommands(clickedRow ? view.GetRow(e.HitInfo.RowHandle) : null);
-            e.Allow = false;
-            popupMenu.ShowPopup(Cursor.Position);
-        }
-
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
         private async void barBtnLoad_ItemClick(object sender, ItemClickEventArgs e)
         {
             await ImportXmlAsync();
@@ -303,48 +343,6 @@ namespace ProjectDocumentation.NET.Forms
             await UpdateGridDataSourceAsync();
             InitialSetupGridControl();
             await CheckUpdates();
-        }
-
-        /// <summary>
-        /// Перед выгрузкой заключение проверяется по ограничениям схемы из модели (обязательность, длина, формат).
-        /// При замечаниях пользователь решает, сохранять ли файл: ведомственная система может его не принять.
-        /// </summary>
-        private static bool ConfirmSchemaRemarks(string xml, FileOperationEntry attempt)
-        {
-            var conclusion = Utf8StringSerialize.DeSerializeObjectByString<Conclusion>(xml, lenient: false);
-            if (conclusion is null)
-            {
-                attempt.Status = FileOperationStatus.Rejected;
-                attempt.Summary = "Не удалось прочитать исходный XML заключения.";
-                XtraMessageBox.Show(
-                    "Не удалось прочитать XML заключения. Файл не сформирован.",
-                    "Проверка заключения",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Error);
-                return false;
-            }
-
-            var remarks = ModelValidator.Validate(conclusion);
-            if (remarks.Count == 0)
-            {
-                return true;
-            }
-
-            foreach (var remark in remarks) FileOperationJournal.AddDiagnostic(attempt, remark);
-            const int shown = 15;
-            var text = string.Join(Environment.NewLine, remarks.Take(shown).Select(remark => "• " + remark));
-            if (remarks.Count > shown)
-            {
-                text += Environment.NewLine + $"… и ещё {remarks.Count - shown}.";
-            }
-
-            return XtraMessageBox.Show(
-                $"Заключение не соответствует ограничениям схемы (замечаний: {remarks.Count}):" + Environment.NewLine + Environment.NewLine +
-                text + Environment.NewLine + Environment.NewLine +
-                "Такой XML может не принять система, в которую он загружается. Всё равно сформировать файл?",
-                "Проверка заключения",
-                MessageBoxButtons.YesNo,
-                MessageBoxIcon.Warning) == DialogResult.Yes;
         }
 
         /// <summary>
@@ -521,14 +519,10 @@ namespace ProjectDocumentation.NET.Forms
                         {
                             await ExportSchemaDocumentAsync(xml, attempt, Conclusion0104Document.RootName);
                         }
-                        else if (CheckConclusionVersion(version))
-                        {
-                            if (ConfirmSchemaRemarks(xml, attempt)) await ExportClassicXmlAsync(xml, attempt);
-                        }
                         else
                         {
                             attempt.Status = FileOperationStatus.Rejected;
-                            attempt.Summary = $"Версия заключения {version} не поддерживается.";
+                            throw new InvalidOperationException($"Версия заключения {version} не поддерживается.");
                         }
                     });
                 }
@@ -545,8 +539,8 @@ namespace ProjectDocumentation.NET.Forms
                         }
                         else if (legacy)
                         {
-                            attempt.FileName = $"explanatoryNote_{record.Guid:D}.xml";
-                            await ExportClassicXmlAsync(xml, attempt);
+                            await ExportSchemaDocumentAsync(ExplanatoryNote0107Document.WithMigrationVersion(xml),
+                                attempt, ExplanatoryNote0107Document.RootName, allowClassicDraft: true);
                         }
                         else
                         {
@@ -567,27 +561,6 @@ namespace ProjectDocumentation.NET.Forms
             }
         }
 
-        private async Task ExportClassicXmlAsync(string xml, FileOperationEntry attempt)
-        {
-            await FileOperationJournal.ObserveSchemaAsync(attempt, conclusionSchema, xml);
-            using (var picker = new FolderBrowserDialog())
-            {
-                if (picker.ShowDialog(this) != DialogResult.OK) return;
-                attempt.FilePath = Path.Combine(picker.SelectedPath, attempt.FileName);
-            }
-
-            const string oldNamespace = "xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\"";
-            var isConclusion = attempt.Family == "conclusion";
-            var result = xml.Replace(oldNamespace, isConclusion ? "xsi:noNamespaceSchemaLocation=\"conclusion.xsd\""
-                : "xsi:noNamespaceSchemaLocation=\"explanatorynote-01-03.xsd\"");
-            if (isConclusion)
-                result = result.InsertIntoXmlProlog("<?xml-stylesheet type=\"text/xsl\" href=\"conclusion.xsl\" ?>");
-            File.WriteAllText(attempt.FilePath, result);
-            CompleteExport(attempt, "XML выгружен.");
-            XtraMessageBox.Show(this, $"Файл сохранён.{Environment.NewLine}{attempt.FilePath}", "Выгрузка XML",
-                MessageBoxButtons.OK, MessageBoxIcon.Information);
-        }
-
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
         private async void barBtnAddConclusion_ItemClick(object sender, ItemClickEventArgs e)
         {
@@ -596,7 +569,35 @@ namespace ProjectDocumentation.NET.Forms
 
         private async void barBtnAddExplanatoryNote_ItemClick(object sender, ItemClickEventArgs e)
         {
-            await AddCurrentExplanatoryNoteAsync();
+            await AddSchemaExplanatoryNoteAsync(ExplanatoryNote0107Document.CurrentVersion);
+        }
+
+        private async Task AddLegacySchemaDocumentAsync(string family)
+        {
+            var note = family == ExplanatoryNote0107Document.Family;
+            const string version = Conclusion0104Document.LegacyVersion;
+            var root = note ? ExplanatoryNote0107Document.RootName : Conclusion0104Document.RootName;
+            var attribute = note ? "id" : "ConclusionGUID";
+            try
+            {
+                var document = SchemaXmlDocument.Parse(await conclusionSchema.CreateAsync(family, version), root);
+                var guid = Guid.NewGuid();
+                using (var editor = new LegacySchemaDocumentForm(conclusionSchema,
+                    SchemaXmlDocument.WithGuid(document, attribute, guid), "", family, async (xml, name) => note
+                        ? (XmlObjXPO)await SchemaXmlDocument.SaveAsync(conclusionSchema, xml, name, guid, root, version,
+                            attribute, session => new ExplanatoryNoteXPO(session), existing: null)
+                        : await SchemaXmlDocument.SaveAsync(conclusionSchema, xml, name, guid, root, version,
+                            attribute, session => new ConclusionXPO(session), existing: null)))
+                {
+                    if (editor.ShowDialog(this) == DialogResult.OK && editor.Document != null)
+                        await UpdateGridDataSourceAsync(nameof(XmlObjXPO.Guid), guid);
+                }
+            }
+            catch (Exception error)
+            {
+                if (note) ShowExplanatoryNoteError(error);
+                else ShowConclusionError(error);
+            }
         }
 
         private async void AddClassicConclusion_ItemClick(object sender, ItemClickEventArgs e)
@@ -608,6 +609,8 @@ namespace ProjectDocumentation.NET.Forms
                     var guid = Guid.NewGuid();
                     form.SetFileName("Заключение 01.03");
                     form.SaveConclusionAsync = (conclusion, name) => SaveClassicConclusionAsync(conclusion, name, guid);
+                    form.SaveDraftAsync = (conclusion, name, omitted) => SaveClassicConclusionAsync(conclusion, name, guid,
+                        draftOwner: form, omitted: omitted);
                     form.ShowDialog(this);
                     if (form.IsSave) await UpdateGridDataSourceAsync(nameof(XmlObjXPO.Guid), guid);
                 }
@@ -627,6 +630,8 @@ namespace ProjectDocumentation.NET.Forms
                     var guid = Guid.NewGuid();
                     form.SetFileName("Пояснительная записка 01.03");
                     form.SaveNoteAsync = (note, name) => SaveClassicNoteAsync(note, name, guid);
+                    form.SaveDraftAsync = (note, name, omitted) => SaveClassicNoteAsync(note, name, guid,
+                        draftOwner: form, omitted: omitted);
                     form.ShowDialog(this);
                     if (form.IsSave) await UpdateGridDataSourceAsync(nameof(XmlObjXPO.Guid), guid);
                 }
@@ -638,7 +643,8 @@ namespace ProjectDocumentation.NET.Forms
         }
 
         private async Task<bool> SaveClassicConclusionAsync(Conclusion conclusion, string name, Guid guid,
-            ConclusionXPO existing = null, string previousName = null, string previousXml = null)
+            ConclusionXPO existing = null, string previousName = null, string previousXml = null,
+            IWin32Window draftOwner = null, IReadOnlyList<string> omitted = null)
         {
             if (existing == null || string.IsNullOrWhiteSpace(conclusion.ConclusionGuid))
             {
@@ -648,9 +654,15 @@ namespace ProjectDocumentation.NET.Forms
             var xml = conclusion.GetSerializeConclusion();
             if (!CheckSerialized(xml)) return false;
 
+            xml = RemoveDraftDefaults(xml, Conclusion0104Document.RootName, omitted);
             xml = await conclusionSchema.NormalizeLegacyConclusionAsync(xml);
-            if (!await ConfirmClassicSaveAsync(xml, previousXml, Conclusion0104Document.LegacyVersion,
-                ClassicConclusionFormat)) return false;
+            if (draftOwner != null)
+            {
+                await TrackExportAsync("conclusion", Conclusion0104Document.LegacyVersion, guid, name, attempt =>
+                    ExportSchemaDocumentAsync(xml, attempt, Conclusion0104Document.RootName, saveAsDraft: true, owner: draftOwner));
+                return true;
+            }
+            await ValidateClassicSaveAsync(xml, name, Conclusion0104Document.LegacyVersion, ClassicConclusionFormat);
 
             await SchemaXmlDocument.PersistAsync(xml, name, guid, session => new ConclusionXPO(session),
                 existing, previousName, previousXml);
@@ -658,27 +670,49 @@ namespace ProjectDocumentation.NET.Forms
         }
 
         private async Task<bool> SaveClassicNoteAsync(ExplanatoryNote note, string name, Guid guid,
-            ExplanatoryNoteXPO existing = null, string previousName = null, string previousXml = null)
+            ExplanatoryNoteXPO existing = null, string previousName = null, string previousXml = null,
+            IWin32Window draftOwner = null, IReadOnlyList<string> omitted = null)
         {
+            if (string.IsNullOrWhiteSpace(note.id)) note.id = guid.ToString("D");
             var xml = note.GetSerializeExplanatoryNote();
             if (!CheckSerialized(xml)) return false;
-            if (!await ConfirmClassicSaveAsync(xml, previousXml, ExplanatoryNote0107Document.LegacyVersion,
-                "локальному формату записки 01.03")) return false;
+            if (draftOwner != null)
+            {
+                xml = RemoveDraftDefaults(xml, ExplanatoryNote0107Document.RootName, omitted);
+                await TrackExportAsync(ExplanatoryNote0107Document.Family, ExplanatoryNote0107Document.LegacyVersion,
+                    guid, name, attempt => ExportSchemaDocumentAsync(xml, attempt, ExplanatoryNote0107Document.RootName,
+                        saveAsDraft: true, owner: draftOwner));
+                return true;
+            }
+            await ValidateClassicSaveAsync(xml, name, ExplanatoryNote0107Document.LegacyVersion, ClassicNoteFormat);
             await SchemaXmlDocument.PersistAsync(xml, name, guid, session => new ExplanatoryNoteXPO(session),
                 existing, previousName, previousXml);
             return true;
         }
 
-        private async Task<bool> ConfirmClassicSaveAsync(string xml, string previousXml, string version, string format)
+        private static string RemoveDraftDefaults(string xml, string rootName, IReadOnlyList<string> omitted)
         {
-            var validation = await conclusionSchema.ValidateAsync(xml);
-            if (validation.Version != version)
-                throw new InvalidOperationException(ClassicValidationMessage(validation, format));
-            if (validation.Valid) return true;
-            if (previousXml != null && (await conclusionSchema.ValidateAsync(previousXml)).Valid)
-                throw new InvalidOperationException(ClassicValidationMessage(validation, format));
+            if (omitted == null || omitted.Count == 0) return xml;
+            var document = SchemaXmlDocument.Parse(xml, rootName);
+            foreach (var path in omitted)
+            {
+                var segments = path.Split('/');
+                IEnumerable<XElement> parents = new[] { document.Root };
+                foreach (var segment in segments.Take(segments.Length - 1)) parents = parents.Elements(segment);
+                var name = segments[segments.Length - 1];
+                if (name.StartsWith("@", StringComparison.Ordinal)) parents.Attributes(name.Substring(1)).Remove();
+                else parents.Elements(name).Remove();
+            }
+            return document.ToString(SaveOptions.DisableFormatting);
+        }
 
-            return ConfirmClassicDraft(validation, format, "Сохранить изменения как черновик?");
+        private async Task ValidateClassicSaveAsync(string xml, string name, string version, string format)
+        {
+            if (string.IsNullOrWhiteSpace(name)) throw new InvalidOperationException("Укажите наименование документа.");
+            var validation = await conclusionSchema.ValidateAsync(xml);
+            if (!validation.Valid || validation.Version != version)
+                throw new InvalidOperationException(ClassicValidationMessage(validation, format) + Environment.NewLine +
+                    "Исправьте замечания или сохраните отдельный XML-черновик.");
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
@@ -718,6 +752,7 @@ namespace ProjectDocumentation.NET.Forms
                     return;
                 }
 
+                if (await OpenIncompleteClassicAsync(conclusionXPO, xml)) return;
                 var conclusion = ConclusionController.GetConclusionByString(xml);
                 if (!CheckDeserialized(conclusion))
                 {
@@ -730,9 +765,11 @@ namespace ProjectDocumentation.NET.Forms
                 using (var form = new ConclusionEdit(conclusion))
                 {
                     form.SetFileName(previousName);
-                    form.SaveConclusionAsync = (edited, name) => SaveClassicConclusionAsync(edited, name,
-                        conclusionXPO.Guid ?? throw new InvalidOperationException("У заключения отсутствует идентификатор в базе."),
+                    var guid = conclusionXPO.Guid ?? throw new InvalidOperationException("У заключения отсутствует идентификатор в базе.");
+                    form.SaveConclusionAsync = (edited, name) => SaveClassicConclusionAsync(edited, name, guid,
                         conclusionXPO, previousName, xml);
+                    form.SaveDraftAsync = (edited, name, omitted) => SaveClassicConclusionAsync(edited, name, guid,
+                        conclusionXPO, draftOwner: form, omitted: omitted);
                     form.ShowDialog(this);
                     if (form.IsSave) await UpdateGridDataSourceAsync(nameof(XmlObjXPO.Guid), conclusionXPO.Guid);
                 }
@@ -741,18 +778,13 @@ namespace ProjectDocumentation.NET.Forms
             {
                 var xml = explanatoryNoteXPO.GetObj();
                 var version = ExplanatoryNote0107Document.ReadVersion(xml);
-                if (version == ExplanatoryNote0107Document.CurrentVersion)
+                if (CanPreviewExplanatoryNote(version))
                 {
-                    await EditCurrentExplanatoryNoteAsync(explanatoryNoteXPO);
+                    await EditSchemaExplanatoryNoteAsync(explanatoryNoteXPO);
                     return;
                 }
 
-                if (version == ExplanatoryNote0107Document.CompatibleVersion)
-                {
-                    await ConvertExplanatoryNoteAsync(explanatoryNoteXPO);
-                    return;
-                }
-
+                if (ExplanatoryNoteController.IsLegacyXml(xml) && await OpenIncompleteClassicAsync(explanatoryNoteXPO, xml)) return;
                 var explanatoryNote = ExplanatoryNoteController.GetExplanatoryNoteByString(xml);
                 if (!CheckDeserialized(explanatoryNote))
                 {
@@ -763,9 +795,11 @@ namespace ProjectDocumentation.NET.Forms
                 using (var form = new ExplanatoryNoteEdit(explanatoryNote))
                 {
                     form.SetFileName(previousName);
-                    form.SaveNoteAsync = (edited, name) => SaveClassicNoteAsync(edited, name,
-                        explanatoryNoteXPO.Guid ?? throw new InvalidOperationException("У записки отсутствует идентификатор в базе."),
+                    var guid = explanatoryNoteXPO.Guid ?? throw new InvalidOperationException("У записки отсутствует идентификатор в базе.");
+                    form.SaveNoteAsync = (edited, name) => SaveClassicNoteAsync(edited, name, guid,
                         explanatoryNoteXPO, previousName, xml);
+                    form.SaveDraftAsync = (edited, name, omitted) => SaveClassicNoteAsync(edited, name, guid,
+                        draftOwner: form, omitted: omitted);
                     form.ShowDialog(this);
                     if (form.IsSave) await UpdateGridDataSourceAsync(nameof(XmlObjXPO.Guid), explanatoryNoteXPO.Guid);
                 }
@@ -796,6 +830,7 @@ namespace ProjectDocumentation.NET.Forms
                     return;
                 }
 
+                if (await OpenIncompleteClassicAsync(conclusionXPO, xml)) return;
                 var conclusion = ConclusionController.GetConclusionByString(xml);
                 if (!CheckDeserialized(conclusion))
                 {

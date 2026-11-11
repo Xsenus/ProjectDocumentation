@@ -545,8 +545,8 @@
 Пояснительная записка;01.03;@1;SchemaLink;атрибут;@SchemaLink;{http://www.w3.org/2001/XMLSchema}string;0;1;;
 Пояснительная записка;01.03;@1;id;атрибут;@id;{http://www.w3.org/2001/XMLSchema}string;0;1;;
 Пояснительная записка;01.03;@1;AccessRestriction;атрибут;@AccessRestriction;{http://www.w3.org/2001/XMLSchema}string;0;1;;
-Пояснительная записка;01.03;@1;ExplanatoryNoteNumber;элемент;sequence[1];{http://www.w3.org/2001/XMLSchema}string;0;1;;
-Пояснительная записка;01.03;@1;ExplanatoryNoteYear;элемент;sequence[2];{http://www.w3.org/2001/XMLSchema}integer;0;1;;
+Пояснительная записка;01.03;@1;ExplanatoryNoteNumber;элемент;sequence[1];tRequiredText;1;1;Шифр пояснительной записки;
+Пояснительная записка;01.03;@1;ExplanatoryNoteYear;элемент;sequence[2];{http://www.w3.org/2001/XMLSchema}integer;1;1;Год составления пояснительной записки;
 Пояснительная записка;01.03;@1;ExplanatoryNoteModifications;элемент;sequence[3];ArrayOfTModification;0;1;;
 Пояснительная записка;01.03;@1;IssueAuthor;элемент;sequence[4];tAuthor;0;1;;
 Пояснительная записка;01.03;@1;ProjectDocumentationAuthors;элемент;sequence[5];ArrayOfTAuthor;0;1;;
@@ -560,9 +560,9 @@
 Пояснительная записка;01.03;@1;EngineeringSurveyDocuments;элемент;sequence[12];ArrayOfTEngineeringSurveyDocument;0;1;;
 Пояснительная записка;01.03;@1;AdditionalData;элемент;sequence[13];ArrayOfTData;0;1;;
 Пояснительная записка;01.03;@1;FinanceSources;элемент;sequence[14];tFinanceSources;0;1;;
-Пояснительная записка;01.03;@1;IndustrialObject;элемент;sequence[15]/choice[1];tIndustrialObject;0;1;;
-Пояснительная записка;01.03;@1;LinearObject;элемент;sequence[15]/choice[2];tLinearObject;0;1;;
-Пояснительная записка;01.03;@1;NonIndustrialObject;элемент;sequence[15]/choice[3];tNonIndustrialObject;0;1;;
+Пояснительная записка;01.03;@1;IndustrialObject;элемент;sequence[15]/choice[1];tIndustrialObject;1;1;Один из трёх вариантов объекта;
+Пояснительная записка;01.03;@1;LinearObject;элемент;sequence[15]/choice[2];tLinearObject;1;1;Один из трёх вариантов объекта;
+Пояснительная записка;01.03;@1;NonIndustrialObject;элемент;sequence[15]/choice[3];tNonIndustrialObject;1;1;Один из трёх вариантов объекта;
 Пояснительная записка;01.03;@1;DesignerNote;элемент;sequence[16];tTextBlock;0;без ограничения;;
 Пояснительная записка;01.03;@1;DesignerAssurance;элемент;sequence[17];tDesignerAssurance;0;1;;
 Пояснительная записка;01.03;ArrayOfTModification;Modification;элемент;sequence[1];tModification;0;без ограничения;;
@@ -691,7 +691,7 @@
 Пояснительная записка;01.03;tIndustrialObject;Placement;атрибут;@Placement;tPlacement;1;1;;1 | 2
 Пояснительная записка;01.03;tIndustrialObject;DangerousAndComplex;атрибут;@DangerousAndComplex;tDangerousAndComplex;0;1;;1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14
 Пояснительная записка;01.03;tIndustrialObject;Unique;атрибут;@Unique;tUnique;0;1;;1 | 2 | 3 | 4
-Пояснительная записка;01.03;tIndustrialObject;Name;элемент;sequence[1];{http://www.w3.org/2001/XMLSchema}string;0;1;;
+Пояснительная записка;01.03;tIndustrialObject;Name;элемент;sequence[1];tRequiredText;1;1;Наименование объекта;
 Пояснительная записка;01.03;tIndustrialObject;ConstructionType;элемент;sequence[2];tConstructionType;1;1;;1 | 2 | 3 | 4 | 5
 Пояснительная записка;01.03;tIndustrialObject;ConstructionDuration;элемент;sequence[3];{http://www.w3.org/2001/XMLSchema}decimal;1;1;;
 Пояснительная записка;01.03;tIndustrialObject;ConstructionDates;элемент;sequence[4];tConstructionDates;0;1;;
@@ -860,7 +860,7 @@
 Пояснительная записка;01.03;tLinearObject;Placement;атрибут;@Placement;tPlacement;1;1;;1 | 2
 Пояснительная записка;01.03;tLinearObject;DangerousAndComplex;атрибут;@DangerousAndComplex;tDangerousAndComplex;0;1;;1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14
 Пояснительная записка;01.03;tLinearObject;Unique;атрибут;@Unique;tUnique;0;1;;1 | 2 | 3 | 4
-Пояснительная записка;01.03;tLinearObject;Name;элемент;sequence[1];{http://www.w3.org/2001/XMLSchema}string;0;1;;
+Пояснительная записка;01.03;tLinearObject;Name;элемент;sequence[1];tRequiredText;1;1;Наименование объекта;
 Пояснительная записка;01.03;tLinearObject;ConstructionType;элемент;sequence[2];tConstructionType;1;1;;1 | 2 | 3 | 4 | 5
 Пояснительная записка;01.03;tLinearObject;ConstructionDuration;элемент;sequence[3];{http://www.w3.org/2001/XMLSchema}decimal;1;1;;
 Пояснительная записка;01.03;tLinearObject;ConstructionDates;элемент;sequence[4];tConstructionDates;0;1;;
@@ -918,7 +918,7 @@
 Пояснительная записка;01.03;tNonIndustrialObject;Placement;атрибут;@Placement;tPlacement;1;1;;1 | 2
 Пояснительная записка;01.03;tNonIndustrialObject;DangerousAndComplex;атрибут;@DangerousAndComplex;tDangerousAndComplex;0;1;;1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14
 Пояснительная записка;01.03;tNonIndustrialObject;Unique;атрибут;@Unique;tUnique;0;1;;1 | 2 | 3 | 4
-Пояснительная записка;01.03;tNonIndustrialObject;Name;элемент;sequence[1];{http://www.w3.org/2001/XMLSchema}string;0;1;;
+Пояснительная записка;01.03;tNonIndustrialObject;Name;элемент;sequence[1];tRequiredText;1;1;Наименование объекта;
 Пояснительная записка;01.03;tNonIndustrialObject;ConstructionType;элемент;sequence[2];tConstructionType;1;1;;1 | 2 | 3 | 4 | 5
 Пояснительная записка;01.03;tNonIndustrialObject;ConstructionDuration;элемент;sequence[3];{http://www.w3.org/2001/XMLSchema}decimal;1;1;;
 Пояснительная записка;01.03;tNonIndustrialObject;ConstructionDates;элемент;sequence[4];tConstructionDates;0;1;;

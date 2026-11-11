@@ -14,6 +14,7 @@ namespace ProjectDocumentation.NET.Services
         public const string CurrentVersion = "01.07";
         public const string CompatibleVersion = "01.05";
         public const string LegacyVersion = "01.03";
+        internal const string LegacySchemaAsset = "explanatorynote-wire-01-03";
         internal const string RootName = "ExplanatoryNote";
         private const string GuidAttribute = "id";
 
@@ -29,8 +30,13 @@ namespace ProjectDocumentation.NET.Services
         public static string WithGuid(XDocument document, Guid guid) => SchemaXmlDocument.WithGuid(document, GuidAttribute, guid);
 
         public static Task<ExplanatoryNoteXPO> SaveAsync(ConclusionSchemaService service, string xml, string name,
-            Guid guid, ExplanatoryNoteXPO existing = null)
-            => SchemaXmlDocument.SaveAsync(service, xml, name, guid, RootName, CurrentVersion, GuidAttribute, session => new ExplanatoryNoteXPO(session), existing);
+            Guid guid, ExplanatoryNoteXPO existing = null, string version = CurrentVersion)
+        {
+            if (version != CurrentVersion && version != CompatibleVersion)
+                throw new ArgumentOutOfRangeException(nameof(version));
+            return SchemaXmlDocument.SaveAsync(service, xml, name, guid, RootName, version, GuidAttribute,
+                session => new ExplanatoryNoteXPO(session), existing);
+        }
 
         public static string WithMigrationVersion(string xml)
         {

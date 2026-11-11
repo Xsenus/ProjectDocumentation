@@ -27,6 +27,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
         public DocumentENEdit()
         {
             InitializeComponent();
+            GridContextMenus.Attach(gridViewItems, popupMenuItems, barBtnItemsAdd);
             layoutControlItemDocIssueAuthor.Text = layoutControlItemDocIssueAuthor.Text.TrimEnd(' ', '*');
         }
 
@@ -190,15 +191,6 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
             if (e.Data.GetDataPresent(DataFormats.FileDrop))
             {
                 e.Effect = DragDropEffects.Copy;
-            }
-        }
-
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
-        private void gridViewItems_PopupMenuShowing(object sender, PopupMenuShowingEventArgs e)
-        {
-            if (sender is GridView)
-            {
-                popupMenuItems.ShowPopup(new Point(Cursor.Position.X, Cursor.Position.Y));
             }
         }
 

@@ -60,7 +60,7 @@ def document_version(root, family):
         hints = ((root.get(name) or '').strip() for name in ('SchemaLink', SCHEMA_LOCATION))
         filenames = {hint.split('?', 1)[0].split('#', 1)[0].replace('\\', '/').rsplit('/', 1)[-1].lower()
                      for hint in hints if hint}
-        if filenames <= {'explanatorynote-01-03.xsd'}:
+        if filenames <= {'explanatorynote-01-03.xsd', schema_filename(family, LEGACY_NOTE_VERSION)}:
             # The old WinForms serializer uses 01.03 when the attribute is absent.
             return LEGACY_NOTE_VERSION
     return version
@@ -72,4 +72,6 @@ SCHEMA_ASSETS = frozenset(
     for version in document.versions
     if not legacy_note_format(family, version)
     for extension in ('.xsd', '.xsl')
-) | frozenset(schema_filename('conclusion', version) for version in LEGACY_CONCLUSION_VERSIONS)
+) | frozenset(schema_filename('conclusion', version) for version in LEGACY_CONCLUSION_VERSIONS) | {
+    schema_filename('explanatorynote', LEGACY_NOTE_VERSION),
+}

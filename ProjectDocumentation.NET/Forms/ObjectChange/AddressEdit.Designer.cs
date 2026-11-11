@@ -382,11 +382,11 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(548, 318);
+            this.ClientSize = new System.Drawing.Size(548, 374);
             this.Controls.Add(this.layoutControlExpert);
             this.IconOptions.Image = global::ProjectDocumentation.NET.Properties.Resources.icon;
             this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.MinimumSize = new System.Drawing.Size(550, 350);
+            this.MinimumSize = new System.Drawing.Size(550, 406);
             this.Name = "AddressEdit";
             this.Text = "Адрес";
             this.Load += new System.EventHandler(this.Form_Load);

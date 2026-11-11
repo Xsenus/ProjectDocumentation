@@ -25,6 +25,7 @@ MAX_VALIDATION_ERRORS = 200
 MISSING_ATTRIBUTE = re.compile(r"^missing required attribute '([^']+)'$")
 INVALID_ATTRIBUTE = re.compile(r"^attribute ([^=\s]+)=")
 FIXED_ATTRIBUTE = re.compile(r"^attribute '([^']+)' has a fixed value '([^']*)'$")
+DOCUMENT_REQUIRED_ASSERTION = re.compile(r' and not\((DocDate|DocNumber|FullDocIssueAuthor)\)\)$')
 CONCLUSION_ASSERTION_FIELDS = {
     'not(not(PreviousConclusions) and ExaminationObject/ExaminationStage!=1)': 'PreviousConclusions',
     'not(not(PreviousSimpleConclusions) and ExaminationObject/ExaminationStage=3)': 'PreviousSimpleConclusions',
@@ -38,6 +39,10 @@ CONCLUSION_ASSERTION_FIELDS = {
         'Summary/ExaminationSummary/EngineeringSurveysResultsSummary',
     'not(not(Summary/ExaminationSummary/ProjectDocumentsSummary) and ExaminationObject/ExaminationType=2)':
         'Summary/ExaminationSummary/ProjectDocumentsSummary',
+    'not(not(Summary/EngineeringSurveySummary) and not(ExpertEngineeringSurveys[Mismatches]) and ExaminationObject/ExaminationType=1)':
+        'Summary/EngineeringSurveySummary',
+    'not(not(Summary/ProjectDocumentsSummary) and not(ExpertProjectDocuments[Mismatches]) and ExaminationObject/ExaminationType=2)':
+        'Summary/ProjectDocumentsSummary',
     'not(ExaminationObject[(ExaminationType=3 or ExaminationType=2) and not(ProjectDocumentationIM)])':
         'ExaminationObject/ProjectDocumentationIM',
     'not(ExaminationObject[ExaminationType=1 and not(EngineeringSurveysIM)])': 'ExaminationObject/EngineeringSurveysIM',
@@ -136,6 +141,8 @@ def _validation_error(error, root_path):
     if isinstance(error.validator, XsdAssert):
         if path == '/Conclusion' and (field := CONCLUSION_ASSERTION_FIELDS.get(error.validator.path)):
             result['path'] = f'{path}/{field}'
+        elif path.startswith('/Conclusion/') and (required := DOCUMENT_REQUIRED_ASSERTION.search(error.validator.path)):
+            result['path'] = f'{path}/{required[1]}'
         result['code'] = 'xsd-assertion'
         result['message'] = _documentation(error.validator) or reason
         return result
@@ -168,18 +175,23 @@ def _children_error(error, result):
     ):
         name, = expected
         return {'path': f'{result["path"]}/{name}', 'code': 'required-element', 'message': f'Заполните обязательный элемент {name}.'}
+    if len(expected) > 1 and not present.intersection(expected) and (child is None or child.tag in known_names):
+        choice = expected_elements[0].parent
+        if isinstance(choice, XsdGroup) and choice.model == 'choice' and choice.min_occurs > 0 and all(
+            element.parent is choice for element in expected_elements
+        ):
+            return {'path': result['path'], 'code': 'required-choice',
+                    'message': f'Заполните одну из доступных веток: {", ".join(expected)}.'}
     if child is not None:
         # The validator may list both the missing required field and later members of the same sequence.
         for index, element in enumerate(expected_elements):
             if element.name != child.tag:
                 continue
-            group = element.parent
-            if isinstance(group, XsdGroup) and group.model == 'sequence' and group.max_occurs == 1:
-                for preceding in expected_elements[:index]:
-                    if preceding.parent is group and preceding.min_occurs > 0 and preceding.name not in present:
-                        name = preceding.local_name
-                        return {'path': f'{result["path"]}/{name}', 'code': 'required-element',
-                                'message': f'Заполните обязательный элемент {name}.'}
+            for preceding in expected_elements[:index]:
+                if _required_predecessor(preceding, element) and preceding.name not in present:
+                    name = preceding.local_name
+                    return {'path': f'{result["path"]}/{name}', 'code': 'required-element',
+                            'message': f'Заполните обязательный элемент {name}.'}
             break
         siblings = [node for node in children if node.tag == child.tag]
         suffix = f'[{siblings.index(child) + 1}]' if len(siblings) > 1 else ''
@@ -193,6 +205,20 @@ def _children_error(error, result):
         result['code'] = 'incomplete-element'
         result['message'] = f'Заполните вложенные элементы. Ожидается {", ".join(expected)}.'
     return result
+
+
+def _required_predecessor(preceding, following):
+    sequence = preceding.parent
+    if not isinstance(sequence, XsdGroup) or sequence.model != 'sequence' or sequence.max_occurs != 1:
+        return False
+    if preceding.min_occurs == 0:
+        return False
+    group = following.parent
+    while isinstance(group, XsdGroup):
+        if group is sequence:
+            return True
+        group = group.parent
+    return False
 
 
 def _facet_message(validator):

@@ -42,11 +42,38 @@ class ExplanatoryNoteSchemaTests(unittest.TestCase):
         result = validate_document('<ExplanatoryNote/>')
         self.assertEqual(result['version'], '01.03')
         self.assertEqual(result['validationBasis'], 'legacy-wire')
+        self.assertFalse(result['valid'])
         hinted = '<ExplanatoryNote xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" ' \
                  'xsi:noNamespaceSchemaLocation="explanatorynote-01-07.xsd"/>'
         result = validate_document(hinted)
         self.assertFalse(result['valid'])
         self.assertIsNone(result['version'])
+
+    def test_legacy_note_requires_a_filled_header_and_one_named_object(self):
+        source = FIXTURE.with_name('explanatorynote-migration-01-03.xml').read_text(encoding='utf-8')
+        self.assertTrue(validate_document(source)['valid'])
+
+        for field in ('ExplanatoryNoteNumber', 'ExplanatoryNoteYear', 'IndustrialObject'):
+            with self.subTest(field=field):
+                root = ET.fromstring(source)
+                root.remove(root.find(field))
+                result = validate_document(ET.tostring(root, encoding='unicode'))
+                self.assertFalse(result['valid'], result)
+                self.assertEqual(result['validationBasis'], 'legacy-wire')
+                if field != 'IndustrialObject':
+                    self.assertIn(f'/ExplanatoryNote/{field}', {error['path'] for error in result['errors']})
+
+        for path in ('ExplanatoryNoteNumber', 'IndustrialObject/Name'):
+            with self.subTest(path=path):
+                root = ET.fromstring(source)
+                root.find(path).text = ' \t '
+                result = validate_document(ET.tostring(root, encoding='unicode'))
+                self.assertFalse(result['valid'], result)
+                self.assertIn(f'/ExplanatoryNote/{path}', {error['path'] for error in result['errors']})
+
+        root = ET.fromstring(source)
+        root.append(ET.Element('LinearObject'))
+        self.assertFalse(validate_document(ET.tostring(root, encoding='unicode'))['valid'])
 
     def test_official_preview_contains_note_content_and_csp(self):
         html = render_preview(self.current)

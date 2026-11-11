@@ -181,7 +181,7 @@ namespace ProjectDocumentation.NET.Services
         public static void WriteExport(string path, string xml, string rootName, string schema)
             => WriteExportAsync(path, xml, rootName, schema).GetAwaiter().GetResult();
 
-        private static async Task WriteExportAsync(string path, string xml, string rootName, string schema)
+        private static async Task WriteExportAsync(string path, string xml, string rootName, string schema, bool includeStylesheet = true)
         {
             var document = Parse(xml, rootName);
             var xsi = XNamespace.Get("http://www.w3.org/2001/XMLSchema-instance");
@@ -193,7 +193,8 @@ namespace ProjectDocumentation.NET.Services
                 instruction.Remove();
             }
 
-            document.Root.AddBeforeSelf(new XProcessingInstruction("xml-stylesheet", $"type=\"text/xsl\" href=\"{schema}.xsl\""));
+            if (includeStylesheet)
+                document.Root.AddBeforeSelf(new XProcessingInstruction("xml-stylesheet", $"type=\"text/xsl\" href=\"{schema}.xsl\""));
             document.Declaration = new XDeclaration("1.0", "utf-8", null);
             var settings = new XmlWriterSettings { Encoding = new UTF8Encoding(false), NewLineHandling = NewLineHandling.None };
             var temporary = Path.Combine(Path.GetDirectoryName(path), Guid.NewGuid().ToString("N") + ".tmp");
@@ -232,11 +233,12 @@ namespace ProjectDocumentation.NET.Services
             }
         }
 
-        public static async Task WriteExportWithAssetsAsync(ConclusionSchemaService service, string path, string xml, string rootName, string schema)
+        public static async Task WriteExportWithAssetsAsync(ConclusionSchemaService service, string path, string xml, string rootName,
+            string schema, bool includeStylesheet = true)
         {
             path = Path.GetFullPath(path);
             var directory = Path.GetDirectoryName(path);
-            var names = new[] { schema + ".xsd", schema + ".xsl" };
+            var names = includeStylesheet ? new[] { schema + ".xsd", schema + ".xsl" } : new[] { schema + ".xsd" };
             var paths = names.Select(name => Path.Combine(directory, name)).ToArray();
             if (paths.Contains(path, StringComparer.OrdinalIgnoreCase))
             {
@@ -254,7 +256,7 @@ namespace ProjectDocumentation.NET.Services
                 await WriteMissingAssetAsync(paths[index], assets[index]);
             }
 
-            await WriteExportAsync(path, xml, rootName, schema);
+            await WriteExportAsync(path, xml, rootName, schema, includeStylesheet);
         }
 
         private static void CheckExistingAsset(string path, byte[] expected)
@@ -262,7 +264,7 @@ namespace ProjectDocumentation.NET.Services
             var info = new FileInfo(path);
             if (info.Exists && (info.Length != expected.Length || !File.ReadAllBytes(path).SequenceEqual(expected)))
             {
-                throw new InvalidOperationException($"В папке уже есть файл «{info.Name}», который отличается от официального. Выберите другую папку для выгрузки.");
+                throw new InvalidOperationException($"В папке уже есть файл «{info.Name}», который отличается от комплектного. Выберите другую папку для выгрузки.");
             }
         }
 

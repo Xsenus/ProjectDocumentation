@@ -213,11 +213,11 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(648, 106);
+            this.ClientSize = new System.Drawing.Size(648, 154);
             this.Controls.Add(this.layoutControl);
             this.IconOptions.Image = global::ProjectDocumentation.NET.Properties.Resources.icon;
             this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.MinimumSize = new System.Drawing.Size(650, 138);
+            this.MinimumSize = new System.Drawing.Size(650, 186);
             this.Name = "FileLoad";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Загрузка файла";

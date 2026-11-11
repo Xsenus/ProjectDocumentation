@@ -38,9 +38,11 @@ namespace ProjectDocumentation.NET.Services
         public Task<JObject> GetSchemaAsync(string family, string version = null)
             => RequestAsync<JObject>("schema", new JObject { ["family"] = family, ["version"] = version });
 
-        public async Task<string> CreateAsync(string family = null)
+        public Task<string> CreateAsync(string family = null) => CreateAsync(family, null);
+
+        public async Task<string> CreateAsync(string family, string version)
         {
-            var document = await RequestAsync<JObject>("new", new JObject { ["family"] = family });
+            var document = await RequestAsync<JObject>("new", new JObject { ["family"] = family, ["version"] = version });
             return document.Value<string>("xml");
         }
 

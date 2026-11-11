@@ -661,7 +661,6 @@
             this.gridViewUsedNorms.OptionsView.ColumnHeaderAutoHeight = DevExpress.Utils.DefaultBoolean.True;
             this.gridViewUsedNorms.OptionsView.RowAutoHeight = true;
             this.gridViewUsedNorms.OptionsView.ShowGroupPanel = false;
-            this.gridViewUsedNorms.PopupMenuShowing += new DevExpress.XtraGrid.Views.Grid.PopupMenuShowingEventHandler(this.gridViewUsedNorms_PopupMenuShowing);
             // 
             // memoEditUsedNorms
             // 
@@ -739,7 +738,6 @@
             this.gridViewSigners.OptionsView.ColumnHeaderAutoHeight = DevExpress.Utils.DefaultBoolean.True;
             this.gridViewSigners.OptionsView.RowAutoHeight = true;
             this.gridViewSigners.OptionsView.ShowGroupPanel = false;
-            this.gridViewSigners.PopupMenuShowing += new DevExpress.XtraGrid.Views.Grid.PopupMenuShowingEventHandler(this.gridViewSigners_PopupMenuShowing);
             // 
             // btnSave
             // 
@@ -826,7 +824,6 @@
             this.gridViewModifications.OptionsView.ColumnHeaderAutoHeight = DevExpress.Utils.DefaultBoolean.True;
             this.gridViewModifications.OptionsView.RowAutoHeight = true;
             this.gridViewModifications.OptionsView.ShowGroupPanel = false;
-            this.gridViewModifications.PopupMenuShowing += new DevExpress.XtraGrid.Views.Grid.PopupMenuShowingEventHandler(this.gridViewExplanatoryNoteModifications_PopupMenuShowing);
             // 
             // btnIssueAuthor
             // 
@@ -865,7 +862,6 @@
             this.gridViewDeveloper.OptionsView.ColumnHeaderAutoHeight = DevExpress.Utils.DefaultBoolean.True;
             this.gridViewDeveloper.OptionsView.RowAutoHeight = true;
             this.gridViewDeveloper.OptionsView.ShowGroupPanel = false;
-            this.gridViewDeveloper.PopupMenuShowing += new DevExpress.XtraGrid.Views.Grid.PopupMenuShowingEventHandler(this.gridViewDeveloper_PopupMenuShowing);
             // 
             // gridControlTechnicalCustomer
             // 
@@ -890,7 +886,6 @@
             this.gridViewTechnicalCustomer.OptionsView.ColumnHeaderAutoHeight = DevExpress.Utils.DefaultBoolean.True;
             this.gridViewTechnicalCustomer.OptionsView.RowAutoHeight = true;
             this.gridViewTechnicalCustomer.OptionsView.ShowGroupPanel = false;
-            this.gridViewTechnicalCustomer.PopupMenuShowing += new DevExpress.XtraGrid.Views.Grid.PopupMenuShowingEventHandler(this.gridViewTechnicalCustomer_PopupMenuShowing);
             // 
             // gridControlProjectDecisionDocuments
             // 
@@ -914,7 +909,6 @@
             this.gridViewProjectDecisionDocuments.OptionsView.ColumnHeaderAutoHeight = DevExpress.Utils.DefaultBoolean.True;
             this.gridViewProjectDecisionDocuments.OptionsView.RowAutoHeight = true;
             this.gridViewProjectDecisionDocuments.OptionsView.ShowGroupPanel = false;
-            this.gridViewProjectDecisionDocuments.PopupMenuShowing += new DevExpress.XtraGrid.Views.Grid.PopupMenuShowingEventHandler(this.gridViewProjectDecisionDocuments_PopupMenuShowing);
             // 
             // gridControlProjectInitialDocuments
             // 
@@ -938,7 +932,6 @@
             this.gridViewProjectInitialDocuments.OptionsView.ColumnHeaderAutoHeight = DevExpress.Utils.DefaultBoolean.True;
             this.gridViewProjectInitialDocuments.OptionsView.RowAutoHeight = true;
             this.gridViewProjectInitialDocuments.OptionsView.ShowGroupPanel = false;
-            this.gridViewProjectInitialDocuments.PopupMenuShowing += new DevExpress.XtraGrid.Views.Grid.PopupMenuShowingEventHandler(this.gridViewProjectInitialDocuments_PopupMenuShowing);
             // 
             // txtIndustrialObjectID
             // 

@@ -1,6 +1,6 @@
 ﻿using Core.NET.AutoModels.ConclusionObj;
 using Core.NET.Controllers;
-using Core.NET.DaDataObj;
+using ProjectDocumentation.NET.Services;
 using Core.NET.Extensions;
 using Core.NET.Models.XPO;
 using DevExpress.Xpo;
@@ -25,6 +25,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
         public ObjPartEdit()
         {
             InitializeComponent();
+            GridContextMenus.Attach(gridViewTEI, popupMenuTEI, barBtnTEIAdd);
         }
 
         public ObjPartEdit(TObjectPart TObjectPart) : this()
@@ -182,10 +183,10 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                 }
                 else if (e.Button.Kind == ButtonPredefines.Search)
                 {
-                    var obj = buttonEdit.EditValue?.ToString();
+                    var obj = buttonEdit.EditValue as string;
                     if (!string.IsNullOrWhiteSpace(obj))
                     {
-                        var addressData = await DaDataObj.GetAddressAsync(obj);
+                        var addressData = await LegacyDaDataLookup.FindAddressAsync(buttonEdit, obj);
                         if (addressData != null)
                         {
                             var address = new TAddress()
@@ -226,15 +227,6 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
 
             cmbObjectType.Properties.Items.AddRange(collection
                 .Where(w => w.GeneralizedDictionary == GeneralizedDictionary.ObjectType).ToArray());
-        }
-
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
-        private void gridViewTEI_PopupMenuShowing(object sender, PopupMenuShowingEventArgs e)
-        {
-            if (sender is GridView)
-            {
-                popupMenuTEI.ShowPopup(new Point(Cursor.Position.X, Cursor.Position.Y));
-            }
         }
 
         private async void ObjPartEdit_Load(object sender, EventArgs e)

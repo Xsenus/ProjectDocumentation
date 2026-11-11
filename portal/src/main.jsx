@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import SchemaForm, { formFieldIndex, groupLabelsFor, normalPath, sectionFor, sectionProgress } from './SchemaForm.jsx';
 import FileHistory from './FileHistory.jsx';
@@ -76,8 +76,8 @@ function exportCopy(document, family, version) {
 
 function ValidationPanel({ validation, onField, navigationDisabled }) {
   const panel = useRef(null);
-  useEffect(() => {
-    if (validation && !validation.valid) panel.current?.focus();
+  useLayoutEffect(() => {
+    if (validation?.valid === false && validation.focusPanel !== false) panel.current?.focus();
   }, [validation]);
   if (!validation) return null;
   const errors = validation.errors || [];
@@ -610,9 +610,10 @@ function App() {
   }
 
   async function validateSnapshot(xml, serial) {
+    const navigation = navigationRequest.current;
     const result = await api('validate', { xml });
     if (!isExactRevision(revision, serial)) return null;
-    setValidation(result);
+    setValidation({ ...result, focusPanel: navigation === navigationRequest.current });
     return result;
   }
 

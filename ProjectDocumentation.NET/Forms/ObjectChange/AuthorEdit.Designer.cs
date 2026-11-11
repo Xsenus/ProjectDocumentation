@@ -416,7 +416,6 @@
             this.gridViewSROMembership.OptionsView.ColumnHeaderAutoHeight = DevExpress.Utils.DefaultBoolean.True;
             this.gridViewSROMembership.OptionsView.RowAutoHeight = true;
             this.gridViewSROMembership.OptionsView.ShowGroupPanel = false;
-            this.gridViewSROMembership.PopupMenuShowing += new DevExpress.XtraGrid.Views.Grid.PopupMenuShowingEventHandler(this.gridViewSROMembership_PopupMenuShowing);
             // 
             // Root
             // 

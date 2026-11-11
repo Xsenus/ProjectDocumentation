@@ -1,18 +1,24 @@
 using ProjectDocumentation.NET.Services;
-using ComboBoxEdit = DevExpress.XtraEditors.ComboBoxEdit;
-using MemoEdit = DevExpress.XtraEditors.MemoEdit;
-using TextEdit = DevExpress.XtraEditors.TextEdit;
+using DevExpress.Utils;
+using DevExpress.Utils.Menu;
+using DevExpress.XtraEditors;
+using DevExpress.XtraEditors.Controls;
+using DevExpress.XtraEditors.Repository;
+using DevExpress.XtraGrid;
+using DevExpress.XtraGrid.Views.Grid;
+using DevExpress.XtraTreeList;
+using DevExpress.XtraTreeList.Nodes;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml.Linq;
-using XtraInputBox = DevExpress.XtraEditors.XtraInputBox;
-using XtraMessageBox = DevExpress.XtraEditors.XtraMessageBox;
 
 namespace ProjectDocumentation.NET.Forms
 {
@@ -24,56 +30,96 @@ namespace ProjectDocumentation.NET.Forms
         {
             "District", "City", "Settlement", "Street", "Building", "Room", "Landmark"
         };
-        private readonly TreeView xmlTree = new TreeView { Dock = DockStyle.Fill, HideSelection = false, ShowNodeToolTips = true };
-        private readonly Panel details = new Panel { Dock = DockStyle.Fill, AutoScroll = true, Padding = new Padding(10, 0, 10, 10) };
+        private readonly TreeList xmlTree = new TreeList { Dock = DockStyle.Fill, AccessibleName = "Дерево XML" };
+        private readonly XtraScrollableControl details = new XtraScrollableControl
+        {
+            Dock = DockStyle.Fill, AutoScroll = true, Padding = new Padding(8, 2, 9, 8), AccessibleName = "Поля выбранного элемента"
+        };
         private readonly Dictionary<string, Control> fieldEditors = new Dictionary<string, Control>();
-        private ComboBox childSelector;
-        private SplitterPanel treeDetailsHost;
+        private ComboBoxEdit childSelector;
+        private SplitGroupPanel treeDetailsHost;
+        private DXPopupMenu treeMenu;
+        private bool rebuildingTree;
 
         private Control CreateFieldsPanel()
         {
-            var split = new SplitContainer { Dock = DockStyle.Fill, Size = new Size(1000, 530), FixedPanel = FixedPanel.Panel1 };
-            split.Panel1MinSize = 210;
-            split.Panel2MinSize = 350;
-            split.SplitterDistance = 325;
-            split.Panel1.Padding = new Padding(8);
-            split.Panel2.Padding = new Padding(8);
+            var split = CreateEditorSplit();
+            xmlTree.OptionsBehavior.Editable = false;
+            xmlTree.OptionsBehavior.AutoPopulateColumns = false;
+            xmlTree.OptionsView.ShowColumns = false;
+            xmlTree.OptionsView.ShowIndicator = false;
+            xmlTree.OptionsView.ShowHorzLines = false;
+            xmlTree.OptionsView.ShowVertLines = false;
+            xmlTree.OptionsSelection.EnableAppearanceFocusedCell = false;
+            xmlTree.OptionsSelection.SelectNodesOnRightClick = true;
+            xmlTree.RowHeight = 26;
+            xmlTree.ToolTipController = fieldToolTips;
+            var column = xmlTree.Columns.Add();
+            column.Caption = "Элемент XML";
+            column.VisibleIndex = 0;
             xmlTree.BeforeExpand += (_, e) => PopulateTree(e.Node);
-            xmlTree.AfterSelect += (_, e) => ShowSelectedFields(e.Node);
+            xmlTree.FocusedNodeChanged += (_, e) =>
+            {
+                if (!rebuildingTree) ShowSelectedFields(e.Node);
+            };
+            xmlTree.MouseUp += (_, e) =>
+            {
+                if (e.Button == MouseButtons.Right && xmlTree.CalcHitInfo(e.Location).Node is TreeListNode node)
+                    ShowTreeMenu(node, e.Location);
+            };
             split.Panel1.Controls.Add(xmlTree);
             treeDetailsHost = split.Panel2;
             return split;
         }
 
+        private static SplitContainerControl CreateEditorSplit()
+        {
+            var split = new SplitContainerControl
+            {
+                Dock = DockStyle.Fill, Size = new Size(1000, 530), Horizontal = true, FixedPanel = SplitFixedPanel.Panel1,
+                ShowSplitGlyph = DevExpress.Utils.DefaultBoolean.True
+            };
+            split.Panel1.MinSize = 205;
+            split.Panel2.MinSize = 340;
+            split.SplitterPosition = 322;
+            split.Panel1.Padding = new Padding(8);
+            split.Panel2.Padding = new Padding(5, 8, 8, 8);
+            split.SizeChanged += (_, __) =>
+            {
+                var normal = (int)Math.Round(322 * split.DeviceDpi / 96d);
+                var position = Math.Min(normal, Math.Max(split.Panel1.MinSize, (int)(split.ClientSize.Width * .30)));
+                split.SplitterPosition = position;
+            };
+            return split;
+        }
+
         private void BuildTree(string section = null)
         {
+            rebuildingTree = true;
             xmlTree.BeginUpdate();
             try
             {
                 xmlTree.Nodes.Clear();
-                var root = TreeNodeFor(profile.RootNode(document.Root));
-                xmlTree.Nodes.Add(root);
-                root.Expand();
-                xmlTree.SelectedNode = section == null ? root
-                    : root.Nodes.Cast<TreeNode>().FirstOrDefault(item => (item.Tag as NativeSchemaNode)?.Element.Name.LocalName == section) ?? root;
-                xmlTree.SelectedNode.EnsureVisible();
-                ShowSelectedFields(xmlTree.SelectedNode);
-                if (section != null && xmlTree.SelectedNode == root) SelectMissingField(section);
+                var root = AppendTreeNode(profile.RootNode(document.Root), null);
+                PopulateTree(root);
+                root.Expanded = true;
+                xmlTree.FocusedNode = section == null ? root
+                    : root.Nodes.Cast<TreeListNode>().FirstOrDefault(item => (item.Tag as NativeSchemaNode)?.Element.Name.LocalName == section) ?? root;
+                xmlTree.MakeNodeVisible(xmlTree.FocusedNode);
+                ShowSelectedFields(xmlTree.FocusedNode);
+                if (section != null && xmlTree.FocusedNode == root) SelectMissingField(section);
             }
             finally
             {
                 xmlTree.EndUpdate();
+                rebuildingTree = false;
             }
         }
 
-        private TreeNode TreeNodeFor(NativeSchemaNode node)
+        private TreeListNode AppendTreeNode(NativeSchemaNode node, TreeListNode parent)
         {
-            var result = new TreeNode(TreeLabel(node))
-            {
-                Tag = node,
-                ToolTipText = XmlPath(node.Element) + Environment.NewLine + (node.Field?.Documentation ?? node.Type?.Documentation)
-            };
-            if (node.Element.HasElements) result.Nodes.Add(new TreeNode());
+            var result = xmlTree.AppendNode(new object[] { TreeLabel(node) }, parent, node);
+            if (node.Element.HasElements) xmlTree.AppendNode(new object[] { "" }, result);
             return result;
         }
 
@@ -88,28 +134,38 @@ namespace ProjectDocumentation.NET.Forms
             return $"{element.Name.LocalName} · {value}";
         }
 
-        private void PopulateTree(TreeNode item)
+        private void PopulateTree(TreeListNode item)
         {
             if (item.Tag is NativeSchemaNode node && item.Nodes.Count == 1 && item.Nodes[0].Tag == null)
             {
                 item.Nodes.Clear();
-                foreach (var element in node.Element.Elements()) item.Nodes.Add(TreeNodeFor(profile.ChildNode(node, element)));
+                foreach (var element in node.Element.Elements()) AppendTreeNode(profile.ChildNode(node, element), item);
             }
         }
 
-        private void RebuildBranch(TreeNode item, XElement selected = null)
+        private void RebuildBranch(TreeListNode item, XElement selected = null)
         {
             var node = (NativeSchemaNode)item.Tag;
-            item.Nodes.Clear();
-            foreach (var element in node.Element.Elements()) item.Nodes.Add(TreeNodeFor(profile.ChildNode(node, element)));
-            item.Text = TreeLabel(node);
-            item.Expand();
-            xmlTree.SelectedNode = item.Nodes.Cast<TreeNode>().FirstOrDefault(n => ReferenceEquals(((NativeSchemaNode)n.Tag).Element, selected)) ?? item;
-            xmlTree.SelectedNode.EnsureVisible();
-            ShowSelectedFields(xmlTree.SelectedNode);
+            rebuildingTree = true;
+            xmlTree.BeginUpdate();
+            try
+            {
+                item.Nodes.Clear();
+                foreach (var element in node.Element.Elements()) AppendTreeNode(profile.ChildNode(node, element), item);
+                item.SetValue(0, TreeLabel(node));
+                item.Expanded = true;
+                xmlTree.FocusedNode = item.Nodes.Cast<TreeListNode>().FirstOrDefault(n => ReferenceEquals(((NativeSchemaNode)n.Tag).Element, selected)) ?? item;
+                xmlTree.MakeNodeVisible(xmlTree.FocusedNode);
+            }
+            finally
+            {
+                xmlTree.EndUpdate();
+                rebuildingTree = false;
+            }
+            ShowSelectedFields(xmlTree.FocusedNode);
         }
 
-        private void ShowFields(TreeNode item)
+        private void ShowFields(TreeListNode item)
         {
             if (!(item?.Tag is NativeSchemaNode node)) return;
             details.SuspendLayout();
@@ -119,13 +175,15 @@ namespace ProjectDocumentation.NET.Forms
                 fieldEditors.Clear();
                 childSelector = null;
                 var layout = new TableLayoutPanel { Dock = DockStyle.Top, AutoSize = true, ColumnCount = 2 };
-                layout.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 182));
-                layout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100));
+                layout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 34));
+                layout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 66));
                 details.Controls.Add(layout);
-                AddWide(layout, LabelFor(XmlPath(node.Element)));
+                var path = WrappedLabelFor(XmlPath(node.Element));
+                path.Appearance.FontStyleDelta = FontStyle.Bold;
+                AddWide(layout, path);
                 var documentation = node.Field?.Documentation;
                 if (string.IsNullOrWhiteSpace(documentation)) documentation = node.Type?.Documentation;
-                if (!string.IsNullOrWhiteSpace(documentation)) AddWide(layout, LabelFor(documentation));
+                if (!string.IsNullOrWhiteSpace(documentation)) AddWide(layout, WrappedLabelFor(documentation));
                 var nil = IsNil(node.Element);
                 if (node.Field?.Nillable == true) AddNilControl(layout, item, node.Element, nil);
 
@@ -155,7 +213,7 @@ namespace ProjectDocumentation.NET.Forms
                         ReadOnlyDocument || binary || node.Field?.Fixed != null, multiline, value =>
                         {
                             SetText(node.Element, value);
-                            item.Text = TreeLabel(node);
+                            item.SetValue(0, TreeLabel(node));
                             MarkChanged();
                         });
                     fieldEditors["."] = editor;
@@ -177,7 +235,7 @@ namespace ProjectDocumentation.NET.Forms
                         AddChildControls(layout, item, node);
                         AddFileAndLookupControls(layout, item, node);
                     }
-                    if (item.Parent != null) AddTreeCommands(layout, item, node.Element);
+                    if (item.ParentNode != null) AddTreeCommands(layout, item, node.Element);
                 }
             }
             finally
@@ -192,9 +250,9 @@ namespace ProjectDocumentation.NET.Forms
             return value == "true" || value == "1";
         }
 
-        private void AddNilControl(TableLayoutPanel layout, TreeNode item, XElement element, bool nil)
+        private void AddNilControl(TableLayoutPanel layout, TreeListNode item, XElement element, bool nil)
         {
-            var check = new CheckBox
+            var check = new CheckEdit
             {
                 Text = "Пустой элемент (xsi:nil)", AutoSize = true, Checked = nil, Enabled = !ReadOnlyDocument
             };
@@ -223,8 +281,11 @@ namespace ProjectDocumentation.NET.Forms
             AddWide(layout, check);
         }
 
-        private static Label LabelFor(string text)
-            => new Label { Text = text, AutoSize = true, MaximumSize = new Size(690, 0), Margin = new Padding(3, 6, 3, 6) };
+        private static LabelControl LabelFor(string text)
+            => new LabelControl { Text = text, Margin = new Padding(3, 7, 3, 6) };
+
+        private static LabelControl WrappedLabelFor(string text)
+            => new LabelControl { Text = text, AutoSizeMode = LabelAutoSizeMode.Vertical, Dock = DockStyle.Top, Margin = new Padding(3, 6, 3, 6) };
 
         private static void AddWide(TableLayoutPanel layout, Control control)
         {
@@ -236,46 +297,20 @@ namespace ProjectDocumentation.NET.Forms
         private static void AddField(TableLayoutPanel layout, string label, Control editor, string documentation)
         {
             var row = layout.RowCount++;
-            layout.Controls.Add(LabelFor(label), 0, row);
+            editor.AccessibleName = label;
+            if (editor is BaseControl control && !string.IsNullOrWhiteSpace(documentation))
+                control.ToolTip = documentation;
+            layout.Controls.Add(WrappedLabelFor(label), 0, row);
             layout.Controls.Add(editor, 1, row);
             if (!string.IsNullOrWhiteSpace(documentation))
             {
-                layout.Controls.Add(LabelFor(documentation), 1, layout.RowCount++);
+                layout.Controls.Add(WrappedLabelFor(documentation), 1, layout.RowCount++);
             }
         }
 
-        private Control ValueEditor(string value, NativeSchemaType type, bool readOnly, bool multiline, Action<string> changed)
+        private static Control ValueEditor(string value, NativeSchemaType type, bool readOnly, bool multiline, Action<string> changed)
         {
             value = value ?? "";
-            if (IsSectionView) return SectionValueEditor(value, type, readOnly, multiline, changed);
-            if (!readOnly && type?.Enumeration?.Count > 0)
-            {
-                var options = new ComboBox { Dock = DockStyle.Top, DropDownStyle = ComboBoxStyle.DropDown, DropDownWidth = 550 };
-                options.Items.AddRange(type.Enumeration.Cast<object>().ToArray());
-                var match = type.Enumeration.FirstOrDefault(option => option.Value == value);
-                if (match != null) options.SelectedItem = match;
-                else options.Text = value;
-                options.SelectedIndexChanged += (_, __) => { if (options.SelectedItem is NativeSchemaOption option) changed(option.Value); };
-                options.TextUpdate += (_, __) => changed(options.Text);
-                return options;
-            }
-
-            var text = new TextBox
-            {
-                Dock = DockStyle.Top, Text = value, ReadOnly = readOnly, Multiline = multiline,
-                MaxLength = SchemaXmlDocument.MaxXmlBytes
-            };
-            if (multiline)
-            {
-                text.ScrollBars = ScrollBars.Vertical;
-                text.Height = 95;
-            }
-            text.TextChanged += (_, __) => { if (!readOnly) changed(text.Text); };
-            return text;
-        }
-
-        private static Control SectionValueEditor(string value, NativeSchemaType type, bool readOnly, bool multiline, Action<string> changed)
-        {
             if (!readOnly && type?.Enumeration?.Count > 0)
             {
                 var editor = new ComboBoxEdit { Dock = DockStyle.Top };
@@ -307,63 +342,139 @@ namespace ProjectDocumentation.NET.Forms
             return text;
         }
 
-        private void AddChildControls(TableLayoutPanel layout, TreeNode item, NativeSchemaNode node)
+        private void AddChildControls(TableLayoutPanel layout, TreeListNode item, NativeSchemaNode node)
         {
-            var candidates = VisibleChildren(node).GroupBy(child => child.Field.Name).Select(group => group.First())
-                .Where(child => (!IsSectionView || !fieldEditors.ContainsKey(child.Field.Name)) &&
-                    node.Element.Elements(child.Field.Name).LongCount() < child.Capacity).ToArray();
+            var candidates = ChildCandidates(node).ToArray();
             if (candidates.Length == 0) return;
-            childSelector = new ComboBox { Dock = DockStyle.Top, DropDownStyle = ComboBoxStyle.DropDownList, DropDownWidth = 650, MaxDropDownItems = 18 };
-            childSelector.Items.AddRange(candidates.Cast<object>().ToArray());
+            childSelector = new ComboBoxEdit { Dock = DockStyle.Top };
+            childSelector.Properties.TextEditStyle = TextEditStyles.DisableTextEditor;
+            childSelector.Properties.DropDownRows = 14;
+            childSelector.Properties.PopupFormSize = new Size(650, 0);
+            childSelector.Properties.Items.AddRange(candidates.Cast<object>().ToArray());
             childSelector.SelectedItem = candidates.FirstOrDefault(child => child.Required && node.Element.Element(child.Field.Name) == null) ?? candidates[0];
             AddField(layout, "Вложенное поле", childSelector, null);
             var add = ActionButton("Добавить выбранное поле");
             add.Click += (_, __) =>
             {
-                if (!(childSelector.SelectedItem is NativeSchemaChild child) || !CanEditFields()) return;
-                if (node.Element.Elements(child.Field.Name).LongCount() >= child.Capacity)
-                {
-                    ShowFields(item);
-                    return;
-                }
-                var element = node.AddChild(child);
-                foreach (var attribute in profile.TypeOf(child.Field.Type)?.Attributes ?? new List<NativeSchemaAttribute>())
-                    if (attribute.Fixed != null) element.SetAttributeValue(attribute.Name, attribute.Fixed);
-                MarkChanged();
-                RebuildBranch(item, element);
-                if (fieldEditors.TryGetValue(".", out var editor)) editor.Focus();
+                if (childSelector.SelectedItem is NativeSchemaChild child) AddChildField(item, node, child);
             };
             AddWide(layout, Toolbar(add));
         }
 
-        private void AddTreeCommands(TableLayoutPanel layout, TreeNode item, XElement element)
+        private IEnumerable<NativeSchemaChild> ChildCandidates(NativeSchemaNode node)
+            => VisibleChildren(node).GroupBy(child => child.Field.Name).Select(group => group.First())
+                .Where(child => (!IsSectionView || !fieldEditors.ContainsKey(child.Field.Name)) &&
+                    node.Element.Elements(child.Field.Name).LongCount() < child.Capacity);
+
+        private void AddChildField(TreeListNode item, NativeSchemaNode node, NativeSchemaChild child)
+        {
+            if (!CanEditFields()) return;
+            if (node.Element.Elements(child.Field.Name).LongCount() >= child.Capacity)
+            {
+                ShowFields(item);
+                return;
+            }
+            var element = node.AddChild(child);
+            foreach (var attribute in profile.TypeOf(child.Field.Type)?.Attributes ?? new List<NativeSchemaAttribute>())
+                if (attribute.Fixed != null) element.SetAttributeValue(attribute.Name, attribute.Fixed);
+            MarkChanged();
+            RebuildBranch(item, element);
+            if (fieldEditors.TryGetValue(".", out var editor)) editor.Focus();
+        }
+
+        private void AddTreeCommands(TableLayoutPanel layout, TreeListNode item, XElement element)
         {
             var up = ActionButton("Вверх");
             var down = ActionButton("Вниз");
             var remove = ActionButton("Удалить поле");
-            var parentNode = (NativeSchemaNode)item.Parent.Tag;
+            var parentNode = (NativeSchemaNode)item.ParentNode.Tag;
             up.Enabled = MoveTarget(parentNode, element, true) != null;
             down.Enabled = MoveTarget(parentNode, element, false) != null;
             up.Click += (_, __) => MoveField(item, true);
             down.Click += (_, __) => MoveField(item, false);
-            remove.Click += (_, __) =>
-            {
-                if (!CanEditFields()) return;
-                if (XtraMessageBox.Show(this, $"Удалить поле {element.Name.LocalName} и его содержимое?", Text,
-                    MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes) return;
-                var parent = item.Parent;
-                element.Remove();
-                MarkChanged();
-                RebuildBranch(parent);
-            };
+            remove.Click += (_, __) => RemoveField(item, element);
             AddWide(layout, Toolbar(up, down, remove));
         }
 
-        private void MoveField(TreeNode item, bool up)
+        private void RemoveField(TreeListNode item, XElement element)
+        {
+            if (!CanEditFields() || item.ParentNode == null) return;
+            if (XtraMessageBox.Show(this, $"Удалить поле {element.Name.LocalName} и его содержимое?", Text,
+                MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes) return;
+            var parent = item.ParentNode;
+            element.Remove();
+            MarkChanged();
+            RebuildBranch(parent);
+        }
+
+        private bool ShowTreeMenu(TreeListNode item, Point location)
+        {
+            if (!loaded || busy || !(item?.Tag is NativeSchemaNode node)) return false;
+            xmlTree.FocusedNode = item;
+            var canEdit = !ReadOnlyDocument && !rawDirty;
+            var parent = item.ParentNode?.Tag as NativeSchemaNode;
+            var menu = new DXPopupMenu(xmlTree);
+            if (canEdit)
+            {
+                var add = new DXSubMenuItem("Добавить вложенное поле");
+                foreach (var child in ChildCandidates(node))
+                    add.Items.Add(new DXMenuItem(child.ToString(), (_, __) => AddChildField(item, node, child)));
+                add.Enabled = add.Items.Count > 0;
+                menu.Items.Add(add);
+            }
+            menu.Items.Add(new DXMenuItem("Копировать путь XML", (_, __) =>
+            {
+                try { Clipboard.SetText(XmlPath(node.Element)); }
+                catch (ExternalException error)
+                {
+                    XtraMessageBox.Show(this, error.Message, "Буфер обмена", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                }
+            }));
+            if (canEdit && parent != null)
+            {
+                menu.Items.Add(new DXMenuItem("Переместить вверх", (_, __) => MoveField(item, true))
+                    { Enabled = MoveTarget(parent, node.Element, true) != null, BeginGroup = true });
+                menu.Items.Add(new DXMenuItem("Переместить вниз", (_, __) => MoveField(item, false))
+                    { Enabled = MoveTarget(parent, node.Element, false) != null });
+                menu.Items.Add(new DXMenuItem("Удалить поле", (_, __) => RemoveField(item, node.Element)) { BeginGroup = true });
+            }
+            treeMenu?.Dispose();
+            treeMenu = menu;
+            menu.ShowPopup(xmlTree, location);
+            return true;
+        }
+
+        private bool ShowFocusedTreeMenu()
+        {
+            var item = xmlTree.FocusedNode;
+            if (item == null) return false;
+            var row = xmlTree.GetVisibleIndexByNode(item) - xmlTree.TopVisibleNodeIndex;
+            var y = Math.Max(0, Math.Min(xmlTree.Height - 1, (row + 1) * xmlTree.RowHeight));
+            return ShowTreeMenu(item, new Point(18, y));
+        }
+
+        private void FieldToolTip(object sender, ToolTipControllerGetActiveObjectInfoEventArgs e)
+        {
+            if (e.SelectedControl == xmlTree && xmlTree.CalcHitInfo(e.ControlMousePosition).Node?.Tag is NativeSchemaNode node)
+            {
+                var path = XmlPath(node.Element);
+                var description = node.Field?.Documentation ?? node.Type?.Documentation;
+                e.Info = new ToolTipControlInfo(node, string.IsNullOrWhiteSpace(description) ? path : path + Environment.NewLine + description);
+            }
+            else if (e.SelectedControl == sectionBlocks)
+            {
+                var index = sectionBlocks.IndexFromPoint(e.ControlMousePosition);
+                if (index < 0 || !(sectionBlocks.Items[index] is SectionBlock block)) return;
+                var description = block.Node?.Field?.Documentation ?? block.Node?.Type?.Documentation ?? block.Field?.Field?.Documentation;
+                e.Info = new ToolTipControlInfo(block, string.IsNullOrWhiteSpace(description) ? block.ToString() : description);
+            }
+        }
+
+        private void MoveField(TreeListNode item, bool up)
         {
             if (!CanEditFields()) return;
             var element = ((NativeSchemaNode)item.Tag).Element;
-            var parent = item.Parent;
+            var parent = item.ParentNode;
             var adjacent = MoveTarget((NativeSchemaNode)parent.Tag, element, up);
             if (adjacent == null) return;
             element.Remove();
@@ -390,7 +501,7 @@ namespace ProjectDocumentation.NET.Forms
         private bool CanEditFields()
         {
             if (!rawDirty) return !busy && !ReadOnlyDocument;
-            tabs.SelectedTab = xmlPage;
+            tabs.SelectedTabPage = xmlPage;
             status.Text = "Примените или отмените изменения исходного XML.";
             return false;
         }
@@ -417,7 +528,7 @@ namespace ProjectDocumentation.NET.Forms
                 }
                 var offset = step.Contains("[") && int.TryParse(step.Split('[').Last().TrimEnd(']'), out var number) ? number - 1 : 0;
                 PopulateTree(item);
-                var next = item.Nodes.Cast<TreeNode>().Where(child => (child.Tag as NativeSchemaNode)?.Element.Name.LocalName == name)
+                var next = item.Nodes.Cast<TreeListNode>().Where(child => (child.Tag as NativeSchemaNode)?.Element.Name.LocalName == name)
                     .Skip(Math.Max(0, offset)).FirstOrDefault();
                 if (next == null)
                 {
@@ -426,7 +537,7 @@ namespace ProjectDocumentation.NET.Forms
                 }
                 item = next;
             }
-            tabs.SelectedTab = previousFieldsPage ?? sectionsPage;
+            tabs.SelectedTabPage = previousFieldsPage ?? sectionsPage;
             SelectTreeElement(((NativeSchemaNode)item.Tag).Element);
             if (missing != null && fieldEditors.TryGetValue(missing, out var editor)) editor.Focus();
             else if (missing != null) SelectMissingField(missing);
@@ -436,27 +547,25 @@ namespace ProjectDocumentation.NET.Forms
         private void FindField()
         {
             if (!CanUseDocument()) return;
-            using (var dialog = new Form
+            using (var dialog = new XtraForm
             {
                 Text = "Найти поле", StartPosition = FormStartPosition.CenterParent, ShowInTaskbar = false,
                 MinimumSize = new Size(690, 360), ClientSize = new Size(850, 480)
             })
             {
-                var query = new TextBox { Width = 240, AccessibleName = "Имя, путь XML или описание поля" };
+                var query = new TextEdit { Width = 270, Margin = new Padding(4, 3, 9, 3), AccessibleName = "Имя, путь XML или описание поля" };
                 var go = ActionButton("Перейти");
                 var close = ActionButton("Закрыть");
                 close.DialogResult = DialogResult.Cancel;
                 dialog.AcceptButton = go;
                 dialog.CancelButton = close;
-                var hint = LabelFor("Введите имя поля, часть пути XML или описание.");
-                var matches = new ListView
-                {
-                    Dock = DockStyle.Fill, View = View.Details, FullRowSelect = true, HideSelection = false,
-                    MultiSelect = false, ShowItemToolTips = true, AccessibleName = "Найденные поля"
-                };
-                matches.Columns.Add("Поле", 165);
-                matches.Columns.Add("Путь XML", 365);
-                matches.Columns.Add("Описание", 295);
+                var hint = WrappedLabelFor("Введите имя поля, часть пути XML или описание.");
+                var matches = new GridControl { Dock = DockStyle.Fill, AccessibleName = "Найденные поля" };
+                var view = ConfigureListGrid(matches);
+                view.Columns.AddVisible(nameof(FieldSearchResult.Name), "Поле").Width = 165;
+                view.Columns.AddVisible(nameof(FieldSearchResult.Path), "Путь XML").Width = 365;
+                view.Columns.AddVisible(nameof(FieldSearchResult.Documentation), "Описание").Width = 295;
+                WrapListColumns(view);
                 var results = new TableLayoutPanel { Dock = DockStyle.Fill, ColumnCount = 1, RowCount = 2 };
                 results.RowStyles.Add(new RowStyle(SizeType.AutoSize));
                 results.RowStyles.Add(new RowStyle(SizeType.Percent, 100));
@@ -467,56 +576,36 @@ namespace ProjectDocumentation.NET.Forms
                 string target = null;
                 void Choose()
                 {
-                    if (matches.SelectedItems.Count != 1) return;
-                    target = (string)matches.SelectedItems[0].Tag;
+                    if (!(view.GetFocusedRow() is FieldSearchResult match)) return;
+                    target = match.Path;
                     dialog.DialogResult = DialogResult.OK;
                 }
                 go.Click += (_, __) => Choose();
-                matches.ItemActivate += (_, __) => Choose();
-                matches.SelectedIndexChanged += (_, __) => go.Enabled = matches.SelectedItems.Count == 1;
+                OnGridActivate(view, Choose);
+                view.FocusedRowChanged += (_, __) => go.Enabled = view.GetFocusedRow() is FieldSearchResult;
                 query.TextChanged += (_, __) =>
                 {
                     var terms = query.Text.Split((char[])null, StringSplitOptions.RemoveEmptyEntries);
                     const int limit = 200;
-                    var hasMore = false;
-                    matches.BeginUpdate();
-                    try
-                    {
-                        matches.Items.Clear();
-                        if (terms.Length > 0)
-                        {
-                            foreach (var match in SearchFields(profile.Root, document.Root, "/" + profile.Root.Name,
-                                terms, new HashSet<NativeSchemaType>()).Take(limit + 1))
-                            {
-                                if (matches.Items.Count == limit)
-                                {
-                                    hasMore = true;
-                                    break;
-                                }
-                                matches.Items.Add(match);
-                            }
-                        }
-                        hint.Text = terms.Length == 0 ? "Введите имя поля, часть пути XML или описание."
-                            : matches.Items.Count == 0 ? "Совпадений нет."
-                            : hasMore ? $"Показаны первые {limit} совпадений. Уточните запрос."
-                            : $"Найдено полей: {matches.Items.Count}.";
-                        if (matches.Items.Count > 0)
-                        {
-                            matches.Items[0].Selected = true;
-                            matches.Items[0].Focused = true;
-                        }
-                    }
-                    finally
-                    {
-                        matches.EndUpdate();
-                    }
+                    var rows = terms.Length == 0 ? new List<FieldSearchResult>()
+                        : SearchFields(profile.Root, document.Root, "/" + profile.Root.Name, terms,
+                            new HashSet<NativeSchemaType>()).Take(limit + 1).ToList();
+                    var hasMore = rows.Count > limit;
+                    if (hasMore) rows.RemoveAt(limit);
+                    matches.DataSource = rows;
+                    if (rows.Count > 0) view.FocusedRowHandle = 0;
+                    go.Enabled = rows.Count > 0;
+                    hint.Text = terms.Length == 0 ? "Введите имя поля, часть пути XML или описание."
+                        : rows.Count == 0 ? "Совпадений нет."
+                        : hasMore ? $"Показаны первые {limit} совпадений. Уточните запрос."
+                        : $"Найдено полей: {rows.Count}.";
                 };
                 dialog.Shown += (_, __) => query.Focus();
                 if (dialog.ShowDialog(this) == DialogResult.OK) NavigateToField(target);
             }
         }
 
-        private IEnumerable<ListViewItem> SearchFields(NativeSchemaParticle field, XElement element, string path,
+        private IEnumerable<FieldSearchResult> SearchFields(NativeSchemaParticle field, XElement element, string path,
             string[] terms, HashSet<NativeSchemaType> ancestors)
         {
             var type = profile.TypeOf(field.Type);
@@ -563,53 +652,78 @@ namespace ProjectDocumentation.NET.Forms
             }
         }
 
-        private static ListViewItem SearchMatch(string name, string path, string documentation, string[] terms)
+        private static FieldSearchResult SearchMatch(string name, string path, string documentation, string[] terms)
         {
             documentation = documentation ?? "";
             if (!terms.All(term => path.IndexOf(term, StringComparison.OrdinalIgnoreCase) >= 0
                 || documentation.IndexOf(term, StringComparison.OrdinalIgnoreCase) >= 0)) return null;
-            return new ListViewItem(new[] { name, path, documentation }) { Tag = path, ToolTipText = path + "\n" + documentation };
+            return new FieldSearchResult(name, path, documentation);
+        }
+
+        private sealed class FieldSearchResult
+        {
+            internal FieldSearchResult(string name, string path, string documentation)
+            {
+                Name = name;
+                Path = path;
+                Documentation = documentation;
+            }
+            public string Name { get; }
+            public string Path { get; }
+            public string Documentation { get; }
         }
 
         private void SelectChild(string name)
         {
-            var option = childSelector?.Items.OfType<NativeSchemaChild>().FirstOrDefault(child => child.Field.Name == name);
+            var option = childSelector?.Properties.Items.OfType<NativeSchemaChild>().FirstOrDefault(child => child.Field.Name == name);
             if (option == null) return;
             childSelector.SelectedItem = option;
             childSelector.Focus();
         }
 
-        private void EditStructuredTable(TreeNode item, NativeSchemaNode node)
+        private void EditStructuredTable(TreeListNode item, NativeSchemaNode node)
         {
             if (!CanEditFields()) return;
             var edited = new XElement(node.Element);
             var alignment = profile.TypeOf("tAlignTypes")?.Enumeration ?? new List<NativeSchemaOption>();
-            using (var dialog = new DevExpress.XtraEditors.XtraForm
+            using (var dialog = new XtraForm
             {
                 Text = "Таблица пояснительной записки", StartPosition = FormStartPosition.CenterParent, ShowInTaskbar = false,
                 MinimumSize = new Size(740, 420), ClientSize = new Size(900, 540)
             })
             {
-                var rowList = new ListBox { Dock = DockStyle.Fill, AccessibleName = "Строки таблицы" };
-                var cells = new DataGridView
+                var rowList = new ListBoxControl { Dock = DockStyle.Fill, AccessibleName = "Строки таблицы", ItemHeight = 27 };
+                var cells = new GridControl { Dock = DockStyle.Fill, AccessibleName = "Ячейки выбранной строки" };
+                var cellView = ConfigureListGrid(cells);
+                cellView.OptionsBehavior.Editable = true;
+                cellView.OptionsView.ShowIndicator = true;
+                cellView.IndicatorWidth = 42;
+                cellView.OptionsSelection.EnableAppearanceFocusedCell = true;
+                cellView.OptionsCustomization.AllowSort = false;
+                cellView.CustomDrawRowIndicator += (_, e) =>
                 {
-                    Dock = DockStyle.Fill, AccessibleName = "Ячейки выбранной строки", MultiSelect = false,
-                    AllowUserToAddRows = false, AllowUserToDeleteRows = false, RowHeadersWidth = 45,
-                    AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill,
-                    SelectionMode = DataGridViewSelectionMode.CellSelect
+                    if (e.RowHandle >= 0) e.Info.DisplayText = (e.RowHandle + 1).ToString();
                 };
-                cells.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Значение", FillWeight = 72, SortMode = DataGridViewColumnSortMode.NotSortable });
-                var alignColumn = new DataGridViewComboBoxColumn
-                {
-                    HeaderText = "Выравнивание", FillWeight = 28, DisplayMember = "Caption", ValueMember = "Value",
-                    SortMode = DataGridViewColumnSortMode.NotSortable
-                };
+                var valueColumn = cellView.Columns.AddVisible(nameof(TableCellRow.Value), "Значение");
+                valueColumn.Width = 420;
+                var alignColumn = cellView.Columns.AddVisible(nameof(TableCellRow.Alignment), "Выравнивание");
+                alignColumn.Width = 175;
                 var options = new[] { new NativeSchemaOption { Value = "", Label = "По умолчанию" } }.Concat(alignment);
-                alignColumn.DataSource = options.Select(option => new
+                var alignEditor = new RepositoryItemLookUpEdit
                 {
-                    option.Value, Caption = string.IsNullOrWhiteSpace(option.Label) ? option.Value : option.Label
-                }).ToList();
-                cells.Columns.Add(alignColumn);
+                    DataSource = options.Select(option => new
+                    {
+                        option.Value, Caption = string.IsNullOrWhiteSpace(option.Label) ? option.Value : option.Label
+                    }).ToList(),
+                    DisplayMember = "Caption",
+                    ValueMember = nameof(NativeSchemaOption.Value),
+                    NullText = "По умолчанию",
+                    ShowHeader = false,
+                    ShowFooter = false
+                };
+                alignEditor.Columns.Add(new LookUpColumnInfo("Caption"));
+                cells.RepositoryItems.Add(alignEditor);
+                alignColumn.ColumnEdit = alignEditor;
 
                 var addTitle = ActionButton("Добавить заголовок");
                 var addRow = ActionButton("Добавить строку");
@@ -623,13 +737,13 @@ namespace ProjectDocumentation.NET.Forms
                 dialog.CancelButton = cancel;
                 var hint = LabelFor("");
                 var rows = new List<XElement>();
-                var rowCells = new List<XElement>();
-                var rebuilding = false;
+                var rebuildingRows = false;
+                DXPopupMenu tableMenu = null;
 
                 void UpdateTableActions()
                 {
                     removeRow.Enabled = addCell.Enabled = rowList.SelectedIndex >= 0;
-                    removeCell.Enabled = cells.CurrentCell != null;
+                    removeCell.Enabled = cellView.GetFocusedRow() is TableCellRow;
                     saveTable.Enabled = edited.Elements("Row").Any() && rows.All(row => row.Element("Cell") != null);
                     hint.Text = saveTable.Enabled ? ""
                         : "Нужна хотя бы одна строка данных и хотя бы одна ячейка в каждой строке.";
@@ -637,24 +751,12 @@ namespace ProjectDocumentation.NET.Forms
 
                 void LoadCells()
                 {
-                    rowCells.Clear();
-                    if (rowList.SelectedIndex >= 0) rowCells.AddRange(rows[rowList.SelectedIndex].Elements("Cell"));
-                    rebuilding = true;
-                    try
+                    var row = rowList.SelectedIndex < 0 ? null : rows[rowList.SelectedIndex];
+                    cells.DataSource = row?.Elements("Cell").Select(cell =>
                     {
-                        cells.Rows.Clear();
-                        foreach (var cell in rowCells)
-                        {
-                            var align = (string)cell.Attribute("align");
-                            var displayAlign = alignment.Any(option => option.Value == align) ? align : "";
-                            var index = cells.Rows.Add(cell.Value, displayAlign);
-                            cells.Rows[index].HeaderCell.Value = (index + 1).ToString();
-                        }
-                    }
-                    finally
-                    {
-                        rebuilding = false;
-                    }
+                        var align = (string)cell.Attribute("align");
+                        return new TableCellRow(cell, alignment.Any(option => option.Value == align) ? align : "");
+                    }).ToList() ?? new List<TableCellRow>();
                     UpdateTableActions();
                 }
 
@@ -662,6 +764,7 @@ namespace ProjectDocumentation.NET.Forms
                 {
                     rows.Clear();
                     rows.AddRange(edited.Elements().Where(row => row.Name == "TitleRow" || row.Name == "Row"));
+                    rebuildingRows = true;
                     rowList.BeginUpdate();
                     try
                     {
@@ -678,13 +781,14 @@ namespace ProjectDocumentation.NET.Forms
                     finally
                     {
                         rowList.EndUpdate();
+                        rebuildingRows = false;
                     }
                     LoadCells();
                 }
 
                 void AddTableRow(bool title)
                 {
-                    if (!cells.EndEdit()) return;
+                    if (!CommitCellEdit()) return;
                     var row = new XElement(title ? "TitleRow" : "Row", new XElement("Cell"));
                     var firstData = title ? edited.Element("Row") : null;
                     if (firstData == null) edited.Add(row);
@@ -692,26 +796,120 @@ namespace ProjectDocumentation.NET.Forms
                     LoadRows(row);
                 }
 
-                rowList.SelectedIndexChanged += (_, __) => LoadCells();
-                cells.SelectionChanged += (_, __) => { if (!rebuilding) UpdateTableActions(); };
-                cells.CurrentCellDirtyStateChanged += (_, __) =>
+                bool CommitCellEdit() => cellView.ActiveEditor == null || cellView.PostEditor() && cellView.UpdateCurrentRow();
+
+                XElement AdjacentRow(bool up)
                 {
-                    if (cells.IsCurrentCellDirty && cells.CurrentCell is DataGridViewComboBoxCell)
-                        cells.CommitEdit(DataGridViewDataErrorContexts.Commit);
+                    var index = rowList.SelectedIndex;
+                    if (index < 0) return null;
+                    var adjacent = index + (up ? -1 : 1);
+                    return adjacent >= 0 && adjacent < rows.Count && rows[index].Name == rows[adjacent].Name
+                        ? rows[adjacent] : null;
+                }
+
+                void MoveRow(bool up)
+                {
+                    var target = AdjacentRow(up);
+                    if (target == null || !CommitCellEdit()) return;
+                    var row = rows[rowList.SelectedIndex];
+                    row.Remove();
+                    if (up) target.AddBeforeSelf(row);
+                    else target.AddAfterSelf(row);
+                    LoadRows(row);
+                }
+
+                XElement AdjacentCell(bool left)
+                {
+                    var cell = (cellView.GetFocusedRow() as TableCellRow)?.Element;
+                    return left ? cell?.ElementsBeforeSelf("Cell").LastOrDefault() : cell?.ElementsAfterSelf("Cell").FirstOrDefault();
+                }
+
+                void MoveCell(bool left)
+                {
+                    var target = AdjacentCell(left);
+                    if (target == null || !CommitCellEdit()) return;
+                    var cell = ((TableCellRow)cellView.GetFocusedRow()).Element;
+                    var index = cellView.GetDataSourceRowIndex(cellView.FocusedRowHandle);
+                    cell.Remove();
+                    if (left) target.AddBeforeSelf(cell);
+                    else target.AddAfterSelf(cell);
+                    LoadCells();
+                    cellView.FocusedRowHandle = cellView.GetRowHandle(index + (left ? -1 : 1));
+                }
+
+                DXMenuItem ButtonCommand(SimpleButton button, bool beginGroup = false)
+                    => new DXMenuItem(button.Text, (_, __) => button.PerformClick()) { Enabled = button.Enabled, BeginGroup = beginGroup };
+
+                void ShowTableMenu(Control owner, Point location)
+                {
+                    tableMenu?.Dispose();
+                    tableMenu = new DXPopupMenu(owner);
+                    if (owner == rowList)
+                    {
+                        tableMenu.Items.Add(ButtonCommand(addTitle));
+                        tableMenu.Items.Add(ButtonCommand(addRow));
+                        tableMenu.Items.Add(new DXMenuItem("Переместить строку вверх", (_, __) => MoveRow(true))
+                            { Enabled = AdjacentRow(true) != null, BeginGroup = true });
+                        tableMenu.Items.Add(new DXMenuItem("Переместить строку вниз", (_, __) => MoveRow(false))
+                            { Enabled = AdjacentRow(false) != null });
+                        tableMenu.Items.Add(ButtonCommand(removeRow, true));
+                    }
+                    else
+                    {
+                        tableMenu.Items.Add(ButtonCommand(addCell));
+                        tableMenu.Items.Add(new DXMenuItem("Переместить ячейку влево", (_, __) => MoveCell(true))
+                            { Enabled = AdjacentCell(true) != null, BeginGroup = true });
+                        tableMenu.Items.Add(new DXMenuItem("Переместить ячейку вправо", (_, __) => MoveCell(false))
+                            { Enabled = AdjacentCell(false) != null });
+                        tableMenu.Items.Add(ButtonCommand(removeCell, true));
+                    }
+                    tableMenu.ShowPopup(owner, location);
+                }
+
+                void TableMenuKey(Control owner, KeyEventArgs e)
+                {
+                    if (e.KeyData != Keys.Apps && e.KeyData != (Keys.Shift | Keys.F10)) return;
+                    e.SuppressKeyPress = true;
+                    var location = owner == rowList && rowList.SelectedIndex >= 0
+                        ? rowList.GetItemRectangle(rowList.SelectedIndex).Location : new Point(15, 30);
+                    ShowTableMenu(owner, location);
+                }
+
+                rowList.SelectedIndexChanged += (_, __) =>
+                {
+                    if (!rebuildingRows && CommitCellEdit()) LoadCells();
                 };
-                cells.CellValueChanged += (_, e) =>
+                rowList.MouseUp += (_, e) =>
                 {
-                    if (rebuilding || e.RowIndex < 0 || e.RowIndex >= rowCells.Count || e.ColumnIndex < 0) return;
-                    var cell = rowCells[e.RowIndex];
-                    var value = Convert.ToString(cells[e.ColumnIndex, e.RowIndex].Value);
-                    if (e.ColumnIndex == 0) SetText(cell, value);
-                    else cell.SetAttributeValue("align", value.Length == 0 ? null : value);
+                    if (e.Button != MouseButtons.Right) return;
+                    var index = rowList.IndexFromPoint(e.Location);
+                    if (index >= 0) rowList.SelectedIndex = index;
+                    ShowTableMenu(rowList, e.Location);
+                };
+                cells.MouseUp += (_, e) =>
+                {
+                    if (e.Button != MouseButtons.Right) return;
+                    var hit = cellView.CalcHitInfo(e.Location);
+                    if (hit.InColumn) return;
+                    if (hit.InRow) cellView.FocusedRowHandle = hit.RowHandle;
+                    ShowTableMenu(cells, e.Location);
+                };
+                rowList.KeyDown += (_, e) => TableMenuKey(rowList, e);
+                cellView.KeyDown += (_, e) => TableMenuKey(cells, e);
+                dialog.FormClosed += (_, __) => tableMenu?.Dispose();
+                cellView.FocusedRowChanged += (_, __) => UpdateTableActions();
+                cellView.CellValueChanged += (_, e) =>
+                {
+                    if (!(cellView.GetRow(e.RowHandle) is TableCellRow row)) return;
+                    var value = Convert.ToString(e.Value);
+                    if (e.Column == valueColumn) SetText(row.Element, value);
+                    else row.Element.SetAttributeValue("align", value.Length == 0 ? null : value);
                 };
                 addTitle.Click += (_, __) => AddTableRow(true);
                 addRow.Click += (_, __) => AddTableRow(false);
                 removeRow.Click += (_, __) =>
                 {
-                    if (rowList.SelectedIndex < 0 || !cells.EndEdit()) return;
+                    if (rowList.SelectedIndex < 0 || !CommitCellEdit()) return;
                     var index = rowList.SelectedIndex;
                     rows[index].Remove();
                     var selection = rows.Count <= 1 ? null : rows[index == rows.Count - 1 ? index - 1 : index + 1];
@@ -719,37 +917,37 @@ namespace ProjectDocumentation.NET.Forms
                 };
                 addCell.Click += (_, __) =>
                 {
-                    if (rowList.SelectedIndex < 0 || !cells.EndEdit()) return;
+                    if (rowList.SelectedIndex < 0 || !CommitCellEdit()) return;
                     rows[rowList.SelectedIndex].Add(new XElement("Cell"));
                     LoadCells();
-                    cells.CurrentCell = cells[0, cells.Rows.Count - 1];
-                    cells.BeginEdit(true);
+                    cellView.FocusedRowHandle = cellView.GetRowHandle(cellView.DataRowCount - 1);
+                    cellView.FocusedColumn = valueColumn;
+                    cells.Focus();
+                    cellView.ShowEditor();
                 };
                 removeCell.Click += (_, __) =>
                 {
-                    if (cells.CurrentCell == null || !cells.EndEdit()) return;
-                    rowCells[cells.CurrentCell.RowIndex].Remove();
+                    if (!(cellView.GetFocusedRow() is TableCellRow row) || !CommitCellEdit()) return;
+                    row.Element.Remove();
                     LoadCells();
                 };
                 saveTable.Click += (_, __) =>
                 {
-                    if (cells.EndEdit() && saveTable.Enabled) dialog.DialogResult = DialogResult.OK;
+                    if (CommitCellEdit() && saveTable.Enabled) dialog.DialogResult = DialogResult.OK;
                 };
 
                 var body = new TableLayoutPanel { Dock = DockStyle.Fill, ColumnCount = 2, RowCount = 3, Padding = new Padding(8) };
-                body.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 320));
+                body.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 200));
                 body.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100));
                 body.RowStyles.Add(new RowStyle(SizeType.AutoSize));
                 body.RowStyles.Add(new RowStyle(SizeType.Percent, 100));
                 body.RowStyles.Add(new RowStyle(SizeType.AutoSize));
-                var rowTools = Toolbar(addTitle, addRow, removeRow);
-                rowTools.WrapContents = true;
+                var rowTools = Toolbar(addTitle, addRow, removeRow, addCell, removeCell);
                 body.Controls.Add(rowTools, 0, 0);
-                body.Controls.Add(Toolbar(addCell, removeCell), 1, 0);
+                body.SetColumnSpan(rowTools, 2);
                 body.Controls.Add(rowList, 0, 1);
                 body.Controls.Add(cells, 1, 1);
                 var footer = Toolbar(saveTable, cancel, hint);
-                footer.WrapContents = true;
                 body.Controls.Add(footer, 0, 2);
                 body.SetColumnSpan(footer, 2);
                 dialog.Controls.Add(body);
@@ -763,6 +961,19 @@ namespace ProjectDocumentation.NET.Forms
             }
         }
 
+        private sealed class TableCellRow
+        {
+            internal TableCellRow(XElement element, string alignment)
+            {
+                Element = element;
+                Value = element.Value;
+                Alignment = alignment;
+            }
+            internal XElement Element { get; }
+            public string Value { get; set; }
+            public string Alignment { get; set; }
+        }
+
         private static string XmlPath(XElement element)
         {
             return "/" + string.Join("/", element.AncestorsAndSelf().Reverse().Select(item =>
@@ -773,7 +984,7 @@ namespace ProjectDocumentation.NET.Forms
             }));
         }
 
-        private void AddFileAndLookupControls(TableLayoutPanel layout, TreeNode item, NativeSchemaNode node)
+        private void AddFileAndLookupControls(TableLayoutPanel layout, TreeListNode item, NativeSchemaNode node)
         {
             var fields = new HashSet<string>(node.Children.Select(child => child.Field.Name));
             var actions = new List<Control>();
@@ -800,7 +1011,7 @@ namespace ProjectDocumentation.NET.Forms
             if (actions.Count > 0) AddWide(layout, Toolbar(actions.ToArray()));
         }
 
-        private async Task ChooseAttachmentAsync(TreeNode item, NativeSchemaNode node)
+        private async Task ChooseAttachmentAsync(TreeListNode item, NativeSchemaNode node)
         {
             if (!CanEditFields()) return;
             using (var picker = new OpenFileDialog { CheckFileExists = true })
@@ -835,7 +1046,7 @@ namespace ProjectDocumentation.NET.Forms
             return oldSignatures.Count > 0;
         }
 
-        private async Task ChooseImageAsync(TreeNode item, NativeSchemaNode node)
+        private async Task ChooseImageAsync(TreeListNode item, NativeSchemaNode node)
         {
             if (!CanEditFields()) return;
             using (var picker = new OpenFileDialog { Filter = "Изображения|*.png;*.jpg;*.jpeg;*.gif", CheckFileExists = true })
@@ -879,7 +1090,7 @@ namespace ProjectDocumentation.NET.Forms
             return null;
         }
 
-        private async Task LookupAsync(TreeNode item, NativeSchemaNode node, bool organization)
+        private async Task LookupAsync(TreeListNode item, NativeSchemaNode node, bool organization)
         {
             if (!CanEditFields()) return;
             var query = XtraInputBox.Show(organization ? "Введите ИНН юридического лица" : "Введите российский адрес",
@@ -896,18 +1107,33 @@ namespace ProjectDocumentation.NET.Forms
                 status.Text = LookupInnConflict;
                 return;
             }
-            await RunAsync("Поиск в DaData…", async () =>
+            using (var cancellation = new CancellationTokenSource())
             {
-                var values = organization ? await ConclusionDaData.FindOrganizationAsync(query) : await ConclusionDaData.NormalizeAddressAsync(query);
-                if (values == null) throw new InvalidOperationException("DaData не нашла однозначного совпадения.");
-                var populated = FillLookupFields(node, values, profile);
-                if (populated)
+                EventHandler cancel = (_, __) => cancellation.Cancel();
+                Disposed += cancel;
+                try
                 {
-                    MarkChanged();
-                    RebuildBranch(item);
+                    await RunAsync("Поиск в DaData…", async () =>
+                    {
+                        var values = organization
+                            ? await ConclusionDaData.FindOrganizationAsync(query, ((string)node.Element.Element("KPP"))?.Trim(), cancellation.Token)
+                            : await ConclusionDaData.NormalizeAddressAsync(query, cancellation.Token);
+                        if (cancellation.IsCancellationRequested || IsDisposed || Disposing) return;
+                        if (values == null) throw new InvalidOperationException("DaData не нашла однозначного совпадения. Заполните поля вручную.");
+                        var populated = FillLookupFields(node, values, profile);
+                        if (populated)
+                        {
+                            MarkChanged();
+                            RebuildBranch(item);
+                        }
+                        status.Text = populated ? "Пустые поля заполнены из DaData." : "Подходящих пустых полей нет.";
+                    });
                 }
-                status.Text = populated ? "Пустые поля заполнены из DaData." : "Подходящих пустых полей нет.";
-            });
+                finally
+                {
+                    Disposed -= cancel;
+                }
+            }
         }
 
         private static bool HasDifferentIdentifier(XElement element, string name, string value)
@@ -922,6 +1148,8 @@ namespace ProjectDocumentation.NET.Forms
                 throw new InvalidOperationException(LookupInnConflict);
             if (values.TryGetValue("OGRN", out var ogrn) && HasDifferentIdentifier(node.Element, "OGRN", ogrn))
                 throw new InvalidOperationException("ОГРН найденной организации отличается от ОГРН в документе.");
+            if (values.TryGetValue("KPP", out var kpp) && HasDifferentIdentifier(node.Element, "KPP", kpp))
+                throw new InvalidOperationException("КПП найденной организации отличается от КПП в документе.");
 
             var hasNote = node.Element.Element("Note") != null;
             var hasStructuredAddress = node.Element.Elements().Any(field => StructuredAddressFields.Contains(field.Name.LocalName));
