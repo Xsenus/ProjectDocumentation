@@ -1,5 +1,6 @@
 import unittest
 from pathlib import Path
+from xml.etree import ElementTree as ET
 
 from schema_engine.preview import render_preview
 from schema_engine.schema import new_document, validate_document
@@ -39,6 +40,14 @@ class FormDiagnosticsTests(unittest.TestCase):
         self.assertFalse(result['valid'])
         self.assertTrue(any(error['path'] == '/ExplanatoryNote/ProjectInitialDocuments/Document[2]/DocDate'
                             for error in result['errors']), result['errors'])
+
+    def test_missing_snils_points_to_the_required_field_before_expert_type(self):
+        root = ET.parse(FIXTURES / 'conclusion-01-04.xml').getroot()
+        expert = root.find('Experts/Expert')
+        expert.remove(expert.find('SNILS'))
+        errors = validate_document(ET.tostring(root, encoding='unicode'))['errors']
+        self.assertTrue(any(error.get('code') == 'required-element' and error['path'] == '/Conclusion/Experts/Expert/SNILS'
+                            for error in errors), errors)
 
     def test_preview_accepts_large_image_inside_xml_size_limit(self):
         xml = (FIXTURES / 'explanatorynote-01-07.xml').read_text(encoding='utf-8')

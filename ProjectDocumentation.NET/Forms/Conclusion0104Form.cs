@@ -26,7 +26,8 @@ namespace ProjectDocumentation.NET.Forms
         private readonly string idAttribute;
         private readonly TextBox nameEditor = new TextBox { Dock = DockStyle.Fill };
         private readonly TabControl tabs = new TabControl { Dock = DockStyle.Fill };
-        private readonly TabPage fieldsPage = new TabPage("Поля документа");
+        private readonly TabPage sectionsPage = new TabPage("Разделы");
+        private readonly TabPage fieldsPage = new TabPage("Все поля");
         private readonly TabPage xmlPage = new TabPage("Исходный XML");
         private readonly TabPage validationPage = new TabPage("Проверка XML");
         private readonly TabPage previewPage = new TabPage("Предпросмотр");
@@ -90,6 +91,7 @@ namespace ProjectDocumentation.NET.Forms
             };
 
             fieldsPage.Controls.Add(CreateFieldsPanel());
+            sectionsPage.Controls.Add(CreateSectionsPanel());
             xmlPage.Controls.Add(WithToolbar(rawEditor, applyRawButton, resetRawButton));
             errors.Columns.Add("Путь XML", 330);
             errors.Columns.Add("Сообщение", 720);
@@ -104,7 +106,7 @@ namespace ProjectDocumentation.NET.Forms
             preview.ReplaceService<IUriStreamService>(new PreviewImages());
             preview.HyperlinkClick += (_, e) => e.Handled = true;
             previewPage.Controls.Add(WithToolbar(preview, previewButton));
-            tabs.TabPages.AddRange(new[] { fieldsPage, xmlPage, validationPage, previewPage });
+            tabs.TabPages.AddRange(new[] { sectionsPage, fieldsPage, xmlPage, validationPage, previewPage });
             if (warnings?.Count > 0)
             {
                 var warningsPage = new TabPage("Замечания преобразования");
@@ -119,12 +121,13 @@ namespace ProjectDocumentation.NET.Forms
             tabs.SelectedIndexChanged += async (_, __) =>
             {
                 if (!loaded) return;
+                if (tabs.SelectedTab == sectionsPage || tabs.SelectedTab == fieldsPage) ShowFieldsView();
                 if (tabs.SelectedTab == xmlPage && !rawDirty && rawRevision != revision) ResetRawEditor();
                 if (tabs.SelectedTab == previewPage && !busy && !rawDirty && previewRevision != revision) await UpdatePreviewAsync();
             };
             tabs.Selecting += (_, e) =>
             {
-                if (rawDirty && (e.TabPage == fieldsPage || e.TabPage == previewPage))
+                if (rawDirty && (e.TabPage == sectionsPage || e.TabPage == fieldsPage || e.TabPage == previewPage))
                 {
                     e.Cancel = true;
                     status.Text = "Примените или отмените изменения исходного XML.";
@@ -178,6 +181,7 @@ namespace ProjectDocumentation.NET.Forms
                     throw new InvalidOperationException("Получено описание полей другого документа.");
                 }
                 loaded = true;
+                ShowFieldsView();
                 BuildTree(initialSection);
                 status.Text = $"Схема {documentVersion}.";
             }

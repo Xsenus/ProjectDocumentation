@@ -49,6 +49,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
         public ConclusionEdit()
         {
             InitializeComponent();
+            txtVersion.Properties.ReadOnly = true;
         }
 
         public ConclusionEdit(Conclusion conclusion) : this()
@@ -922,12 +923,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
 
             try
             {
-                var schemaVersion = txtVersion.EditValue?.ToString()?.Trim();
-                if (string.IsNullOrWhiteSpace(schemaVersion))
-                {
-                    schemaVersion = "01.03";
-                }
-                Conclusion.SchemaVersion = schemaVersion;
+                Conclusion.SchemaVersion = "01.03";
 
                 #region Page I
                 Conclusion.ExaminationObject = new TExaminationObject
@@ -1694,7 +1690,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                 Conclusion = new Conclusion();
             }
 
-            txtVersion.EditValue = Conclusion.SchemaVersion;
+            txtVersion.EditValue = "01.03";
 
             #region Page I
             cmbExaminationResult.EditValue = cmbExaminationResult.Properties.Items
