@@ -15,6 +15,11 @@ namespace ProjectDocumentation.NET.Forms
 {
     internal partial class SchemaDocumentForm
     {
+        private const string LookupInnConflict = "ИНН запроса отличается от ИНН в документе.";
+        private static readonly HashSet<string> StructuredAddressFields = new HashSet<string>
+        {
+            "District", "City", "Settlement", "Street", "Building", "Room", "Landmark"
+        };
         private readonly TreeView xmlTree = new TreeView { Dock = DockStyle.Fill, HideSelection = false, ShowNodeToolTips = true };
         private readonly Panel details = new Panel { Dock = DockStyle.Fill, AutoScroll = true, Padding = new Padding(10, 0, 10, 10) };
         private readonly Dictionary<string, Control> fieldEditors = new Dictionary<string, Control>();
@@ -387,13 +392,25 @@ namespace ProjectDocumentation.NET.Forms
                         extension.Any(ch => !(ch >= 'a' && ch <= 'z') && !(ch >= '0' && ch <= '9')))
                         throw new InvalidOperationException("Расширение файла не соответствует формату схемы.");
                     var checksum = await ReadChecksumAsync(picker.FileName);
-                    PutField(node, "FileName", filename);
-                    PutField(node, "FileFormat", extension);
-                    PutField(node, "FileChecksum", checksum);
+                    var removedSignatures = UpdateAttachmentMetadata(node, filename, extension, checksum);
                     MarkChanged();
                     RebuildBranch(item);
+                    if (removedSignatures)
+                        status.Text = "Файл изменился. Сведения о прежних файлах подписи удалены. Добавьте подписи к новому файлу.";
                 });
             }
+        }
+
+        private static bool UpdateAttachmentMetadata(NativeSchemaNode node, string name, string format, string checksum)
+        {
+            var previousChecksum = (string)node.Element.Element("FileChecksum");
+            PutField(node, "FileName", name);
+            PutField(node, "FileFormat", format);
+            PutField(node, "FileChecksum", checksum);
+            if (string.Equals(previousChecksum, checksum, StringComparison.OrdinalIgnoreCase)) return false;
+            var oldSignatures = node.Element.Elements("SignFile").ToList();
+            oldSignatures.Remove();
+            return oldSignatures.Count > 0;
         }
 
         private async Task ChooseImageAsync(TreeNode item, NativeSchemaNode node)
@@ -452,16 +469,16 @@ namespace ProjectDocumentation.NET.Forms
                 status.Text = organization ? "ИНН юридического лица должен содержать 10 цифр." : "Введите адрес от 3 до 400 символов.";
                 return;
             }
+            if (organization && HasDifferentIdentifier(node.Element, "INN", query))
+            {
+                status.Text = LookupInnConflict;
+                return;
+            }
             await RunAsync("Поиск в DaData…", async () =>
             {
                 var values = organization ? await ConclusionDaData.FindOrganizationAsync(query) : await ConclusionDaData.NormalizeAddressAsync(query);
                 if (values == null) throw new InvalidOperationException("DaData не нашла однозначного совпадения.");
-                var populated = false;
-                foreach (var value in values)
-                {
-                    if (string.IsNullOrWhiteSpace((string)node.Element.Element(value.Key)) && PutField(node, value.Key, value.Value))
-                        populated = true;
-                }
+                var populated = FillLookupFields(node, values, profile);
                 if (populated)
                 {
                     MarkChanged();
@@ -471,10 +488,38 @@ namespace ProjectDocumentation.NET.Forms
             });
         }
 
-        private static bool PutField(NativeSchemaNode node, string name, string value)
+        private static bool HasDifferentIdentifier(XElement element, string name, string value)
+        {
+            var existing = ((string)element.Element(name))?.Trim();
+            return !string.IsNullOrEmpty(existing) && existing != value;
+        }
+
+        private static bool FillLookupFields(NativeSchemaNode node, Dictionary<string, string> values, NativeSchemaProfile schema)
+        {
+            if (values.TryGetValue("INN", out var inn) && HasDifferentIdentifier(node.Element, "INN", inn))
+                throw new InvalidOperationException(LookupInnConflict);
+            if (values.TryGetValue("OGRN", out var ogrn) && HasDifferentIdentifier(node.Element, "OGRN", ogrn))
+                throw new InvalidOperationException("ОГРН найденной организации отличается от ОГРН в документе.");
+
+            var hasNote = node.Element.Element("Note") != null;
+            var hasStructuredAddress = node.Element.Elements().Any(field => StructuredAddressFields.Contains(field.Name.LocalName));
+            var populated = false;
+            foreach (var value in values)
+            {
+                if ((hasNote && StructuredAddressFields.Contains(value.Key)) || (hasStructuredAddress && value.Key == "Note"))
+                    continue;
+                if (string.IsNullOrWhiteSpace((string)node.Element.Element(value.Key)) && PutField(node, value.Key, value.Value, schema))
+                    populated = true;
+            }
+            return populated;
+        }
+
+        private static bool PutField(NativeSchemaNode node, string name, string value, NativeSchemaProfile schema = null)
         {
             var candidate = node.Children.FirstOrDefault(field => field.Field.Name == name);
             if (candidate == null) return false;
+            var allowed = schema?.TypeOf(candidate.Field.Type)?.Enumeration;
+            if (allowed?.Count > 0 && !allowed.Any(option => option.Value == value)) return false;
             var target = node.Element.Element(name) ?? node.AddChild(candidate);
             SetText(target, value);
             return true;

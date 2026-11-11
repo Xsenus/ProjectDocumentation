@@ -24,6 +24,23 @@ MAX_VALIDATION_ERRORS = 200
 MISSING_ATTRIBUTE = re.compile(r"^missing required attribute '([^']+)'$")
 INVALID_ATTRIBUTE = re.compile(r"^attribute ([^=\s]+)=")
 FIXED_ATTRIBUTE = re.compile(r"^attribute '([^']+)' has a fixed value '([^']*)'$")
+CONCLUSION_ASSERTION_FIELDS = {
+    'not(not(PreviousConclusions) and ExaminationObject/ExaminationStage!=1)': 'PreviousConclusions',
+    'not(not(PreviousSimpleConclusions) and ExaminationObject/ExaminationStage=3)': 'PreviousSimpleConclusions',
+    'not(ExaminationObject/ExaminationType!=1 and not(Designer))': 'Designer',
+    'not(ExaminationObject/ExaminationType=1 and count(EngineeringSurveyAddress)=0)': 'EngineeringSurveyAddress',
+    'not(not(Summary/EngineeringSurveySummaryDate) and ExaminationObject/ExaminationType=1 and ExaminationObject/ExaminationStage=2)':
+        'Summary/EngineeringSurveySummaryDate',
+    'not(not(Summary/ProjectDocumentsSummaryDate) and ExaminationObject/ExaminationType=2)':
+        'Summary/ProjectDocumentsSummaryDate',
+    'not(not(Summary/ExaminationSummary/EngineeringSurveysResultsSummary) and ExaminationObject/ExaminationType=1)':
+        'Summary/ExaminationSummary/EngineeringSurveysResultsSummary',
+    'not(not(Summary/ExaminationSummary/ProjectDocumentsSummary) and ExaminationObject/ExaminationType=2)':
+        'Summary/ExaminationSummary/ProjectDocumentsSummary',
+    'not(ExaminationObject[(ExaminationType=3 or ExaminationType=2) and not(ProjectDocumentationIM)])':
+        'ExaminationObject/ProjectDocumentationIM',
+    'not(ExaminationObject[ExaminationType=1 and not(EngineeringSurveysIM)])': 'ExaminationObject/EngineeringSurveysIM',
+}
 
 
 @lru_cache(maxsize=None)
@@ -116,6 +133,8 @@ def _validation_error(error, root_path):
     reason = error.reason or error.message
     result = {'path': path, 'message': reason}
     if isinstance(error.validator, XsdAssert):
+        if path == '/Conclusion' and (field := CONCLUSION_ASSERTION_FIELDS.get(error.validator.path)):
+            result['path'] = f'{path}/{field}'
         result['code'] = 'xsd-assertion'
         result['message'] = _documentation(error.validator) or reason
         return result

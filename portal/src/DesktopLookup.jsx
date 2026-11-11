@@ -74,9 +74,16 @@ export default function DesktopLookup({ element, type, context }) {
 
   if (!bridge || context.readOnly || !organization && !address) return null;
   const allowed = organization ? organizationFields : addressFields;
-  const available = fields ? candidates(element, type.particle, fields, allowed, context.types) : [];
   const value = query.trim();
-  const valid = organization ? /^\d{10}$/.test(value) : Boolean(value);
+  const savedInn = organization ? queryFrom(element, true).trim() : '';
+  const savedOgrn = organization ? readElementText(fieldNode(element, 'OGRN')).trim() : '';
+  const queryMismatch = Boolean(savedInn && savedInn !== value);
+  const resultMismatch = Boolean(organization && fields && (
+    fields.INN !== value || savedOgrn && fields.OGRN && fields.OGRN !== savedOgrn
+  ));
+  const available = fields && !queryMismatch && !resultMismatch
+    ? candidates(element, type.particle, fields, allowed, context.types) : [];
+  const valid = organization ? /^\d{10}$/.test(value) && !queryMismatch : Boolean(value);
   const button = organization ? 'Найти организацию' : 'Нормализовать адрес';
 
   function lookup() {
@@ -125,8 +132,10 @@ export default function DesktopLookup({ element, type, context }) {
           {pending ? 'Запрашиваю…' : button}
         </button>
       </div>
+      {queryMismatch && <p className="lookup-error" role="alert">Поиск доступен по ИНН, указанному в документе.</p>}
+      {resultMismatch && !queryMismatch && <p className="lookup-error" role="alert">Реквизиты организации в ответе DaData не совпадают с документом.</p>}
       {error && <p className="lookup-error" role="alert">{error}</p>}
-      {fields && (
+      {fields && !queryMismatch && !resultMismatch && (
         <div className="lookup-results" aria-live="polite">
           {available.length ? (
             <>

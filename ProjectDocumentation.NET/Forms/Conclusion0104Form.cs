@@ -9,6 +9,7 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml.Linq;
@@ -17,6 +18,9 @@ namespace ProjectDocumentation.NET.Forms
 {
     internal partial class SchemaDocumentForm : XtraForm
     {
+        private static readonly Regex DraftEncoding = new Regex(
+            @"\A\uFEFF?<\?xml(?=\s)[^<?]*?\sencoding\s*=\s*(?<quote>['""])(?<encoding>[A-Za-z][A-Za-z0-9._-]*)\k<quote>",
+            RegexOptions.CultureInvariant);
         private readonly ConclusionSchemaService service;
         private readonly Func<string, string, Task<XmlObjXPO>> save;
         private readonly string family;
@@ -379,7 +383,7 @@ namespace ProjectDocumentation.NET.Forms
                 var temporary = Path.Combine(Path.GetDirectoryName(picker.FileName), Guid.NewGuid().ToString("N") + ".tmp");
                 try
                 {
-                    File.WriteAllText(temporary, text, new UTF8Encoding(false));
+                    File.WriteAllText(temporary, NormalizeDraftEncoding(text), new UTF8Encoding(false));
                     if (File.Exists(picker.FileName)) File.Replace(temporary, picker.FileName, null);
                     else File.Move(temporary, picker.FileName);
                     status.Text = "Исходный XML записан в выбранный файл.";
@@ -393,6 +397,19 @@ namespace ProjectDocumentation.NET.Forms
                     if (File.Exists(temporary)) File.Delete(temporary);
                 }
             }
+        }
+
+        private static string NormalizeDraftEncoding(string xml)
+        {
+            // An unapplied draft can be malformed. Rewrite just the encoding of a complete leading declaration.
+            if (!xml.StartsWith("<?xml", StringComparison.Ordinal) && !xml.StartsWith("\uFEFF<?xml", StringComparison.Ordinal)) return xml;
+            var startOfDeclaration = xml[0] == '\uFEFF' ? 1 : 0;
+            var endOfDeclaration = xml.IndexOf('?', startOfDeclaration + 5);
+            if (endOfDeclaration < 0 || endOfDeclaration + 1 == xml.Length || xml[endOfDeclaration + 1] != '>' ||
+                xml.IndexOf('<', startOfDeclaration + 1, endOfDeclaration - startOfDeclaration - 1) >= 0) return xml;
+            var encoding = DraftEncoding.Match(xml, 0, endOfDeclaration).Groups["encoding"];
+            if (!encoding.Success || string.Equals(encoding.Value, "utf-8", StringComparison.OrdinalIgnoreCase)) return xml;
+            return xml.Substring(0, encoding.Index) + "utf-8" + xml.Substring(encoding.Index + encoding.Length);
         }
 
         private sealed class PreviewImages : IUriStreamService

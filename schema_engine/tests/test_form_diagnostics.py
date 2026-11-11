@@ -49,6 +49,19 @@ class FormDiagnosticsTests(unittest.TestCase):
         self.assertTrue(any(error.get('code') == 'required-element' and error['path'] == '/Conclusion/Experts/Expert/SNILS'
                             for error in errors), errors)
 
+    def test_missing_conditional_fields_point_to_the_editable_xml_path(self):
+        xml = '<Conclusion SchemaVersion="01.04"><ExaminationObject><ExaminationType>1</ExaminationType></ExaminationObject></Conclusion>'
+        errors = validate_document(xml)['errors']
+        paths = {error['path'] for error in errors if error.get('code') == 'xsd-assertion'}
+        self.assertIn('/Conclusion/ExaminationObject/EngineeringSurveysIM', paths)
+        self.assertIn('/Conclusion/EngineeringSurveyAddress', paths)
+
+        xml = (FIXTURES / 'conclusion-01-04.xml').read_text(encoding='utf-8')
+        xml = xml.replace('<ExaminationStage>1</ExaminationStage>', '<ExaminationStage>2</ExaminationStage>')
+        errors = validate_document(xml)['errors']
+        self.assertTrue(any(error.get('code') == 'xsd-assertion' and error['path'] == '/Conclusion/PreviousConclusions'
+                            for error in errors), errors)
+
     def test_preview_accepts_large_image_inside_xml_size_limit(self):
         xml = (FIXTURES / 'explanatorynote-01-07.xml').read_text(encoding='utf-8')
         data = 'A' * 10_000_004
