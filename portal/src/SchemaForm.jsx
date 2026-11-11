@@ -42,6 +42,7 @@ const noteFields = {
 };
 
 const labels = {
+  align: 'Выравнивание',
   ExplanatoryNoteNumber: 'Номер пояснительной записки',
   ExplanatoryNoteYear: 'Год подготовки',
   ExplanatoryNoteModifications: 'Изменения записки',
@@ -113,6 +114,39 @@ export function normalPath(path) {
   return (path || '').replace(/\{[^}]*\}/g, '');
 }
 
+export function formFieldIndex(model, familyId) {
+  const result = [];
+  const seenPaths = new Set();
+  const sections = groupLabelsFor(familyId);
+  function add(spec, path, section) {
+    if (seenPaths.has(path)) return;
+    seenPaths.add(path);
+    result.push({ path, title: titleFor(spec, model.types), section: sections[section], documentation: spec.documentation });
+  }
+  function visitType(typeName, path, section, ancestors) {
+    if (ancestors.has(typeName)) return;
+    const type = model.types[typeName];
+    for (const attribute of type?.attributes || []) add(attribute, `${path}/@${attribute.name}`, section);
+    if (type?.particle) visitParticle(type.particle, path, section, new Set(ancestors).add(typeName));
+  }
+  function visitParticle(particle, path, section, ancestors) {
+    if (particle.kind === 'element') {
+      const elementPath = `${path}/${particle.name}`;
+      add(particle, elementPath, section);
+      visitType(particle.type, elementPath, section, ancestors);
+      return;
+    }
+    for (const child of particle.children || []) visitParticle(child, path, section, ancestors);
+  }
+  const rootType = model.types[model.root.type];
+  const rootPath = '/' + model.root.name;
+  for (const attribute of rootType?.attributes || []) add(attribute, `${rootPath}/@${attribute.name}`, 'details');
+  for (const part of topParticles(rootType?.particle)) {
+    visitParticle(part, rootPath, sectionFor([...leafNames(part)][0], familyId), new Set([model.root.type]));
+  }
+  return result;
+}
+
 export function sectionProgress(model, document, section) {
   const root = model.types[model.root.type];
   const familyId = familyForDocument(document)?.id;
@@ -134,6 +168,10 @@ function primitive(typeName, types, seen = new Set()) {
 
 function choicesFor(spec, types) {
   const entries = types[spec.type]?.enumeration;
+  if (spec.type === 'tAlignTypes' && entries?.length) {
+    const alignments = { left: 'Слева', right: 'Справа', center: 'По центру' };
+    return entries.map(entry => ({ ...entry, label: entry.label || alignments[entry.value] }));
+  }
   if (entries?.length) return entries;
   if (primitive(spec.type, types) === 'boolean') {
     return [{ value: 'true', label: 'Да' }, { value: 'false', label: 'Нет' }];
@@ -147,13 +185,14 @@ function dateInputValue(value) {
   return Number.isFinite(date.getTime()) && date.toISOString().slice(0, 10) === value;
 }
 
-function Field({ spec, types, value, onChange, readOnly, path, errorPaths, onRemove, occurrence }) {
+function Field({ spec, types, value, onChange, readOnly, path, fieldErrors, onRemove, occurrence }) {
   const id = useId();
   const title = titleFor(spec, types);
   const fieldTitle = occurrence ? title + ' ' + occurrence : title;
   const doc = spec.documentation && spec.documentation !== title ? spec.documentation : undefined;
   const fixed = spec.fixed !== undefined && spec.fixed !== null;
-  const invalid = errorPaths.has(normalPath(path));
+  const messages = fieldErrors?.get(normalPath(path)) || [];
+  const invalid = messages.length > 0;
   const defaultValue = spec.default == null ? '' : String(spec.default);
   const blank = value == null ? '' : String(value);
   const inputType = primitive(spec.type, types);
@@ -161,7 +200,8 @@ function Field({ spec, types, value, onChange, readOnly, path, errorPaths, onRem
   const trueFalse = inputType === 'boolean' && (blank === '0' || blank === '1');
   const selected = trueFalse ? (blank === '0' ? 'false' : 'true') : blank;
   const common = { id, value: blank, 'aria-invalid': invalid || undefined,
-    'aria-describedby': doc ? id + '-hint' : undefined, 'aria-required': Boolean(spec.required), readOnly: readOnly || fixed,
+    'aria-describedby': [doc && id + '-hint', messages.length > 0 && id + '-error'].filter(Boolean).join(' ') || undefined,
+    'aria-required': Boolean(spec.required), readOnly: readOnly || fixed,
     onChange: event => onChange(event.target.value) };
   const [initialMultiline] = useState(() => blank.includes('\n') || blank.length > 150);
   const multiline = initialMultiline || spec.name === 'Text' || inputType === 'base64Binary' ||
@@ -194,6 +234,7 @@ function Field({ spec, types, value, onChange, readOnly, path, errorPaths, onRem
       </div>
       {control}
       {doc && <small id={id + '-hint'} className="field-hint">{doc}</small>}
+      {messages.length > 0 && <span id={id + '-error'} className="field-error">{messages.join(' ')}</span>}
       {fixed && blank !== String(spec.fixed) && !readOnly && (
         <button type="button" className="text-button" onClick={() => onChange(String(spec.fixed))}>Установить {spec.fixed}</button>
       )}
@@ -204,22 +245,119 @@ function Field({ spec, types, value, onChange, readOnly, path, errorPaths, onRem
   );
 }
 
-function Attributes({ element, type, context }) {
+function Attributes({ element, type, context, showDocumentation = true }) {
   const attributes = type.attributes || [];
   const extra = knownAttributeNames(element, attributes);
   if (!attributes.length && !extra.length) return null;
   return (
     <div className="field-grid attributes">
       {attributes.map(spec => (
-        <Field key={spec.name} spec={spec} types={context.types} value={element.getAttribute(spec.name)}
+        <Field key={spec.name} spec={showDocumentation ? spec : { ...spec, documentation: '' }}
+          types={context.types} value={element.getAttribute(spec.name)}
           readOnly={context.readOnly || (context.lockGuid && !element.parentElement && spec.name === context.idAttribute)}
-          path={pathFor(element) + '/@' + spec.name} errorPaths={context.errorPaths}
+          path={pathFor(element) + '/@' + spec.name} fieldErrors={context.fieldErrors}
           onChange={value => context.change(() => {
             if (value === '' && !spec.required) element.removeAttribute(spec.name);
             else element.setAttribute(spec.name, value);
           })} />
       ))}
       {extra.length > 0 && <p className="preserved field-wide">Дополнительные атрибуты: {extra.join(', ')}. Доступны во вкладке XML.</p>}
+    </div>
+  );
+}
+
+function TableGrid({ element, type, context }) {
+  const rowTypes = type.particle.children;
+  const rows = rowTypes.flatMap(spec => directElements(element, new Set([spec.name])).map((row, index, siblings) => {
+    const rowType = context.types[spec.type];
+    const cellSpec = rowType.particle.children[0];
+    return { row, spec, rowType, cellSpec, cells: directElements(row, new Set([cellSpec.name])), siblings, index };
+  }));
+  const width = rows.reduce((maximum, row) => Math.max(maximum, row.cells.length), 0);
+  const columns = Array.from({ length: width }, (_, index) => index);
+  const ragged = rows.some(row => row.cells.length !== width);
+  const editable = !context.readOnly;
+  const addCell = entry => insertElement(entry.row, entry.cellSpec, entry.rowType.particle, context.types);
+  const addRow = spec => {
+    const row = insertElement(element, spec, type.particle, context.types);
+    const rowType = context.types[spec.type];
+    for (let column = 1; column < width; column++) {
+      insertElement(row, rowType.particle.children[0], rowType.particle, context.types);
+    }
+  };
+  const tablePath = pathFor(element);
+  return (
+    <div className="table-editor">
+      {editable && (
+        <div className="inline-actions">
+          {rowTypes.map(spec => (
+            <button className="button button-quiet" type="button" key={spec.name}
+              data-xml-path={tablePath + '/' + spec.name}
+              onClick={() => context.change(() => addRow(spec))}>
+              {spec.name === 'TitleRow' ? 'Добавить строку заголовка' : 'Добавить строку таблицы'}
+            </button>
+          ))}
+          <button className="button button-quiet" type="button" disabled={!rows.length || ragged}
+            onClick={() => context.change(() => rows.forEach(addCell))}>Добавить столбец</button>
+        </div>
+      )}
+      {editable && ragged && <p className="field-hint">Для общего столбца выровняйте число ячеек в строках.</p>}
+      {rows.length > 0 && <div className="table-scroll" role="region" aria-label="Строки и ячейки таблицы" tabIndex={0}>
+        <table className="xml-table">
+          <thead>
+            <tr>
+              <th scope="col">Строка</th>
+              {columns.map(column => (
+                <th scope="col" key={column}>
+                  Столбец {column + 1}
+                  {editable && <button className="text-button" type="button"
+                    aria-label={'Удалить столбец ' + (column + 1)}
+                    disabled={rows.some(({ cells, cellSpec }) => cells[column] && cells.length <= cellSpec.min)}
+                    onClick={() => context.change(() => rows.forEach(({ cells }) => cells[column]?.remove()))}>Удалить</button>}
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {rows.map(entry => {
+              const { row, spec, cells, cellSpec, siblings, index } = entry;
+              const title = (spec.name === 'TitleRow' ? 'Заголовок ' : 'Строка ') + (index + 1);
+              const rowPath = pathFor(row);
+              const cellType = context.types[cellSpec.type];
+              return (
+                <tr key={context.keyFor(row)} data-xml-path={rowPath}>
+                  <th scope="row">
+                    {title}
+                    {editable && <div className="table-row-actions">
+                      <button className="text-button" type="button" data-xml-path={rowPath + '/Cell'}
+                        aria-label={'Добавить ячейку — ' + title} onClick={() => context.change(() => addCell(entry))}>Добавить ячейку</button>
+                      {siblings.length > 1 && <>
+                        <button className="text-button" type="button" disabled={index === 0}
+                          aria-label={'Переместить вверх — ' + title}
+                          onClick={() => context.change(() => element.insertBefore(row, siblings[index - 1]))}>Вверх</button>
+                        <button className="text-button" type="button" disabled={index === siblings.length - 1}
+                          aria-label={'Переместить вниз — ' + title}
+                          onClick={() => context.change(() => element.insertBefore(row, siblings[index + 1].nextSibling))}>Вниз</button>
+                      </>}
+                      <button className="text-button" type="button" disabled={siblings.length <= spec.min}
+                        aria-label={'Удалить — ' + title} onClick={() => context.change(() => row.remove())}>Удалить</button>
+                    </div>}
+                  </th>
+                  {cells.map((cell, column) => (
+                    <td key={context.keyFor(cell)}>
+                      <Field spec={{ name: 'Ячейка ' + (column + 1), type: cellType.textType }} types={context.types}
+                        value={readElementText(cell)} path={pathFor(cell)} readOnly={context.readOnly} fieldErrors={context.fieldErrors}
+                        onChange={value => context.change(() => writeElementText(cell, value))}
+                        onRemove={cells.length > cellSpec.min ? () => context.change(() => cell.remove()) : undefined} />
+                      <Attributes element={cell} type={cellType} context={context} showDocumentation={false} />
+                    </td>
+                  ))}
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>}
     </div>
   );
 }
@@ -237,12 +375,12 @@ function ComplexContent({ element, type, context }) {
       <Attributes element={element} type={type} context={context} />
       {valueType && (
         <Field spec={{ name: 'Значение', type: valueType, required: true }} types={context.types} value={readElementText(element)}
-          readOnly={context.readOnly} path={pathFor(element)} errorPaths={context.errorPaths}
+          readOnly={context.readOnly} path={pathFor(element)} fieldErrors={context.fieldErrors}
           onChange={value => context.change(() => writeElementText(element, value))} />
       )}
-      {type.particle && (
-        <ParticleEditor parent={element} spec={type.particle} parentParticle={type.particle} context={context} />
-      )}
+      {type.particle && (context.familyId === 'explanatorynote' && type === context.types.tTable
+        ? <TableGrid element={element} type={type} context={context} />
+        : <ParticleEditor parent={element} spec={type.particle} parentParticle={type.particle} context={context} />)}
       {unknown.length > 0 && (
         <p className="preserved">Дополнительные элементы: {[...new Set(unknown.map(node => node.localName))].join(', ')}. Доступны во вкладке XML.</p>
       )}
@@ -298,7 +436,7 @@ function ElementEditor({ parent, spec, parentParticle, context }) {
     const path = node ? pathFor(node) : pathFor(parent) + '/' + spec.name;
     return (
       <Field spec={fieldSpec} types={context.types} value={readElementText(node)}
-        readOnly={context.readOnly} path={path} errorPaths={context.errorPaths}
+        readOnly={context.readOnly} path={path} fieldErrors={context.fieldErrors}
         onChange={value => updateSimple(node, value)}
         onRemove={node && spec.min === 0 ? () => context.change(() => node.remove()) : undefined} />
     );
@@ -311,7 +449,7 @@ function ElementEditor({ parent, spec, parentParticle, context }) {
         ? <ComplexInstance key={context.keyFor(element)} element={element} spec={spec} type={type} index={index}
             repeatable={repeatable || nodes.length > 1} removable={nodes.length > spec.min} context={context} />
         : <Field key={context.keyFor(element)} spec={fieldSpec} occurrence={index + 1} types={context.types}
-            value={readElementText(element)} readOnly={context.readOnly} path={pathFor(element)} errorPaths={context.errorPaths}
+            value={readElementText(element)} readOnly={context.readOnly} path={pathFor(element)} fieldErrors={context.fieldErrors}
             onChange={value => updateSimple(element, value)}
             onRemove={nodes.length > spec.min ? () => context.change(() => element.remove()) : undefined} />
       )}
@@ -350,7 +488,7 @@ function OrderedChoiceEntries({ parent, branches, spec, context }) {
               repeatable removable={removable} context={context} />
           : <Field spec={branch} occurrence={index + 1} types={context.types}
               value={readElementText(element)} readOnly={context.readOnly} path={pathFor(element)}
-              errorPaths={context.errorPaths} onChange={value => context.change(() => writeElementText(element, value))}
+              fieldErrors={context.fieldErrors} onChange={value => context.change(() => writeElementText(element, value))}
               onRemove={removable ? () => context.change(() => element.remove()) : undefined} />}
         {!context.readOnly && entries.length > 1 && (
           <div className="inline-actions">
@@ -431,7 +569,7 @@ function ChoiceEditor({ parent, spec, parentParticle, context }) {
             }}>Удалить</button>
             <button type="button" className="button button-quiet" onClick={() => setClearing(false)}>Отмена</button>
           </div>
-        ) : <button type="button" className="text-button" onClick={() => setClearing(true)}>Сменить вариант</button>
+        ) : <button type="button" className="text-button choice-switch" onClick={() => setClearing(true)}>Сменить вариант</button>
       )}
     </div>
   );

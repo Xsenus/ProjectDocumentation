@@ -38,26 +38,26 @@ namespace ProjectDocumentation.NET.Services
             }
         }
 
-        public static string ReadFileVersion(string path, string rootName)
+        public static (string RootName, string Version) ReadFileHeader(string path)
         {
             using (var source = File.OpenRead(path))
             using (var reader = XmlReader.Create(source, ReaderSettings()))
             {
-                if (reader.MoveToContent() != XmlNodeType.Element || reader.Name != rootName || reader.NamespaceURI.Length != 0)
+                if (reader.MoveToContent() != XmlNodeType.Element || reader.NamespaceURI.Length != 0)
                 {
-                    throw new InvalidOperationException($"Корневой элемент XML должен быть {rootName}.");
+                    throw new InvalidOperationException("Ожидается заключение или пояснительная записка XML без пространства имён.");
                 }
 
-                return reader.GetAttribute("SchemaVersion");
+                return (reader.LocalName, reader.GetAttribute("SchemaVersion"));
             }
         }
 
-        public static XDocument ReadFile(string path, string rootName)
+        public static XDocument ReadFile(string path)
         {
             using (var source = File.OpenRead(path))
             using (var reader = XmlReader.Create(source, ReaderSettings()))
             {
-                return RequireRoot(XDocument.Load(reader, LoadOptions.PreserveWhitespace), rootName);
+                return XDocument.Load(reader, LoadOptions.PreserveWhitespace);
             }
         }
 

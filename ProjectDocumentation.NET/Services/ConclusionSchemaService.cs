@@ -43,7 +43,7 @@ namespace ProjectDocumentation.NET.Services
 
         public async Task<string> PreviewAsync(string xml)
         {
-            var preview = await RequestAsync<JObject>("preview", new JObject { ["xml"] = xml });
+            var preview = await RequestAsync<JObject>("preview", new JObject { ["xml"] = xml, ["layout"] = "rich-edit" });
             return preview.Value<string>("html");
         }
 
@@ -238,6 +238,7 @@ namespace ProjectDocumentation.NET.Services
     {
         public bool Valid { get; set; }
         public string Version { get; set; }
+        public string ValidationBasis { get; set; }
         public List<ConclusionValidationError> Errors { get; set; }
     }
 

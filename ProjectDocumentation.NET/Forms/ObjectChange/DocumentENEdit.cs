@@ -27,6 +27,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
         public DocumentENEdit()
         {
             InitializeComponent();
+            layoutControlItemDocIssueAuthor.Text = layoutControlItemDocIssueAuthor.Text.TrimEnd(' ', '*');
         }
 
         public DocumentENEdit(tDocument tDocument) : this()
@@ -97,45 +98,43 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
         {
             try
             {
-                Document.DocType = ConclusionEdit.GetEnumByAttributeValue<TDocumentType>(ConclusionEdit.GetValueGeneralizedDictionary(
+                var docType = ConclusionEdit.GetEnumByAttributeValue<TDocumentType>(ConclusionEdit.GetValueGeneralizedDictionary(
                     cmbDocType,
                     message: "Заполните поле тип документа")?.Value);
-                Document.DocName = ConclusionEdit.GetStringValue(txtDocName.EditValue, txtDocName, "Заполните поле наименование документа.");
-                Document.DocNumber = ConclusionEdit.GetStringValue(txtDocNumber.EditValue, txtDocNumber, "Заполните поле номер документа.", isNullAble: true);
-                if (dateDocDate.EditValue is DateTime date)
+                if (!(dateDocDate.EditValue is DateTime date))
                 {
-                    Document.DocDate = date;
-                }
-                else
-                {
-                    Document.DocDate = default;
+                    dateDocDate.Focus();
+                    throw new InvalidOperationException("Укажите дату документа.");
                 }
 
-                Document.DocChanges = ConclusionEdit.GetStringValue(memoDocChanges.EditValue, memoDocChanges, "Заполните поле примечание об изменении документа.", isNullAble: true);
-
-                if (!string.IsNullOrWhiteSpace(txtDocIssueAuthor.Text))
+                var items = new List<object>();
+                var choices = new List<ItemsChoiceType1>();
+                var remainingFiles = new HashSet<tFile>(_tFiles);
+                if (Document.Items != null)
                 {
-                    Document.Items = new string[] { txtDocIssueAuthor.Text };
-                }
-                else
-                {
-                    txtDocIssueAuthor.Focus();
-                    XtraMessageBox.Show("Укажите автора документа.",
-                        "Информационное сообщение",
-                        MessageBoxButtons.OK,
-                        MessageBoxIcon.Error);
-                    return;
+                    for (var index = 0; index < Document.Items.Length; index++)
+                    {
+                        var item = Document.Items[index];
+                        if (item is tFile file && !remainingFiles.Remove(file)) continue;
+                        items.Add(item);
+                        choices.Add(Document.ItemsElementName[index]);
+                    }
                 }
 
-                if (_tFiles.Count > 0)
+                foreach (var file in _tFiles.Where(remainingFiles.Contains))
                 {
-                    Document.Items = _tFiles.ToArray();
-                }
-                else
-                {
-                    Document.Items = null;
+                    items.Add(file);
+                    choices.Add(ItemsChoiceType1.File);
                 }
 
+                Document.DocType = docType;
+                Document.DocName = txtDocName.EditValue?.ToString();
+                Document.DocNumber = txtDocNumber.EditValue?.ToString();
+                Document.DocDate = date.Date;
+                Document.DocIssueAuthor = string.IsNullOrWhiteSpace(txtDocIssueAuthor.Text) ? null : txtDocIssueAuthor.Text;
+                Document.DocChanges = memoDocChanges.EditValue?.ToString();
+                Document.Items = items.Count > 0 ? items.ToArray() : null;
+                Document.ItemsElementName = choices.Count > 0 ? choices.ToArray() : null;
             }
             catch (Exception ex)
             {
@@ -223,8 +222,9 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                 dateDocDate.EditValue = Document.DocDate;
             }
             memoDocChanges.EditValue = Document.DocChanges;
+            txtDocIssueAuthor.EditValue = Document.DocIssueAuthor;
 
-            _tFiles = Document.Items?.Cast<tFile>()?.ToList() ?? new List<tFile>();
+            _tFiles = Document.Items?.OfType<tFile>().ToList() ?? new List<tFile>();
             gridControlItems.DataSource = _tFiles;
             foreach (GridColumn column in gridViewItems.Columns.Cast<GridColumn>())
             {

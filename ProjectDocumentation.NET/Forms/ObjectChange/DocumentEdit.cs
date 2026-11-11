@@ -9,6 +9,7 @@ using DevExpress.XtraEditors;
 using DevExpress.XtraEditors.Controls;
 using DevExpress.XtraGrid.Columns;
 using DevExpress.XtraGrid.Views.Grid;
+using DevExpress.XtraLayout.Utils;
 using ProjectDocumentation.NET.Models.ConclusionObj;
 using System;
 using System.Collections.Generic;
@@ -24,10 +25,16 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
     {
         private List<TDeclarant> _TDeclarants = new List<TDeclarant>();
         public List<TFile> _tFiles = new List<TFile>();
+        private readonly TextEdit includedEditor = new TextEdit();
 
         public DocumentEdit()
         {
             InitializeComponent();
+            includedEditor.Name = "includedEditor";
+            includedEditor.Properties.MaxLength = 1000;
+            layoutControlObjPart.Controls.Add(includedEditor);
+            Root.AddItem("В составе другого документа", includedEditor, layoutControlItemItems, InsertType.Top)
+                .TextLocation = DevExpress.Utils.Locations.Top;
         }
 
         public DocumentEdit(TDocument TDocument) : this()
@@ -37,24 +44,44 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
 
         private void AddFiles(string[] files)
         {
-            if (files != null && files.Count() > 0)
+            if (files == null || files.Length == 0) return;
+
+            var added = new List<TFile>();
+            foreach (var file in files)
             {
-                foreach (var file in files)
+                var fileInfo = new FileInfo(file);
+                var format = fileInfo.Extension.TrimStart('.').ToLowerInvariant();
+                if (format.Length == 0 || format.Length > 4 ||
+                    format.Any(value => !(value >= 'a' && value <= 'z') && !(value >= '0' && value <= '9')))
                 {
-                    var fileInfo = new FileInfo(file);
-
-                    var fileObj = new TFile()
-                    {
-                        FileName = fileInfo.Name,
-                        FileFormat = fileInfo.Extension?.Replace(".", string.Empty),
-                        FileChecksum = GetCheckSum(fileInfo)?.ToLower()
-                    };
-
-                    _tFiles.Add(fileObj);
+                    XtraMessageBox.Show(this, $"Для файла «{fileInfo.Name}» требуется расширение из 1–4 латинских букв или цифр.",
+                        "Вложения", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+                var checksum = GetCheckSum(fileInfo)?.ToLowerInvariant();
+                if (string.IsNullOrEmpty(checksum))
+                {
+                    XtraMessageBox.Show(this, $"Не удалось прочитать файл «{fileInfo.Name}».",
+                        "Вложения", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
                 }
 
-                gridControlItems.RefreshDataSource();
+                added.Add(new TFile
+                {
+                    FileName = fileInfo.Name,
+                    FileFormat = format,
+                    FileChecksum = checksum
+                });
             }
+
+            if (!string.IsNullOrWhiteSpace(includedEditor.Text))
+            {
+                if (XtraMessageBox.Show(this, "Заменить ссылку на другой документ выбранными файлами?",
+                    "Вложения", MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes) return;
+                includedEditor.Text = string.Empty;
+            }
+            _tFiles.AddRange(added);
+            gridControlItems.RefreshDataSource();
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
@@ -151,6 +178,18 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
         {
             try
             {
+                var included = includedEditor.Text.Trim();
+                if (included.Length != 0 && _tFiles.Count > 0)
+                {
+                    includedEditor.Focus();
+                    throw new InvalidOperationException("Укажите либо документ, в составе которого поступили материалы, либо файлы.");
+                }
+                var author = txtDocIssueAuthor.Text?.Trim();
+                if (_TDeclarants.Count == 0 && string.IsNullOrWhiteSpace(author))
+                {
+                    txtDocIssueAuthor.Focus();
+                    throw new InvalidOperationException("Укажите автора документа.");
+                }
                 Document.DocType = ConclusionEdit.GetEnumByAttributeValue<TDocumentType>(
                     ConclusionEdit.GetValueGeneralizedDictionary(cmbDocType, message: "Заполните поле тип документа")?.Value);
 
@@ -184,22 +223,10 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                 }
                 else
                 {
-                    var author = txtDocIssueAuthor.Text?.Trim();
-                    if (!string.IsNullOrWhiteSpace(author))
-                    {
-                        Document.DocIssueAuthor = author;
-                    }
-                    else
-                    {
-                        txtDocIssueAuthor.Focus();
-                        XtraMessageBox.Show("Укажите автора документа.",
-                            "Информационное сообщение",
-                            MessageBoxButtons.OK,
-                            MessageBoxIcon.Error);
-                        return;
-                    }
+                    Document.DocIssueAuthor = author;
                 }
 
+                Document.Included = included.Length == 0 ? null : included;
                 Document.File.Clear();
                 foreach (var f in _tFiles)
                     Document.File.Add(f);
@@ -299,6 +326,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                 dateDocDate.EditValue = Document.DocDate;
             }
             memoDocChanges.EditValue = Document.DocChanges;
+            includedEditor.EditValue = Document.Included;
 
             _TDeclarants = Document.FullDocIssueAuthor?.ToList() ?? new List<TDeclarant>();
             if (_TDeclarants.Count == 0)

@@ -28,6 +28,7 @@ namespace ProjectDocumentation.NET.Forms
         private readonly string initialSection;
         private readonly string rootName;
         private readonly string idAttribute;
+        private readonly bool legacyEditor;
         private readonly TextBox nameEditor = new TextBox { Dock = DockStyle.Fill };
         private readonly TabControl tabs = new TabControl { Dock = DockStyle.Fill };
         private readonly TabPage sectionsPage = new TabPage("Разделы");
@@ -40,9 +41,15 @@ namespace ProjectDocumentation.NET.Forms
             AcceptsReturn = true, AcceptsTab = true, Dock = DockStyle.Fill, Multiline = true,
             ScrollBars = ScrollBars.Both, WordWrap = false, MaxLength = SchemaXmlDocument.MaxXmlBytes
         };
-        private readonly ListView errors = new ListView { Dock = DockStyle.Fill, View = View.Details, FullRowSelect = true };
+        private readonly ListView errors = new ListView
+        {
+            Dock = DockStyle.Fill, View = View.Details, FullRowSelect = true, HideSelection = false, MultiSelect = false
+        };
         private readonly RichEditControl preview = new RichEditControl { Dock = DockStyle.Fill, ReadOnly = true };
         private readonly Label status = new Label { AutoSize = true, Dock = DockStyle.Fill, Padding = new Padding(0, 8, 0, 0) };
+        private readonly Label validationHint = LabelFor("Нажмите «Проверить XML», чтобы проверить документ.");
+        private readonly Button findFieldButton = ActionButton("Найти поле…");
+        private readonly Button goToErrorButton = ActionButton("К полю");
         private readonly Button checkButton = ActionButton("Проверить XML");
         private readonly Button saveButton = ActionButton("Сохранить");
         private readonly Button draftButton = ActionButton("Сохранить черновик XML…");
@@ -62,18 +69,21 @@ namespace ProjectDocumentation.NET.Forms
         private int revision;
         private int rawRevision = -1;
         private int previewRevision = -1;
+        private int validationRevision = -1;
 
         public XmlObjXPO Document { get; private set; }
         private bool ReadOnlyDocument => save == null;
 
         protected SchemaDocumentForm(ConclusionSchemaService service, string xml, string name,
-            Func<string, string, Task<XmlObjXPO>> save, string family, string title, string section, IReadOnlyList<string> warnings)
+            Func<string, string, Task<XmlObjXPO>> save, string family, string title, string section, IReadOnlyList<string> warnings,
+            bool legacyEditor = false)
         {
             this.service = service;
             this.family = family ?? "conclusion";
             this.save = save;
             initialXml = xml;
             initialSection = section;
+            this.legacyEditor = legacyEditor;
             var note = this.family == ExplanatoryNote0107Document.Family;
             rootName = note ? "ExplanatoryNote" : "Conclusion";
             idAttribute = note ? "id" : "ConclusionGUID";
@@ -99,18 +109,18 @@ namespace ProjectDocumentation.NET.Forms
             xmlPage.Controls.Add(WithToolbar(rawEditor, applyRawButton, resetRawButton));
             errors.Columns.Add("Путь XML", 330);
             errors.Columns.Add("Сообщение", 720);
-            errors.ItemActivate += (_, __) =>
-            {
-                if (errors.SelectedItems.Count == 1 && errors.SelectedItems[0].Tag is string path)
-                {
-                    NavigateToField(path);
-                }
-            };
-            validationPage.Controls.Add(errors);
+            errors.ItemActivate += (_, __) => GoToSelectedError();
+            errors.SelectedIndexChanged += (_, __) => UpdateErrorNavigation();
+            goToErrorButton.Click += (_, __) => GoToSelectedError();
+            goToErrorButton.Enabled = false;
+            validationPage.Controls.Add(WithToolbar(errors, goToErrorButton, validationHint));
             preview.ReplaceService<IUriStreamService>(new PreviewImages());
             preview.HyperlinkClick += (_, e) => e.Handled = true;
             previewPage.Controls.Add(WithToolbar(preview, previewButton));
-            tabs.TabPages.AddRange(new[] { sectionsPage, fieldsPage, xmlPage, validationPage, previewPage });
+            tabs.TabPages.AddRange(new[] { sectionsPage, fieldsPage, xmlPage, validationPage });
+            if (!legacyEditor || !note) tabs.TabPages.Add(previewPage);
+            else previewPage.Dispose();
+            if (legacyEditor) tabs.SelectedTab = fieldsPage;
             if (warnings?.Count > 0)
             {
                 var warningsPage = new TabPage("Замечания преобразования");
@@ -138,6 +148,7 @@ namespace ProjectDocumentation.NET.Forms
                 }
             };
             checkButton.Click += async (_, __) => await ValidateOrSaveAsync(false);
+            findFieldButton.Click += (_, __) => FindField();
             saveButton.Click += async (_, __) => await ValidateOrSaveAsync(true);
             draftButton.Click += (_, __) => SaveDraft();
             applyRawButton.Click += (_, __) => ApplyRaw();
@@ -148,7 +159,7 @@ namespace ProjectDocumentation.NET.Forms
             resetRawButton.Visible = !ReadOnlyDocument;
             draftButton.Text = ReadOnlyDocument ? "Выгрузить исходный XML…" : draftButton.Text;
 
-            var commands = Toolbar(checkButton, saveButton, draftButton);
+            var commands = Toolbar(findFieldButton, checkButton, saveButton, draftButton);
             var header = new TableLayoutPanel { AutoSize = true, Dock = DockStyle.Top, ColumnCount = 3 };
             header.ColumnStyles.Add(new ColumnStyle(SizeType.AutoSize));
             header.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100));
@@ -175,7 +186,9 @@ namespace ProjectDocumentation.NET.Forms
             try
             {
                 document = SchemaXmlDocument.Parse(initialXml, rootName);
-                documentVersion = (string)document.Root.Attribute("SchemaVersion");
+                documentVersion = DocumentVersionOf(document);
+                if (legacyEditor && documentVersion != "01.03")
+                    throw new InvalidOperationException("Этот редактор открывает документы версии 01.03.");
                 initialId = (string)document.Root.Attribute(idAttribute);
                 var schema = await service.GetSchemaAsync(family, documentVersion);
                 if (IsDisposed || Disposing) return;
@@ -198,7 +211,8 @@ namespace ProjectDocumentation.NET.Forms
                 if (!IsDisposed && !Disposing) SetBusy(false);
             }
 
-            if (loaded && ReadOnlyDocument && !IsDisposed && !Disposing) tabs.SelectedTab = previewPage;
+            if (loaded && ReadOnlyDocument && !IsDisposed && !Disposing && tabs.TabPages.Contains(previewPage))
+                tabs.SelectedTab = previewPage;
         }
 
         protected override void OnFormClosing(FormClosingEventArgs e)
@@ -215,6 +229,13 @@ namespace ProjectDocumentation.NET.Forms
         {
             base.Dispose(disposing);
             if (disposing) xmlFont.Dispose();
+        }
+
+        protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
+        {
+            if (keyData != (Keys.Control | Keys.F) || !loaded || busy) return base.ProcessCmdKey(ref msg, keyData);
+            FindField();
+            return true;
         }
 
         private static Button ActionButton(string text) => new Button { AutoSize = true, Text = text, Padding = new Padding(5, 0, 5, 0) };
@@ -241,6 +262,7 @@ namespace ProjectDocumentation.NET.Forms
             busy = value;
             tabs.Enabled = loaded && !value;
             nameEditor.Enabled = loaded && !value;
+            findFieldButton.Enabled = loaded && !value;
             checkButton.Enabled = loaded && !value;
             saveButton.Enabled = loaded && !value && !ReadOnlyDocument;
             draftButton.Enabled = !value && (loaded || !string.IsNullOrWhiteSpace(initialXml));
@@ -253,10 +275,22 @@ namespace ProjectDocumentation.NET.Forms
             return document.Declaration == null ? xml : new XDeclaration("1.0", "utf-8", document.Declaration.Standalone) + Environment.NewLine + xml;
         }
 
+        private string DocumentVersionOf(XDocument xml)
+        {
+            var version = (string)xml.Root.Attribute("SchemaVersion");
+            return legacyEditor && family == ExplanatoryNote0107Document.Family &&
+                string.IsNullOrWhiteSpace(version) ? "01.03" : version;
+        }
+
         private void MarkChanged(bool xmlChanged = true)
         {
             dirty = true;
-            if (xmlChanged) revision++;
+            if (xmlChanged)
+            {
+                revision++;
+                if (validationRevision >= 0)
+                    validationHint.Text = "XML изменён. Повторите проверку, чтобы обновить список.";
+            }
             status.Text = rawDirty ? "Есть неприменённые изменения XML." : "Есть несохранённые изменения.";
         }
 
@@ -283,7 +317,7 @@ namespace ProjectDocumentation.NET.Forms
             try
             {
                 var next = SchemaXmlDocument.Parse(rawEditor.Text, rootName);
-                if ((string)next.Root.Attribute("SchemaVersion") != documentVersion)
+                if (DocumentVersionOf(next) != documentVersion)
                     throw new InvalidOperationException("Для смены версии используйте преобразование документа.");
                 if ((string)next.Root.Attribute(idAttribute) != initialId)
                     throw new InvalidOperationException($"Восстановите исходный идентификатор {idAttribute}.");
@@ -312,6 +346,12 @@ namespace ProjectDocumentation.NET.Forms
         private async Task ValidateOrSaveAsync(bool commit)
         {
             if (!CanUseDocument() || (commit && ReadOnlyDocument)) return;
+            if (commit && string.IsNullOrWhiteSpace(nameEditor.Text))
+            {
+                status.Text = "Укажите название документа перед сохранением.";
+                nameEditor.Focus();
+                return;
+            }
             await RunAsync(commit ? "Проверка перед сохранением…" : "Проверка XML…", async () =>
             {
                 var xml = Snapshot();
@@ -324,23 +364,41 @@ namespace ProjectDocumentation.NET.Forms
                 DialogResult = DialogResult.OK;
                 Close();
             });
+            if (!IsDisposed && !Disposing && tabs.SelectedTab == validationPage && errors.Items.Count > 0)
+                errors.Focus();
         }
 
         private void ShowValidation(ConclusionValidation result)
         {
+            validationRevision = revision;
             errors.Items.Clear();
             if (result.Valid)
             {
-                errors.Items.Add(new ListViewItem(new[] { "/", $"XML соответствует схеме {result.Version}." }));
-                status.Text = $"XML соответствует схеме {result.Version}.";
+                status.Text = result.ValidationBasis == "legacy-wire"
+                    ? $"XML соответствует локальному формату совместимости {result.Version}."
+                    : $"XML соответствует схеме {result.Version}.";
+                errors.Items.Add(new ListViewItem(new[] { "/", status.Text }));
+                validationHint.Text = status.Text;
             }
             else
             {
                 foreach (var error in result.Errors ?? new List<ConclusionValidationError>())
                     errors.Items.Add(new ListViewItem(new[] { error.Path ?? "/", error.Message }) { Tag = error.Path });
                 status.Text = $"XML требует исправлений. Ошибок: {errors.Items.Count}.";
+                validationHint.Text = status.Text + " Выберите строку и нажмите «К полю».";
             }
             tabs.SelectedTab = validationPage;
+            if (errors.Items.Count > 0) errors.Items[0].Selected = true;
+            UpdateErrorNavigation();
+        }
+
+        private void UpdateErrorNavigation()
+            => goToErrorButton.Enabled = errors.SelectedItems.Count == 1 && errors.SelectedItems[0].Tag is string;
+
+        private void GoToSelectedError()
+        {
+            if (errors.SelectedItems.Count == 1 && errors.SelectedItems[0].Tag is string path)
+                NavigateToField(path);
         }
 
         private async Task UpdatePreviewAsync()
@@ -446,6 +504,17 @@ namespace ProjectDocumentation.NET.Forms
             Func<string, string, Task<ExplanatoryNoteXPO>> save = null, IReadOnlyList<string> warnings = null)
             : base(service, xml, name, save == null ? (Func<string, string, Task<XmlObjXPO>>)null : async (document, title) => await save(document, title),
                 ExplanatoryNote0107Document.Family, $"Пояснительная записка {ExplanatoryNote0107Document.ReadVersion(xml)}", null, warnings)
+        {
+        }
+    }
+
+    internal sealed class LegacySchemaDocumentForm : SchemaDocumentForm
+    {
+        public LegacySchemaDocumentForm(ConclusionSchemaService service, string xml, string name, string family,
+            Func<string, string, Task<XmlObjXPO>> save)
+            : base(service, xml, name, save, family, family == ExplanatoryNote0107Document.Family
+                ? "Пояснительная записка 01.03 — все поля" : "Заключение экспертизы 01.03 — все поля",
+                null, null, legacyEditor: true)
         {
         }
     }

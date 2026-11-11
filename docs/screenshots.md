@@ -10,6 +10,7 @@
 |---|---|
 | Главное окно и команды для документов | [Открыть](screenshots/devexpress-main.png) |
 | Загрузка XML из файла | [Открыть](screenshots/classic-file-load.png) |
+| Результат локальной проверки выбранного XML | [Открыть](screenshots/desktop-validation.png) |
 
 ### Заключение 01.03
 
@@ -17,6 +18,7 @@
 |---|---|
 | Классическая форма заключения 01.03 | [Открыть](screenshots/classic-conclusion.png) |
 | Краткий просмотр заключения 01.03 | [Открыть](screenshots/classic-conclusion-view.png) |
+| Полный предпросмотр заключения 01.03 по XSL | [Открыть](screenshots/classic-conclusion-xsl.png) |
 | I. Общие положения и сведения о заключении | [Открыть](screenshots/classic-conclusion-section-1.png) |
 | I. Общая информация | [Открыть](screenshots/classic-conclusion-general-9.png) |
 | I. Экспертная организация и утверждающее лицо | [Открыть](screenshots/classic-conclusion-general-10.png) |
@@ -33,6 +35,8 @@
 | II. Кадастровые номера | [Открыть](screenshots/classic-conclusion-project-12.png) |
 | II. Застройщики и технические заказчики | [Открыть](screenshots/classic-conclusion-project-13.png) |
 | III. Описание рассмотренной документации | [Открыть](screenshots/classic-conclusion-section-3.png) |
+| Сметные нормативы, стоимость и несоответствия | [Открыть](screenshots/classic-estimate.png) |
+| Заключения, выданные по результатам экспертного сопровождения | [Открыть](screenshots/classic-support.png) |
 | IV. Выводы по результатам рассмотрения | [Открыть](screenshots/classic-conclusion-section-5.png) |
 | V. Общие выводы | [Открыть](screenshots/classic-conclusion-section-6.png) |
 | VI. Эксперты, подписавшие заключение | [Открыть](screenshots/classic-conclusion-section-7.png) |
@@ -42,6 +46,7 @@
 | Что показано | Снимок |
 |---|---|
 | Классическая форма пояснительной записки 01.03 | [Открыть](screenshots/classic-note.png) |
+| Все поля пояснительной записки 01.03 | [Открыть](screenshots/classic-all-fields.png) |
 | Общая информация | [Открыть](screenshots/classic-note-general.png) |
 | Описание производственного объекта | [Открыть](screenshots/classic-note-industrial.png) |
 | Сведения об изменениях и авторах | [Открыть](screenshots/classic-note-changes.png) |
@@ -88,6 +93,11 @@
 | Заключение 01.04 | [XML черновика](screenshots/native-conclusion-xml.png) | [Ошибки заполнения](screenshots/native-conclusion-validation.png) |
 | Пояснительная записка 01.07 | [XML черновика](screenshots/native-note-xml.png) | [Пример пропущенного поля](screenshots/native-note-validation.png) |
 
+| Что показано | Снимок |
+|---|---|
+| Поиск поля по имени и пути XML | [Открыть](screenshots/native-field-search.png) |
+| Строки, ячейки и выравнивание в записке 01.07 | [Открыть](screenshots/native-note-table.png) |
+
 ## Веб-редактор
 
 | Что показано | Снимок |
@@ -103,3 +113,7 @@
 | Текст и загруженное изображение в заверении проектировщика | [Текстовый блок](screenshots/web-note-image.png) |
 | Изображение внутри представления по XSL | [Изображение в предпросмотре](screenshots/web-note-image-preview.png) |
 | Замечания перед переходом с 01.03 на 01.04 | [Преобразование](screenshots/web-migration.png) |
+| Поиск поля с показом путей | [Открыть](screenshots/web-field-search.png) |
+| Ошибка рядом со значением | [Открыть](screenshots/web-inline-validation.png) |
+| Таблица пояснительной записки 01.05 | [Открыть](screenshots/web-table-0105.png) |
+| Таблица пояснительной записки 01.07 | [Открыть](screenshots/web-table-0107.png) |

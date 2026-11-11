@@ -9,12 +9,14 @@ using DevExpress.Xpo;
 using DevExpress.XtraBars;
 using DevExpress.XtraEditors;
 using DevExpress.XtraEditors.Controls;
+using DevExpress.XtraEditors.Repository;
 using DevExpress.XtraGrid.Columns;
 using DevExpress.XtraGrid.Views.Grid;
 using DevExpress.XtraLayout.Utils;
 using ProjectDocumentation.NET.Models.ConclusionObj;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Drawing;
 using System.IO;
@@ -30,7 +32,9 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
     {
         private List<CadastralNumber> _cadastralNumbers = new List<CadastralNumber>();
         private List<TExpert> _experts = new List<TExpert>();
-        private List<TMismatch> _mismatch = new List<TMismatch>();
+        private readonly BindingList<EstimateMismatchEdit.Row> _estimateMismatches = new BindingList<EstimateMismatchEdit.Row>();
+        private readonly TextEdit _seismicMinimum = new TextEdit { Name = "txtSeismicMinimum" };
+        private readonly TextEdit _seismicMaximum = new TextEdit { Name = "txtSeismicMaximum" };
         private List<TDesigner> _tDesigners = new List<TDesigner>();
         private List<TDocument> _tDocuments = new List<TDocument>();
         private List<TEngineeringSurveyAddress> _tEngineeringSurveyAddresses = new List<TEngineeringSurveyAddress>();
@@ -41,6 +45,8 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
         private List<TFinance> _tFinances = new List<TFinance>();
         private List<TObjectPart> _tObjectParts = new List<TObjectPart>();
         private List<TPreviousConclusion> _tPreviousConclusions = new List<TPreviousConclusion>();
+        private readonly BindingList<PreviousSimpleConclusionRow> _previousSupportConclusions =
+            new BindingList<PreviousSimpleConclusionRow>();
         private List<TDeclarant> _tProjectDocumentsDevelopers = new List<TDeclarant>();
         private List<TTechnicalCustomer> _tProjectDocumentsTechnicalCustomer = new List<TTechnicalCustomer>();
         private List<Ttei> _Tteis = new List<Ttei>();
@@ -54,6 +60,25 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
             txtVersion.Properties.ReadOnly = true;
             layoutControlItemExpertiseResultNote.Visibility = LayoutVisibility.Never;
             layoutControlItemClimateConditionsNote.Text = layoutControlItemClimateConditionsNote.Text.TrimEnd(' ', '*');
+            layoutControlGroup5.AddItem("Расчётная интенсивность сейсмического воздействия", _seismicMinimum,
+                layoutControlItemClimateConditionsNote, InsertType.Top);
+            layoutControlGroup5.AddItem("Максимум диапазона (при наличии)", _seismicMaximum,
+                layoutControlItemClimateConditionsNote, InsertType.Top);
+            xtraTabPageForm4.Text = "Сметная документация";
+            xtraTabPageForm4.PageVisible = true;
+            layoutControlItemEstimatedCompleteCostBefore.Text = "Стоимость на дату подачи документации";
+            layoutControlItemEstimatedCompleteCostPost.Text = "Стоимость на дату утверждения заключения";
+            var openEstimate = new SimpleButton { Text = "Открыть сметные нормативы и замечания" };
+            openEstimate.Click += (_, __) => xtraTabControlBase.SelectedTabPage = xtraTabPageForm4;
+            layoutControlItemExpertEstimate.Control = openEstimate;
+            gridControlExpertEstimate.Dispose();
+            gridViewMismatches.DoubleClick += (_, __) => EditEstimateMismatch();
+            AddEstimateTableActions();
+            gridControlExpertProjectDocuments2.UseEmbeddedNavigator = true;
+            gridControlExpertProjectDocuments2.EmbeddedNavigator.Buttons.Append.Hint = "Добавить заключение по сопровождению";
+            gridControlExpertProjectDocuments2.EmbeddedNavigator.Buttons.Remove.Hint = "Удалить заключение по сопровождению";
+            gridViewExpertProjectDocuments2.OptionsBehavior.Editable = true;
+            _previousSupportConclusions.AddingNew += (_, args) => args.NewObject = new PreviousSimpleConclusionRow();
         }
 
         public ConclusionEdit(Conclusion conclusion) : this()
@@ -546,21 +571,15 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
         {
             using (var form = new EstimateMismatchEdit())
             {
-                form.ShowDialog();
-                //if (form.IsSave && form.EstimateMismatch != null)
-                //{
-                //    _experts.Add(form.Expert);
-                //}
+                if (form.ShowDialog(this) == DialogResult.OK)
+                    _estimateMismatches.Add(form.Mismatch);
             }
-            ;
-
-            gridControlExpert.RefreshDataSource();
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
         private void barBtnMismatchesDel_ItemClick(object sender, ItemClickEventArgs e)
         {
-            if (gridViewExpert.GetRow(gridViewExpert.FocusedRowHandle) is TMismatch TMismatch)
+            if (gridViewMismatches.GetFocusedRow() is EstimateMismatchEdit.Row row)
             {
                 if (XtraMessageBox.Show(
                     "Вы действительно хотите удалить выделенный объект?",
@@ -568,24 +587,222 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                     MessageBoxButtons.OKCancel,
                     MessageBoxIcon.Question) == DialogResult.OK)
                 {
-                    _mismatch.Remove(TMismatch);
+                    _estimateMismatches.Remove(row);
                 }
             }
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
         private void barBtnMismatchesEdit_ItemClick(object sender, ItemClickEventArgs e)
+            => EditEstimateMismatch();
+
+        private void EditEstimateMismatch()
         {
-            using (var form = new EstimateMismatchEdit())
+            if (!(gridViewMismatches.GetFocusedRow() is EstimateMismatchEdit.Row row)) return;
+            using (var form = new EstimateMismatchEdit(row))
             {
-                form.ShowDialog();
-                //if (form.IsSave && form.EstimateMismatch != null)
-                //{
-                //    _experts.Add(form.Expert);
-                //}
+                if (form.ShowDialog(this) == DialogResult.OK)
+                    _estimateMismatches[_estimateMismatches.IndexOf(row)] = form.Mismatch;
+            }
+        }
+
+        private void AddEstimateTableActions()
+        {
+            var actions = new FlowLayoutPanel { WrapContents = false, Margin = System.Windows.Forms.Padding.Empty };
+            var add = new SimpleButton { Text = "Добавить", Width = 90 };
+            var edit = new SimpleButton { Text = "Изменить", Width = 90 };
+            var delete = new SimpleButton { Text = "Удалить", Width = 90 };
+            add.Click += (_, __) => barBtnMismatchesAdd_ItemClick(add, null);
+            edit.Click += (_, __) => EditEstimateMismatch();
+            delete.Click += (_, __) => barBtnMismatchesDel_ItemClick(delete, null);
+            actions.Controls.AddRange(new Control[] { add, edit, delete });
+            void RefreshActions()
+            {
+                edit.Enabled = delete.Enabled = gridViewMismatches.GetFocusedRow() is EstimateMismatchEdit.Row;
+            }
+            gridViewMismatches.FocusedRowChanged += (_, __) => RefreshActions();
+            gridViewMismatches.RowCountChanged += (_, __) => RefreshActions();
+            RefreshActions();
+            var item = layoutControlGroup1.AddItem(string.Empty, actions, layoutControlItemMismatches, InsertType.Top);
+            item.TextVisible = false;
+            item.SizeConstraintsType = DevExpress.XtraLayout.SizeConstraintsType.Custom;
+            item.MinSize = new Size(285, 31);
+            item.MaxSize = new Size(0, 31);
+        }
+
+        private void LoadEstimate()
+        {
+            var cost = Conclusion.EstimatedCost;
+            txtEstimatedCost.EditValue = cost?.Currency;
+            txtEstimatedCompleteCostBefore.EditValue = cost?.EstimatedCompleteCostBefore;
+            txtEstimatedCompleteCostPost.EditValue = cost?.EstimatedCompleteCostPost;
+            var hasComplexCost = cost?.EstimatedComplexCostBefore != null || cost?.EstimatedComplexCostPost != null;
+            layoutControlItemEstimatedCompleteCostBefore.Visibility = hasComplexCost ? LayoutVisibility.Never : LayoutVisibility.Always;
+            layoutControlItemEstimatedCompleteCostPost.Visibility = hasComplexCost ? LayoutVisibility.Never : LayoutVisibility.Always;
+            if (hasComplexCost) layoutControlItemEstimatedCost.Text = "Валюта (детализация во «Все поля 01.03»)";
+
+            memoEstimateNorms.EditValue = Conclusion.ExpertEstimate?.EstimateNorms;
+            var mismatches = Conclusion.ExpertEstimate?.Mismatches;
+            if (mismatches != null)
+            {
+                AddEstimateRows(mismatches.CommonMismatch, EstimateMismatchEdit.Kind.Common);
+                AddEstimateRows(mismatches.FullCalculationMismatch, EstimateMismatchEdit.Kind.FullCalculation);
+                AddEstimateRows(mismatches.LocalCalculationMismatch, EstimateMismatchEdit.Kind.LocalCalculation);
+                AddEstimateRows(mismatches.BasicMismatch, EstimateMismatchEdit.Kind.Basic);
+                foreach (var item in mismatches.ProjectDocumentsMismatch)
+                {
+                    _estimateMismatches.Add(new EstimateMismatchEdit.Row
+                    {
+                        Category = EstimateMismatchEdit.Kind.ProjectDocuments,
+                        Summary = item.Summary,
+                        Part = item.Part,
+                        Link = item.Link,
+                        ExpertType = item.ExpertType
+                    });
+                }
             }
 
-            gridControlExpert.RefreshDataSource();
+            gridControlMismatches.DataSource = _estimateMismatches;
+            gridViewMismatches.PopulateColumns();
+            gridViewMismatches.Columns[nameof(EstimateMismatchEdit.Row.CategoryName)].Caption = "Вид";
+            gridViewMismatches.Columns[nameof(EstimateMismatchEdit.Row.Summary)].Caption = "Вывод";
+            gridViewMismatches.Columns[nameof(EstimateMismatchEdit.Row.Part)].Caption = "Материалы";
+            gridViewMismatches.Columns[nameof(EstimateMismatchEdit.Row.Link)].Caption = "Требование";
+            gridViewMismatches.Columns[nameof(EstimateMismatchEdit.Row.ExpertTypeCode)].Caption = "Код направления";
+            var multiline = new RepositoryItemMemoEdit();
+            gridControlMismatches.RepositoryItems.Add(multiline);
+            gridViewMismatches.Columns[nameof(EstimateMismatchEdit.Row.CategoryName)].ColumnEdit = multiline;
+        }
+
+        private void AddEstimateRows(IEnumerable<TMismatch> source, EstimateMismatchEdit.Kind category)
+        {
+            foreach (var item in source)
+            {
+                _estimateMismatches.Add(new EstimateMismatchEdit.Row
+                {
+                    Category = category,
+                    Summary = item.Summary,
+                    Part = item.Part,
+                    Link = item.Link
+                });
+            }
+        }
+
+        private TExpertEstimate ReadEstimate()
+        {
+            var norms = OptionalXmlText(memoEstimateNorms.EditValue);
+            if (_estimateMismatches.Count == 0)
+                return norms == null ? null : new TExpertEstimate { EstimateNorms = norms };
+
+            var mismatches = new TEstimateMismatches();
+            foreach (var row in _estimateMismatches)
+            {
+                var item = new TMismatch { Summary = row.Summary, Part = row.Part, Link = row.Link };
+                switch (row.Category)
+                {
+                    case EstimateMismatchEdit.Kind.Common:
+                        mismatches.CommonMismatch.Add(item);
+                        break;
+                    case EstimateMismatchEdit.Kind.FullCalculation:
+                        mismatches.FullCalculationMismatch.Add(item);
+                        break;
+                    case EstimateMismatchEdit.Kind.LocalCalculation:
+                        mismatches.LocalCalculationMismatch.Add(item);
+                        break;
+                    case EstimateMismatchEdit.Kind.Basic:
+                        mismatches.BasicMismatch.Add(item);
+                        break;
+                    case EstimateMismatchEdit.Kind.ProjectDocuments:
+                        mismatches.ProjectDocumentsMismatch.Add(new TMismatchExtended
+                        {
+                            Summary = row.Summary, Part = row.Part, Link = row.Link, ExpertType = row.ExpertType.Value
+                        });
+                        break;
+                }
+            }
+
+            return new TExpertEstimate { EstimateNorms = norms ?? string.Empty, Mismatches = mismatches };
+        }
+
+        private TEstimatedCost ReadEstimatedCost()
+        {
+            var currency = OptionalXmlText(txtEstimatedCost.EditValue);
+            var cost = Conclusion.EstimatedCost;
+            if (cost?.EstimatedComplexCostBefore != null || cost?.EstimatedComplexCostPost != null)
+            {
+                cost.Currency = currency;
+                return cost;
+            }
+
+            var before = OptionalXmlText(txtEstimatedCompleteCostBefore.EditValue);
+            var post = OptionalXmlText(txtEstimatedCompleteCostPost.EditValue);
+            if (currency == null && before == null && post == null) return null;
+            return new TEstimatedCost
+            {
+                Currency = currency,
+                EstimatedCompleteCostBefore = before?.Replace(',', '.'),
+                EstimatedCompleteCostPost = post?.Replace(',', '.')
+            };
+        }
+
+        private void LoadPreviousSupportConclusions()
+        {
+            foreach (var item in Conclusion.PreviousSimpleConclusions)
+            {
+                _previousSupportConclusions.Add(new PreviousSimpleConclusionRow
+                {
+                    Date = item.Date, Number = item.Number, ExaminationObjectType = item.ExaminationObjectType, Result = item.Result
+                });
+            }
+
+            gridControlExpertProjectDocuments2.DataSource = _previousSupportConclusions;
+            gridViewExpertProjectDocuments2.PopulateColumns();
+            var columns = gridViewExpertProjectDocuments2.Columns;
+            columns[nameof(PreviousSimpleConclusionRow.Date)].Caption = "Дата";
+            columns[nameof(PreviousSimpleConclusionRow.Number)].Caption = "Номер заключения";
+            columns[nameof(PreviousSimpleConclusionRow.ExaminationObjectType)].Caption = "Вид объекта экспертизы";
+            columns[nameof(PreviousSimpleConclusionRow.Result)].Caption = "Результат оценки";
+            columns[nameof(PreviousSimpleConclusionRow.ExaminationObjectType)].ColumnEdit =
+                CreateSupportLookup<TExaminationObjectType>(cmbExaminationObjectType);
+            columns[nameof(PreviousSimpleConclusionRow.Result)].ColumnEdit =
+                CreateSupportLookup<TExaminationResult>(cmbExaminationResult);
+        }
+
+        private RepositoryItemImageComboBox CreateSupportLookup<T>(ComboBoxEdit source) where T : Enum
+        {
+            var lookup = new RepositoryItemImageComboBox();
+            foreach (var item in source.Properties.Items.OfType<GeneralizedDictionaryXPO>())
+            {
+                if (EnumExtension.TryGetEnumByXmlAttributeValue(item.Value, out T value))
+                    lookup.Items.Add(new ImageComboBoxItem(item.Name, value));
+            }
+
+            gridControlExpertProjectDocuments2.RepositoryItems.Add(lookup);
+            return lookup;
+        }
+
+        private void SavePreviousSupportConclusions()
+        {
+            gridViewExpertProjectDocuments2.PostEditor();
+            gridViewExpertProjectDocuments2.UpdateCurrentRow();
+            var conclusions = new List<TPreviousSimpleConclusion>();
+            foreach (var row in _previousSupportConclusions)
+            {
+                if (!row.Date.HasValue || string.IsNullOrWhiteSpace(row.Number) || !row.ExaminationObjectType.HasValue || !row.Result.HasValue)
+                {
+                    xtraTabControlBase.SelectedTabPage = xtraTabPageForm1;
+                    gridControlExpertProjectDocuments2.Focus();
+                    throw new InvalidOperationException("Укажите дату, номер, вид объекта и результат оценки для каждого заключения по экспертному сопровождению.");
+                }
+
+                conclusions.Add(new TPreviousSimpleConclusion
+                {
+                    Date = row.Date.Value.Date, Number = row.Number, ExaminationObjectType = row.ExaminationObjectType.Value, Result = row.Result.Value
+                });
+            }
+
+            Conclusion.PreviousSimpleConclusions.Clear();
+            foreach (var item in conclusions) Conclusion.PreviousSimpleConclusions.Add(item);
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
@@ -928,6 +1145,10 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
 
             try
             {
+                gridViewTEI.PostEditor();
+                gridViewTEI.UpdateCurrentRow();
+                gridViewCadastralNumber.PostEditor();
+                gridViewCadastralNumber.UpdateCurrentRow();
                 Conclusion.SchemaVersion = "01.03";
 
                 #region Page I
@@ -1032,6 +1253,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                         Conclusion.PreviousConclusions.Add(item);
                     }
                 }
+                SavePreviousSupportConclusions();
                 #endregion
 
                 #region Page 1_7
@@ -1125,9 +1347,18 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                 #endregion
 
                 #region Page II_3
+                var seismicMin = OptionalXmlText(_seismicMinimum.EditValue);
+                var seismicMax = OptionalXmlText(_seismicMaximum.EditValue);
+                if (seismicMin == null && seismicMax != null)
+                {
+                    _seismicMinimum.Focus();
+                    throw new InvalidOperationException("Укажите расчётную интенсивность сейсмического воздействия.");
+                }
+
                 Conclusion.ClimateConditions = new TClimateConditions
                 {
-                    SeismicActivityCalculatedValue = Conclusion.ClimateConditions?.SeismicActivityCalculatedValue
+                    SeismicActivityCalculatedValue = seismicMin == null ? null
+                        : new TSeismicActivityCalculatedValue { MinValue = seismicMin, MaxValue = seismicMax }
                 };
 
                 var climateDistrict = GetCheckComboBoxItems<TClimateDistrict>(checkCmbClimateDistrict, isNullAble: true).ToArray();
@@ -1341,6 +1572,9 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                     }
                 }
                 #endregion
+
+                Conclusion.EstimatedCost = ReadEstimatedCost();
+                Conclusion.ExpertEstimate = ReadEstimate();
 
                 #region Page V
                 if (Conclusion.Summary is null)
@@ -1769,6 +2003,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
 
             #region Page I_6
             _tPreviousConclusions = Conclusion?.PreviousConclusions?.ToList() ?? new List<TPreviousConclusion>();
+            LoadPreviousSupportConclusions();
             gridControlPreviousConclusions.DataSource = _tPreviousConclusions;
             foreach (GridColumn column in gridViewPreviousConclusions.Columns.Cast<GridColumn>())
             {
@@ -1864,6 +2099,8 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
             SetCheckComboBoxByItems(Conclusion?.ClimateConditions?.WindDistrict, checkCmbWindDistrict);
             SetCheckComboBoxByItems(Conclusion?.ClimateConditions?.GeologicalConditions, checkCmbGeologicalConditions);
             SetCheckComboBoxByItems(Conclusion?.ClimateConditions?.SnowDistrict, checkCmbSnowDistrict);
+            _seismicMinimum.EditValue = Conclusion.ClimateConditions?.SeismicActivityCalculatedValue?.MinValue;
+            _seismicMaximum.EditValue = Conclusion.ClimateConditions?.SeismicActivityCalculatedValue?.MaxValue;
             memoClimateConditionsNote.EditValue = Conclusion?.ClimateConditionsNote;
             #endregion
 
@@ -2034,6 +2271,8 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                 gridEngineeringSurveyType.Visible = true;
             }
             #endregion
+
+            LoadEstimate();
 
             #region Page V
 
@@ -2566,6 +2805,14 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
         {
             [RegExEditMask(@"\d+:\d+:\d+:\d+", AllowBlankInput = true, ShowPlaceholders = false)]
             public string Number { get; set; }
+        }
+
+        private sealed class PreviousSimpleConclusionRow
+        {
+            public DateTime? Date { get; set; }
+            public string Number { get; set; }
+            public TExaminationObjectType? ExaminationObjectType { get; set; }
+            public TExaminationResult? Result { get; set; }
         }
     }
 }

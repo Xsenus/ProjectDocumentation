@@ -8,7 +8,8 @@ from lxml import etree
 from xmlschema import XMLSchema11
 from xmlschema.validators import XMLSchemaChildrenValidationError, XsdAssert, XsdElement, XsdGroup
 from xmlschema.validators.facets import (
-    XsdEnumerationFacets, XsdLengthFacet, XsdMaxLengthFacet, XsdMinLengthFacet, XsdPatternFacets,
+    XsdEnumerationFacets, XsdLengthFacet, XsdMaxInclusiveFacet, XsdMaxLengthFacet, XsdMinInclusiveFacet,
+    XsdMinLengthFacet, XsdPatternFacets,
 )
 
 from .documents import (
@@ -208,6 +209,10 @@ def _facet_message(validator):
         return f'Минимальная длина значения — {validator.value}.'
     if isinstance(validator, XsdMaxLengthFacet):
         return f'Максимальная длина значения — {validator.value}.'
+    if isinstance(validator, XsdMinInclusiveFacet):
+        return f'Введите значение не меньше {validator.value}.'
+    if isinstance(validator, XsdMaxInclusiveFacet):
+        return f'Введите значение не больше {validator.value}.'
     return ''
 
 
@@ -227,6 +232,7 @@ class _FormSchema:
     def element(self, component):
         return {
             'kind': 'element', 'name': component.local_name, 'type': self.type_id(component.type),
+            'nillable': component.nillable,
             'documentation': _documentation(component), **_occurs(component), **_declared_values(component),
         }
 

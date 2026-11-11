@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { createRoot } from 'react-dom/client';
-import SchemaForm, { groupLabelsFor, normalPath, sectionFor, sectionProgress } from './SchemaForm.jsx';
+import SchemaForm, { formFieldIndex, groupLabelsFor, normalPath, sectionFor, sectionProgress } from './SchemaForm.jsx';
 import { documentFamilies, familyForDocument, familyForId, familyRequest } from './documentFamilies.js';
 import { api, downloadXml, encodeXmlBytes, parseXml, readXmlFile, schemaVersion, serializeXml, xmlBlobFromBase64 } from './xml.js';
 import './styles.css';
@@ -73,16 +73,21 @@ function exportCopy(document, family, version) {
 }
 
 function ValidationPanel({ validation, onField, navigationDisabled }) {
+  const panel = useRef(null);
+  useEffect(() => {
+    if (validation && !validation.valid) panel.current?.focus();
+  }, [validation]);
   if (!validation) return null;
   const errors = validation.errors || [];
   return (
-    <aside className={'validation ' + (validation.valid ? 'valid' : 'invalid')} aria-live="polite">
+    <aside ref={panel} tabIndex={-1} className={'validation ' + (validation.valid ? 'valid' : 'invalid')}
+      aria-label="Результат локальной проверки XML" aria-live="polite">
       <div className="validation-header">
         <span className="validation-icon" aria-hidden="true">{validation.valid ? '✓' : '!'}</span>
         <div>
-          <strong>{validation.valid ? 'XML прошёл проверку' : 'XML требует исправлений'}</strong>
+          <strong>{validation.valid ? 'XML прошёл локальную проверку' : 'XML требует исправлений'}</strong>
           <p>{validation.validationBasis === 'legacy-wire' ? 'Совместимость с форматом приложения 01.03' :
-            validation.valid ? 'Схема ' + versionLabel(validation.version) : 'Ошибок: ' + errors.length}</p>
+            validation.valid ? 'XSD ' + versionLabel(validation.version) : 'Ошибок: ' + errors.length}</p>
         </div>
       </div>
       {errors.length > 0 && (
@@ -101,6 +106,85 @@ function ValidationPanel({ validation, onField, navigationDisabled }) {
       )}
     </aside>
   );
+}
+
+function searchText(value) {
+  return value.toLocaleLowerCase('ru').replaceAll('ё', 'е');
+}
+
+function FieldSearch({ index, onField, onSearchFocus, disabled }) {
+  const [query, setQuery] = useState('');
+  const [limit, setLimit] = useState(10);
+  const typedPath = query.trim().startsWith('/') ? xmlPathParts(query.trim()) : [];
+  const needle = searchText(query.trim()).replace(/\[\d+\]/g, '');
+  const terms = needle.split(/\s+/).filter(Boolean);
+  function priority(item) {
+    if (searchText(item.path) === needle) return 2;
+    return Number(searchText(item.title) === needle || searchText(item.path.split('/').at(-1)) === needle);
+  }
+  const matches = terms.length ? index.filter(item => {
+    const searchable = searchText(`${item.title} ${item.path} ${item.section} ${item.documentation || ''}`);
+    return terms.every(term => searchable.includes(term));
+  }).sort((first, second) => priority(second) - priority(first)) : [];
+  function choose(path) {
+    setQuery('');
+    setLimit(10);
+    const exactPath = typedPath.length > 0 && searchText(path) === needle;
+    const target = exactPath ? '/' + xmlPathParts(path).map((part, index) =>
+      part + (typedPath[index]?.match(/\[\d+\]$/)?.[0] || '')).join('/') : path;
+    onField(target);
+  }
+  return (
+    <form className="field-search" role="search" onSubmit={event => {
+      event.preventDefault();
+      if (!disabled && matches.length) choose(matches[0].path);
+    }}>
+      <label htmlFor="schema-field-search">Найти поле</label>
+      <input id="schema-field-search" type="search" value={query} disabled={disabled} spellCheck={false}
+        placeholder="Название или имя XML" onFocus={onSearchFocus}
+        onChange={event => { setQuery(event.target.value); setLimit(10); }} />
+      {terms.length > 0 && !disabled && (
+        <>
+          <p className="field-search-count" role="status">{matches.length ? 'Найдено: ' + matches.length : 'Поля не найдены'}</p>
+          {matches.length > 0 && <ul className="field-search-results">
+            {matches.slice(0, limit).map(item => <li key={item.path}>
+              <button type="button" onClick={() => choose(item.path)}>
+                <strong>{item.title}</strong><span>{item.section}</span><small>{item.path}</small>
+              </button>
+            </li>)}
+          </ul>}
+          {matches.length > limit && <button className="text-button" type="button" onClick={() => setLimit(limit + 10)}>Показать ещё</button>}
+        </>
+      )}
+    </form>
+  );
+}
+
+function matchesPathPart(actual, expected) {
+  if (actual === expected) return true;
+  const actualName = actual.replace(/\[\d+\]$/, '');
+  const expectedName = expected.replace(/\[\d+\]$/, '');
+  return actualName === expectedName && (expectedName === expected || actualName === actual && expected.endsWith('[1]'));
+}
+
+function xmlPathParts(path) {
+  return normalPath(path).split('/').filter(Boolean);
+}
+
+function isPathPrefix(parts, target) {
+  return parts.length <= target.length && parts.every((part, index) => matchesPathPart(part, target[index]));
+}
+
+function resolveOccurrence(document, parts) {
+  let element = document.documentElement;
+  return parts.map((part, depth) => {
+    if (depth === 0 || !element || part.startsWith('@')) return part;
+    const index = Number(part.match(/\[(\d+)\]$/)?.[1] || 1);
+    const name = part.replace(/\[\d+\]$/, '');
+    const siblings = Array.from(element.children).filter(child => child.localName === name);
+    element = siblings[index - 1];
+    return element && siblings.length > 1 ? `${name}[${index}]` : part;
+  });
 }
 
 function MigrationPanel({ result, onApply, onCancel }) {
@@ -151,6 +235,7 @@ function App() {
   const [showDrafts, setShowDrafts] = useState(false);
   const [, refresh] = useState(0);
   const revision = useRef(0);
+  const navigationRequest = useRef(0);
   const operation = useRef('');
   const desktopSavePending = useRef(false);
   const fileInput = useRef(null);
@@ -171,7 +256,18 @@ function App() {
     ? family.migrationTargets[currentDocumentVersion]
     : !currentDocumentVersion && family.id === 'explanatorynote' ? currentVersion : undefined;
   const rawDirty = raw !== rawBase;
-  const errorPaths = useMemo(() => new Set((validation?.errors || []).map(error => normalPath(error.path))), [validation]);
+  const currentValidation = rawDirty ? null : validation;
+  const fieldErrors = useMemo(() => {
+    const result = new Map();
+    for (const error of currentValidation?.errors || []) {
+      const path = normalPath(error.path);
+      const messages = result.get(path) || [];
+      if (!messages.includes(error.message)) messages.push(error.message);
+      result.set(path, messages);
+    }
+    return result;
+  }, [currentValidation]);
+  const fieldIndex = useMemo(() => model ? formFieldIndex(model, family.id) : [], [model, family.id]);
 
   function keyFor(element) {
     if (!keys.current.has(element)) keys.current.set(element, ++nextKey.current);
@@ -516,46 +612,52 @@ function App() {
     }
   }
 
-  function navigateError(path) {
+  function navigateField(path) {
     if (rawDirty || readingFiles) return;
+    setShowDrafts(false);
     if (!formReady) {
       openXmlView();
+      requestAnimationFrame(() => window.document.querySelector('.raw-editor')?.focus());
       return;
     }
-    const normalized = normalPath(path);
-    const name = normalized.split('/').filter(Boolean)[1]?.replace(/\[\d+\]/g, '');
+    const parts = resolveOccurrence(document, xmlPathParts(path));
+    const name = parts[1]?.replace(/\[\d+\]$/, '');
+    const request = ++navigationRequest.current;
     setSection(sectionFor(name, family.id));
     setTab('form');
-    const slash = normalized.lastIndexOf('/');
-    const parentPath = normalized.slice(0, slash);
-    const elementName = normalized.slice(slash + 1).replace(/\[\d+\]$/, '');
     function reveal(remainingFrames) {
-      const matches = Array.from(window.document.querySelectorAll('.schema-form [data-xml-path]'));
-      const ancestors = matches.filter(node => normalized === node.dataset.xmlPath ||
-        normalized.startsWith(node.dataset.xmlPath + '/'));
-      const closed = ancestors.find(node => node.tagName === 'DETAILS' && !node.open);
-      if (closed && remainingFrames > 0) {
-        closed.open = true;
+      if (documentRef.current !== document || navigationRequest.current !== request) return;
+      const root = window.document.querySelector('.schema-form');
+      const ancestors = Array.from(root?.querySelectorAll('[data-xml-path]') || []).flatMap(node => {
+        const candidate = xmlPathParts(node.dataset.xmlPath);
+        return isPathPrefix(candidate, parts) ? [{ node, depth: candidate.length }] : [];
+      });
+      const closed = ancestors.find(({ node }) => node.tagName === 'DETAILS' && !node.open);
+      const opening = ancestors.some(({ node }) => node.tagName === 'DETAILS' && node.open &&
+        !node.querySelector(':scope > .complex-content'));
+      if ((!root || closed || opening) && remainingFrames > 0) {
+        if (closed) closed.node.open = true;
         requestAnimationFrame(() => reveal(remainingFrames - 1));
         return;
       }
-      const field = matches.find(node => node.dataset.xmlPath === normalized && node.classList.contains('field'));
-      if (field) {
-        field.scrollIntoView({ block: 'center' });
-        field.querySelector('input, select, textarea')?.focus({ preventScroll: true });
-        return;
+      const candidates = ancestors.flatMap(({ node, depth }) => {
+        const control = node.classList.contains('field') ? node.querySelector('input, select, textarea')
+          : node.tagName === 'BUTTON' ? node : node.querySelector(':scope > .button-add');
+        if (control && !control.disabled) return [{ control, depth, priority: node.classList.contains('field') ? 2 : 1 }];
+        const summary = node.tagName === 'DETAILS' && node.querySelector(':scope > summary');
+        return summary ? [{ control: summary, depth, priority: depth === parts.length ? 2 : 0 }] : [];
+      });
+      for (const choice of root?.querySelectorAll('[data-choice-parent-path]') || []) {
+        const parent = xmlPathParts(choice.dataset.choiceParentPath);
+        const next = parts[parent.length]?.replace(/\[\d+\]$/, '');
+        const picker = choice.querySelector(':scope > .choice-picker > select, :scope > .choice-switch');
+        if (picker && isPathPrefix(parent, parts) && choice.dataset.choiceElements.split(' ').includes(next)) {
+          candidates.push({ control: picker, depth: parent.length + 1, priority: 1 });
+        }
       }
-
-      const choice = Array.from(window.document.querySelectorAll('[data-choice-parent-path]')).find(node =>
-        node.dataset.choiceParentPath === parentPath && node.dataset.choiceElements.split(' ').includes(elementName));
-      const picker = choice?.querySelector(':scope > .choice-picker > select');
-      const group = matches.find(node => node.dataset.xmlPath === parentPath + '/' + elementName &&
-        node.classList.contains('element-group'));
-      const add = group?.querySelector(':scope > .button-add');
-      const closest = ancestors.sort((a, b) => b.dataset.xmlPath.length - a.dataset.xmlPath.length)[0];
-      const target = picker || add || closest || window.document.querySelector('.schema-form');
-      target?.scrollIntoView({ block: 'center' });
-      (picker || add)?.focus({ preventScroll: true });
+      const target = candidates.sort((a, b) => b.depth - a.depth || b.priority - a.priority)[0]?.control;
+      (target || root)?.scrollIntoView({ block: 'center' });
+      target?.focus({ preventScroll: true });
     }
     requestAnimationFrame(() => reveal(60));
   }
@@ -568,7 +670,7 @@ function App() {
   const assetVersion = hasSchemaAssets ? currentDocumentVersion : currentVersion;
   const assetBase = '/schemas/' + family.id + '-' + assetVersion.replace('.', '-');
   const context = { types: model?.types || {}, depth: 0, readOnly: editorLocked, lockGuid: Boolean(host),
-    idAttribute: family.idAttribute, familyId: family.id, bridge: host, errorPaths, change, keyFor,
+    idAttribute: family.idAttribute, familyId: family.id, bridge: host, fieldErrors, change, keyFor,
     isCurrent: element => element.isConnected && element.ownerDocument === documentRef.current,
     beginFileRead() {
       setFileReads(count => count + 1);
@@ -609,6 +711,8 @@ function App() {
                 <button className={showDrafts ? 'selected' : ''} type="button" disabled={readingFiles} onClick={() => setShowDrafts(true)}>Черновики <span>{drafts.length}</span></button>
               </div>
             )}
+            {formReady && <FieldSearch key={profileKey} index={fieldIndex} onField={navigateField}
+              onSearchFocus={() => { navigationRequest.current++; }} disabled={rawDirty || readingFiles} />}
             <h2>{family.sectionsTitle}</h2>
             <nav className="section-nav" aria-label={family.sectionsTitle}>
               {Object.entries(groupLabels).map(([id, label]) => (
@@ -626,6 +730,11 @@ function App() {
               <a href={assetBase + '.xsd'} download>Схема XSD {assetVersion}</a>
               {family.stylesheetVersions.includes(assetVersion) && <a href={assetBase + '.xsl'} download>Стиль XSL {assetVersion}</a>}
             </div>
+            {!host && <div className="sidebar-bottom">
+              <h2>Проверка и реестр</h2>
+              <a href="https://checkxml.gge.ru/" target="_blank" rel="noreferrer">Сервис проверки XML Главгосэкспертизы</a>
+              <a href="https://egrz.ru/organisation/reestr-advance/latest" target="_blank" rel="noreferrer">Поиск заключений в ЕГРЗ</a>
+            </div>}
           </div>
         </aside>
 
@@ -717,7 +826,7 @@ function App() {
                   <ul>{conversionWarnings.map((warning, index) => <li key={index}>{warning}</li>)}</ul>
                 </details>
               )}
-              <ValidationPanel validation={validation} onField={navigateError} navigationDisabled={rawDirty || readingFiles} />
+              <ValidationPanel validation={currentValidation} onField={navigateField} navigationDisabled={readingFiles} />
 
               <section className="paper editor">
                 <div className="editor-heading">

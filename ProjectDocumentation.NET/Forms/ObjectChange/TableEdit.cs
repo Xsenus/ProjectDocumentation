@@ -1,5 +1,7 @@
 using Core.NET.AutoModels.ExplanatoryNoteObj;
+using DevExpress.Utils;
 using DevExpress.XtraEditors;
+using DevExpress.XtraEditors.Controls;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -13,8 +15,11 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
         private readonly DataTable cells = new DataTable();
         private readonly Dictionary<DataRow, Dictionary<DataColumn, tCell>> originals =
             new Dictionary<DataRow, Dictionary<DataColumn, tCell>>();
+        private readonly HashSet<DataRow> addedRows = new HashSet<DataRow>();
+        private readonly ComboBoxEdit alignment = new ComboBoxEdit { Width = 132, AccessibleName = "Выравнивание выбранной ячейки" };
         private DataRow header;
         private int nextColumnId;
+        private bool refreshingAlignment;
 
         public TableEdit()
         {
@@ -24,6 +29,11 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
             actions.Controls.Add(TableButton("Добавить строку", AddRow));
             actions.Controls.Add(TableButton("Удалить столбец", DeleteColumn));
             actions.Controls.Add(TableButton("Удалить строку", DeleteRow));
+            alignment.Properties.TextEditStyle = TextEditStyles.DisableTextEditor;
+            alignment.Properties.Items.AddRange(new[] { "По умолчанию", "По левому краю", "По правому краю", "По центру" });
+            alignment.ToolTip = "Выравнивание выбранной ячейки";
+            alignment.SelectedIndexChanged += (_, __) => ChangeAlignment();
+            actions.Controls.Add(alignment);
             Controls.Add(actions);
             layoutControlTextBlock.BringToFront();
             btnSave.AllowFocus = true;
@@ -37,6 +47,28 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
             gridView.CustomDrawRowIndicator += (_, e) =>
             {
                 if (e.RowHandle >= 0) e.Info.DisplayText = e.RowHandle == 0 ? "Заголовок" : e.RowHandle.ToString();
+            };
+            gridView.FocusedRowChanged += (_, __) => RefreshAlignment();
+            gridView.FocusedColumnChanged += (_, __) => RefreshAlignment();
+            gridView.RowCellStyle += (_, e) =>
+            {
+                var row = gridView.GetDataRow(e.RowHandle);
+                var column = cells.Columns[e.Column.FieldName];
+                var cell = GetOriginalCell(row, column);
+                if (cell?.alignSpecified != true) return;
+                e.Appearance.Options.UseTextOptions = true;
+                switch (cell.align)
+                {
+                    case tAlignTypes.left:
+                        e.Appearance.TextOptions.HAlignment = HorzAlignment.Near;
+                        break;
+                    case tAlignTypes.right:
+                        e.Appearance.TextOptions.HAlignment = HorzAlignment.Far;
+                        break;
+                    case tAlignTypes.center:
+                        e.Appearance.TextOptions.HAlignment = HorzAlignment.Center;
+                        break;
+                }
             };
         }
 
@@ -60,12 +92,12 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
             gridView.UpdateCurrentRow();
             var columns = cells.Columns.Cast<DataColumn>().ToArray();
             var rows = cells.Rows.Cast<DataRow>().Skip(1)
-                .Where(row => columns.Any(column => HasCell(row, column))).ToList();
+                .Where(row => addedRows.Contains(row) || columns.Any(column => HasCell(row, column))).ToList();
             var body = new List<tCell>();
             for (var index = 0; index < rows.Count; index++)
             {
                 var row = rows[index];
-                var width = index < rows.Count - 1 ? columns.Length
+                var width = index < rows.Count - 1 || addedRows.Contains(row) ? columns.Length
                     : Array.FindLastIndex(columns, column => HasCell(row, column)) + 1;
                 for (var column = 0; column < width; column++) body.Add(ReadCell(row, columns[column]));
             }
@@ -118,7 +150,9 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
         private void AddRow()
         {
             gridView.PostEditor();
-            cells.Rows.Add(cells.NewRow());
+            var row = cells.NewRow();
+            addedRows.Add(row);
+            cells.Rows.Add(row);
             gridView.FocusedRowHandle = gridView.GetRowHandle(cells.Rows.Count - 1);
         }
 
@@ -128,6 +162,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
             if (row == null || ReferenceEquals(row, header)) return;
             gridView.CloseEditor();
             originals.Remove(row);
+            addedRows.Remove(row);
             cells.Rows.Remove(row);
         }
 
@@ -148,6 +183,44 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
             gridView.PopulateColumns();
             for (var index = 0; index < cells.Columns.Count; index++)
                 gridView.Columns[cells.Columns[index].ColumnName].Caption = "Столбец " + (index + 1);
+            RefreshAlignment();
+        }
+
+        private void RefreshAlignment()
+        {
+            var row = gridView.GetFocusedDataRow();
+            var column = gridView.FocusedColumn == null ? null : cells.Columns[gridView.FocusedColumn.FieldName];
+            var cell = GetOriginalCell(row, column);
+            refreshingAlignment = true;
+            try
+            {
+                alignment.Enabled = row != null && column != null;
+                alignment.SelectedIndex = cell?.alignSpecified == true ? (int)cell.align + 1 : 0;
+            }
+            finally
+            {
+                refreshingAlignment = false;
+            }
+        }
+
+        private void ChangeAlignment()
+        {
+            if (refreshingAlignment || !alignment.Enabled || alignment.SelectedIndex < 0) return;
+            var row = gridView.GetFocusedDataRow();
+            var column = gridView.FocusedColumn == null ? null : cells.Columns[gridView.FocusedColumn.FieldName];
+            if (row == null || column == null) return;
+            gridView.PostEditor();
+            var cell = ReadCell(row, column) ?? new tCell();
+            cell.alignSpecified = alignment.SelectedIndex > 0;
+            if (cell.alignSpecified) cell.align = (tAlignTypes)(alignment.SelectedIndex - 1);
+            LoadCell(row, column, cell);
+            gridView.RefreshRow(gridView.FocusedRowHandle);
+        }
+
+        private tCell GetOriginalCell(DataRow row, DataColumn column)
+        {
+            return row != null && column != null && originals.TryGetValue(row, out var columns) &&
+                columns.TryGetValue(column, out var cell) ? cell : null;
         }
 
         private void LoadCell(DataRow row, DataColumn column, tCell cell)

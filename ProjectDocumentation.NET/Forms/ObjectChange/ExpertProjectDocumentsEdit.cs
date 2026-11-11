@@ -1,4 +1,4 @@
-﻿using Core.NET.AutoModels.ConclusionObj;
+using Core.NET.AutoModels.ConclusionObj;
 using Core.NET.Controllers;
 using Core.NET.Extensions;
 using Core.NET.Models.XPO;
@@ -75,6 +75,8 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
         {
             try
             {
+                gridViewProjectDocumentsMismatches.PostEditor();
+                gridViewProjectDocumentsMismatches.UpdateCurrentRow();
                 ExpertProjectDocuments.ExpertType = ConclusionEdit.GetEnumByAttributeValue<TExpertType>(ConclusionEdit.GetValueGeneralizedDictionary(
                     cmbExpertType,
                     message: "Заполните поле направление деятельности в области экспертизы проектной документации.")?.Value);
@@ -92,85 +94,32 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                     ExpertProjectDocuments.DangerSolutions = null;
                 }
 
-                if (_mismatchObjS.Count > 0)
+                var dangerMismatch = memoDangerMismatch.Text;
+                ExpertProjectDocuments.Mismatches = null;
+                if (_mismatchObjS.Count > 0 || !string.IsNullOrWhiteSpace(dangerMismatch))
                 {
-                    ExpertProjectDocuments.Mismatches = new TProjectDocumentsMismatches();
-
-                    if (_mismatchObjS.Where(w => w.Type == MismatchObjType.EngineeringSurveyMismatch).Count() > 0)
+                    var mismatches = new TProjectDocumentsMismatches
                     {
-                        var objs = _mismatchObjS
-                            .Where(w => w.Type == MismatchObjType.EngineeringSurveyMismatch)
-                            .Select(s => new TMismatch() { Summary = s.Summary, Link = s.Link, Part = s.Part })
-                            .ToArray();
-
-                        if (objs != null)
+                        DangerMismatch = string.IsNullOrWhiteSpace(dangerMismatch) ? null : dangerMismatch
+                    };
+                    foreach (var row in _mismatchObjS)
+                    {
+                        var item = new TMismatch { Summary = row.Summary, Link = row.Link, Part = row.Part };
+                        switch (row.Type)
                         {
-                            foreach (var item in objs)
-                            {
-                                ExpertProjectDocuments.Mismatches.EngineeringSurveyMismatch.Add(item);
-                            }
+                            case MismatchObjType.EngineeringSurveyMismatch:
+                                mismatches.EngineeringSurveyMismatch.Add(item);
+                                break;
+                            case MismatchObjType.ProjectTaskMismatch:
+                                mismatches.ProjectTaskMismatch.Add(item);
+                                break;
+                            case MismatchObjType.NormsMismatch:
+                                mismatches.NormsMismatch.Add(item);
+                                break;
                         }
                     }
 
-                    if (_mismatchObjS.Where(w => w.Type == MismatchObjType.ProjectTaskMismatch).Count() > 0)
-                    {
-                        var objs = _mismatchObjS
-                            .Where(w => w.Type == MismatchObjType.ProjectTaskMismatch)
-                            .Select(s => new TMismatch() { Summary = s.Summary, Link = s.Link, Part = s.Part })
-                            .ToArray();
-
-                        if (objs != null)
-                        {
-                            foreach (var item in objs)
-                            {
-                                ExpertProjectDocuments.Mismatches.ProjectTaskMismatch.Add(item);
-                            }
-                        }
-                    }
-
-                    if (_mismatchObjS.Where(w => w.Type == MismatchObjType.NormsMismatch).Count() > 0)
-                    {
-                        var objs = _mismatchObjS
-                            .Where(w => w.Type == MismatchObjType.NormsMismatch)
-                            .Select(s => new TMismatch() { Summary = s.Summary, Link = s.Link, Part = s.Part })
-                            .ToArray();
-
-                        if (objs != null)
-                        {
-                            foreach (var item in objs)
-                            {
-                                ExpertProjectDocuments.Mismatches.NormsMismatch.Add(item);
-                            }
-                        }
-                    }
-                }
-
-                var dangerMismatch = ConclusionEdit.GetStringValue(memoDangerMismatch.Text, memoDangerMismatch, "Описание решения, реализация которого может привести к риску возникновения аварийных ситуаций на объекте капитального строительства, гибели людей, причинения значительного материального ущерба.", isNullAble: true);
-                if (string.IsNullOrWhiteSpace(dangerMismatch))
-                {
-                    if (ExpertProjectDocuments.Mismatches != null)
-                    {
-                        ExpertProjectDocuments.Mismatches.DangerMismatch = null;
-                    }
-                }
-                else
-                {
-                    if (ExpertProjectDocuments.Mismatches is null)
-                    {
-                        ExpertProjectDocuments.Mismatches = new TProjectDocumentsMismatches();
-                    }
-                    ExpertProjectDocuments.Mismatches.DangerMismatch = dangerMismatch;
-                }
-
-                if (ExpertProjectDocuments.Mismatches != null)
-                {
-                    if (ExpertProjectDocuments.Mismatches.DangerMismatch is null
-                        && ExpertProjectDocuments.Mismatches.EngineeringSurveyMismatch is null
-                        && ExpertProjectDocuments.Mismatches.NormsMismatch is null
-                        && ExpertProjectDocuments.Mismatches.ProjectTaskMismatch is null)
-                    {
-                        ExpertProjectDocuments.Mismatches = null;
-                    }
+                    ExpertProjectDocuments.Mismatches = mismatches;
                 }
             }
             catch (Exception ex)

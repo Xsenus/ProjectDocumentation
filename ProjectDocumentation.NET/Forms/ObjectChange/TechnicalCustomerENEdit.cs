@@ -142,6 +142,8 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
         {
             try
             {
+                gridViewSROMembership.PostEditor();
+                gridViewSROMembership.UpdateCurrentRow();
                 switch (radioGroupTypeOrganization.SelectedIndex)
                 {
                     case (int)TypeOrganization.Entity:
@@ -358,7 +360,11 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                 radioGroupTypeOrganization.SelectedIndex = (int)TypeOrganization.Entity;
             }
 
-            _tSROs = TechnicalCustomer?.SROMembership?.ToList() ?? new List<tSRO>();
+            _tSROs = TechnicalCustomer?.SROMembership?.Select(item => new tSRO
+            {
+                Value = item.Value,
+                SROType = item.SROType
+            }).ToList() ?? new List<tSRO>();
             gridControlSROMembership.DataSource = _tSROs;
             foreach (GridColumn column in gridViewSROMembership.Columns.Cast<GridColumn>())
             {

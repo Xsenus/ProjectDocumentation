@@ -30,6 +30,7 @@ namespace ProjectDocumentation.NET.Forms
         public string Documentation { get; set; }
         public string Default { get; set; }
         public string Fixed { get; set; }
+        public bool Nillable { get; set; }
         public int Min { get; set; }
         public int? Max { get; set; }
         public List<NativeSchemaParticle> Children { get; set; }
