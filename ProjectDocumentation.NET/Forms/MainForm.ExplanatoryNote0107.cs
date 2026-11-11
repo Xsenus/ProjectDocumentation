@@ -19,10 +19,8 @@ namespace ProjectDocumentation.NET.Forms
             barBtnAddExplanatoryNote.Caption = "Добавить пояснительную записку 01.07";
             convertExplanatoryNote = new BarButtonItem(barManager, "Преобразовать записку в 01.07");
             convertExplanatoryNote.ItemClick += ConvertExplanatoryNote_ItemClick;
-            popupMenu.AddItem(convertExplanatoryNote);
             exportCompatibleExplanatoryNote = new BarButtonItem(barManager, "Выгрузить копию записки 01.05");
             exportCompatibleExplanatoryNote.ItemClick += ExportCompatibleExplanatoryNote_ItemClick;
-            popupMenu.AddItem(exportCompatibleExplanatoryNote);
         }
 
         private void UpdateExplanatoryNoteCommands(object row)
@@ -45,11 +43,11 @@ namespace ProjectDocumentation.NET.Forms
         private static bool CanPreviewExplanatoryNote(string version)
             => version == ExplanatoryNote0107Document.CurrentVersion || version == ExplanatoryNote0107Document.CompatibleVersion;
 
-        private async Task AddCurrentExplanatoryNoteAsync()
+        private async Task AddSchemaExplanatoryNoteAsync(string version)
         {
             try
             {
-                var document = ExplanatoryNote0107Document.Parse(await conclusionSchema.CreateAsync(ExplanatoryNote0107Document.Family));
+                var document = ExplanatoryNote0107Document.Parse(await conclusionSchema.CreateAsync(ExplanatoryNote0107Document.Family, version));
                 var guid = ExplanatoryNote0107Document.ReadGuid(document) ?? Guid.NewGuid();
                 await EditExplanatoryNoteXmlAsync(ExplanatoryNote0107Document.WithGuid(document, guid), "", guid);
             }
@@ -59,7 +57,7 @@ namespace ProjectDocumentation.NET.Forms
             }
         }
 
-        private async Task EditCurrentExplanatoryNoteAsync(ExplanatoryNoteXPO record)
+        private async Task EditSchemaExplanatoryNoteAsync(ExplanatoryNoteXPO record)
         {
             try
             {
@@ -75,8 +73,9 @@ namespace ProjectDocumentation.NET.Forms
         private async Task EditExplanatoryNoteXmlAsync(string xml, string name, Guid guid, ExplanatoryNoteXPO existing = null,
             System.Collections.Generic.IReadOnlyList<string> warnings = null)
         {
+            var version = ExplanatoryNote0107Document.ReadVersion(xml);
             using (var editor = new ExplanatoryNote0107Form(conclusionSchema, xml, name,
-                (document, title) => ExplanatoryNote0107Document.SaveAsync(conclusionSchema, document, title, guid, existing), warnings))
+                (document, title) => ExplanatoryNote0107Document.SaveAsync(conclusionSchema, document, title, guid, existing, version), warnings))
             {
                 if (editor.ShowDialog(this) == DialogResult.OK && editor.Document != null)
                 {

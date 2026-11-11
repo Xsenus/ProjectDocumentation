@@ -305,7 +305,6 @@
             this.gridViewProjectDocumentsMismatches.OptionsView.ColumnHeaderAutoHeight = DevExpress.Utils.DefaultBoolean.True;
             this.gridViewProjectDocumentsMismatches.OptionsView.RowAutoHeight = true;
             this.gridViewProjectDocumentsMismatches.OptionsView.ShowGroupPanel = false;
-            this.gridViewProjectDocumentsMismatches.PopupMenuShowing += new DevExpress.XtraGrid.Views.Grid.PopupMenuShowingEventHandler(this.gridViewProjectDocumentsMismatches_PopupMenuShowing);
             // 
             // memoDangerMismatch
             // 

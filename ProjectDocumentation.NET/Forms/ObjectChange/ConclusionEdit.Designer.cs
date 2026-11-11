@@ -1425,7 +1425,6 @@
             this.gridViewPreviousConclusions.OptionsView.ColumnHeaderAutoHeight = DevExpress.Utils.DefaultBoolean.True;
             this.gridViewPreviousConclusions.OptionsView.RowAutoHeight = true;
             this.gridViewPreviousConclusions.OptionsView.ShowGroupPanel = false;
-            this.gridViewPreviousConclusions.PopupMenuShowing += new DevExpress.XtraGrid.Views.Grid.PopupMenuShowingEventHandler(this.gridViewPreviousConclusions_PopupMenuShowing);
             // 
             // gridControlExpertProjectDocuments2
             // 
@@ -1474,7 +1473,6 @@
             this.gridViewDocuments.OptionsView.ColumnHeaderAutoHeight = DevExpress.Utils.DefaultBoolean.True;
             this.gridViewDocuments.OptionsView.RowAutoHeight = true;
             this.gridViewDocuments.OptionsView.ShowGroupPanel = false;
-            this.gridViewDocuments.PopupMenuShowing += new DevExpress.XtraGrid.Views.Grid.PopupMenuShowingEventHandler(this.gridViewDocuments_PopupMenuShowing);
             // 
             // cmbProjectDocumentationIM
             // 
@@ -2084,7 +2082,6 @@
             this.gridViewObjectPart.OptionsView.ColumnHeaderAutoHeight = DevExpress.Utils.DefaultBoolean.True;
             this.gridViewObjectPart.OptionsView.RowAutoHeight = true;
             this.gridViewObjectPart.OptionsView.ShowGroupPanel = false;
-            this.gridViewObjectPart.PopupMenuShowing += new DevExpress.XtraGrid.Views.Grid.PopupMenuShowingEventHandler(this.gridViewObjectPart_PopupMenuShowing);
             // 
             // gridControlTEI
             // 
@@ -2109,7 +2106,6 @@
             this.gridViewTEI.OptionsView.ColumnHeaderAutoHeight = DevExpress.Utils.DefaultBoolean.True;
             this.gridViewTEI.OptionsView.RowAutoHeight = true;
             this.gridViewTEI.OptionsView.ShowGroupPanel = false;
-            this.gridViewTEI.PopupMenuShowing += new DevExpress.XtraGrid.Views.Grid.PopupMenuShowingEventHandler(this.gridViewTEI_PopupMenuShowing);
             // 
             // memoObjectName
             // 
@@ -2341,7 +2337,6 @@
             this.gridViewFinances.OptionsView.ColumnHeaderAutoHeight = DevExpress.Utils.DefaultBoolean.True;
             this.gridViewFinances.OptionsView.RowAutoHeight = true;
             this.gridViewFinances.OptionsView.ShowGroupPanel = false;
-            this.gridViewFinances.PopupMenuShowing += new DevExpress.XtraGrid.Views.Grid.PopupMenuShowingEventHandler(this.gridViewFinances_PopupMenuShowing);
             // 
             // memoFinanceComment
             // 
@@ -2602,7 +2597,6 @@
             this.gridViewDesigners.OptionsView.ColumnHeaderAutoHeight = DevExpress.Utils.DefaultBoolean.True;
             this.gridViewDesigners.OptionsView.RowAutoHeight = true;
             this.gridViewDesigners.OptionsView.ShowGroupPanel = false;
-            this.gridViewDesigners.PopupMenuShowing += new DevExpress.XtraGrid.Views.Grid.PopupMenuShowingEventHandler(this.gridViewDesigners_PopupMenuShowing);
             // 
             // xtraTabPage11
             // 
@@ -2804,7 +2798,6 @@
             this.gridViewCadastralNumber.OptionsView.ColumnHeaderAutoHeight = DevExpress.Utils.DefaultBoolean.True;
             this.gridViewCadastralNumber.OptionsView.RowAutoHeight = true;
             this.gridViewCadastralNumber.OptionsView.ShowGroupPanel = false;
-            this.gridViewCadastralNumber.PopupMenuShowing += new DevExpress.XtraGrid.Views.Grid.PopupMenuShowingEventHandler(this.gridViewCadastralNumber_PopupMenuShowing);
             // 
             // layoutControlGroup7
             // 
@@ -2872,7 +2865,6 @@
             this.gridViewProjectDocumentsTechnicalCustomer.OptionsView.ColumnHeaderAutoHeight = DevExpress.Utils.DefaultBoolean.True;
             this.gridViewProjectDocumentsTechnicalCustomer.OptionsView.RowAutoHeight = true;
             this.gridViewProjectDocumentsTechnicalCustomer.OptionsView.ShowGroupPanel = false;
-            this.gridViewProjectDocumentsTechnicalCustomer.PopupMenuShowing += new DevExpress.XtraGrid.Views.Grid.PopupMenuShowingEventHandler(this.gridViewProjectDocumentsTechnicalCustomer_PopupMenuShowing);
             // 
             // gridControlProjectDocumentsDeveloper
             // 
@@ -2897,7 +2889,6 @@
             this.gridViewProjectDocumentsDeveloper.OptionsView.ColumnHeaderAutoHeight = DevExpress.Utils.DefaultBoolean.True;
             this.gridViewProjectDocumentsDeveloper.OptionsView.RowAutoHeight = true;
             this.gridViewProjectDocumentsDeveloper.OptionsView.ShowGroupPanel = false;
-            this.gridViewProjectDocumentsDeveloper.PopupMenuShowing += new DevExpress.XtraGrid.Views.Grid.PopupMenuShowingEventHandler(this.gridViewProjectDocumentsDeveloper_PopupMenuShowing);
             // 
             // gridControlEngineeringSurveyDeveloper
             // 
@@ -2922,7 +2913,6 @@
             this.gridViewEngineeringSurveyDeveloper.OptionsView.ColumnHeaderAutoHeight = DevExpress.Utils.DefaultBoolean.True;
             this.gridViewEngineeringSurveyDeveloper.OptionsView.RowAutoHeight = true;
             this.gridViewEngineeringSurveyDeveloper.OptionsView.ShowGroupPanel = false;
-            this.gridViewEngineeringSurveyDeveloper.PopupMenuShowing += new DevExpress.XtraGrid.Views.Grid.PopupMenuShowingEventHandler(this.gridViewEngineeringSurveyDeveloper_PopupMenuShowing);
             // 
             // gridControlEngineeringSurveyTechnicalCustomer
             // 
@@ -2947,7 +2937,6 @@
             this.gridViewEngineeringSurveyTechnicalCustomer.OptionsView.ColumnHeaderAutoHeight = DevExpress.Utils.DefaultBoolean.True;
             this.gridViewEngineeringSurveyTechnicalCustomer.OptionsView.RowAutoHeight = true;
             this.gridViewEngineeringSurveyTechnicalCustomer.OptionsView.ShowGroupPanel = false;
-            this.gridViewEngineeringSurveyTechnicalCustomer.PopupMenuShowing += new DevExpress.XtraGrid.Views.Grid.PopupMenuShowingEventHandler(this.gridViewEngineeringSurveyTechnicalCustomer_PopupMenuShowing);
             // 
             // layoutControlGroup6
             // 
@@ -3078,7 +3067,6 @@
             this.gridViewExpertEngineeringSurveys.OptionsView.ColumnHeaderAutoHeight = DevExpress.Utils.DefaultBoolean.True;
             this.gridViewExpertEngineeringSurveys.OptionsView.RowAutoHeight = true;
             this.gridViewExpertEngineeringSurveys.OptionsView.ShowGroupPanel = false;
-            this.gridViewExpertEngineeringSurveys.PopupMenuShowing += new DevExpress.XtraGrid.Views.Grid.PopupMenuShowingEventHandler(this.gridViewExpertEngineeringSurveys_PopupMenuShowing);
             // 
             // gridControlExpertProjectDocuments
             // 
@@ -3103,7 +3091,6 @@
             this.gridViewExpertProjectDocuments.OptionsView.ColumnHeaderAutoHeight = DevExpress.Utils.DefaultBoolean.True;
             this.gridViewExpertProjectDocuments.OptionsView.RowAutoHeight = true;
             this.gridViewExpertProjectDocuments.OptionsView.ShowGroupPanel = false;
-            this.gridViewExpertProjectDocuments.PopupMenuShowing += new DevExpress.XtraGrid.Views.Grid.PopupMenuShowingEventHandler(this.gridViewExpertProjectDocuments_PopupMenuShowing);
             // 
             // gridControlExpertEstimate
             // 
@@ -3152,7 +3139,6 @@
             this.gridViewEngineeringSurveyAddress.OptionsView.ColumnHeaderAutoHeight = DevExpress.Utils.DefaultBoolean.True;
             this.gridViewEngineeringSurveyAddress.OptionsView.RowAutoHeight = true;
             this.gridViewEngineeringSurveyAddress.OptionsView.ShowGroupPanel = false;
-            this.gridViewEngineeringSurveyAddress.PopupMenuShowing += new DevExpress.XtraGrid.Views.Grid.PopupMenuShowingEventHandler(this.gridViewEngineeringSurveyAddress_PopupMenuShowing);
             // 
             // layoutControlGroup8
             // 
@@ -3285,7 +3271,6 @@
             this.gridViewMismatches.OptionsView.ColumnHeaderAutoHeight = DevExpress.Utils.DefaultBoolean.True;
             this.gridViewMismatches.OptionsView.RowAutoHeight = true;
             this.gridViewMismatches.OptionsView.ShowGroupPanel = false;
-            this.gridViewMismatches.PopupMenuShowing += new DevExpress.XtraGrid.Views.Grid.PopupMenuShowingEventHandler(this.gridViewMismatches_PopupMenuShowing);
             // 
             // memoEstimateNorms
             // 
@@ -3722,7 +3707,6 @@
             this.gridViewExpert.OptionsView.ColumnHeaderAutoHeight = DevExpress.Utils.DefaultBoolean.True;
             this.gridViewExpert.OptionsView.RowAutoHeight = true;
             this.gridViewExpert.OptionsView.ShowGroupPanel = false;
-            this.gridViewExpert.PopupMenuShowing += new DevExpress.XtraGrid.Views.Grid.PopupMenuShowingEventHandler(this.gridViewExpert_PopupMenuShowing);
             // 
             // layoutControl
             // 

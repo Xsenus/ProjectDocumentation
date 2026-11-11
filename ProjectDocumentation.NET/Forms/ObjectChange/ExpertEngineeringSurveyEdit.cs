@@ -24,6 +24,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
         public ExpertEngineeringSurveyEdit()
         {
             InitializeComponent();
+            GridContextMenus.Attach(gridViewMismatches, popupMenuMismatches, barBtnMismatchesAdd);
         }
 
         public ExpertEngineeringSurveyEdit(TExpertEngineeringSurveys TExpertEngineeringSurveys) : this()
@@ -107,15 +108,6 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
 
             cmbEngineeringSurveyType.Properties.Items.AddRange(collection
                 .Where(w => w.GeneralizedDictionary == GeneralizedDictionary.EngineeringSurveyType).ToList());
-        }
-
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
-        private void gridViewMismatches_PopupMenuShowing(object sender, PopupMenuShowingEventArgs e)
-        {
-            if (sender is GridView)
-            {
-                popupMenuMismatches.ShowPopup(new Point(Cursor.Position.X, Cursor.Position.Y));
-            }
         }
 
         private async void Obj_Load(object sender, EventArgs e)

@@ -93,7 +93,6 @@
             this.gridView.OptionsView.ColumnHeaderAutoHeight = DevExpress.Utils.DefaultBoolean.True;
             this.gridView.OptionsView.RowAutoHeight = true;
             this.gridView.OptionsView.ShowGroupPanel = false;
-            this.gridView.PopupMenuShowing += new DevExpress.XtraGrid.Views.Grid.PopupMenuShowingEventHandler(this.gridView_PopupMenuShowing);
             this.gridView.DoubleClick += new System.EventHandler(this.gridView_DoubleClick);
             // 
             // Root
@@ -118,15 +117,6 @@
             // 
             // popupMenu
             // 
-            this.popupMenu.LinksPersistInfo.AddRange(new DevExpress.XtraBars.LinkPersistInfo[] {
-            new DevExpress.XtraBars.LinkPersistInfo(this.barBtnView),
-            new DevExpress.XtraBars.LinkPersistInfo(this.barBtnAddConclusion, true),
-            new DevExpress.XtraBars.LinkPersistInfo(this.barBtnAddExplanatoryNote),
-            new DevExpress.XtraBars.LinkPersistInfo(this.barBtnEdit, true),
-            new DevExpress.XtraBars.LinkPersistInfo(this.barBtnDel),
-            new DevExpress.XtraBars.LinkPersistInfo(this.barBtnLoad, true),
-            new DevExpress.XtraBars.LinkPersistInfo(this.barBtnFill, true),
-            new DevExpress.XtraBars.LinkPersistInfo(this.barBtnBaseSetting, true)});
             this.popupMenu.Manager = this.barManager;
             this.popupMenu.Name = "popupMenu";
             // 

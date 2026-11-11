@@ -32,6 +32,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
         public string FileName { get; private set; }
         public bool IsSave { get; private set; }
         internal Func<ExplanatoryNote, string, Task<bool>> SaveNoteAsync { get; set; }
+        internal Func<ExplanatoryNote, string, IReadOnlyList<string>, Task<bool>> SaveDraftAsync { get; set; }
         private bool _saving;
         public ExplanatoryNote ExplanatoryNote { get; private set; }
 
@@ -47,6 +48,16 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
         public ExplanatoryNoteEdit()
         {
             InitializeComponent();
+            var draftButton = new SimpleButton { Name = "btnSaveDraft", Text = "Черновик XML…" };
+            layoutControlExplanatoryNote.AddItem(draftButton.Text, draftButton, layoutControlItemSave, InsertType.Left).TextVisible = false;
+            draftButton.Click += async (_, __) => await SaveFormAsync(draft: true);
+            GridContextMenus.Attach(gridViewUsedNorms, popupMenuUsedNorms, barBtnUsedNormsAdd);
+            GridContextMenus.Attach(gridViewSigners, popupMenuSigners, barBtnSignerAdd);
+            GridContextMenus.Attach(gridViewModifications, popupMenuModifications, barBtnExplanatoryNoteModificationsAdd);
+            GridContextMenus.Attach(gridViewDeveloper, popupMenuDeveloper, barBtnDeveloperAdd);
+            GridContextMenus.Attach(gridViewTechnicalCustomer, popupMenuTechnicalCustomer, barBtnTechnicalCustomerAdd);
+            GridContextMenus.Attach(gridViewProjectDecisionDocuments, popupMenuProjectDecisionDocuments, barBtnProjectDecisionDocumentsAdd);
+            GridContextMenus.Attach(gridViewProjectInitialDocuments, popupMenuProjectInitialDocuments, barBtnProjectInitialDocumentsAdd);
             txtVersion.Properties.ReadOnly = true;
 
             foreach (ExplanatoryNoteObjType item in Enum.GetValues(typeof(ExplanatoryNoteObjType)))
@@ -70,6 +81,11 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
         {
             if (sender is ButtonEdit buttonEdit)
             {
+                if (string.IsNullOrWhiteSpace(buttonEdit.Text))
+                {
+                    layoutControlGroupIndustrialObject.Visibility = LayoutVisibility.Never;
+                    return;
+                }
                 ApplyObjType(EnumExtension.GetDefaultEnum<ExplanatoryNoteObjType>(buttonEdit.Text));
             }
         }
@@ -198,7 +214,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
             }
             #endregion
 
-            // Тип объекта — по загруженным данным; без данных — производственный.
+            // Для новой записки тип объекта выбирает пользователь.
             if (ExplanatoryNote?.Item is tNonIndustrialObject)
             {
                 SetObjType(ExplanatoryNoteObjType.NonIndustrialObject);
@@ -207,9 +223,14 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
             {
                 SetObjType(ExplanatoryNoteObjType.LinearObject);
             }
-            else
+            else if (ExplanatoryNote?.Item is tIndustrialObject)
             {
                 SetObjType(ExplanatoryNoteObjType.IndustrialObject);
+            }
+            else
+            {
+                cmbExplanatoryNoteObjType.EditValue = null;
+                layoutControlGroupIndustrialObject.Visibility = LayoutVisibility.Never;
             }
 
             // Поля формы общие для всех трёх типов объекта (IExplanatoryNoteObject).
@@ -391,10 +412,13 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
-        private async void btnSave_Click(object sender, EventArgs e)
+        private async void btnSave_Click(object sender, EventArgs e) => await SaveFormAsync(draft: false);
+
+        private async Task SaveFormAsync(bool draft)
         {
-            if (_saving) return;
+            if (_saving || (draft && SaveDraftAsync == null)) return;
             FileName = txtFileName.Text;
+            var omitted = draft ? new List<string>() : null;
 
             try
             {
@@ -444,8 +468,15 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
 
                 // Существующий объект того же типа дополняется, а не создаётся заново: иначе терялись поля,
                 // которых нет в форме (адрес, ТЭП, функции, климат, ресурсы, части объекта и т. д.).
+                var objectType = string.IsNullOrWhiteSpace(cmbExplanatoryNoteObjType.Text)
+                    ? (ExplanatoryNoteObjType?)null : _explanatoryNoteObjType;
+                if (!draft && objectType == null)
+                {
+                    cmbExplanatoryNoteObjType.Focus();
+                    throw new InvalidOperationException("Выберите тип объекта строительства.");
+                }
                 IExplanatoryNoteObject noteObject;
-                switch (_explanatoryNoteObjType)
+                switch (objectType)
                 {
                     case ExplanatoryNoteObjType.IndustrialObject:
                         noteObject = ExplanatoryNote.Item as tIndustrialObject ?? new tIndustrialObject();
@@ -467,10 +498,12 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                 if (noteObject != null)
                 {
                     #region NoteObject
+                    var objectPath = objectType.Value.ToString();
+                    T ReadRequiredEnum<T>(BaseEdit editor, string name, string message) =>
+                        ConclusionEdit.ReadEnumForSave<T>(editor, $"{objectPath}/{name}", message, omitted);
                     noteObject.ObjectID = ConclusionEdit.GetStringValue(txtIndustrialObjectID.EditValue, txtIndustrialObjectID, "Заполните идентификатор объекта (части объекта)");
-                    noteObject.Placement = ConclusionEdit.GetEnumByAttributeValue<tPlacement>(ConclusionEdit.GetValueGeneralizedDictionary(
-                        cmbPlacement,
-                        message: "Заполните поле сведения о месте расположения объекта капитального строительства")?.Value);
+                    noteObject.Placement = ReadRequiredEnum<tPlacement>(cmbPlacement, "@Placement",
+                        "Укажите место расположения объекта капитального строительства.");
                     if (cmbDangerousAndComplex.EditValue is GeneralizedDictionaryXPO)
                     {
                         noteObject.DangerousAndComplexSpecified = true;
@@ -494,26 +527,26 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                         noteObject.UniqueSpecified = false;
                     }
                     noteObject.Name = ConclusionEdit.GetStringValue(txtIndustrialObjectName.EditValue, txtIndustrialObjectName, "Заполните поле наименование объекта капитального строительства (части сложного (составного) объекта капитального строительства)");
-                    noteObject.ConstructionType = ConclusionEdit.GetEnumByAttributeValue<tConstructionType>(ConclusionEdit.GetValueGeneralizedDictionary(
-                        cmbConstructionType,
-                        message: "Заполните поле вид работ, на который разрабатывается проектная документация")?.Value);
+                    noteObject.ConstructionType = ReadRequiredEnum<tConstructionType>(cmbConstructionType, "ConstructionType",
+                        "Укажите вид работ, на который разрабатывается проектная документация.");
                     var constructionDurationText = txtConstructionDuration.Text.Trim().Replace(',', '.');
-                    if (!decimal.TryParse(constructionDurationText, NumberStyles.AllowDecimalPoint | NumberStyles.AllowLeadingSign,
+                    if (draft && constructionDurationText.Length == 0)
+                        omitted.Add($"{objectPath}/ConstructionDuration");
+                    else if (decimal.TryParse(constructionDurationText, NumberStyles.AllowDecimalPoint | NumberStyles.AllowLeadingSign,
                         CultureInfo.InvariantCulture, out var constructionDuration))
+                        noteObject.ConstructionDuration = constructionDuration;
+                    else
                     {
                         txtConstructionDuration.Focus();
                         throw new InvalidOperationException("Введите продолжительность работ в месяцах. Например, 1,5.");
                     }
-                    noteObject.ConstructionDuration = constructionDuration;
                     if (noteObject is IDangerousIndustrialObject dangerousIndustrialObject)
                     {
-                        dangerousIndustrialObject.DangerousIndustrialObject = ConclusionEdit.GetEnumByAttributeValue<tDangerIndustrialClass>(ConclusionEdit.GetValueGeneralizedDictionary(
-                            cmbDangerIndustrialClass,
-                            message: "Заполните поле класс опасности опасного производственного объекта")?.Value);
+                        dangerousIndustrialObject.DangerousIndustrialObject = ReadRequiredEnum<tDangerIndustrialClass>(cmbDangerIndustrialClass,
+                            "DangerousIndustrialObject", "Укажите класс опасности опасного производственного объекта.");
                     }
-                    noteObject.LandCategory = ConclusionEdit.GetEnumByAttributeValue<tLandCategory>(ConclusionEdit.GetValueGeneralizedDictionary(
-                        cmbLandCategory,
-                        message: "Заполните поле сведения о категории земель, на которых располагается (будет располагаться) объект капитального строительства")?.Value);
+                    noteObject.LandCategory = ReadRequiredEnum<tLandCategory>(cmbLandCategory, "LandCategory",
+                        "Укажите категорию земель объекта капитального строительства.");
 
                     // Части объекта и прочие элементы Items сохраняются; меняются только значения из формы.
                     var fireDangerCategory = ConclusionEdit.GetOptionalEnum<tFireDangerCategory>(
@@ -578,13 +611,15 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                 }
                 #endregion
 
-                if (SaveNoteAsync != null)
+                Func<ExplanatoryNote, string, Task<bool>> save = SaveNoteAsync;
+                if (draft) save = (value, name) => SaveDraftAsync(value, name, omitted);
+                if (save != null)
                 {
                     _saving = true;
                     layoutControlExplanatoryNote.Enabled = false;
                     try
                     {
-                        if (!await SaveNoteAsync(ExplanatoryNote, FileName)) return;
+                        if (!await save(ExplanatoryNote, FileName)) return;
                     }
                     finally
                     {
@@ -603,6 +638,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                 return;
             }
 
+            if (draft) return;
             IsSave = true;
             Close();
         }
@@ -639,15 +675,6 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
         {
             if (_saving && e.CloseReason == CloseReason.UserClosing) e.Cancel = true;
             base.OnFormClosing(e);
-        }
-
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
-        private void gridViewExplanatoryNoteModifications_PopupMenuShowing(object sender, PopupMenuShowingEventArgs e)
-        {
-            if (sender is GridView)
-            {
-                popupMenuModifications.ShowPopup(new Point(Cursor.Position.X, Cursor.Position.Y));
-            }
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
@@ -758,14 +785,6 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
             }
         }
 
-        private void gridViewSigners_PopupMenuShowing(object sender, PopupMenuShowingEventArgs e)
-        {
-            if (sender is GridView)
-            {
-                popupMenuSigners.ShowPopup(new Point(Cursor.Position.X, Cursor.Position.Y));
-            }
-        }
-
         private void barBtnSignerAdd_ItemClick(object sender, ItemClickEventArgs e)
         {
             using (var form = new WorkPersonEdit())
@@ -807,14 +826,6 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                     _tSigners.Remove(obj);
                     gridControlSigners.RefreshDataSource();
                 }
-            }
-        }
-
-        private void gridViewDeveloper_PopupMenuShowing(object sender, PopupMenuShowingEventArgs e)
-        {
-            if (sender is GridView)
-            {
-                popupMenuDeveloper.ShowPopup(new Point(Cursor.Position.X, Cursor.Position.Y));
             }
         }
 
@@ -868,14 +879,6 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
             }
         }
 
-        private void gridViewTechnicalCustomer_PopupMenuShowing(object sender, PopupMenuShowingEventArgs e)
-        {
-            if (sender is GridView)
-            {
-                popupMenuTechnicalCustomer.ShowPopup(new Point(Cursor.Position.X, Cursor.Position.Y));
-            }
-        }
-
         private void barBtnTechnicalCustomerAdd_ItemClick(object sender, ItemClickEventArgs e)
         {
             using (var form = new TechnicalCustomerENEdit())
@@ -926,14 +929,6 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
             }
         }
 
-        private void gridViewUsedNorms_PopupMenuShowing(object sender, PopupMenuShowingEventArgs e)
-        {
-            if (sender is GridView)
-            {
-                popupMenuUsedNorms.ShowPopup(new Point(Cursor.Position.X, Cursor.Position.Y));
-            }
-        }
-
         private void barBtnUsedNormsAdd_ItemClick(object sender, ItemClickEventArgs e)
         {
             _tUsedNorms.Add(new tUsedNorm());
@@ -953,14 +948,6 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                     _tUsedNorms.Remove(obj);
                     gridControlUsedNorms.RefreshDataSource();
                 }
-            }
-        }
-
-        private void gridViewProjectDecisionDocuments_PopupMenuShowing(object sender, PopupMenuShowingEventArgs e)
-        {
-            if (sender is GridView)
-            {
-                popupMenuProjectDecisionDocuments.ShowPopup(new Point(Cursor.Position.X, Cursor.Position.Y));
             }
         }
 
@@ -1011,14 +998,6 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
             }
         }
         
-        private void gridViewProjectInitialDocuments_PopupMenuShowing(object sender, PopupMenuShowingEventArgs e)
-        {
-            if (sender is GridView)
-            {
-                popupMenuProjectInitialDocuments.ShowPopup(new Point(Cursor.Position.X, Cursor.Position.Y));
-            }
-        }
-
         private void barBtnProjectInitialDocumentsAdd_ItemClick(object sender, ItemClickEventArgs e)
         {
             using (var form = new DocumentENEdit())

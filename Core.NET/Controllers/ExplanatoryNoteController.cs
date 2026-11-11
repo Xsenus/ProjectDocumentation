@@ -156,6 +156,7 @@ namespace Core.NET.Controllers
             var filename = parts[parts.Length - 1];
             return versionless
                 ? filename.Equals("explanatorynote-01-03.xsd", StringComparison.OrdinalIgnoreCase)
+                    || filename.Equals("explanatorynote-wire-01-03.xsd", StringComparison.OrdinalIgnoreCase)
                 : !Regex.IsMatch(filename, @"\b0?1[._-]0?[4-9]\b");
         }
 

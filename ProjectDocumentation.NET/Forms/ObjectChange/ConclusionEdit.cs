@@ -2,6 +2,7 @@
 using Core.NET.AutoModels.ConclusionObj;
 using Core.NET.Controllers;
 using Core.NET.DaDataObj;
+using ProjectDocumentation.NET.Services;
 using Core.NET.Extensions;
 using Core.NET.Models.XPO;
 using DevExpress.Utils;
@@ -57,6 +58,25 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
         public ConclusionEdit()
         {
             InitializeComponent();
+            var draftButton = new SimpleButton { Name = "btnSaveDraft", Text = "Черновик XML…" };
+            layoutControl.AddItem(draftButton.Text, draftButton, layoutControlItemSave, InsertType.Left).TextVisible = false;
+            draftButton.Click += async (_, __) => await SaveFormAsync(draft: true);
+            GridContextMenus.Attach(gridViewPreviousConclusions, popupMenuPreviousConclusions, barBtnPreviousConclusionsAdd);
+            GridContextMenus.Attach(gridViewDocuments, popupMenuDocuments, barBtnDocumentsAdd);
+            GridContextMenus.Attach(gridViewObjectPart, popupMenuObjectPart, barBtnObjectPartAdd);
+            GridContextMenus.Attach(gridViewTEI, popupMenuTEI, barBtnTEIAdd);
+            GridContextMenus.Attach(gridViewFinances, popupMenuFinance, barBtnFinanceAdd);
+            GridContextMenus.Attach(gridViewDesigners, popupMenuDesigners, barBtnDesignersAdd);
+            GridContextMenus.Attach(gridViewCadastralNumber, popupMenuCadastralNumber, barBtnCadastralNumberAdd);
+            GridContextMenus.Attach(gridViewProjectDocumentsTechnicalCustomer, popupMenuProjectDocumentsTechnicalCustomer, barBtnProjectDocumentsTechnicalCustomerAdd);
+            GridContextMenus.Attach(gridViewProjectDocumentsDeveloper, popupMenuProjectDocumentsDeveloper, barBtnProjectDocumentsDeveloperAdd);
+            GridContextMenus.Attach(gridViewEngineeringSurveyDeveloper, popupMenuEngineeringSurveyDeveloper, barBtnEngineeringSurveyDeveloperAdd);
+            GridContextMenus.Attach(gridViewEngineeringSurveyTechnicalCustomer, popupMenuEngineeringSurveyTechnicalCustomer, barBtnEngineeringSurveyTechnicalCustomerAdd);
+            GridContextMenus.Attach(gridViewExpertEngineeringSurveys, popupMenuExpertEngineeringSurveys, barBtnExpertEngineeringSurveysAdd);
+            GridContextMenus.Attach(gridViewExpertProjectDocuments, popupMenuExpertProjectDocuments, barBtnExpertProjectDocumentsAdd);
+            GridContextMenus.Attach(gridViewEngineeringSurveyAddress, popupMenuEngineeringSurveyAddress, barBtnEngineeringSurveyAddressAdd);
+            GridContextMenus.Attach(gridViewMismatches, popupMenuMismatches, barBtnMismatchesAdd);
+            GridContextMenus.Attach(gridViewExpert, popupMenuExpert, barBtnExpertAdd);
             txtVersion.Properties.ReadOnly = true;
             layoutControlItemExpertiseResultNote.Visibility = LayoutVisibility.Never;
             layoutControlItemClimateConditionsNote.Text = layoutControlItemClimateConditionsNote.Text.TrimEnd(' ', '*');
@@ -1061,10 +1081,10 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                 }
                 else if (e.Button.Kind == ButtonPredefines.Search)
                 {
-                    var obj = buttonEdit.EditValue?.ToString();
+                    var obj = buttonEdit.EditValue as string;
                     if (!string.IsNullOrWhiteSpace(obj))
                     {
-                        var addressData = await DaDataObj.GetAddressAsync(obj);
+                        var addressData = await LegacyDaDataLookup.FindAddressAsync(buttonEdit, obj);
                         if (addressData != null)
                         {
                             var address = new TAddress()
@@ -1138,10 +1158,15 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
-        private async void btnSave_Click(object sender, EventArgs e)
+        private async void btnSave_Click(object sender, EventArgs e) => await SaveFormAsync(draft: false);
+
+        private async Task SaveFormAsync(bool draft)
         {
-            if (_saving) return;
+            if (_saving || (draft && SaveDraftAsync == null)) return;
             FileName = txtFileName.Text;
+            var omitted = draft ? new List<string>() : null;
+
+            T ReadRequiredEnum<T>(BaseEdit editor, string path, string message) => ReadEnumForSave<T>(editor, path, message, omitted);
 
             try
             {
@@ -1154,21 +1179,16 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                 #region Page I
                 Conclusion.ExaminationObject = new TExaminationObject
                 {
-                    ExaminationResult = GetEnumByAttributeValue<TExaminationResult>(GetValueGeneralizedDictionary(
-                        cmbExaminationResult,
-                        message: "Заполните поле результат экспертизы")?.Value),
-                    ExaminationForm = GetEnumByAttributeValue<TExaminationForm>(GetValueGeneralizedDictionary(
-                        cmbExaminationForm,
-                        message: "Заполните поле формы экспертизы")?.Value),
-                    ExaminationObjectType = GetEnumByAttributeValue<TExaminationObjectType>(GetValueGeneralizedDictionary(
-                        cmbExaminationObjectType,
-                        message: "Заполните поле вида объекта экспертизы")?.Value),
-                    ExaminationStage = GetEnumByAttributeValue<TExaminationStage>(GetValueGeneralizedDictionary(
-                        cmbExaminationStage,
-                        message: "Заполните поле вид экспертизы")?.Value),
-                    ConstructionType = GetEnumByAttributeValue<TConstractionType>(GetValueGeneralizedDictionary(
-                        cmbConstructionType,
-                        message: "Заполните поле вид работ")?.Value),
+                    ExaminationResult = ReadRequiredEnum<TExaminationResult>(cmbExaminationResult,
+                        "ExaminationObject/ExaminationResult", "Укажите результат экспертизы."),
+                    ExaminationForm = ReadRequiredEnum<TExaminationForm>(cmbExaminationForm,
+                        "ExaminationObject/ExaminationForm", "Укажите форму экспертизы."),
+                    ExaminationObjectType = ReadRequiredEnum<TExaminationObjectType>(cmbExaminationObjectType,
+                        "ExaminationObject/ExaminationObjectType", "Укажите вид объекта экспертизы."),
+                    ExaminationStage = ReadRequiredEnum<TExaminationStage>(cmbExaminationStage,
+                        "ExaminationObject/ExaminationStage", "Укажите вид экспертизы."),
+                    ConstructionType = ReadRequiredEnum<TConstractionType>(cmbConstructionType,
+                        "ExaminationObject/ConstructionType", "Укажите вид работ."),
                     Name = GetStringValue(memoName.Text, memoName, "Заполните поле наименование объекта экспертизы")
                 };
 
@@ -1258,8 +1278,8 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
 
                 #region Page 1_7
                 Conclusion.EcologyExpertise = new TEcologyExpertise();
-                Conclusion.EcologyExpertise.NeedExpertise = GetEnumByAttributeValue<TYesNo>(GetValueGeneralizedDictionary(cmbEcologyExpertiseNeedExpertise,
-                    message: "Заполните поле требуется ли экологическая экспертиза")?.Value);
+                Conclusion.EcologyExpertise.NeedExpertise = ReadRequiredEnum<TYesNo>(cmbEcologyExpertiseNeedExpertise,
+                    "EcologyExpertise/NeedExpertise", "Укажите, требуется ли экологическая экспертиза.");
                 Conclusion.EcologyExpertise.Comment = OptionalXmlText(memoEcologyExpertiseNote.EditValue);
                 #endregion
 
@@ -1267,9 +1287,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                 Conclusion.Object = new TObject
                 {
                     Name = GetStringValue(memoObjectName.Text, memoObjectName, "Заполните поле наименование объекта капитального строительства"),
-                    Type = GetEnumByAttributeValue<TObjectType>(GetValueGeneralizedDictionary(
-                        cmbObjectType,
-                        message: "Заполните поле вид объекта капитального строительства")?.Value),
+                    Type = ReadRequiredEnum<TObjectType>(cmbObjectType, "Object/Type", "Укажите вид объекта капитального строительства."),
                     FunctionsClass = GetStringValue(cmbFunctionsClass.EditValue?.ToString(), cmbFunctionsClass, "Функциональное назначение объекта капитального строительства (код по классификатору)")
                 };
 
@@ -1349,7 +1367,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                 #region Page II_3
                 var seismicMin = OptionalXmlText(_seismicMinimum.EditValue);
                 var seismicMax = OptionalXmlText(_seismicMaximum.EditValue);
-                if (seismicMin == null && seismicMax != null)
+                if (!draft && seismicMin == null && seismicMax != null)
                 {
                     _seismicMinimum.Focus();
                     throw new InvalidOperationException("Укажите расчётную интенсивность сейсмического воздействия.");
@@ -1357,7 +1375,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
 
                 Conclusion.ClimateConditions = new TClimateConditions
                 {
-                    SeismicActivityCalculatedValue = seismicMin == null ? null
+                    SeismicActivityCalculatedValue = seismicMin == null && seismicMax == null ? null
                         : new TSeismicActivityCalculatedValue { MinValue = seismicMin, MaxValue = seismicMax }
                 };
 
@@ -1652,22 +1670,19 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                         Conclusion.Summary.ExaminationSummary.ProjectDocumentsSummary = new TProjectDocumentsSummary();
 
                     Conclusion.Summary.ExaminationSummary.ProjectDocumentsSummary.ProjectDocumentationEngineeringSurveysResultsSummary =
-                        GetEnumByAttributeValue<TProjectDocumentationEngineeringSurveysResultsSummary>(
-                            GetValueGeneralizedDictionary(
-                                cmbProjectDocumentationEngineeringSurveysResultsSummary,
-                                message: "Заполните вывод о соответствии ПД результатам инженерных изысканий")?.Value);
+                        ReadRequiredEnum<TProjectDocumentationEngineeringSurveysResultsSummary>(cmbProjectDocumentationEngineeringSurveysResultsSummary,
+                            "Summary/ExaminationSummary/ProjectDocumentsSummary/ProjectDocumentationEngineeringSurveysResultsSummary",
+                            "Заполните вывод о соответствии ПД результатам инженерных изысканий.");
 
                     Conclusion.Summary.ExaminationSummary.ProjectDocumentsSummary.ProjectDocumentationDesignAssignmentSummary =
-                        GetEnumByAttributeValue<TProjectDocumentationDesignAssignmentSummary>(
-                            GetValueGeneralizedDictionary(
-                                cmbProjectDocumentationDesignAssignmentSummary,
-                                message: "Заполните вывод о соответствии ПД заданию на проектирование")?.Value);
+                        ReadRequiredEnum<TProjectDocumentationDesignAssignmentSummary>(cmbProjectDocumentationDesignAssignmentSummary,
+                            "Summary/ExaminationSummary/ProjectDocumentsSummary/ProjectDocumentationDesignAssignmentSummary",
+                            "Заполните вывод о соответствии ПД заданию на проектирование.");
 
                     Conclusion.Summary.ExaminationSummary.ProjectDocumentsSummary.ProjectDocumentationTechnicalRequirementsSummary =
-                        GetEnumByAttributeValue<TProjectDocumentationTechnicalRequirementsSummary>(
-                            GetValueGeneralizedDictionary(
-                                cmbProjectDocumentationTechnicalRequirementsSummary,
-                                message: "Заполните вывод о соответствии ПД требованиям технических регламентов и иным требованиям")?.Value);
+                        ReadRequiredEnum<TProjectDocumentationTechnicalRequirementsSummary>(cmbProjectDocumentationTechnicalRequirementsSummary,
+                            "Summary/ExaminationSummary/ProjectDocumentsSummary/ProjectDocumentationTechnicalRequirementsSummary",
+                            "Заполните вывод о соответствии ПД требованиям технических регламентов и иным требованиям.");
                 }
                 #endregion
 
@@ -1683,13 +1698,15 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                 }
                 #endregion
 
-                if (SaveConclusionAsync != null)
+                Func<Conclusion, string, Task<bool>> save = SaveConclusionAsync;
+                if (draft) save = (value, name) => SaveDraftAsync(value, name, omitted);
+                if (save != null)
                 {
                     _saving = true;
                     layoutControl.Enabled = false;
                     try
                     {
-                        if (!await SaveConclusionAsync(Conclusion, FileName)) return;
+                        if (!await save(Conclusion, FileName)) return;
                     }
                     finally
                     {
@@ -1708,6 +1725,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                 return;
             }
 
+            if (draft) return;
             IsSave = true;
             Close();
         }
@@ -1723,26 +1741,25 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
 
                     if (!string.IsNullOrWhiteSpace(obj))
                     {
-                        var party = await DaDataObj.GetPartyAsync(obj);
-                        var data = party?.suggestions?.FirstOrDefault()?.data;
+                        var data = await LegacyDaDataLookup.FindPartyAsync(buttonEdit, obj, txtOrgINN, txtOrgOGRN, txtOrgKPP);
                         if (data != null)
                         {
-                            txtOrgFullName.EditValue = data.name?.full_with_opf ?? data.name?.full;
-                            txtOrgOGRN.EditValue = data.ogrn;
-                            txtOrgKPP.EditValue = data.kpp;
-                            txtOrgINN.EditValue = data.inn;
+                            LegacyDaDataLookup.FillEmpty(txtOrgFullName, data.name?.full_with_opf ?? data.name?.full);
+                            LegacyDaDataLookup.FillEmpty(txtOrgOGRN, data.ogrn);
+                            LegacyDaDataLookup.FillEmpty(txtOrgKPP, data.kpp);
+                            LegacyDaDataLookup.FillEmpty(txtOrgINN, data.inn);
 
                             var splitsSplitsName = data.management?.name?.Split();
                             if (splitsSplitsName?.Length >= 3)
                             {
-                                txtFamilyName.EditValue = splitsSplitsName[0];
-                                txtFirstName.EditValue = splitsSplitsName[1];
-                                txtSecondName.EditValue = splitsSplitsName[2];
+                                LegacyDaDataLookup.FillEmpty(txtFamilyName, splitsSplitsName[0]);
+                                LegacyDaDataLookup.FillEmpty(txtFirstName, splitsSplitsName[1]);
+                                LegacyDaDataLookup.FillEmpty(txtSecondName, splitsSplitsName[2]);
                             }
-                            txtPosition.EditValue = data.management?.post;
+                            LegacyDaDataLookup.FillEmpty(txtPosition, data.management?.post);
 
                             var addressData = data.address?.data;
-                            if (addressData != null)
+                            if (DaDataObj.IsRussianAddress(addressData) && addressData.qc == "0")
                             {
                                 var address = new TAddress()
                                 {
@@ -1769,7 +1786,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                                         MessageBoxIcon.Exclamation);
                                 }
 
-                                btnAddress.EditValue = address;
+                                LegacyDaDataLookup.FillEmpty(btnAddress, address);
                             }
                         }
                     }
@@ -1861,10 +1878,10 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                 }
                 else if (e.Button.Kind == ButtonPredefines.Search)
                 {
-                    var obj = buttonEdit.EditValue?.ToString();
+                    var obj = buttonEdit.EditValue as string;
                     if (!string.IsNullOrWhiteSpace(obj))
                     {
-                        var addressData = await DaDataObj.GetAddressAsync(obj);
+                        var addressData = await LegacyDaDataLookup.FindAddressAsync(buttonEdit, obj);
                         if (addressData != null)
                         {
                             var address = new TAddress()
@@ -2467,150 +2484,6 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
-        private void gridViewCadastralNumber_PopupMenuShowing(object sender, PopupMenuShowingEventArgs e)
-        {
-            if (sender is GridView)
-            {
-                popupMenuCadastralNumber.ShowPopup(new Point(Cursor.Position.X, Cursor.Position.Y));
-            }
-        }
-
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
-        private void gridViewDesigners_PopupMenuShowing(object sender, PopupMenuShowingEventArgs e)
-        {
-            if (sender is GridView)
-            {
-                popupMenuDesigners.ShowPopup(new Point(Cursor.Position.X, Cursor.Position.Y));
-            }
-        }
-
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
-        private void gridViewDocuments_PopupMenuShowing(object sender, PopupMenuShowingEventArgs e)
-        {
-            if (sender is GridView)
-            {
-                popupMenuDocuments.ShowPopup(new Point(Cursor.Position.X, Cursor.Position.Y));
-            }
-        }
-
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
-        private void gridViewEngineeringSurveyAddress_PopupMenuShowing(object sender, PopupMenuShowingEventArgs e)
-        {
-            if (sender is GridView)
-            {
-                popupMenuEngineeringSurveyAddress.ShowPopup(new Point(Cursor.Position.X, Cursor.Position.Y));
-            }
-        }
-
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
-        private void gridViewEngineeringSurveyDeveloper_PopupMenuShowing(object sender, PopupMenuShowingEventArgs e)
-        {
-            if (sender is GridView)
-            {
-                popupMenuEngineeringSurveyDeveloper.ShowPopup(new Point(Cursor.Position.X, Cursor.Position.Y));
-            }
-        }
-
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
-        private void gridViewEngineeringSurveyTechnicalCustomer_PopupMenuShowing(object sender, PopupMenuShowingEventArgs e)
-        {
-            if (sender is GridView)
-            {
-                popupMenuEngineeringSurveyTechnicalCustomer.ShowPopup(new Point(Cursor.Position.X, Cursor.Position.Y));
-            }
-        }
-
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
-        private void gridViewExpert_PopupMenuShowing(object sender, PopupMenuShowingEventArgs e)
-        {
-            if (sender is GridView)
-            {
-                popupMenuExpert.ShowPopup(new Point(Cursor.Position.X, Cursor.Position.Y));
-            }
-        }
-
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
-        private void gridViewExpertEngineeringSurveys_PopupMenuShowing(object sender, PopupMenuShowingEventArgs e)
-        {
-            if (sender is GridView)
-            {
-                popupMenuExpertEngineeringSurveys.ShowPopup(new Point(Cursor.Position.X, Cursor.Position.Y));
-            }
-        }
-
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
-        private void gridViewExpertProjectDocuments_PopupMenuShowing(object sender, PopupMenuShowingEventArgs e)
-        {
-            if (sender is GridView)
-            {
-                popupMenuExpertProjectDocuments.ShowPopup(new Point(Cursor.Position.X, Cursor.Position.Y));
-            }
-        }
-
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
-        private void gridViewFinances_PopupMenuShowing(object sender, PopupMenuShowingEventArgs e)
-        {
-            if (sender is GridView)
-            {
-                popupMenuFinance.ShowPopup(new Point(Cursor.Position.X, Cursor.Position.Y));
-            }
-        }
-
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
-        private void gridViewMismatches_PopupMenuShowing(object sender, PopupMenuShowingEventArgs e)
-        {
-            if (sender is GridView)
-            {
-                popupMenuMismatches.ShowPopup(new Point(Cursor.Position.X, Cursor.Position.Y));
-            }
-        }
-
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
-        private void gridViewObjectPart_PopupMenuShowing(object sender, PopupMenuShowingEventArgs e)
-        {
-            if (sender is GridView)
-            {
-                popupMenuObjectPart.ShowPopup(new Point(Cursor.Position.X, Cursor.Position.Y));
-            }
-        }
-
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
-        private void gridViewPreviousConclusions_PopupMenuShowing(object sender, PopupMenuShowingEventArgs e)
-        {
-            if (sender is GridView)
-            {
-                popupMenuPreviousConclusions.ShowPopup(new Point(Cursor.Position.X, Cursor.Position.Y));
-            }
-        }
-
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
-        private void gridViewProjectDocumentsDeveloper_PopupMenuShowing(object sender, PopupMenuShowingEventArgs e)
-        {
-            if (sender is GridView)
-            {
-                popupMenuProjectDocumentsDeveloper.ShowPopup(new Point(Cursor.Position.X, Cursor.Position.Y));
-            }
-        }
-
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
-        private void gridViewProjectDocumentsTechnicalCustomer_PopupMenuShowing(object sender, PopupMenuShowingEventArgs e)
-        {
-            if (sender is GridView)
-            {
-                popupMenuProjectDocumentsTechnicalCustomer.ShowPopup(new Point(Cursor.Position.X, Cursor.Position.Y));
-            }
-        }
-
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
-        private void gridViewTEI_PopupMenuShowing(object sender, PopupMenuShowingEventArgs e)
-        {
-            if (sender is GridView)
-            {
-                popupMenuTEI.ShowPopup(new Point(Cursor.Position.X, Cursor.Position.Y));
-            }
-        }
-
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
         private void radioGroupConclusionNumber_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (sender is RadioGroup radioGroup)
@@ -2694,6 +2567,19 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
             var item = GetValueGeneralizedDictionary(sender, isNullAble: true);
             specified = item != null && EnumExtension.TryGetEnumByXmlAttributeValue(item.Value, out T _);
             return GetEnumByAttributeValue<T>(item?.Value);
+        }
+
+        internal static T ReadEnumForSave<T>(BaseEdit editor, string path, string message, ICollection<string> omitted)
+        {
+            var selection = editor.EditValue as GeneralizedDictionaryXPO;
+            if (EnumExtension.TryGetEnumByXmlAttributeValue(selection?.Value, out T value)) return value;
+            if (omitted != null)
+            {
+                omitted.Add(path);
+                return default;
+            }
+            editor.Focus();
+            throw new InvalidOperationException(message);
         }
 
         public static string GetStringValue(object sender, object control = default, string message = default, bool isNullAble = true)
@@ -2782,6 +2668,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
         public string FileName { get; private set; }
         public bool IsSave { get; private set; }
         internal Func<Conclusion, string, Task<bool>> SaveConclusionAsync { get; set; }
+        internal Func<Conclusion, string, IReadOnlyList<string>, Task<bool>> SaveDraftAsync { get; set; }
 
         protected override void OnFormClosing(FormClosingEventArgs e)
         {

@@ -1,5 +1,6 @@
 using DevExpress.XtraEditors;
 using DevExpress.XtraTab;
+using DevExpress.XtraTreeList.Nodes;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -13,17 +14,17 @@ namespace ProjectDocumentation.NET.Forms
     {
         private readonly XtraTabControl sectionTabs = new XtraTabControl { Dock = DockStyle.Fill };
         private readonly ListBoxControl sectionBlocks = new ListBoxControl { Dock = DockStyle.Fill, HorizontalScrollbar = true };
-        private readonly Label sectionLocation = LabelFor("");
-        private readonly SimpleButton sectionBack = new SimpleButton { AutoSize = true, Text = "Назад" };
-        private readonly SimpleButton sectionOpen = new SimpleButton { AutoSize = true, Text = "Вложенные поля" };
+        private readonly LabelControl sectionLocation = WrappedLabelFor("");
+        private readonly SimpleButton sectionBack = ActionButton("Назад");
+        private readonly SimpleButton sectionOpen = ActionButton("Вложенные поля");
         private readonly Dictionary<string, XtraTabPage> sectionByField = new Dictionary<string, XtraTabPage>();
-        private SplitContainer sectionBody;
-        private TabPage previousFieldsPage;
+        private SplitContainerControl sectionBody;
+        private XtraTabPage previousFieldsPage;
         private XtraTabPage otherSection;
         private XElement sectionParent;
         private bool updatingSections;
 
-        private bool IsSectionView => tabs.SelectedTab == sectionsPage;
+        private bool IsSectionView => tabs.SelectedTabPage == sectionsPage;
 
         private Control CreateSectionsPanel()
         {
@@ -49,12 +50,12 @@ namespace ProjectDocumentation.NET.Forms
                 AddSection("Выводы и эксперты", "Summary", "Experts");
             }
 
-            sectionBody = new SplitContainer { Dock = DockStyle.Fill, Size = new Size(1000, 530), FixedPanel = FixedPanel.Panel1 };
-            sectionBody.Panel1MinSize = 210;
-            sectionBody.Panel2MinSize = 350;
-            sectionBody.SplitterDistance = 325;
-            sectionBody.Panel1.Padding = new Padding(6);
-            sectionBody.Panel2.Padding = new Padding(6);
+            sectionBody = CreateEditorSplit();
+            sectionTabs.AppearancePage.HeaderActive.FontStyleDelta = FontStyle.Bold;
+            sectionBlocks.AccessibleName = "Блоки раздела";
+            sectionBlocks.ItemHeight = 27;
+            sectionBlocks.ToolTipController = fieldToolTips;
+            sectionLocation.Appearance.FontStyleDelta = FontStyle.Bold;
 
             var list = new TableLayoutPanel { Dock = DockStyle.Fill, ColumnCount = 1, RowCount = 3 };
             list.RowStyles.Add(new RowStyle(SizeType.AutoSize));
@@ -105,14 +106,14 @@ namespace ProjectDocumentation.NET.Forms
 
         private void ShowFieldsView()
         {
-            previousFieldsPage = tabs.SelectedTab;
+            previousFieldsPage = tabs.SelectedTabPage;
             var host = IsSectionView ? sectionBody.Panel2 : treeDetailsHost;
             if (details.Parent != host) host.Controls.Add(details);
             if (IsSectionView) MountSectionBody();
-            ShowSelectedFields(xmlTree.SelectedNode);
+            ShowSelectedFields(xmlTree.FocusedNode);
         }
 
-        private void ShowSelectedFields(TreeNode item)
+        private void ShowSelectedFields(TreeListNode item)
         {
             if (!(item?.Tag is NativeSchemaNode node)) return;
             if (IsSectionView && !updatingSections)
@@ -179,7 +180,7 @@ namespace ProjectDocumentation.NET.Forms
 
         private void UpdateSectionButtons()
         {
-            var selectedElement = (xmlTree.SelectedNode?.Tag as NativeSchemaNode)?.Element;
+            var selectedElement = (xmlTree.FocusedNode?.Tag as NativeSchemaNode)?.Element;
             sectionBack.Enabled = sectionParent != null && (sectionParent.Parent != null || !ReferenceEquals(selectedElement, sectionParent));
             var selected = (sectionBlocks.SelectedItem as SectionBlock)?.Node;
             sectionOpen.Enabled = selected != null && (selected.Type?.Particle != null || selected.Element.HasElements);
@@ -188,7 +189,7 @@ namespace ProjectDocumentation.NET.Forms
         private void BackFromSectionBlock()
         {
             if (sectionParent == null) return;
-            var selected = (xmlTree.SelectedNode?.Tag as NativeSchemaNode)?.Element;
+            var selected = (xmlTree.FocusedNode?.Tag as NativeSchemaNode)?.Element;
             if (!ReferenceEquals(selected, sectionParent))
             {
                 SelectTreeElement(sectionParent);
@@ -234,12 +235,12 @@ namespace ProjectDocumentation.NET.Forms
         {
             var item = FindTreeElement(element);
             if (item == null) return;
-            if (xmlTree.SelectedNode != item) xmlTree.SelectedNode = item;
+            if (xmlTree.FocusedNode != item) xmlTree.FocusedNode = item;
             else ShowSelectedFields(item);
-            item.EnsureVisible();
+            xmlTree.MakeNodeVisible(item);
         }
 
-        private TreeNode FindTreeElement(XElement element)
+        private TreeListNode FindTreeElement(XElement element)
         {
             if (element == null || xmlTree.Nodes.Count == 0) return null;
             var item = xmlTree.Nodes[0];
@@ -247,7 +248,7 @@ namespace ProjectDocumentation.NET.Forms
             foreach (var child in element.AncestorsAndSelf().Reverse().Skip(1))
             {
                 PopulateTree(item);
-                item = item.Nodes.Cast<TreeNode>().FirstOrDefault(candidate => ReferenceEquals((candidate.Tag as NativeSchemaNode)?.Element, child));
+                item = item.Nodes.Cast<TreeListNode>().FirstOrDefault(candidate => ReferenceEquals((candidate.Tag as NativeSchemaNode)?.Element, child));
                 if (item == null) return null;
             }
             return item;
@@ -263,10 +264,10 @@ namespace ProjectDocumentation.NET.Forms
 
         private void SelectMissingField(string name)
         {
-            if (IsSectionView && xmlTree.SelectedNode?.Parent == null)
+            if (IsSectionView && xmlTree.FocusedNode?.ParentNode == null)
             {
                 SelectSectionTab(name.StartsWith("@", StringComparison.Ordinal) ? sectionTabs.TabPages[0] : SectionFor(name));
-                ShowSelectedFields(xmlTree.SelectedNode);
+                ShowSelectedFields(xmlTree.FocusedNode);
             }
             FocusChildEditor(name);
         }
@@ -277,7 +278,7 @@ namespace ProjectDocumentation.NET.Forms
             else SelectChild(name);
         }
 
-        private void AddSectionValues(TableLayoutPanel layout, TreeNode item, NativeSchemaNode node)
+        private void AddSectionValues(TableLayoutPanel layout, TreeListNode item, NativeSchemaNode node)
         {
             foreach (var field in VisibleChildren(node).Where(child => child.Capacity == 1 && !child.InsideChoice))
             {
@@ -303,20 +304,19 @@ namespace ProjectDocumentation.NET.Forms
             }
         }
 
-        private void UpdateInlineTreeNode(TreeNode parent, NativeSchemaNode node, XElement element)
+        private void UpdateInlineTreeNode(TreeListNode parent, NativeSchemaNode node, XElement element)
         {
             PopulateTree(parent);
-            var target = parent.Nodes.Cast<TreeNode>().FirstOrDefault(item => ReferenceEquals((item.Tag as NativeSchemaNode)?.Element, element));
+            var target = parent.Nodes.Cast<TreeListNode>().FirstOrDefault(item => ReferenceEquals((item.Tag as NativeSchemaNode)?.Element, element));
             if (target != null)
             {
-                target.Text = TreeLabel((NativeSchemaNode)target.Tag);
+                target.SetValue(0, TreeLabel((NativeSchemaNode)target.Tag));
                 return;
             }
-            target = TreeNodeFor(profile.ChildNode(node, element));
             var following = element.ElementsAfterSelf().FirstOrDefault();
-            var next = parent.Nodes.Cast<TreeNode>().FirstOrDefault(item => ReferenceEquals((item.Tag as NativeSchemaNode)?.Element, following));
-            if (next == null) parent.Nodes.Add(target);
-            else parent.Nodes.Insert(next.Index, target);
+            var next = parent.Nodes.Cast<TreeListNode>().FirstOrDefault(item => ReferenceEquals((item.Tag as NativeSchemaNode)?.Element, following));
+            target = AppendTreeNode(profile.ChildNode(node, element), parent);
+            if (next != null) xmlTree.SetNodeIndex(target, xmlTree.GetNodeIndex(next));
         }
 
         private static string SectionCaption(NativeSchemaParticle field, string fallback)

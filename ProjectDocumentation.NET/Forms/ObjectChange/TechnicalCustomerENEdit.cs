@@ -2,6 +2,7 @@
 using Core.NET.AutoModels.ExplanatoryNoteObj;
 using Core.NET.Controllers;
 using Core.NET.DaDataObj;
+using ProjectDocumentation.NET.Services;
 using Core.NET.Extensions;
 using Core.NET.Models.XPO;
 using DevExpress.Xpo;
@@ -28,6 +29,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
         public TechnicalCustomerENEdit()
         {
             InitializeComponent();
+            GridContextMenus.Attach(gridViewSROMembership, popupMenuSROMembership, barBtnSROMembershipAdd);
         }
 
         public TechnicalCustomerENEdit(TTechnicalCustomer obj) : this()
@@ -93,10 +95,10 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                 }
                 else if (e.Button.Kind == ButtonPredefines.Search)
                 {
-                    var obj = buttonEdit.EditValue?.ToString();
+                    var obj = buttonEdit.EditValue as string;
                     if (!string.IsNullOrWhiteSpace(obj))
                     {
-                        var addressData = await DaDataObj.GetAddressAsync(obj);
+                        var addressData = await LegacyDaDataLookup.FindAddressAsync(buttonEdit, obj);
                         if (addressData != null)
                         {
                             var address = new TAddress()
@@ -229,17 +231,16 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
 
                     if (!string.IsNullOrWhiteSpace(obj))
                     {
-                        var party = await DaDataObj.GetPartyAsync(obj);
-                        var data = party?.suggestions?.FirstOrDefault()?.data;
+                        var data = await LegacyDaDataLookup.FindPartyAsync(buttonEdit, obj, txtOrgINN, txtOrgOGRN, txtOrgKPP);
                         if (data != null)
                         {
-                            txtOrgFullName.EditValue = data.name?.full_with_opf ?? data.name?.full;
-                            txtOrgOGRN.EditValue = data.ogrn;
-                            txtOrgKPP.EditValue = data.kpp;
-                            txtOrgINN.EditValue = data.inn;
+                            LegacyDaDataLookup.FillEmpty(txtOrgFullName, data.name?.full_with_opf ?? data.name?.full);
+                            LegacyDaDataLookup.FillEmpty(txtOrgOGRN, data.ogrn);
+                            LegacyDaDataLookup.FillEmpty(txtOrgKPP, data.kpp);
+                            LegacyDaDataLookup.FillEmpty(txtOrgINN, data.inn);
 
                             var addressData = data.address?.data;
-                            if (addressData != null)
+                            if (DaDataObj.IsRussianAddress(addressData) && addressData.qc == "0")
                             {
                                 var address = new TAddress()
                                 {
@@ -266,7 +267,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                                         MessageBoxIcon.Exclamation);
                                 }
 
-                                btnAddress.EditValue = address;
+                                LegacyDaDataLookup.FillEmpty(btnAddress, address);
                             }
                         }
                     }
@@ -316,14 +317,6 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
             person.Enabled = false;
             radioGroupTypeOrganization.Properties.Items.Remove(individualEntrepreneur);
             radioGroupTypeOrganization.Properties.Items.Remove(person);
-        }
-
-        private void gridViewSROMembership_PopupMenuShowing(object sender, PopupMenuShowingEventArgs e)
-        {
-            if (sender is GridView)
-            {
-                popupMenuSROMembership.ShowPopup(new Point(Cursor.Position.X, Cursor.Position.Y));
-            }
         }
 
         private async void ObjPartEdit_Load(object sender, EventArgs e)

@@ -22,6 +22,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
         public TextBlockEdit()
         {
             InitializeComponent();
+            GridContextMenus.Attach(gridViewItems, popupMenuItemsObj);
         }
 
         public TextBlockEdit(tTextBlock tTextBlock) : this()
@@ -152,15 +153,6 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                         }
                     }
                 }
-            }
-        }
-
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
-        private void gridViewItems_PopupMenuShowing(object sender, PopupMenuShowingEventArgs e)
-        {
-            if (sender is GridView)
-            {
-                popupMenuItemsObj.ShowPopup(new Point(Cursor.Position.X, Cursor.Position.Y));
             }
         }
 

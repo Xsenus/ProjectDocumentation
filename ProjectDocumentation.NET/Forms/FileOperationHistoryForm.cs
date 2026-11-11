@@ -2,6 +2,7 @@ using Core.NET.Controllers;
 using DevExpress.Images;
 using DevExpress.LookAndFeel;
 using DevExpress.Utils;
+using DevExpress.XtraBars;
 using DevExpress.XtraEditors;
 using DevExpress.XtraEditors.Controls;
 using DevExpress.XtraGrid;
@@ -148,7 +149,44 @@ namespace ProjectDocumentation.NET.Forms
                     XtraMessageBox.Show(this, error.Message, "Буфер обмена", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 }
             };
+            InitializeContextMenus();
             ShowSelection();
+        }
+
+        private void InitializeContextMenus()
+        {
+            var manager = new BarManager { Form = this };
+            var rowMenu = new PopupMenu { Manager = manager };
+            var emptyMenu = new PopupMenu { Manager = manager };
+            var retryLink = rowMenu.AddItem(CreateContextItem(manager, retry));
+            var folderLink = rowMenu.AddItem(CreateContextItem(manager, openFolder));
+            var copyLink = rowMenu.AddItem(CreateContextItem(manager, copy));
+            var refreshItem = CreateContextItem(manager, refresh);
+            rowMenu.AddItem(refreshItem).BeginGroup = true;
+            emptyMenu.AddItem(refreshItem);
+
+            GridContextMenus.Attach(view, hasRow =>
+            {
+                refreshItem.Enabled = refresh.Enabled;
+                retryLink.Visible = retry.Enabled;
+                folderLink.Visible = openFolder.Enabled;
+                copyLink.Visible = copy.Enabled;
+                return hasRow ? rowMenu : emptyMenu;
+            });
+            Disposed += (_, __) =>
+            {
+                rowMenu.Dispose();
+                emptyMenu.Dispose();
+                manager.Dispose();
+            };
+        }
+
+        private static BarButtonItem CreateContextItem(BarManager manager, SimpleButton button)
+        {
+            var item = new BarButtonItem(manager, button.Text);
+            item.ImageOptions.SvgImage = button.ImageOptions.SvgImage;
+            item.ItemClick += (_, __) => button.PerformClick();
+            return item;
         }
 
         private FileOperationEntry SelectedEntry => (view.GetFocusedRow() as HistoryRow)?.Entry;

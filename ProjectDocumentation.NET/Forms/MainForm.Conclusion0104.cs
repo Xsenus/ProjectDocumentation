@@ -15,6 +15,7 @@ namespace ProjectDocumentation.NET.Forms
     public partial class MainForm
     {
         private const string ClassicConclusionFormat = "официальной схеме заключения 01.03";
+        private const string ClassicNoteFormat = "локальному формату записки 01.03";
         private readonly ConclusionSchemaService conclusionSchema = new ConclusionSchemaService();
         private BarButtonItem convertConclusion;
         private BarButtonItem exportLegacyConclusion;
@@ -24,10 +25,8 @@ namespace ProjectDocumentation.NET.Forms
             barBtnAddConclusion.Caption = "Добавить заключение 01.04";
             convertConclusion = new BarButtonItem(barManager, "Преобразовать заключение в 01.04");
             convertConclusion.ItemClick += ConvertConclusion_ItemClick;
-            popupMenu.AddItem(convertConclusion);
             exportLegacyConclusion = new BarButtonItem(barManager, "Выгрузить совместимую копию 01.03");
             exportLegacyConclusion.ItemClick += ExportLegacyConclusion_ItemClick;
-            popupMenu.AddItem(exportLegacyConclusion);
         }
 
         private void UpdateConclusionCommands(object row)
@@ -147,8 +146,11 @@ namespace ProjectDocumentation.NET.Forms
                 StartPosition = FormStartPosition.CenterParent, Size = new Size(980, 720) })
             using (var font = new Font(FontFamily.GenericMonospace, 10))
             {
-                viewer.Controls.Add(new TextBox { Dock = DockStyle.Fill, Multiline = true, ReadOnly = true,
-                    WordWrap = false, ScrollBars = ScrollBars.Both, Font = font, Text = record.GetObj() });
+                var source = new MemoEdit { Dock = DockStyle.Fill, Font = font, Text = record.GetObj(), AccessibleName = "Исходный XML" };
+                source.Properties.ReadOnly = true;
+                source.Properties.WordWrap = false;
+                source.Properties.ScrollBars = ScrollBars.Both;
+                viewer.Controls.Add(source);
                 viewer.ShowDialog(this);
             }
         }
@@ -192,24 +194,27 @@ namespace ProjectDocumentation.NET.Forms
         }
 
         private async Task ExportSchemaDocumentAsync(string xml, FileOperationEntry attempt, string rootName,
-            System.Collections.Generic.IReadOnlyList<string> warnings = null, bool allowClassicDraft = false)
+            System.Collections.Generic.IReadOnlyList<string> warnings = null, bool allowClassicDraft = false,
+            bool saveAsDraft = false, IWin32Window owner = null)
         {
             var version = attempt.Version;
+            var classicNote = rootName == ExplanatoryNote0107Document.RootName && version == ExplanatoryNote0107Document.LegacyVersion;
             if (warnings != null)
                 foreach (var warning in warnings) FileOperationJournal.AddDiagnostic(attempt, warning);
 
             var validation = await conclusionSchema.ValidateAsync(xml);
             FileOperationJournal.AddValidation(attempt, validation);
-            var isClassicDraft = allowClassicDraft && validation.Version == version && !validation.Valid;
-            if (isClassicDraft)
+            var offerClassicDraft = allowClassicDraft && validation.Version == version && !validation.Valid;
+            var isClassicDraft = saveAsDraft || offerClassicDraft;
+            if (offerClassicDraft)
             {
-                if (!ConfirmClassicDraft(validation, ClassicConclusionFormat, "Выгрузить XML как черновик?"))
+                if (!ConfirmClassicDraft(validation, classicNote ? ClassicNoteFormat : ClassicConclusionFormat, "Выгрузить XML как черновик?"))
                 {
                     attempt.Summary = "Выгрузка черновика отменена после проверки XML.";
                     return;
                 }
             }
-            else if (!validation.Valid || validation.Version != version)
+            else if ((!validation.Valid && !saveAsDraft) || validation.Version != version)
             {
                 attempt.Status = FileOperationStatus.Rejected;
                 attempt.Summary = $"XML не прошёл проверку по схеме {version}.";
@@ -235,15 +240,21 @@ namespace ProjectDocumentation.NET.Forms
             using (var picker = new SaveFileDialog { Filter = "XML (*.xml)|*.xml", DefaultExt = "xml", AddExtension = true,
                 FileName = attempt.FileName })
             {
-                if (picker.ShowDialog(this) != DialogResult.OK)
+                if (picker.ShowDialog(owner ?? this) != DialogResult.OK)
                 {
                     return;
                 }
 
                 SetExportPath(attempt, picker.FileName);
-                var schema = $"{attempt.Family}-{version.Replace('.', '-')}";
-                await SchemaXmlDocument.WriteExportWithAssetsAsync(conclusionSchema, attempt.FilePath, xml, rootName, schema);
-                CompleteExport(attempt, isClassicDraft ? "Сохранён XML-черновик." : "XML выгружен.");
+                var schema = classicNote ? ExplanatoryNote0107Document.LegacySchemaAsset : $"{attempt.Family}-{version.Replace('.', '-')}";
+                await SchemaXmlDocument.WriteExportWithAssetsAsync(conclusionSchema, attempt.FilePath, xml, rootName, schema,
+                    includeStylesheet: !classicNote);
+                if (isClassicDraft)
+                {
+                    attempt.Status = FileOperationStatus.Warning;
+                    attempt.Summary = "Сохранён XML-черновик.";
+                }
+                else CompleteExport(attempt, "XML выгружен.");
             }
         }
 

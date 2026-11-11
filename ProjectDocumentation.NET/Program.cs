@@ -1,4 +1,5 @@
 ﻿using Core.NET.Controllers;
+using DevExpress.LookAndFeel;
 using ProjectDocumentation.NET.Forms;
 using System;
 using System.Windows.Forms;
@@ -17,6 +18,8 @@ namespace ProjectDocumentation.NET
 
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
+            if (!SystemInformation.HighContrast)
+                UserLookAndFeel.Default.SetSkinStyle(SkinStyle.WXI);
             Application.Run(new MainForm());
         }
     }

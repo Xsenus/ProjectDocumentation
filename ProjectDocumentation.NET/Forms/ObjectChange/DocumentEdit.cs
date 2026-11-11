@@ -30,6 +30,8 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
         public DocumentEdit()
         {
             InitializeComponent();
+            GridContextMenus.Attach(gridViewDeclarant, popupMenuDeclarant, barBtnDeclarantAdd);
+            GridContextMenus.Attach(gridViewItems, popupMenuItems, barBtnItemsAdd);
             includedEditor.Name = "includedEditor";
             includedEditor.Properties.MaxLength = 1000;
             layoutControlObjPart.Controls.Add(includedEditor);
@@ -285,24 +287,6 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
             if (e.Data.GetDataPresent(DataFormats.FileDrop))
             {
                 e.Effect = DragDropEffects.Copy;
-            }
-        }
-
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
-        private void gridViewDeclarant_PopupMenuShowing(object sender, PopupMenuShowingEventArgs e)
-        {
-            if (sender is GridView)
-            {
-                popupMenuDeclarant.ShowPopup(new Point(Cursor.Position.X, Cursor.Position.Y));
-            }
-        }
-
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
-        private void gridViewItems_PopupMenuShowing(object sender, PopupMenuShowingEventArgs e)
-        {
-            if (sender is GridView)
-            {
-                popupMenuItems.ShowPopup(new Point(Cursor.Position.X, Cursor.Position.Y));
             }
         }
 

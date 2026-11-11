@@ -90,6 +90,41 @@ class FormDiagnosticsTests(unittest.TestCase):
         self.assertTrue(any(error.get('code') == 'xsd-assertion' and error['path'] == '/Conclusion/PreviousConclusions'
                             for error in errors), errors)
 
+    def test_missing_required_field_before_nested_choice_points_to_missing_field(self):
+        root = ET.parse(FIXTURES / 'conclusion-01-04.xml').getroot()
+        organization = root.find('Declarant/Organization')
+        organization.remove(organization.find('FullName'))
+        errors = validate_document(ET.tostring(root, encoding='unicode'))['errors']
+        self.assertTrue(any(error['path'] == '/Conclusion/Declarant/Organization/FullName'
+                            and error.get('code') == 'required-element' for error in errors), errors)
+
+    def test_required_choices_keep_the_available_options_and_parent_path(self):
+        cases = (
+            ('conclusion-01-04.xml', 'ExpertOrganization/OGRN', '/Conclusion/ExpertOrganization', ('OGRN', 'RAFP')),
+            ('explanatorynote-01-07.xml', 'Developer', '/ExplanatoryNote', ('Developer', 'TechnicalCustomer')),
+            ('explanatorynote-01-07.xml', 'NonIndustrialObject', '/ExplanatoryNote',
+             ('NonIndustrialObject', 'IndustrialObject', 'LinearObject')),
+        )
+        for fixture, field, path, options in cases:
+            with self.subTest(field=field):
+                root = ET.parse(FIXTURES / fixture).getroot()
+                parent, _, name = field.rpartition('/')
+                node = root.find(parent) if parent else root
+                node.remove(node.find(name))
+                errors = validate_document(ET.tostring(root, encoding='unicode'))['errors']
+                self.assertTrue(any(error['path'] == path and error.get('code') == 'required-choice'
+                                    and all(option in error['message'] for option in options) for error in errors), errors)
+
+    def test_conditional_document_number_and_date_link_to_missing_fields(self):
+        root = ET.parse(FIXTURES / 'conclusion-01-04.xml').getroot()
+        document = root.find('Documents/Document')
+        for field in ('DocNumber', 'DocDate'):
+            document.remove(document.find(field))
+        errors = validate_document(ET.tostring(root, encoding='unicode'))['errors']
+        paths = {error['path'] for error in errors if error.get('code') == 'xsd-assertion'}
+        self.assertTrue({'/Conclusion/Documents/Document/DocNumber', '/Conclusion/Documents/Document/DocDate'}
+                        <= paths, errors)
+
     def test_preview_accepts_large_image_inside_xml_size_limit(self):
         xml = (FIXTURES / 'explanatorynote-01-07.xml').read_text(encoding='utf-8')
         data = 'A' * 10_000_004

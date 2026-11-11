@@ -1,6 +1,7 @@
 ﻿using Core.NET.AutoModels.ConclusionObj;
 using Core.NET.Controllers;
 using Core.NET.DaDataObj;
+using ProjectDocumentation.NET.Services;
 using Core.NET.Extensions;
 using Core.NET.Models.XPO;
 using DevExpress.Xpo;
@@ -62,10 +63,10 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                 }
                 else if (e.Button.Kind == ButtonPredefines.Search)
                 {
-                    var obj = buttonEdit.EditValue?.ToString();
+                    var obj = buttonEdit.EditValue as string;
                     if (!string.IsNullOrWhiteSpace(obj))
                     {
-                        var addressData = await DaDataObj.GetAddressAsync(obj);
+                        var addressData = await LegacyDaDataLookup.FindAddressAsync(buttonEdit, obj);
                         if (addressData != null)
                         {
                             var address = new TAddress()
@@ -134,10 +135,10 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                 }
                 else if (e.Button.Kind == ButtonPredefines.Search)
                 {
-                    var obj = buttonEdit.EditValue?.ToString();
+                    var obj = buttonEdit.EditValue as string;
                     if (!string.IsNullOrWhiteSpace(obj))
                     {
-                        var addressData = await DaDataObj.GetAddressAsync(obj);
+                        var addressData = await LegacyDaDataLookup.FindAddressAsync(buttonEdit, obj);
                         if (addressData != null)
                         {
                             var postAddress = new TPostAddress()
@@ -304,17 +305,16 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
 
                     if (!string.IsNullOrWhiteSpace(obj))
                     {
-                        var party = await DaDataObj.GetPartyAsync(obj);
-                        var data = party?.suggestions?.FirstOrDefault()?.data;
+                        var data = await LegacyDaDataLookup.FindPartyAsync(buttonEdit, obj, txtOrgINN, txtOrgOGRN, txtOrgKPP);
                         if (data != null)
                         {
-                            txtOrgFullName.EditValue = data.name?.full_with_opf ?? data.name?.full;
-                            txtOrgOGRN.EditValue = data.ogrn;
-                            txtOrgKPP.EditValue = data.kpp;
-                            txtOrgINN.EditValue = data.inn;
+                            LegacyDaDataLookup.FillEmpty(txtOrgFullName, data.name?.full_with_opf ?? data.name?.full);
+                            LegacyDaDataLookup.FillEmpty(txtOrgOGRN, data.ogrn);
+                            LegacyDaDataLookup.FillEmpty(txtOrgKPP, data.kpp);
+                            LegacyDaDataLookup.FillEmpty(txtOrgINN, data.inn);
 
                             var addressData = data.address?.data;
-                            if (addressData != null)
+                            if (DaDataObj.IsRussianAddress(addressData) && addressData.qc == "0")
                             {
                                 var address = new TAddress()
                                 {
@@ -341,7 +341,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                                         MessageBoxIcon.Exclamation);
                                 }
 
-                                btnAddress.EditValue = address;
+                                LegacyDaDataLookup.FillEmpty(btnAddress, address);
                             }
                         }
                     }
@@ -369,21 +369,17 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
 
                     if (!string.IsNullOrWhiteSpace(obj))
                     {
-                        var party = await DaDataObj.GetPartyAsync(obj);
-                        var data = party?.suggestions?.FirstOrDefault()?.data;
+                        var data = await LegacyDaDataLookup.FindPartyAsync(buttonEdit, obj, null, txtOGRNIP, individual: true);
                         if (data != null)
                         {
-                            txtOGRNIP.EditValue = data.ogrn;
-                            var splitsSplitsName = data.name?.full?.Split();
-                            if (splitsSplitsName?.Length >= 3)
-                            {
-                                txtFamilyName.EditValue = splitsSplitsName[0];
-                                txtFirstName.EditValue = splitsSplitsName[1];
-                                txtSecondName.EditValue = splitsSplitsName[2];
-                            }
+                            LegacyDaDataLookup.FillEmpty(txtOGRNIP, data.ogrn);
+                            var nameParts = data.name?.full?.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                            LegacyDaDataLookup.FillEmpty(txtFamilyName, data.fio?.surname ?? nameParts?.ElementAtOrDefault(0));
+                            LegacyDaDataLookup.FillEmpty(txtFirstName, data.fio?.name ?? nameParts?.ElementAtOrDefault(1));
+                            LegacyDaDataLookup.FillEmpty(txtSecondName, data.fio?.patronymic ?? nameParts?.ElementAtOrDefault(2));
 
                             var addressData = data.address?.data;
-                            if (addressData != null)
+                            if (DaDataObj.IsRussianAddress(addressData) && addressData.qc == "0")
                             {
                                 var postAddress = new TPostAddress()
                                 {
@@ -411,7 +407,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                                         MessageBoxIcon.Exclamation);
                                 }
 
-                                btnPostAddress.EditValue = postAddress;
+                                LegacyDaDataLookup.FillEmpty(btnPostAddress, postAddress);
                             }
                         }
                     }

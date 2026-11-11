@@ -1,10 +1,18 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <xs:schema elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
-  <xs:element name="ExplanatoryNote" nillable="true">
+  <xs:element name="ExplanatoryNote">
     <xs:complexType>
       <xs:sequence>
-        <xs:element minOccurs="0" maxOccurs="1" name="ExplanatoryNoteNumber" type="xs:string" />
-        <xs:element minOccurs="0" maxOccurs="1" name="ExplanatoryNoteYear" type="xs:integer" />
+        <xs:element name="ExplanatoryNoteNumber" type="tRequiredText">
+          <xs:annotation>
+            <xs:documentation xml:lang="ru">Шифр пояснительной записки</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="ExplanatoryNoteYear" type="xs:integer">
+          <xs:annotation>
+            <xs:documentation xml:lang="ru">Год составления пояснительной записки</xs:documentation>
+          </xs:annotation>
+        </xs:element>
         <xs:element minOccurs="0" maxOccurs="1" name="ExplanatoryNoteModifications" type="ArrayOfTModification" />
         <xs:element minOccurs="0" maxOccurs="1" name="IssueAuthor" type="tAuthor" />
         <xs:element minOccurs="0" maxOccurs="1" name="ProjectDocumentationAuthors" type="ArrayOfTAuthor" />
@@ -21,9 +29,9 @@
         <xs:element minOccurs="0" maxOccurs="1" name="AdditionalData" type="ArrayOfTData" />
         <xs:element minOccurs="0" maxOccurs="1" name="FinanceSources" type="tFinanceSources" />
         <xs:choice minOccurs="1" maxOccurs="1">
-          <xs:element minOccurs="0" maxOccurs="1" name="IndustrialObject" type="tIndustrialObject" />
-          <xs:element minOccurs="0" maxOccurs="1" name="LinearObject" type="tLinearObject" />
-          <xs:element minOccurs="0" maxOccurs="1" name="NonIndustrialObject" type="tNonIndustrialObject" />
+          <xs:element name="IndustrialObject" type="tIndustrialObject" />
+          <xs:element name="LinearObject" type="tLinearObject" />
+          <xs:element name="NonIndustrialObject" type="tNonIndustrialObject" />
         </xs:choice>
         <xs:element minOccurs="0" maxOccurs="unbounded" name="DesignerNote" type="tTextBlock" />
         <xs:element minOccurs="0" maxOccurs="1" name="DesignerAssurance" type="tDesignerAssurance" />
@@ -34,6 +42,11 @@
       <xs:attribute name="AccessRestriction" type="xs:string" />
     </xs:complexType>
   </xs:element>
+  <xs:simpleType name="tRequiredText">
+    <xs:restriction base="xs:token">
+      <xs:minLength value="1" />
+    </xs:restriction>
+  </xs:simpleType>
   <xs:complexType name="ArrayOfTModification">
     <xs:sequence>
       <xs:element minOccurs="0" maxOccurs="unbounded" name="Modification" type="tModification" />
@@ -652,7 +665,7 @@
   </xs:complexType>
   <xs:complexType name="tIndustrialObject">
     <xs:sequence>
-      <xs:element minOccurs="0" maxOccurs="1" name="Name" type="xs:string" />
+      <xs:element name="Name" type="tRequiredText" />
       <xs:element minOccurs="1" maxOccurs="1" name="ConstructionType" type="tConstructionType" />
       <xs:element minOccurs="1" maxOccurs="1" name="ConstructionDuration" type="xs:decimal" />
       <xs:element minOccurs="0" maxOccurs="1" name="ConstructionDates" type="tConstructionDates" />
@@ -1708,7 +1721,7 @@
   </xs:simpleType>
   <xs:complexType name="tLinearObject">
     <xs:sequence>
-      <xs:element minOccurs="0" maxOccurs="1" name="Name" type="xs:string" />
+      <xs:element name="Name" type="tRequiredText" />
       <xs:element minOccurs="1" maxOccurs="1" name="ConstructionType" type="tConstructionType" />
       <xs:element minOccurs="1" maxOccurs="1" name="ConstructionDuration" type="xs:decimal" />
       <xs:element minOccurs="0" maxOccurs="1" name="ConstructionDates" type="tConstructionDates" />
@@ -1788,7 +1801,7 @@
   </xs:complexType>
   <xs:complexType name="tNonIndustrialObject">
     <xs:sequence>
-      <xs:element minOccurs="0" maxOccurs="1" name="Name" type="xs:string" />
+      <xs:element name="Name" type="tRequiredText" />
       <xs:element minOccurs="1" maxOccurs="1" name="ConstructionType" type="tConstructionType" />
       <xs:element minOccurs="1" maxOccurs="1" name="ConstructionDuration" type="xs:decimal" />
       <xs:element minOccurs="0" maxOccurs="1" name="ConstructionDates" type="tConstructionDates" />

@@ -27,6 +27,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
         public ExpertProjectDocumentsEdit()
         {
             InitializeComponent();
+            GridContextMenus.Attach(gridViewProjectDocumentsMismatches, popupMenuMismatches, barBtnAdd);
 
             richEditControlProjectDocumentsReview.ActiveViewType = RichEditViewType.Simple;
             richEditControlProjectDocumentsChanges.ActiveViewType = RichEditViewType.Simple;
@@ -150,15 +151,6 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
 
             cmbExpertType.Properties.Items.AddRange(collection
                 .Where(w => w.GeneralizedDictionary == GeneralizedDictionary.ExpertType).ToList());
-        }
-
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
-        private void gridViewProjectDocumentsMismatches_PopupMenuShowing(object sender, DevExpress.XtraGrid.Views.Grid.PopupMenuShowingEventArgs e)
-        {
-            if (sender is GridView)
-            {
-                popupMenuMismatches.ShowPopup(new Point(Cursor.Position.X, Cursor.Position.Y));
-            }
         }
 
         private async void ObjPartEdit_Load(object sender, EventArgs e)

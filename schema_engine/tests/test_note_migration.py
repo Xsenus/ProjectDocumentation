@@ -127,6 +127,7 @@ class NoteMigrationTests(unittest.TestCase):
 
     def test_linear_object_migrates_both_addresses_and_renamed_repair_frequency(self):
         original = '''<ExplanatoryNote SchemaVersion="01.03">
+          <ExplanatoryNoteNumber>ТЕСТ-ЛО</ExplanatoryNoteNumber><ExplanatoryNoteYear>2026</ExplanatoryNoteYear>
           <LinearObject ObjectID="test-line" Placement="1" DangerousAndComplex="1" Unique="1">
             <Name>Тестовый линейный объект</Name>
             <ConstructionType>1</ConstructionType><ConstructionDuration>2.5</ConstructionDuration>

@@ -94,16 +94,16 @@
 
 | Метод | Поведение |
 |---|---|
-| `GetPartyAsync(query)` | `SuggestClientAsync.FindParty` — поиск организации по ИНН/ОГРН |
-| `GetAddressAsync(query)` | `CleanClientAsync.Clean<Address>` — нормализация адреса (платный метод) |
+| `GetPartyAsync(query)` | Поиск организации по ИНН, ОГРН или ИНН/КПП через `findById/party` |
+| `GetAddressAsync(query)` | Платная стандартизация адреса через `clean/address` |
 
-Клиенты создаются лениво, ключи зашиты в коде (D-06).
+Общий HTTP-клиент поддерживает ограничение времени и отмену. Ключи передаются через переменные окружения. `ConclusionDaData` проверяет однозначность ответа, а формы сохраняют ручной ввод.
 
 ## ProjectDocumentation.NET
 
 ### Program
 
-`Main`: `SessionController.GetSession()` → `EnableVisualStyles` → `Application.Run(new MainForm())`.
+`Main` открывает локальную сессию, включает оформление DevExpress и запускает `MainForm`.
 
 ### Forms/MainForm
 
@@ -113,15 +113,17 @@
 | `CheckUpdates` | Получает или создаёт `SettingXPO("UpdatePath")`, `AutoUpdater.Mandatory = true`, `AutoUpdater.Start`. Исключения глотаются |
 | `UpdateGridDataSourceAsync(column, value)` | Перечитывает все `XmlObjXPO` по убыванию `DateCreate`, фокус на строке со значением |
 | `UpdateGridDataSource(rowHandle)` | То же с фокусом по номеру строки |
-| `gridView_PopupMenuShowing` | Включает или выключает пункты меню в зависимости от выбранной строки, показывает меню у курсора |
+| `GridContextMenus.Attach` | Подключает контекстное меню к строке и пустой области. Правый щелчок выбирает строку под курсором, `Shift+F10` работает с текущей строкой. Заголовки оставляют штатное меню DevExpress |
 | `barBtnLoad_ItemClick` | `FileLoad`; если что-то загружено — обновить таблицу и выделить запись |
 | `barBtnAddConclusion_ItemClick` | Открывает текущую форму заключения 01.04 |
 | `barBtnAddExplanatoryNote_ItemClick` | Открывает текущую форму пояснительной записки 01.07 |
+| «Создать» → «Добавить пояснительную записку 01.05» | Открывает полноценный редактор XSD 01.05 с сохранением в этой версии |
 | «Создать» → «Классические формы 01.03» | Создаёт заключение в `ConclusionEdit` или записку в `ExplanatoryNoteEdit`. Сохранение использует отдельную запись XPO |
+| «Создать» → «Все поля по схеме 01.03» | Открывает пустой документ в редакторе всех полей соответствующего семейства |
 | `EditGridViewObjectAsync` («Изменить» и двойной клик) | Выбирает редактор по корню и версии XML. Для архивных заключений предлагает преобразование в 01.04 |
 | `barBtnBaseSetting_ItemClick` | Только заключение: `ConclusionBaseSettingEdit(ExpertOrganization, Approver)` → запись обратно |
 | `barBtnView_ItemClick` | Для поддерживаемых схем выводит предпросмотр по XSL. Для архивного заключения доступен просмотр исходного XML |
-| `barBtnFill_ItemClick` | Выгружает XML выбранной записи и сохраняет итог операции в журнале. Для схем с комплектными файлами экспорт сохраняет соответствующие XSD и XSL |
+| `barBtnFill_ItemClick` | Выгружает XML выбранной записи и сохраняет итог в журнале. Для записки 01.03 прикладывается схема совместимости, для официальных комплектов также XSL |
 | «История файлов» | Открывает журнал импорта и выгрузки с фильтрами, замечаниями и повторным импортом |
 | `barBtnDel_ItemClick` | Подтверждение → `DeleteAsync` → обновление таблицы |
 

@@ -119,7 +119,6 @@
             this.gridViewItems.OptionsView.RowAutoHeight = true;
             this.gridViewItems.OptionsView.ShowGroupPanel = false;
             this.gridViewItems.CustomRowCellEdit += new DevExpress.XtraGrid.Views.Grid.CustomRowCellEditEventHandler(this.gridViewItems_CustomRowCellEdit);
-            this.gridViewItems.PopupMenuShowing += new DevExpress.XtraGrid.Views.Grid.PopupMenuShowingEventHandler(this.gridViewItems_PopupMenuShowing);
             // 
             // btnAddTable
             // 

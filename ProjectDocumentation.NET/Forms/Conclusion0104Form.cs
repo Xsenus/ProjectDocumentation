@@ -1,8 +1,13 @@
 using Core.NET.Controllers;
 using Core.NET.Models.XPO;
+using DevExpress.Images;
 using DevExpress.Office.Services;
+using DevExpress.Utils;
 using DevExpress.XtraEditors;
+using DevExpress.XtraGrid;
+using DevExpress.XtraGrid.Views.Grid;
 using DevExpress.XtraRichEdit;
+using DevExpress.XtraTab;
 using ProjectDocumentation.NET.Services;
 using System;
 using System.Collections.Generic;
@@ -30,34 +35,29 @@ namespace ProjectDocumentation.NET.Forms
         private readonly string rootName;
         private readonly string idAttribute;
         private readonly bool legacyEditor;
-        private readonly TextBox nameEditor = new TextBox { Dock = DockStyle.Fill };
-        private readonly TabControl tabs = new TabControl { Dock = DockStyle.Fill };
-        private readonly TabPage sectionsPage = new TabPage("Разделы");
-        private readonly TabPage fieldsPage = new TabPage("Все поля");
-        private readonly TabPage xmlPage = new TabPage("Исходный XML");
-        private readonly TabPage validationPage = new TabPage("Проверка XML");
-        private readonly TabPage previewPage = new TabPage("Предпросмотр");
-        private readonly TextBox rawEditor = new TextBox
-        {
-            AcceptsReturn = true, AcceptsTab = true, Dock = DockStyle.Fill, Multiline = true,
-            ScrollBars = ScrollBars.Both, WordWrap = false, MaxLength = SchemaXmlDocument.MaxXmlBytes
-        };
-        private readonly ListView errors = new ListView
-        {
-            Dock = DockStyle.Fill, View = View.Details, FullRowSelect = true, HideSelection = false, MultiSelect = false
-        };
+        private readonly TextEdit nameEditor = new TextEdit { Dock = DockStyle.Fill, AccessibleName = "Название документа" };
+        private readonly XtraTabControl tabs = new XtraTabControl { Dock = DockStyle.Fill, AccessibleName = "Вкладки редактора" };
+        private readonly XtraTabPage sectionsPage = new XtraTabPage { Text = "Разделы" };
+        private readonly XtraTabPage fieldsPage = new XtraTabPage { Text = "Все поля" };
+        private readonly XtraTabPage xmlPage = new XtraTabPage { Text = "Исходный XML" };
+        private readonly XtraTabPage validationPage = new XtraTabPage { Text = "Проверка XML" };
+        private readonly XtraTabPage previewPage = new XtraTabPage { Text = "Предпросмотр" };
+        private readonly MemoEdit rawEditor = new MemoEdit { Dock = DockStyle.Fill, AccessibleName = "Исходный XML" };
+        private readonly GridControl errors = new GridControl { Dock = DockStyle.Fill, AccessibleName = "Результаты проверки XML" };
+        private readonly GridView errorView;
         private readonly RichEditControl preview = new RichEditControl { Dock = DockStyle.Fill, ReadOnly = true };
-        private readonly Label status = new Label { AutoSize = true, Dock = DockStyle.Fill, Padding = new Padding(0, 8, 0, 0) };
-        private readonly Label validationHint = LabelFor("Нажмите «Проверить XML», чтобы проверить документ.");
-        private readonly Button findFieldButton = ActionButton("Найти поле…");
-        private readonly Button goToErrorButton = ActionButton("К полю");
-        private readonly Button checkButton = ActionButton("Проверить XML");
-        private readonly Button saveButton = ActionButton("Сохранить");
-        private readonly Button draftButton = ActionButton("Сохранить черновик XML…");
-        private readonly Button applyRawButton = ActionButton("Применить XML");
-        private readonly Button resetRawButton = ActionButton("Вернуть текущий XML");
-        private readonly Button previewButton = ActionButton("Обновить предпросмотр");
+        private readonly LabelControl status = WrappedLabelFor("");
+        private readonly LabelControl validationHint = LabelFor("Нажмите «Проверить XML», чтобы проверить документ.");
+        private readonly SimpleButton findFieldButton = ActionButton("Найти поле…", "find/find");
+        private readonly SimpleButton goToErrorButton = ActionButton("К полю");
+        private readonly SimpleButton checkButton = ActionButton("Проверить XML");
+        private readonly SimpleButton saveButton = ActionButton("Сохранить");
+        private readonly SimpleButton draftButton = ActionButton("Сохранить черновик XML…");
+        private readonly SimpleButton applyRawButton = ActionButton("Применить XML");
+        private readonly SimpleButton resetRawButton = ActionButton("Вернуть текущий XML");
+        private readonly SimpleButton previewButton = ActionButton("Обновить предпросмотр", "xaf/action_refresh");
         private readonly Font xmlFont = new Font(FontFamily.GenericMonospace, 9);
+        private readonly ToolTipController fieldToolTips = new ToolTipController();
         private XDocument document;
         private NativeSchemaProfile profile;
         private string documentVersion;
@@ -94,11 +94,20 @@ namespace ProjectDocumentation.NET.Forms
             MinimumSize = new Size(800, 560);
             ClientSize = new Size(1180, 780);
             AutoScaleMode = AutoScaleMode.Font;
+            tabs.AppearancePage.HeaderActive.FontStyleDelta = FontStyle.Bold;
+            saveButton.Appearance.FontStyleDelta = FontStyle.Bold;
+            findFieldButton.ToolTip = "Найти поле (Ctrl+F)";
             nameEditor.Text = name ?? "";
-            nameEditor.ReadOnly = ReadOnlyDocument;
+            nameEditor.Properties.ReadOnly = ReadOnlyDocument;
             nameEditor.TextChanged += (_, __) => { if (loaded) MarkChanged(false); };
-            rawEditor.Font = xmlFont;
-            rawEditor.ReadOnly = ReadOnlyDocument;
+            rawEditor.Properties.Appearance.Font = xmlFont;
+            rawEditor.Properties.AppearanceReadOnly.Font = xmlFont;
+            rawEditor.Properties.ReadOnly = ReadOnlyDocument;
+            rawEditor.Properties.AcceptsReturn = true;
+            rawEditor.Properties.AcceptsTab = true;
+            rawEditor.Properties.ScrollBars = ScrollBars.Both;
+            rawEditor.Properties.WordWrap = false;
+            rawEditor.Properties.MaxLength = SchemaXmlDocument.MaxXmlBytes;
             rawEditor.TextChanged += (_, __) =>
             {
                 if (updatingRaw || ReadOnlyDocument) return;
@@ -108,11 +117,14 @@ namespace ProjectDocumentation.NET.Forms
 
             fieldsPage.Controls.Add(CreateFieldsPanel());
             sectionsPage.Controls.Add(CreateSectionsPanel());
+            fieldToolTips.GetActiveObjectInfo += FieldToolTip;
             xmlPage.Controls.Add(WithToolbar(rawEditor, applyRawButton, resetRawButton));
-            errors.Columns.Add("Путь XML", 330);
-            errors.Columns.Add("Сообщение", 720);
-            errors.ItemActivate += (_, __) => GoToSelectedError();
-            errors.SelectedIndexChanged += (_, __) => UpdateErrorNavigation();
+            errorView = ConfigureListGrid(errors);
+            errorView.Columns.AddVisible(nameof(ConclusionValidationError.Path), "Путь XML").Width = 330;
+            errorView.Columns.AddVisible(nameof(ConclusionValidationError.Message), "Сообщение").Width = 720;
+            WrapListColumns(errorView);
+            OnGridActivate(errorView, GoToSelectedError);
+            errorView.FocusedRowChanged += (_, __) => UpdateErrorNavigation();
             goToErrorButton.Click += (_, __) => GoToSelectedError();
             goToErrorButton.Enabled = false;
             validationPage.Controls.Add(WithToolbar(errors, goToErrorButton, validationHint));
@@ -122,28 +134,31 @@ namespace ProjectDocumentation.NET.Forms
             tabs.TabPages.AddRange(new[] { sectionsPage, fieldsPage, xmlPage, validationPage });
             if (!legacyEditor || !note) tabs.TabPages.Add(previewPage);
             else previewPage.Dispose();
-            if (legacyEditor) tabs.SelectedTab = fieldsPage;
+            if (legacyEditor) tabs.SelectedTabPage = fieldsPage;
             if (warnings?.Count > 0)
             {
-                var warningsPage = new TabPage("Замечания преобразования");
-                warningsPage.Controls.Add(new TextBox
+                var warningsPage = new XtraTabPage { Text = "Замечания преобразования" };
+                var warningsText = new MemoEdit
                 {
-                    Dock = DockStyle.Fill, Multiline = true, ScrollBars = ScrollBars.Vertical, ReadOnly = true,
+                    Dock = DockStyle.Fill, AccessibleName = "Замечания преобразования",
                     Text = string.Join(Environment.NewLine + Environment.NewLine, warnings)
-                });
+                };
+                warningsText.Properties.ReadOnly = true;
+                warningsText.Properties.ScrollBars = ScrollBars.Vertical;
+                warningsPage.Controls.Add(WithToolbar(warningsText));
                 tabs.TabPages.Add(warningsPage);
             }
 
-            tabs.SelectedIndexChanged += async (_, __) =>
+            tabs.SelectedPageChanged += async (_, __) =>
             {
                 if (!loaded) return;
-                if (tabs.SelectedTab == sectionsPage || tabs.SelectedTab == fieldsPage) ShowFieldsView();
-                if (tabs.SelectedTab == xmlPage && !rawDirty && rawRevision != revision) ResetRawEditor();
-                if (tabs.SelectedTab == previewPage && !busy && !rawDirty && previewRevision != revision) await UpdatePreviewAsync();
+                if (tabs.SelectedTabPage == sectionsPage || tabs.SelectedTabPage == fieldsPage) ShowFieldsView();
+                if (tabs.SelectedTabPage == xmlPage && !rawDirty && rawRevision != revision) ResetRawEditor();
+                if (tabs.SelectedTabPage == previewPage && !busy && !rawDirty && previewRevision != revision) await UpdatePreviewAsync();
             };
-            tabs.Selecting += (_, e) =>
+            tabs.SelectedPageChanging += (_, e) =>
             {
-                if (rawDirty && (e.TabPage == sectionsPage || e.TabPage == fieldsPage || e.TabPage == previewPage))
+                if (rawDirty && (e.Page == sectionsPage || e.Page == fieldsPage || e.Page == previewPage))
                 {
                     e.Cancel = true;
                     status.Text = "Примените или отмените изменения исходного XML.";
@@ -162,14 +177,14 @@ namespace ProjectDocumentation.NET.Forms
             draftButton.Text = ReadOnlyDocument ? "Выгрузить исходный XML…" : draftButton.Text;
 
             var commands = Toolbar(findFieldButton, checkButton, saveButton, draftButton);
-            var header = new TableLayoutPanel { AutoSize = true, Dock = DockStyle.Top, ColumnCount = 3 };
+            var header = new TableLayoutPanel { AutoSize = true, Dock = DockStyle.Top, ColumnCount = 2, RowCount = 2, Margin = new Padding(0, 0, 0, 8) };
             header.ColumnStyles.Add(new ColumnStyle(SizeType.AutoSize));
             header.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100));
-            header.ColumnStyles.Add(new ColumnStyle(SizeType.AutoSize));
-            header.Controls.Add(new Label { Text = "Название документа", Anchor = AnchorStyles.Left, AutoSize = true }, 0, 0);
+            header.Controls.Add(new LabelControl { Text = "Название документа", Anchor = AnchorStyles.Left, Margin = new Padding(0, 0, 10, 0) }, 0, 0);
             header.Controls.Add(nameEditor, 1, 0);
-            header.Controls.Add(commands, 2, 0);
-            var layout = new TableLayoutPanel { Dock = DockStyle.Fill, ColumnCount = 1, RowCount = 3, Padding = new Padding(12) };
+            header.Controls.Add(commands, 0, 1);
+            header.SetColumnSpan(commands, 2);
+            var layout = new TableLayoutPanel { Dock = DockStyle.Fill, ColumnCount = 1, RowCount = 3, Padding = new Padding(14, 12, 14, 4) };
             layout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100));
             layout.RowStyles.Add(new RowStyle(SizeType.AutoSize));
             layout.RowStyles.Add(new RowStyle(SizeType.Percent, 100));
@@ -215,7 +230,7 @@ namespace ProjectDocumentation.NET.Forms
             }
 
             if (loaded && ReadOnlyDocument && !IsDisposed && !Disposing && tabs.TabPages.Contains(previewPage))
-                tabs.SelectedTab = previewPage;
+                tabs.SelectedTabPage = previewPage;
         }
 
         protected override void OnFormClosing(FormClosingEventArgs e)
@@ -230,18 +245,77 @@ namespace ProjectDocumentation.NET.Forms
 
         protected override void Dispose(bool disposing)
         {
+            if (disposing)
+            {
+                treeMenu?.Dispose();
+                fieldToolTips.Dispose();
+            }
             base.Dispose(disposing);
             if (disposing) xmlFont.Dispose();
         }
 
         protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
         {
+            if (xmlTree.ContainsFocus && (keyData == Keys.Apps || keyData == (Keys.Shift | Keys.F10)) &&
+                ShowFocusedTreeMenu())
+                return true;
             if (keyData != (Keys.Control | Keys.F) || !loaded || busy) return base.ProcessCmdKey(ref msg, keyData);
             FindField();
             return true;
         }
 
-        private static Button ActionButton(string text) => new Button { AutoSize = true, Text = text, Padding = new Padding(5, 0, 5, 0) };
+        private static SimpleButton ActionButton(string text, string icon = null)
+        {
+            var button = new SimpleButton
+            {
+                AutoSize = true, Text = text, Padding = new Padding(6, 0, 6, 0), MinimumSize = new Size(0, 30)
+            };
+            if (icon != null)
+            {
+                button.ImageOptions.SvgImage = ImageResourceCache.Default.GetSvgImage($"svgimages/{icon}.svg");
+                button.ImageOptions.SvgImageSize = new Size(16, 16);
+            }
+            return button;
+        }
+
+        private static GridView ConfigureListGrid(GridControl grid)
+        {
+            var view = new GridView(grid);
+            grid.ViewCollection.Add(view);
+            grid.MainView = view;
+            view.OptionsBehavior.Editable = false;
+            view.OptionsCustomization.AllowGroup = false;
+            view.OptionsView.ShowGroupPanel = false;
+            view.OptionsView.ShowIndicator = false;
+            view.OptionsView.ShowVerticalLines = DefaultBoolean.False;
+            view.OptionsSelection.EnableAppearanceFocusedCell = false;
+            view.Appearance.HeaderPanel.FontStyleDelta = FontStyle.Bold;
+            view.RowHeight = 29;
+            return view;
+        }
+
+        private static void OnGridActivate(GridView view, Action activate)
+        {
+            view.DoubleClick += (_, __) =>
+            {
+                if (view.CalcHitInfo(view.GridControl.PointToClient(MousePosition)).InRowCell) activate();
+            };
+            view.KeyDown += (_, e) =>
+            {
+                if (e.KeyCode != Keys.Enter) return;
+                e.SuppressKeyPress = true;
+                activate();
+            };
+        }
+
+        private static void WrapListColumns(GridView view)
+        {
+            var memo = new DevExpress.XtraEditors.Repository.RepositoryItemMemoEdit { WordWrap = true };
+            view.GridControl.RepositoryItems.Add(memo);
+            foreach (DevExpress.XtraGrid.Columns.GridColumn column in view.Columns)
+                column.ColumnEdit = memo;
+            view.OptionsView.RowAutoHeight = true;
+        }
 
         private static FlowLayoutPanel Toolbar(params Control[] controls)
         {
@@ -255,7 +329,8 @@ namespace ProjectDocumentation.NET.Forms
             var panel = new TableLayoutPanel { Dock = DockStyle.Fill, ColumnCount = 1, RowCount = 2, Padding = new Padding(8) };
             panel.RowStyles.Add(new RowStyle(SizeType.AutoSize));
             panel.RowStyles.Add(new RowStyle(SizeType.Percent, 100));
-            panel.Controls.Add(Toolbar(controls), 0, 0);
+            if (controls.Length > 0)
+                panel.Controls.Add(Toolbar(controls), 0, 0);
             panel.Controls.Add(content, 0, 1);
             return panel;
         }
@@ -343,7 +418,7 @@ namespace ProjectDocumentation.NET.Forms
         {
             if (!loaded || busy) return false;
             if (!rawDirty) return true;
-            tabs.SelectedTab = xmlPage;
+            tabs.SelectedTabPage = xmlPage;
             status.Text = "Примените изменения исходного XML.";
             return false;
         }
@@ -378,41 +453,54 @@ namespace ProjectDocumentation.NET.Forms
                 DialogResult = DialogResult.OK;
                 Close();
             }, captureImportFailure: commit);
-            if (!IsDisposed && !Disposing && tabs.SelectedTab == validationPage && errors.Items.Count > 0)
+            if (!IsDisposed && !Disposing && tabs.SelectedTabPage == validationPage && errorView.DataRowCount > 0)
                 errors.Focus();
         }
 
         private void ShowValidation(ConclusionValidation result)
         {
             validationRevision = revision;
-            errors.Items.Clear();
+            List<ValidationRow> rows;
             if (result.Valid)
             {
                 status.Text = result.ValidationBasis == "legacy-wire"
                     ? $"XML соответствует локальному формату совместимости {result.Version}."
                     : $"XML соответствует схеме {result.Version}.";
-                errors.Items.Add(new ListViewItem(new[] { "/", status.Text }));
+                rows = new List<ValidationRow> { new ValidationRow(null, status.Text) };
                 validationHint.Text = status.Text;
             }
             else
             {
-                foreach (var error in result.Errors ?? new List<ConclusionValidationError>())
-                    errors.Items.Add(new ListViewItem(new[] { error.Path ?? "/", error.Message }) { Tag = error.Path });
-                status.Text = $"XML требует исправлений. Ошибок: {errors.Items.Count}.";
+                rows = (result.Errors ?? new List<ConclusionValidationError>())
+                    .Select(error => new ValidationRow(error.Path, error.Message)).ToList();
+                status.Text = $"XML требует исправлений. Ошибок: {rows.Count}.";
                 validationHint.Text = status.Text + " Выберите строку и нажмите «К полю».";
             }
-            tabs.SelectedTab = validationPage;
-            if (errors.Items.Count > 0) errors.Items[0].Selected = true;
+            errors.DataSource = rows;
+            tabs.SelectedTabPage = validationPage;
+            if (rows.Count > 0) errorView.FocusedRowHandle = 0;
             UpdateErrorNavigation();
         }
 
         private void UpdateErrorNavigation()
-            => goToErrorButton.Enabled = errors.SelectedItems.Count == 1 && errors.SelectedItems[0].Tag is string;
+            => goToErrorButton.Enabled = (errorView.GetFocusedRow() as ValidationRow)?.Target != null;
 
         private void GoToSelectedError()
         {
-            if (errors.SelectedItems.Count == 1 && errors.SelectedItems[0].Tag is string path)
+            if ((errorView.GetFocusedRow() as ValidationRow)?.Target is string path)
                 NavigateToField(path);
+        }
+
+        private sealed class ValidationRow
+        {
+            internal ValidationRow(string target, string message)
+            {
+                Target = target;
+                Message = message;
+            }
+            internal string Target { get; }
+            public string Path => Target ?? "/";
+            public string Message { get; }
         }
 
         private async Task UpdatePreviewAsync()
