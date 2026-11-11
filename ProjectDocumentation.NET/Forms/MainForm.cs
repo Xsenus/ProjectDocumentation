@@ -65,8 +65,23 @@ namespace ProjectDocumentation.NET.Forms
             registry.ItemClick += (_, __) => OpenExternalService("https://egrz.ru/organisation/reestr-advance/latest");
             checks.AddItem(registry);
 
-            AddDocumentBar("Документы", 0, barBtnAddConclusion, barBtnAddExplanatoryNote, classic, barBtnLoad);
-            AddDocumentBar("Действия с документом", 1, barBtnView, barBtnEdit, barBtnFill, checks);
+            var create = new BarSubItem(barManager, "Создать");
+            create.AddItem(barBtnAddConclusion);
+            create.AddItem(barBtnAddExplanatoryNote);
+            create.AddItem(addConclusion).BeginGroup = true;
+            create.AddItem(addNote);
+
+            var versions = new BarSubItem(barManager, "Версии XML");
+            versions.AddItem(editLegacyFields);
+            versions.AddItem(convertConclusion).BeginGroup = true;
+            versions.AddItem(convertExplanatoryNote);
+            versions.AddItem(exportLegacyConclusion).BeginGroup = true;
+            versions.AddItem(exportCompatibleExplanatoryNote);
+
+            var history = new BarButtonItem(barManager, "История файлов");
+            history.ItemClick += OpenFileOperationHistory_ItemClick;
+            AddDocumentBar("Документы", 0, create, barBtnLoad, barBtnFill, history);
+            AddDocumentBar("Действия с документом", 1, barBtnView, barBtnEdit, versions, checks);
 
             gridView.FocusedRowChanged += (_, __) => UpdateDocumentCommands(gridView.GetFocusedRow());
             popupMenu.CloseUp += (_, __) => UpdateDocumentCommands(gridView.GetFocusedRow());
@@ -230,14 +245,7 @@ namespace ProjectDocumentation.NET.Forms
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
         private async void barBtnLoad_ItemClick(object sender, ItemClickEventArgs e)
         {
-            using (var form = new FileLoad(conclusionSchema))
-            {
-                form.ShowDialog();
-                if (form.ObjXPO != null)
-                {
-                    await UpdateGridDataSourceAsync(nameof(XmlObjXPO.Guid), form.ObjXPO.Guid);
-                }
-            }
+            await ImportXmlAsync();
         }
 
         private async Task CheckUpdates()
@@ -273,11 +281,13 @@ namespace ProjectDocumentation.NET.Forms
         /// Перед выгрузкой заключение проверяется по ограничениям схемы из модели (обязательность, длина, формат).
         /// При замечаниях пользователь решает, сохранять ли файл: ведомственная система может его не принять.
         /// </summary>
-        private static bool ConfirmSchemaRemarks(string xml)
+        private static bool ConfirmSchemaRemarks(string xml, FileOperationEntry attempt)
         {
             var conclusion = Utf8StringSerialize.DeSerializeObjectByString<Conclusion>(xml, lenient: false);
             if (conclusion is null)
             {
+                attempt.Status = FileOperationStatus.Rejected;
+                attempt.Summary = "Не удалось прочитать исходный XML заключения.";
                 XtraMessageBox.Show(
                     "Не удалось прочитать XML заключения. Файл не сформирован.",
                     "Проверка заключения",
@@ -292,6 +302,7 @@ namespace ProjectDocumentation.NET.Forms
                 return true;
             }
 
+            foreach (var remark in remarks) FileOperationJournal.AddDiagnostic(attempt, remark);
             const int shown = 15;
             var text = string.Join(Environment.NewLine, remarks.Take(shown).Select(remark => "• " + remark));
             if (remarks.Count > shown)
@@ -459,106 +470,62 @@ namespace ProjectDocumentation.NET.Forms
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
         private async void barBtnFill_ItemClick(object sender, ItemClickEventArgs e)
         {
+            if (!(gridView.GetFocusedRow() is XmlObjXPO record)) return;
+            var xml = record.GetObj();
+
             try
             {
-                if (gridView.GetFocusedRow() is ConclusionXPO current)
+                if (record is ConclusionXPO)
                 {
-                    var xml = current.GetObj();
                     var version = Conclusion0104Document.ReadVersion(xml);
-                    if (version == Conclusion0104Document.CurrentVersion)
+                    await TrackExportAsync(record, "conclusion", version, async attempt =>
                     {
-                        await ExportConclusionAsync(xml, version, current.Guid);
-                        return;
-                    }
-
-                    if (Conclusion0104Document.IsHistoricalVersion(version))
-                    {
-                        ExportHistoricalConclusion(current);
-                        return;
-                    }
-
-                    if (version == Conclusion0104Document.LegacyVersion)
-                    {
-                        var normalized = await conclusionSchema.NormalizeLegacyConclusionAsync(xml);
-                        await ExportConclusionAsync(normalized, version, current.Guid, allowClassicDraft: true);
-                        return;
-                    }
-
-                    if (!CheckConclusionVersion(version))
-                    {
-                        return;
-                    }
-                }
-
-                if (gridView.GetFocusedRow() is ExplanatoryNoteXPO note)
-                {
-                    var xml = note.GetObj();
-                    var version = ExplanatoryNote0107Document.ReadVersion(xml);
-                    if (CanPreviewExplanatoryNote(version))
-                    {
-                        await ExportSchemaDocumentAsync(xml, version, note.Guid, "ExplanatoryNote", ExplanatoryNote0107Document.Family);
-                        return;
-                    }
-
-                    if (!ExplanatoryNoteController.IsLegacyXml(xml))
-                    {
-                        throw new InvalidOperationException("Не удалось определить поддерживаемую версию пояснительной записки.");
-                    }
-                }
-
-                var fileName = default(string);
-                if (gridView.GetRow(gridView.FocusedRowHandle) is ConclusionXPO conclusionXPO)
-                {
-                    fileName = "conclusion";
-                }
-                else if (gridView.GetRow(gridView.FocusedRowHandle) is ExplanatoryNoteXPO explanatoryNoteXPO)
-                {
-
-                    fileName = "explanatoryNote";
-                }
-
-                if (gridView.GetRow(gridView.FocusedRowHandle) is XmlObjXPO xmlObjXPO)
-                {
-                    var xmlFileName = $"{fileName}_{xmlObjXPO.Guid}.xml";
-
-                    if (xmlObjXPO is ConclusionXPO && !ConfirmSchemaRemarks(xmlObjXPO.GetObj()))
-                    {
-                        return;
-                    }
-
-                    using (var fbd = new FolderBrowserDialog())
-                    {
-                        if (fbd.ShowDialog() == DialogResult.OK)
+                        if (Conclusion0104Document.IsHistoricalVersion(version))
                         {
-                            var folderPath = fbd.SelectedPath;
-                            var outFullPath = Path.Combine(folderPath, xmlFileName);
-
-                            var result = xmlObjXPO.GetObj();
-
-                            switch (fileName)
-                            {
-                                case "conclusion":
-                                    result = result.Replace("xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\"", $"xsi:noNamespaceSchemaLocation=\"{fileName}.xsd\"");
-                                    // Инструкция xml-stylesheet должна стоять в прологе: после корневого элемента браузер её игнорирует.
-                                    result = result.InsertIntoXmlProlog("<?xml-stylesheet type=\"text/xsl\" href=\"conclusion.xsl\" ?>");
-                                    break;
-
-                                case "explanatoryNote":
-                                    result = result.Replace("xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\"", $"xsi:noNamespaceSchemaLocation=\"{fileName.ToLower()}-01-03.xsd\"");
-                                    //result = result.Replace("<?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n", "");
-                                    break;
-                            }                            
-
-                            File.WriteAllText(outFullPath, result);
-
-                            XtraMessageBox.Show(
-                                $"Файл успешно сформирован и сохранен по следующем пути:{Environment.NewLine}" +
-                                    $"{outFullPath}",
-                                "Информационное сообщение",
-                                MessageBoxButtons.OK,
-                                MessageBoxIcon.Information);
+                            await ExportHistoricalConclusionAsync(record, xml, attempt);
                         }
-                    }
+                        else if (version == Conclusion0104Document.LegacyVersion)
+                        {
+                            var normalized = await conclusionSchema.NormalizeLegacyConclusionAsync(xml);
+                            await ExportSchemaDocumentAsync(normalized, attempt, Conclusion0104Document.RootName, allowClassicDraft: true);
+                        }
+                        else if (version == Conclusion0104Document.CurrentVersion)
+                        {
+                            await ExportSchemaDocumentAsync(xml, attempt, Conclusion0104Document.RootName);
+                        }
+                        else if (CheckConclusionVersion(version))
+                        {
+                            if (ConfirmSchemaRemarks(xml, attempt)) await ExportClassicXmlAsync(xml, attempt);
+                        }
+                        else
+                        {
+                            attempt.Status = FileOperationStatus.Rejected;
+                            attempt.Summary = $"Версия заключения {version} не поддерживается.";
+                        }
+                    });
+                }
+                else if (record is ExplanatoryNoteXPO)
+                {
+                    var version = ExplanatoryNote0107Document.ReadVersion(xml);
+                    var legacy = ExplanatoryNoteController.IsLegacyXml(xml);
+                    await TrackExportAsync(record, ExplanatoryNote0107Document.Family,
+                        legacy ? ExplanatoryNote0107Document.LegacyVersion : version, async attempt =>
+                    {
+                        if (CanPreviewExplanatoryNote(version))
+                        {
+                            await ExportSchemaDocumentAsync(xml, attempt, ExplanatoryNote0107Document.RootName);
+                        }
+                        else if (legacy)
+                        {
+                            attempt.FileName = $"explanatoryNote_{record.Guid:D}.xml";
+                            await ExportClassicXmlAsync(xml, attempt);
+                        }
+                        else
+                        {
+                            attempt.Status = FileOperationStatus.Rejected;
+                            throw new InvalidOperationException("Не удалось определить поддерживаемую версию пояснительной записки.");
+                        }
+                    });
                 }
             }
             catch (Exception ex)
@@ -570,6 +537,27 @@ namespace ProjectDocumentation.NET.Forms
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Error);
             }
+        }
+
+        private async Task ExportClassicXmlAsync(string xml, FileOperationEntry attempt)
+        {
+            await FileOperationJournal.ObserveSchemaAsync(attempt, conclusionSchema, xml);
+            using (var picker = new FolderBrowserDialog())
+            {
+                if (picker.ShowDialog(this) != DialogResult.OK) return;
+                attempt.FilePath = Path.Combine(picker.SelectedPath, attempt.FileName);
+            }
+
+            const string oldNamespace = "xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\"";
+            var isConclusion = attempt.Family == "conclusion";
+            var result = xml.Replace(oldNamespace, isConclusion ? "xsi:noNamespaceSchemaLocation=\"conclusion.xsd\""
+                : "xsi:noNamespaceSchemaLocation=\"explanatorynote-01-03.xsd\"");
+            if (isConclusion)
+                result = result.InsertIntoXmlProlog("<?xml-stylesheet type=\"text/xsl\" href=\"conclusion.xsl\" ?>");
+            File.WriteAllText(attempt.FilePath, result);
+            CompleteExport(attempt, "XML выгружен.");
+            XtraMessageBox.Show(this, $"Файл сохранён.{Environment.NewLine}{attempt.FilePath}", "Выгрузка XML",
+                MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]

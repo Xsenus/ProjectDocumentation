@@ -1,3 +1,4 @@
+using Core.NET.Controllers;
 using Core.NET.Models.XPO;
 using DevExpress.Office.Services;
 using DevExpress.XtraEditors;
@@ -72,6 +73,7 @@ namespace ProjectDocumentation.NET.Forms
         private int validationRevision = -1;
 
         public XmlObjXPO Document { get; private set; }
+        internal FileOperationEntry ImportAttempt { private get; set; }
         private bool ReadOnlyDocument => save == null;
 
         protected SchemaDocumentForm(ConclusionSchemaService service, string xml, string name,
@@ -150,7 +152,7 @@ namespace ProjectDocumentation.NET.Forms
             checkButton.Click += async (_, __) => await ValidateOrSaveAsync(false);
             findFieldButton.Click += (_, __) => FindField();
             saveButton.Click += async (_, __) => await ValidateOrSaveAsync(true);
-            draftButton.Click += (_, __) => SaveDraft();
+            draftButton.Click += async (_, __) => await SaveDraftAsync();
             applyRawButton.Click += (_, __) => ApplyRaw();
             resetRawButton.Click += (_, __) => ResetRawEditor();
             previewButton.Click += async (_, __) => await UpdatePreviewAsync();
@@ -204,6 +206,7 @@ namespace ProjectDocumentation.NET.Forms
             }
             catch (Exception error)
             {
+                FileOperationJournal.Fail(ImportAttempt, error);
                 status.Text = error.Message;
             }
             finally
@@ -330,6 +333,8 @@ namespace ProjectDocumentation.NET.Forms
             }
             catch (Exception error)
             {
+                FileOperationJournal.AddDiagnostic(ImportAttempt, $"Редактор. {error.Message}",
+                    error is System.Xml.XmlException ? "/" : null);
                 status.Text = error.Message;
             }
         }
@@ -357,13 +362,22 @@ namespace ProjectDocumentation.NET.Forms
                 var xml = Snapshot();
                 var result = await service.ValidateAsync(xml);
                 ShowValidation(result);
+                if (ImportAttempt != null && !result.Valid)
+                {
+                    FileOperationJournal.AddValidation(ImportAttempt, result, "Редактор.");
+                    if (commit)
+                    {
+                        ImportAttempt.Status = FileOperationStatus.Rejected;
+                        ImportAttempt.Summary = "Документ не прошёл проверку перед сохранением.";
+                    }
+                }
                 if (!result.Valid || !commit) return;
                 Document = await save(xml, nameEditor.Text);
                 dirty = false;
                 rawDirty = false;
                 DialogResult = DialogResult.OK;
                 Close();
-            });
+            }, captureImportFailure: commit);
             if (!IsDisposed && !Disposing && tabs.SelectedTab == validationPage && errors.Items.Count > 0)
                 errors.Focus();
         }
@@ -414,7 +428,7 @@ namespace ProjectDocumentation.NET.Forms
             });
         }
 
-        private async Task RunAsync(string message, Func<Task> action)
+        private async Task RunAsync(string message, Func<Task> action, bool captureImportFailure = false)
         {
             SetBusy(true);
             status.Text = message;
@@ -424,6 +438,7 @@ namespace ProjectDocumentation.NET.Forms
             }
             catch (Exception error)
             {
+                if (captureImportFailure) FileOperationJournal.Fail(ImportAttempt, error);
                 if (!IsDisposed && !Disposing) status.Text = error.Message;
             }
             finally
@@ -432,28 +447,57 @@ namespace ProjectDocumentation.NET.Forms
             }
         }
 
-        private void SaveDraft()
+        private async Task SaveDraftAsync()
         {
+            if (busy) return;
             var text = rawDirty ? rawEditor.Text : document != null ? Snapshot() : initialXml;
             using (var picker = new SaveFileDialog { Filter = "Документ XML (*.xml)|*.xml", DefaultExt = "xml", AddExtension = true })
             {
                 if (picker.ShowDialog(this) != DialogResult.OK) return;
-                var temporary = Path.Combine(Path.GetDirectoryName(picker.FileName), Guid.NewGuid().ToString("N") + ".tmp");
-                try
+                var path = picker.FileName;
+                var entry = new FileOperationEntry
                 {
-                    File.WriteAllText(temporary, NormalizeDraftEncoding(text), new UTF8Encoding(false));
-                    if (File.Exists(picker.FileName)) File.Replace(temporary, picker.FileName, null);
-                    else File.Move(temporary, picker.FileName);
-                    status.Text = "Исходный XML записан в выбранный файл.";
-                }
-                catch (Exception error)
+                    Kind = FileOperationKind.Export,
+                    FilePath = path,
+                    FileName = Path.GetFileName(path),
+                    DocumentName = nameEditor.Text,
+                    Family = family,
+                    Version = documentVersion,
+                    DocumentId = Guid.TryParse(initialId, out var guid) ? (Guid?)guid : null
+                };
+                await RunAsync("Сохранение файла XML…", async () =>
                 {
-                    status.Text = error.Message;
-                }
-                finally
-                {
-                    if (File.Exists(temporary)) File.Delete(temporary);
-                }
+                    var temporary = Path.Combine(Path.GetDirectoryName(path), Guid.NewGuid().ToString("N") + ".tmp");
+                    try
+                    {
+                        var xml = NormalizeDraftEncoding(text);
+                        File.WriteAllText(temporary, xml, new UTF8Encoding(false));
+                        if (File.Exists(path)) File.Replace(temporary, path, null);
+                        else File.Move(temporary, path);
+                        await FileOperationJournal.ObserveSchemaAsync(entry, service, xml);
+                        entry.Status = ReadOnlyDocument && entry.Diagnostics.Count == 0
+                            ? FileOperationStatus.Completed : FileOperationStatus.Warning;
+                        entry.Summary = ReadOnlyDocument ? "Выгружен исходный XML." : "Сохранён XML-черновик.";
+                        status.Text = "Исходный XML записан в выбранный файл.";
+                    }
+                    catch (Exception error)
+                    {
+                        FileOperationJournal.Fail(entry, error);
+                        status.Text = error.Message;
+                    }
+                    finally
+                    {
+                        try
+                        {
+                            if (File.Exists(temporary)) File.Delete(temporary);
+                        }
+                        catch (Exception error)
+                        {
+                            FileOperationJournal.AddDiagnostic(entry, $"Не удалось удалить временный файл. {error.Message}");
+                        }
+                        await FileOperationJournal.SaveAsync(this, entry);
+                    }
+                });
             }
         }
 

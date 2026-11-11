@@ -20,7 +20,9 @@ namespace ProjectDocumentation.NET.Forms
 
         public FileLoad() : this(null) { }
 
-        internal FileLoad(ConclusionSchemaService conclusionSchema)
+        internal FileLoad(ConclusionSchemaService conclusionSchema) : this(conclusionSchema, null, null) { }
+
+        internal FileLoad(ConclusionSchemaService conclusionSchema, string initialPath, string initialName)
         {
             this.conclusionSchema = conclusionSchema;
             InitializeComponent();
@@ -30,6 +32,12 @@ namespace ProjectDocumentation.NET.Forms
             {
                 if (importing && ObjXPO == null && e.CloseReason == CloseReason.UserClosing) e.Cancel = true;
             };
+            if (!string.IsNullOrWhiteSpace(initialPath))
+            {
+                btnFile.EditValue = initialPath;
+                txtName.Text = initialName ?? string.Empty;
+                DescribeSelectedFile();
+            }
         }
 
         private void DescribeSelectedFile()
@@ -103,21 +111,50 @@ namespace ProjectDocumentation.NET.Forms
         private async void btnSave_Click(object sender, EventArgs e)
         {
             if (importing) return;
+            var path = btnFile.EditValue?.ToString()?.Trim();
+            if (string.IsNullOrWhiteSpace(path))
+            {
+                XtraMessageBox.Show(this, "Укажите путь к файлу XML.", "Загрузка XML",
+                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                btnFile.Focus();
+                return;
+            }
+
+            var attempt = new FileOperationEntry
+            {
+                Kind = FileOperationKind.Import,
+                Status = FileOperationStatus.Cancelled,
+                FilePath = path,
+                DocumentName = txtName.Text.Trim(),
+                Summary = "Загрузка отменена."
+            };
             SetImporting(true);
             try
             {
-                await ImportSelectedFileAsync();
+                await ImportSelectedFileAsync(attempt);
             }
             catch (Exception error)
             {
+                if (error is XmlException || attempt.Status == FileOperationStatus.Rejected)
+                {
+                    attempt.Status = FileOperationStatus.Rejected;
+                    attempt.Summary = error.Message;
+                    if (attempt.Diagnostics.Count == 0) FileOperationJournal.AddDiagnostic(attempt, error.Message, "/");
+                }
+                else
+                {
+                    FileOperationJournal.Fail(attempt, error);
+                }
                 if (!IsDisposed && !Disposing)
                     XtraMessageBox.Show(this, error.Message, "Ошибка загрузки XML", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             finally
             {
+                await FileOperationJournal.SaveAsync(this, attempt);
                 if (!IsDisposed && !Disposing)
                 {
                     SetImporting(false);
+                    if (ObjXPO != null) Close();
                 }
             }
         }
@@ -131,31 +168,37 @@ namespace ProjectDocumentation.NET.Forms
             txtName.Properties.ReadOnly = active;
         }
 
-        private async Task ImportSelectedFileAsync()
+        private async Task ImportSelectedFileAsync(FileOperationEntry attempt)
         {
-            var filePath = btnFile.EditValue?.ToString()?.Trim();
-
-            if (string.IsNullOrWhiteSpace(filePath))
-            {
-                XtraMessageBox.Show("Укажите путь к файлу для сохранения.",
-                                "Информационное сообщение",
-                                MessageBoxButtons.OK,
-                                MessageBoxIcon.Warning);
-
-                btnFile.Focus();
-                return;
-            }
+            var filePath = Path.GetFullPath(attempt.FilePath);
+            attempt.FilePath = filePath;
+            attempt.FileName = Path.GetFileName(filePath);
 
             if (FileController.CheckFile(filePath))
             {
                 var document = SchemaXmlDocument.ReadFile(filePath);
                 var rootName = document.Root.Name.NamespaceName.Length == 0 ? document.Root.Name.LocalName : null;
                 var version = (string)document.Root.Attribute("SchemaVersion");
+                attempt.Version = version;
+                if (rootName == Conclusion0104Document.RootName)
+                {
+                    attempt.Family = "conclusion";
+                    attempt.DocumentId = Conclusion0104Document.ReadGuid(document);
+                }
+                else if (rootName == ExplanatoryNote0107Document.RootName)
+                {
+                    attempt.Family = ExplanatoryNote0107Document.Family;
+                    attempt.DocumentId = ExplanatoryNote0107Document.ReadGuid(document);
+                }
+                if (attempt.Family == null) attempt.Status = FileOperationStatus.Rejected;
                 DescribeFile(filePath, rootName, version);
                 var name = txtName.Text.Trim();
+                attempt.DocumentName = name;
 
                 if (string.IsNullOrWhiteSpace(name))
                 {
+                    attempt.Status = FileOperationStatus.Rejected;
+                    attempt.Summary = "Укажите наименование для сохранения.";
                     XtraMessageBox.Show("Укажите наименование для сохранения.",
                                 "Информационное сообщение",
                                 MessageBoxButtons.OK,
@@ -165,29 +208,33 @@ namespace ProjectDocumentation.NET.Forms
                     return;
                 }
 
+                await FileOperationJournal.ObserveSchemaAsync(attempt, conclusionSchema,
+                    document.ToString(System.Xml.Linq.SaveOptions.DisableFormatting), "Исходный XML.");
+
                 ImportResult result;
                 switch (rootName)
                 {
                     case Conclusion0104Document.RootName:
                         if (version == Conclusion0104Document.CurrentVersion)
                         {
-                            await ImportCurrentConclusionAsync(document, name);
+                            await ImportCurrentConclusionAsync(document, name, attempt);
                             return;
                         }
 
                         if (Conclusion0104Document.IsHistoricalVersion(version))
                         {
-                            await ImportHistoricalConclusionAsync(document, name);
+                            await ImportHistoricalConclusionAsync(document, name, attempt);
                             return;
                         }
 
                         if (!Conclusion0104Document.CanUseLegacyEditor(version))
                         {
+                            attempt.Status = FileOperationStatus.Rejected;
                             throw new InvalidOperationException($"Версия заключения {version} не поддерживается.");
                         }
 
-                        Func<XmlObjXPO, ImportConflictAction> resolveConflict = existing => AskImportConflict(existing,
-                            existing is ConclusionXPO && Conclusion0104Document.CanUseLegacyEditor(Conclusion0104Document.ReadVersion(existing.GetObj())));
+                        Func<XmlObjXPO, ImportConflictAction> resolveConflict = existing => ResolveImportConflict(existing,
+                            existing is ConclusionXPO && Conclusion0104Document.CanUseLegacyEditor(Conclusion0104Document.ReadVersion(existing.GetObj())), attempt);
                         result = version == Conclusion0104Document.LegacyVersion
                             ? await ConclusionController.ImportConclusionAsync(document, filePath, name, resolveConflict)
                             : await ConclusionController.ImportConclusionAsync(filePath, name, resolveConflict);
@@ -195,17 +242,18 @@ namespace ProjectDocumentation.NET.Forms
                     case ExplanatoryNote0107Document.RootName:
                         if (version == ExplanatoryNote0107Document.CurrentVersion || version == ExplanatoryNote0107Document.CompatibleVersion)
                         {
-                            await ImportExplanatoryNoteAsync(document, version, filePath, name);
+                            await ImportExplanatoryNoteAsync(document, version, filePath, name, attempt);
                             return;
                         }
 
                         if (!string.IsNullOrWhiteSpace(version) && version != ExplanatoryNote0107Document.LegacyVersion)
                         {
+                            attempt.Status = FileOperationStatus.Rejected;
                             throw new InvalidOperationException($"Версия пояснительной записки {version} не поддерживается.");
                         }
 
-                        result = await ExplanatoryNoteController.ImportExplanatoryNoteAsync(filePath, name, existing => AskImportConflict(existing,
-                            existing is ExplanatoryNoteXPO && ExplanatoryNoteController.IsLegacyXml(existing.GetObj())));
+                        result = await ExplanatoryNoteController.ImportExplanatoryNoteAsync(filePath, name, existing => ResolveImportConflict(existing,
+                            existing is ExplanatoryNoteXPO && ExplanatoryNoteController.IsLegacyXml(existing.GetObj()), attempt));
                         break;
                     default:
                         throw new InvalidOperationException("Выберите XML заключения или пояснительной записки.");
@@ -219,19 +267,21 @@ namespace ProjectDocumentation.NET.Forms
                 ObjXPO = result.Document;
                 if (ObjXPO is null)
                 {
-                    XtraMessageBox.Show("Ошибка загрузки файла: файл не соответствует выбранному типу документа или повреждён.",
+                    attempt.Status = FileOperationStatus.Rejected;
+                    attempt.Summary = "Файл не соответствует выбранному типу документа или повреждён.";
+                    XtraMessageBox.Show(attempt.Summary,
                                     "Информационное сообщение",
                                     MessageBoxButtons.OK,
                                     MessageBoxIcon.Warning);
                     return;
                 }
 
-                var message = result.IsReplaced
+                var summary = result.IsReplaced
                     ? "Содержимое существующего документа заменено."
                     : result.IsCopy
                         ? $"Файл загружен как копия с новым ID: {ObjXPO.Guid}."
                         : "Файл успешно обработан.";
-
+                var message = summary;
                 if (result.Warnings.Count > 0)
                 {
                     // Раньше эти значения удалялись молча.
@@ -239,20 +289,43 @@ namespace ProjectDocumentation.NET.Forms
                         + "Замечания при чтении XML:" + Environment.NewLine
                         + string.Join(Environment.NewLine, result.Warnings);
                 }
+                foreach (var warning in result.Warnings) FileOperationJournal.AddDiagnostic(attempt, warning);
+                FinishImport(attempt, summary);
 
                 XtraMessageBox.Show(message,
                                 "Информационное сообщение",
                                 MessageBoxButtons.OK,
                                 result.Warnings.Count > 0 ? MessageBoxIcon.Warning : MessageBoxIcon.Information);
-                Close();
             }
             else
             {
-                XtraMessageBox.Show("Не найден файл по указанному пути.",
-                                "Информационное сообщение",
-                                MessageBoxButtons.OK,
-                                MessageBoxIcon.Warning);
+                throw new FileNotFoundException("Не найден файл по указанному пути.", filePath);
             }
+        }
+
+        private void FinishImport(FileOperationEntry attempt, string summary)
+        {
+            attempt.DocumentId = ObjXPO.Guid;
+            attempt.DocumentName = ObjXPO.Name;
+            attempt.Status = attempt.Diagnostics.Count == 0 ? FileOperationStatus.Completed : FileOperationStatus.Warning;
+            attempt.Summary = summary;
+        }
+
+        private static ImportConflictAction ResolveImportConflict(XmlObjXPO existing, bool isSameType, FileOperationEntry attempt)
+        {
+            var choice = AskImportConflict(existing, isSameType);
+            if (choice == ImportConflictAction.Cancel)
+            {
+                attempt.Summary = "Загрузка отменена при совпадении идентификатора.";
+                attempt.DocumentId = existing.Guid;
+            }
+            else
+            {
+                attempt.Summary = choice == ImportConflictAction.Replace
+                    ? "Загрузка отменена в редакторе замены документа."
+                    : "Загрузка отменена в редакторе копии документа.";
+            }
+            return choice;
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]

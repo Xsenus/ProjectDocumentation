@@ -11,6 +11,7 @@
 | Главное окно и команды для документов | [Открыть](screenshots/devexpress-main.png) |
 | Загрузка XML из файла | [Открыть](screenshots/classic-file-load.png) |
 | Результат локальной проверки выбранного XML | [Открыть](screenshots/desktop-validation.png) |
+| История файлов с замечаниями и повторным импортом | [Открыть](screenshots/desktop-file-history.png) |
 
 ### Заключение 01.03
 
@@ -117,3 +118,6 @@
 | Ошибка рядом со значением | [Открыть](screenshots/web-inline-validation.png) |
 | Таблица пояснительной записки 01.05 | [Открыть](screenshots/web-table-0105.png) |
 | Таблица пояснительной записки 01.07 | [Открыть](screenshots/web-table-0107.png) |
+| Меню «Файлы» | [Открыть](screenshots/web-file-menu.png) |
+| История импорта и выгрузки с замечаниями | [Открыть](screenshots/web-file-history.png) |
+| История файлов на узком экране | [Открыть](screenshots/web-file-history-mobile.png) |

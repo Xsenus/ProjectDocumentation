@@ -133,9 +133,11 @@ namespace ProjectDocumentation.NET.Forms
 
             try
             {
-                var migration = await conclusionSchema.MigrateAsync(record.GetObj(), ExplanatoryNote0107Document.CompatibleVersion);
-                await ExportSchemaDocumentAsync(migration.Xml, ExplanatoryNote0107Document.CompatibleVersion, record.Guid,
-                    "ExplanatoryNote", ExplanatoryNote0107Document.Family, migration.Warnings);
+                await TrackExportAsync(record, ExplanatoryNote0107Document.Family, ExplanatoryNote0107Document.CompatibleVersion, async attempt =>
+                {
+                    var migration = await conclusionSchema.MigrateAsync(record.GetObj(), attempt.Version);
+                    await ExportSchemaDocumentAsync(migration.Xml, attempt, ExplanatoryNote0107Document.RootName, migration.Warnings);
+                });
             }
             catch (Exception error)
             {

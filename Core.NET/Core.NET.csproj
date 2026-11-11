@@ -67,6 +67,7 @@
     <Compile Include="Controllers\DataBaseController.cs" />
     <Compile Include="Controllers\ExplanatoryNoteController.cs" />
     <Compile Include="Controllers\FileController.cs" />
+    <Compile Include="Controllers\FileOperationHistory.cs" />
     <Compile Include="Controllers\ImportController.cs" />
     <Compile Include="Controllers\SessionController.cs" />
     <Compile Include="DaDataObj\DaDataObj.cs" />
@@ -83,6 +84,7 @@
     <Compile Include="Models\XPO\ConclusionXPO.cs" />
     <Compile Include="Models\XPO\GeneralizedDictionaryXPO.cs" />
     <Compile Include="Models\XPO\ExplanatoryNoteXPO.cs" />
+    <Compile Include="Models\XPO\FileOperationXPO.cs" />
     <Compile Include="Models\XPO\GeneralizedDictionary.cs" />
     <Compile Include="Models\XPO\SettingXPO.cs" />
     <Compile Include="Models\XPO\TypeOrganization.cs" />

@@ -12,7 +12,7 @@ namespace ProjectDocumentation.NET.Forms
 {
     public partial class FileLoad
     {
-        private async Task ImportExplanatoryNoteAsync(XDocument document, string version, string path, string name)
+        private async Task ImportExplanatoryNoteAsync(XDocument document, string version, string path, string name, FileOperationEntry attempt)
         {
             if (conclusionSchema == null)
             {
@@ -42,7 +42,7 @@ namespace ProjectDocumentation.NET.Forms
                 {
                     var sameVersion = existing is ExplanatoryNoteXPO &&
                         ExplanatoryNote0107Document.ReadVersion(existing.GetObj()) == ExplanatoryNote0107Document.CurrentVersion;
-                    switch (AskImportConflict(existing, sameVersion))
+                    switch (ResolveImportConflict(existing, sameVersion, attempt))
                     {
                         case ImportConflictAction.Replace:
                             replace = (ExplanatoryNoteXPO)existing;
@@ -56,13 +56,19 @@ namespace ProjectDocumentation.NET.Forms
                 }
             }
 
+            foreach (var warning in warnings) FileOperationJournal.AddDiagnostic(attempt, warning);
             using (var editor = new ExplanatoryNote0107Form(conclusionSchema, ExplanatoryNote0107Document.WithGuid(document, guid), name,
-                (xml, title) => ExplanatoryNote0107Document.SaveAsync(conclusionSchema, xml, title, guid, replace), warnings))
+                (xml, title) => ExplanatoryNote0107Document.SaveAsync(conclusionSchema, xml, title, guid, replace), warnings)
+                { ImportAttempt = attempt })
             {
                 if (editor.ShowDialog(this) == DialogResult.OK && editor.Document != null)
                 {
                     ObjXPO = editor.Document;
-                    Close();
+                    var summary = upgrading ? "Записка преобразована и загружена в версии 01.07."
+                        : replace != null ? "Содержимое существующей записки заменено."
+                        : incomingGuid.HasValue && guid != incomingGuid.Value ? "Записка загружена как копия."
+                        : "Записка загружена.";
+                    FinishImport(attempt, summary);
                 }
             }
         }
