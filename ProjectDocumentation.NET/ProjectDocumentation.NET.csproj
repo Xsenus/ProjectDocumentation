@@ -1,4 +1,4 @@
-﻿<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="..\packages\EntityFramework.6.5.1\build\EntityFramework.props" Condition="Exists('..\packages\EntityFramework.6.5.1\build\EntityFramework.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -123,6 +123,12 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Services\ConclusionSchemaService.cs" />
+    <Compile Include="Services\ConclusionDaData.cs" />
+    <Compile Include="Services\Conclusion0104Document.cs" />
+    <Compile Include="Forms\Conclusion0104Form.cs" />
+    <Compile Include="Forms\MainForm.Conclusion0104.cs" />
+    <Compile Include="Forms\FileLoad.Conclusion0104.cs" />
     <Compile Include="Forms\FileLoad.cs">
       <SubType>Form</SubType>
     </Compile>

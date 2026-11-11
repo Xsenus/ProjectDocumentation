@@ -1,0 +1,450 @@
+"""Loss-aware conversion between the two supported conclusion XML versions."""
+
+from collections import Counter
+from dataclasses import dataclass
+from datetime import date
+from functools import lru_cache
+from pathlib import Path
+import re
+from xml.etree import ElementTree as ET
+
+from .xmlio import parse_document
+
+
+XSD = '{http://www.w3.org/2001/XMLSchema}'
+SCHEMA_LOCATION = '{http://www.w3.org/2001/XMLSchema-instance}noNamespaceSchemaLocation'
+VERSIONS = frozenset({'01.03', '01.04'})
+SCHEMA_DIR = Path(__file__).resolve().parent / 'schemas'
+PARTICLES = {XSD + name for name in ('all', 'choice', 'element', 'group', 'sequence')}
+PERSON_AND_ORGANIZATION_NAMES = {
+    'FamilyName': 'Surname', 'FirstName': 'Name', 'SecondName': 'Patronymic',
+    'OrgFullName': 'FullName', 'OrgOGRN': 'OGRN', 'OrgINN': 'INN', 'OrgKPP': 'KPP',
+}
+LEGACY_NAMES = {target: source for source, target in PERSON_AND_ORGANIZATION_NAMES.items()}
+ADDRESS_VARIANTS = {'RussianAddress', 'RussianPostAddress', 'ForeignAddress', 'SeaRussianAddress'}
+RUSSIAN_NAMES = {'россия', 'российская федерация', 'рф', 'russia', 'russian federation', 'ru', 'rus'}
+ADDRESS_LABELS = {
+    'District': 'Район', 'City': 'Город', 'Settlement': 'Населённый пункт',
+    'Street': 'Улица', 'Building': 'Здание', 'Room': 'Помещение',
+    'PostIndex': 'Почтовый индекс', 'Landmark': 'Ориентир',
+}
+DATE_VALUE = r'\d{4}-\d{2}-\d{2}(?:Z|[+-]\d{2}:\d{2})?|\d{2}\.\d{2}\.\d{4}'
+DATE_TEXT = re.compile(rf'\s*({DATE_VALUE})(?:\s*[,;:–—]\s*(.+))?\s*', re.DOTALL)
+DATE_IN_SENTENCE = re.compile(rf'\b(?:по\s+состоянию\s+на|на\s+дату)\s+({DATE_VALUE})(?!\w)', re.IGNORECASE)
+
+
+@dataclass(frozen=True)
+class _Particle:
+    kind: str
+    minimum: int = 1
+    maximum: int | None = 1
+    element: ET.Element | None = None
+    children: tuple['_Particle', ...] = ()
+
+    @property
+    def name(self) -> str:
+        return self.element.get('name') if self.element is not None else ''
+
+
+class _Schema:
+    def __init__(self, version: str):
+        schema = ET.parse(SCHEMA_DIR / f'conclusion-{version.replace(".", "-")}.xsd').getroot()
+        self.root = schema.find(f'{XSD}element[@name="Conclusion"]')
+        self.complex_types = self._named(schema, 'complexType')
+        self.simple_types = self._named(schema, 'simpleType')
+        self.groups = self._named(schema, 'group')
+
+    @staticmethod
+    def _named(schema, kind):
+        return {item.attrib['name']: item for item in schema.findall(XSD + kind)}
+
+    def _content(self, definition):
+        inline = definition.find(XSD + 'complexType')
+        if inline is not None:
+            return inline
+        return self.complex_types.get(definition.get('type'))
+
+    def _inherited_content(self, complex_type):
+        if complex_type is None:
+            return
+        extension = complex_type.find(f'{XSD}complexContent/{XSD}extension')
+        if extension is None:
+            extension = complex_type.find(f'{XSD}simpleContent/{XSD}extension')
+        if extension is None:
+            yield complex_type
+            return
+        yield from self._inherited_content(self.complex_types.get(extension.get('base')))
+        yield extension
+
+    def _particle(self, node):
+        kind = node.tag.removeprefix(XSD)
+        minimum = int(node.get('minOccurs', '1'))
+        raw_maximum = node.get('maxOccurs', '1')
+        maximum = None if raw_maximum == 'unbounded' else int(raw_maximum)
+        if kind == 'element':
+            return _Particle(kind, minimum, maximum, element=node)
+        if kind == 'group':
+            node = self.groups[node.attrib['ref']]
+        children = tuple(self._particle(child) for child in node if child.tag in PARTICLES)
+        return _Particle(kind, minimum, maximum, children=children)
+
+    @lru_cache(maxsize=None)
+    def layout(self, definition):
+        content = tuple(self._inherited_content(self._content(definition)))
+        fields = tuple(self._particle(child) for base in content for child in base if child.tag in PARTICLES)
+        attributes = {node.attrib['name']: node for base in content for node in base.findall(XSD + 'attribute')}
+        return _Particle('sequence', children=fields), attributes
+
+    @lru_cache(maxsize=None)
+    def enumerated_values(self, type_name):
+        simple_type = self.simple_types.get(type_name)
+        if simple_type is None:
+            return frozenset()
+        restriction = simple_type.find(XSD + 'restriction')
+        if restriction is None:
+            return frozenset()
+        values = frozenset(node.attrib['value'] for node in restriction.findall(XSD + 'enumeration'))
+        return values or self.enumerated_values(restriction.get('base'))
+
+
+@lru_cache(maxsize=2)
+def _schema(version):
+    return _Schema(version)
+
+
+def _ordered_fields(particle, order=()):
+    if particle.element is not None:
+        yield particle.name, (order, particle.element)
+        return
+    for index, child in enumerate(particle.children):
+        # Repeated choices must retain the source order between alternatives.
+        yield from _ordered_fields(child, order + (0 if particle.kind == 'choice' else index,))
+
+
+def _field_names(particle):
+    return [name for name, _ in _ordered_fields(particle)]
+
+
+def _can_be_empty(particle):
+    if particle.minimum == 0:
+        return True
+    if particle.element is not None:
+        return False
+    checks = (_can_be_empty(child) for child in particle.children)
+    return any(checks) if particle.kind == 'choice' else all(checks)
+
+
+def _check_required(particle, counts, path, warnings, parent_maximum=1):
+    maximum = None if parent_maximum is None or particle.maximum is None else parent_maximum * particle.maximum
+    if particle.element is not None:
+        count = counts[particle.name]
+        if count < particle.minimum:
+            warnings.append(f'{path}/{particle.name}: заполните обязательное поле.')
+        if maximum is not None and count > maximum:
+            warnings.append(f'{path}/{particle.name}: превышено допустимое число элементов.')
+        return
+
+    present = [child for child in particle.children if any(counts[name] for name in _field_names(child))]
+    if not present and _can_be_empty(particle):
+        return
+    if particle.kind == 'choice':
+        if not present:
+            choices = ', '.join('/'.join(_field_names(child)) for child in particle.children)
+            warnings.append(f'{path}: выберите один из обязательных вариантов ({choices}).')
+        elif len(present) > 1 and maximum == 1:
+            warnings.append(f'{path}: перенесено несколько взаимоисключающих вариантов. Оставьте один.')
+        children = present
+    else:
+        children = particle.children
+    for child in children:
+        _check_required(child, counts, path, warnings, maximum)
+
+
+def _with_children(element, children):
+    result = ET.Element(element.tag, element.attrib)
+    result.extend(children)
+    return result
+
+
+def _value_element(tag, value):
+    element = ET.Element(tag)
+    element.text = value
+    return element
+
+
+def _renamed(element, name):
+    result = _with_children(element, list(element))
+    result.tag = name
+    result.text = element.text
+    return result
+
+
+def _address_description(children):
+    lines = []
+    for child in children:
+        value = (child.text or '').strip()
+        if value:
+            label = ADDRESS_LABELS.get(child.tag)
+            lines.append(f'{label}: {value}' if label else value)
+    return ', '.join(lines)
+
+
+def _upgrade_address(element, target_type, path, warnings):
+    if any(child.tag in ADDRESS_VARIANTS for child in element):
+        return element
+    regions = {(child.text or '').strip() for child in element.findall('Region')}
+    countries = {(child.text or '').strip() for child in element.findall('Country')}
+    if len(regions) > 1 or len(countries) > 1:
+        warnings.append(f'{path}: в оригинале несколько кодов региона или стран. Определите адрес по оригиналу.')
+        return _with_children(element, [])
+    region = next(iter(regions), '')
+    country = next(iter(countries), '')
+    russian_country = country.casefold() in RUSSIAN_NAMES
+    foreign_country = bool(country) and not russian_country
+    russian_region = region != '00' and region in _schema('01.03').enumerated_values('tRegionsRF')
+    if (region == '00' and russian_country) or (russian_region and foreign_country):
+        warnings.append(f'{path}: код региона и страна указывают на разные варианты адреса. Выберите правильный вариант по исходному документу.')
+        return _with_children(element, [])
+    if not russian_region and region != '00' and not country:
+        warnings.append(f'{path}: невозможно определить страну адреса по исходному XML. Выберите вариант и перенесите адрес из оригинала.')
+        return _with_children(element, [])
+    if region == '00' or foreign_country:
+        variant = ET.Element('ForeignAddress')
+        variant.extend(element.findall('Country'))
+        if region not in {'', '00'}:
+            warnings.append(f'{path}/Region: исходный код региона не перенесён в иностранный адрес.')
+        fields = [child for child in element if child.tag in ADDRESS_LABELS or child.tag == 'Note']
+        if any(field.tag != 'Note' for field in fields):
+            warnings.append(f'{path}/ForeignAddress: структурные поля сведены в текст адреса.')
+            description = _address_description(fields)
+            if description:
+                variant.append(_value_element('Note', description))
+        else:
+            variant.extend(fields)
+        for child in element:
+            if child.tag not in ADDRESS_LABELS and child.tag not in {'Country', 'Region', 'Note'}:
+                variant.append(child)
+        return _with_children(element, [variant])
+
+    variant = ET.Element('RussianPostAddress' if target_type == 'tPostAddress' else 'RussianAddress')
+    fields = [child for child in element if child.tag in ADDRESS_LABELS and child.tag != 'PostIndex']
+    notes = element.findall('Note')
+    combine = bool(fields and any((note.text or '').strip() for note in notes))
+    for child in element:
+        if child.tag == 'Region':
+            variant.append(_renamed(child, 'RegionCode'))
+        elif child.tag != 'Country' and (not combine or child not in fields + notes):
+            variant.append(child)
+    if combine:
+        variant.append(_value_element('Note', _address_description(fields + notes)))
+        warnings.append(f'{path}/{variant.tag}: структурные поля и примечание сведены в текст адреса, чтобы сохранить сведения в одном варианте 01.04.')
+    return _with_children(element, [variant])
+
+
+def _downgrade_address(element, path, warnings):
+    variants = [child for child in element if child.tag in ADDRESS_VARIANTS]
+    if not variants:
+        return element
+    variant = variants[0]
+    if len(variants) > 1:
+        warnings.append(f'{path}: в 01.03 перенесён первый вариант адреса. Остальные варианты доступны в оригинале.')
+    for child in element:
+        if child not in variants:
+            warnings.append(f'{path}/{child.tag}: поле за пределами выбранного варианта адреса не перенесено.')
+    for attribute in variant.attrib:
+        warnings.append(f'{path}/{variant.tag}/@{attribute}: атрибут не перенесён в плоский адрес 01.03.')
+    if variant.tag == 'SeaRussianAddress':
+        warnings.append(f'{path}: морской адрес перенесён в примечание. Код региона не определён.')
+        return _with_children(element, [_value_element('Note', variant.text or '')])
+    if variant.tag == 'ForeignAddress':
+        if (variant.findtext('Country') or '').strip().casefold() in RUSSIAN_NAMES:
+            warnings.append(f'{path}/Country: иностранный вариант содержит название России. Проверьте классификацию адреса.')
+        return _with_children(element, [*variant, _value_element('Region', '00')])
+    children = []
+    notes = [child for child in variant if child.tag in {'Note', 'Landmark'}]
+    for child in variant:
+        if child.tag == 'RegionCode':
+            if (child.text or '').strip() == '00':
+                warnings.append(f'{path}/RegionCode: код 00 означает иностранный адрес в 01.03. Укажите регион российского адреса по оригиналу.')
+            else:
+                children.append(_renamed(child, 'Region'))
+        elif child.tag not in {'Note', 'Landmark'}:
+            children.append(child)
+    if any(note.tag == 'Landmark' for note in notes):
+        children.append(_value_element('Note', _address_description(notes)))
+        warnings.append(f'{path}/Landmark: ориентир перенесён в примечание 01.03.')
+    else:
+        children.extend(notes)
+    return _with_children(element, children)
+
+
+def _normalized_date(raw_date):
+    if '.' in raw_date:
+        raw_date = '-'.join(reversed(raw_date.split('.')))
+    try:
+        parsed = date.fromisoformat(raw_date[:10])
+    except ValueError:
+        return None
+    zone = raw_date[10:]
+    if zone and zone != 'Z':
+        hour, minute = map(int, zone[1:].split(':'))
+        if hour > 14 or minute > 59 or (hour == 14 and minute != 0):
+            return None
+    return parsed.isoformat() + zone
+
+
+def _upgrade_date(element, path, warnings):
+    if len(element):
+        return element
+    value = element.text or ''
+    match = DATE_TEXT.fullmatch(value)
+    if match is not None:
+        raw_date, justification = match.groups()
+        parsed = _normalized_date(raw_date)
+        if parsed is not None:
+            children = [_value_element('Date', parsed)]
+            if justification:
+                children.append(_value_element('DateJustification', justification))
+            return _with_children(element, children)
+    dates = DATE_IN_SENTENCE.findall(value)
+    if len(dates) == 1:
+        parsed = _normalized_date(dates[0])
+        if parsed is not None:
+            warnings.append(f'{path}: дата перенесена из фразы исходного документа. Проверьте дату и обоснование.')
+            return _with_children(element, [_value_element('Date', parsed), _value_element('DateJustification', value)])
+    if value.strip():
+        warnings.append(f'{path}: дата не распознана. Исходный текст сохранён в обосновании.')
+        return _with_children(element, [_value_element('DateJustification', value)])
+    return _with_children(element, [])
+
+
+def _downgrade_date(element, path, warnings):
+    if not len(element):
+        return element
+    pieces = []
+    for child in element:
+        if child.tag in {'Date', 'DateJustification'} and (child.text or '').strip():
+            pieces.append(child.text)
+        elif child.tag not in {'Date', 'DateJustification'}:
+            warnings.append(f'{path}/{child.tag}: поле даты не имеет аналога в 01.03.')
+    result = ET.Element(element.tag, element.attrib)
+    result.text = '; '.join(pieces)
+    return result
+
+
+def _finance_owner(element, forward, path, warnings):
+    wrappers = [child for child in element if child.tag in {'Organization', 'ForeignOrganization'}]
+    if forward and wrappers:
+        if len(wrappers) > 1:
+            warnings.append(f'{path}: в 01.04 перенесён первый владелец. Остальные сведения доступны в оригинале.')
+        owner = wrappers[0]
+        if owner.tag == 'ForeignOrganization' and owner.find('RAFP') is None:
+            warnings.append(f'{path}/RAFP: внесите номер записи об аккредитации иностранной организации.')
+        result = _with_children(element, [*owner, *(child for child in element if child not in wrappers)])
+        for attribute, value in owner.attrib.items():
+            if attribute in result.attrib and result.get(attribute) != value:
+                warnings.append(f'{path}/@{attribute}: исходные атрибуты владельца конфликтуют.')
+            else:
+                result.set(attribute, value)
+        return result
+    if not forward and not wrappers and len(element):
+        tag = 'ForeignOrganization' if element.find('RAFP') is not None and element.find('OGRN') is None else 'Organization'
+        owner = ET.Element(tag)
+        owner.extend(element)
+        return _with_children(element, [owner])
+    return element
+
+
+def _project(source, name, definition, schema, forward, path, warnings):
+    type_name = definition.get('type')
+    if forward and type_name in {'tAddress', 'tObjectAddress', 'tPostAddress'}:
+        source = _upgrade_address(source, type_name, path, warnings)
+    elif not forward and type_name in {'tAddress', 'tPostAddress'}:
+        source = _downgrade_address(source, path, warnings)
+    if name in {'EngineeringSurveySummaryDate', 'ProjectDocumentsSummaryDate'}:
+        source = (_upgrade_date if forward else _downgrade_date)(source, path, warnings)
+    if name == 'FinanceOwner':
+        source = _finance_owner(source, forward, path, warnings)
+
+    particle, attributes = schema.layout(definition)
+    fields = dict(_ordered_fields(particle))
+    result = ET.Element(name)
+    for attribute, value in source.attrib.items():
+        if path == '/Conclusion' and attribute == 'SchemaLink':
+            if value.strip():
+                warnings.append(f'{path}/@SchemaLink: ссылка на исходную версию снята при преобразовании.')
+        elif path == '/Conclusion' and attribute == SCHEMA_LOCATION:
+            result.set(attribute, f'conclusion-{"01-04" if forward else "01-03"}.xsd')
+        elif attribute in attributes:
+            result.set(attribute, value)
+        else:
+            warnings.append(f'{path}/@{attribute}: атрибут не имеет аналога в целевой схеме и доступен в оригинале.')
+    for attribute, attribute_definition in attributes.items():
+        if attribute_definition.get('use') == 'required' and not (result.get(attribute) or '').strip():
+            warnings.append(f'{path}/@{attribute}: заполните обязательное поле.')
+
+    if not fields:
+        result.text = source.text
+        values = schema.enumerated_values(type_name)
+        if values and result.text is not None and result.text.strip() not in values:
+            warnings.append(f'{path}: значение отсутствует в справочнике целевой схемы. Выберите допустимое значение.')
+        if type_name in {'tNotEmptyString', 'tNotBreakString'} and not (result.text or '').strip():
+            warnings.append(f'{path}: в целевой схеме это поле не может быть пустым.')
+        if type_name == 'tNotBreakString' and result.text and (len(result.text) > 50 or any(ch in result.text for ch in '\r\n')):
+            warnings.append(f'{path}: исходный текст сохранён целиком. Для 01.04 сократите его до 50 символов и уберите переносы строк.')
+    elif (source.text or '').strip():
+        warnings.append(f'{path}: свободный текст не соответствует структуре целевого поля и доступен в оригинале.')
+
+    accepted = []
+    aliases = PERSON_AND_ORGANIZATION_NAMES if forward else LEGACY_NAMES
+    original_counts = Counter(child.tag for child in source)
+    original_positions = Counter()
+    for child in source:
+        candidate = child.tag
+        original_positions[candidate] += 1
+        suffix = f'[{original_positions[candidate]}]' if original_counts[candidate] > 1 else ''
+        if forward and candidate == 'ForeignOrganization' and 'Organization' in fields:
+            candidate = 'Organization'
+            if child.find('RAFP') is None:
+                warnings.append(f'{path}/{child.tag}{suffix}/RAFP: внесите номер записи об аккредитации иностранной организации.')
+        elif not forward and candidate == 'Organization' and 'ForeignOrganization' in fields and child.find('RAFP') is not None and child.find('OGRN') is None:
+            candidate = 'ForeignOrganization'
+        elif candidate not in fields:
+            candidate = aliases.get(candidate, candidate)
+        if candidate in fields:
+            order, child_definition = fields[candidate]
+            accepted.append((order, candidate, child_definition, child))
+        else:
+            warnings.append(f'{path}/{child.tag}{suffix}: поле не имеет аналога в целевой схеме и доступно в оригинале.')
+
+    counts = Counter(candidate for _, candidate, _, _ in accepted)
+    positions = Counter()
+    for _, candidate, child_definition, child in sorted(accepted, key=lambda item: item[0]):
+        positions[candidate] += 1
+        suffix = f'[{positions[candidate]}]' if counts[candidate] > 1 else ''
+        result.append(_project(child, candidate, child_definition, schema, forward, f'{path}/{candidate}{suffix}', warnings))
+    _check_required(particle, counts, path, warnings)
+    return result
+
+
+def migrate_xml(xml: str, target_version: str = '01.04') -> dict:
+    """Return a converted draft and field warnings; callers retain the input XML."""
+    if not isinstance(target_version, str) or target_version not in VERSIONS:
+        raise ValueError('Поддерживаются только версии заключения 01.03 и 01.04.')
+    try:
+        root = parse_document(xml)
+    except ET.ParseError as error:
+        raise ValueError(f'Некорректный XML заключения: {error}.') from error
+    if root.tag != 'Conclusion':
+        raise ValueError('Ожидается XML заключения с корневым элементом Conclusion.')
+    source_version = root.get('SchemaVersion')
+    if source_version not in VERSIONS:
+        raise ValueError('У заключения отсутствует поддерживаемый атрибут SchemaVersion (01.03 или 01.04).')
+    warnings: list[str] = []
+    if source_version != target_version:
+        schema = _schema(target_version)
+        result = _project(root, 'Conclusion', schema.root, schema, target_version == '01.04', '/Conclusion', warnings)
+        result.set('SchemaVersion', target_version)
+        ET.indent(result, space='  ')
+        xml = ET.tostring(result, encoding='unicode', xml_declaration=True)
+    return {'xml': xml, 'warnings': warnings, 'sourceVersion': source_version, 'targetVersion': target_version}

@@ -10,6 +10,7 @@ using DevExpress.XtraEditors;
 using DevExpress.XtraGrid.Columns;
 using DevExpress.XtraGrid.Views.Grid;
 using ProjectDocumentation.NET.Forms.ObjectChange;
+using ProjectDocumentation.NET.Services;
 using System;
 using System.Drawing;
 using System.IO;
@@ -26,6 +27,7 @@ namespace ProjectDocumentation.NET.Forms
         public MainForm()
         {
             InitializeComponent();
+            InitializeConclusionCommands();
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
@@ -50,6 +52,7 @@ namespace ProjectDocumentation.NET.Forms
                     barBtnFill.Enabled = false;
                 }
 
+                UpdateConclusionCommands(gridView.GetFocusedRow());
                 popupMenu.ShowPopup(new Point(Cursor.Position.X, Cursor.Position.Y));
             }
         }
@@ -57,7 +60,7 @@ namespace ProjectDocumentation.NET.Forms
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
         private async void barBtnLoad_ItemClick(object sender, ItemClickEventArgs e)
         {
-            using (var form = new FileLoad())
+            using (var form = new FileLoad(conclusionSchema))
             {
                 form.ShowDialog();
                 if (form.ObjXPO != null)
@@ -282,10 +285,26 @@ namespace ProjectDocumentation.NET.Forms
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
-        private void barBtnFill_ItemClick(object sender, ItemClickEventArgs e)
+        private async void barBtnFill_ItemClick(object sender, ItemClickEventArgs e)
         {
             try
             {
+                if (gridView.GetFocusedRow() is ConclusionXPO current)
+                {
+                    var xml = current.GetObj();
+                    var version = Conclusion0104Document.ReadVersion(xml);
+                    if (version == Conclusion0104Document.CurrentVersion)
+                    {
+                        await ExportConclusionAsync(xml, version, current.Guid);
+                        return;
+                    }
+
+                    if (!CheckConclusionVersion(version))
+                    {
+                        return;
+                    }
+                }
+
                 var fileName = default(string);
                 if (gridView.GetRow(gridView.FocusedRowHandle) is ConclusionXPO conclusionXPO)
                 {
@@ -355,30 +374,7 @@ namespace ProjectDocumentation.NET.Forms
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
         private async void barBtnAddConclusion_ItemClick(object sender, ItemClickEventArgs e)
         {
-            using (var form = new ConclusionEdit())
-            {
-                form.ShowDialog();
-
-                if (form.IsSave)
-                {
-                    var conclusionXPO = new ConclusionXPO(Session)
-                    {
-                        Name = form.FileName
-                    };
-
-                    form.Conclusion.ConclusionGuid = conclusionXPO.Guid?.ToString();
-                    var xml = form.Conclusion.GetSerializeConclusion();
-                    if (!CheckSerialized(xml))
-                    {
-                        return;
-                    }
-
-                    conclusionXPO.SetObj(xml);
-                    await Session.SaveAsync(conclusionXPO);
-
-                    await UpdateGridDataSourceAsync(nameof(XmlObjXPO.Guid), conclusionXPO.Guid);
-                }
-            }
+            await AddCurrentConclusionAsync();
         }
 
         private async void barBtnAddExplanatoryNote_ItemClick(object sender, ItemClickEventArgs e)
@@ -419,6 +415,18 @@ namespace ProjectDocumentation.NET.Forms
             if (gridView.GetRow(gridView.FocusedRowHandle) is ConclusionXPO conclusionXPO)
             {
                 var xml = conclusionXPO.GetObj();
+                var version = Conclusion0104Document.ReadVersion(xml);
+                if (version == Conclusion0104Document.CurrentVersion)
+                {
+                    await EditCurrentConclusionAsync(conclusionXPO);
+                    return;
+                }
+
+                if (!CheckConclusionVersion(version))
+                {
+                    return;
+                }
+
                 var conclusion = ConclusionController.GetConclusionByString(xml);
                 if (!CheckDeserialized(conclusion))
                 {
@@ -481,6 +489,18 @@ namespace ProjectDocumentation.NET.Forms
             if (gridView.GetRow(gridView.FocusedRowHandle) is ConclusionXPO conclusionXPO)
             {
                 var xml = conclusionXPO.GetObj();
+                var version = Conclusion0104Document.ReadVersion(xml);
+                if (version == Conclusion0104Document.CurrentVersion)
+                {
+                    await EditCurrentConclusionAsync(conclusionXPO, "ExpertOrganization");
+                    return;
+                }
+
+                if (!CheckConclusionVersion(version))
+                {
+                    return;
+                }
+
                 var conclusion = ConclusionController.GetConclusionByString(xml);
                 if (!CheckDeserialized(conclusion))
                 {
@@ -514,6 +534,18 @@ namespace ProjectDocumentation.NET.Forms
             if (gridView.GetRow(gridView.FocusedRowHandle) is ConclusionXPO conclusionXPO)
             {
                 var xml = conclusionXPO.GetObj();
+                var version = Conclusion0104Document.ReadVersion(xml);
+                if (version == Conclusion0104Document.CurrentVersion)
+                {
+                    ViewCurrentConclusion(conclusionXPO);
+                    return;
+                }
+
+                if (!CheckConclusionVersion(version))
+                {
+                    return;
+                }
+
                 var conclusion = ConclusionController.GetConclusionByString(xml);
                 if (!CheckDeserialized(conclusion))
                 {
