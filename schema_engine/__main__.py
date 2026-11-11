@@ -10,11 +10,10 @@ import webbrowser
 
 from schema_engine.documents import DEFAULT_FAMILY, DOCUMENTS, SCHEMA_ASSETS, SCHEMA_DIRECTORY, resolve_version
 from schema_engine.schema import form_schema, new_document, validate_document
-from schema_engine.xmlio import MAX_XML_SIZE
+from schema_engine.xmlio import MAX_REQUEST_SIZE
 
 
 PORTAL = SCHEMA_DIRECTORY.parent.parent / 'portal' / 'dist'
-MAX_REQUEST_SIZE = MAX_XML_SIZE * 2 + 4096
 DEVELOPMENT_ORIGINS = {'http://127.0.0.1:5173', 'http://localhost:5173'}
 
 
@@ -142,7 +141,13 @@ def main():
     parser.add_argument('--host', choices=['127.0.0.1'], default='127.0.0.1')
     parser.add_argument('--port', type=int, default=8765)
     parser.add_argument('--open-browser', action='store_true')
+    parser.add_argument('--stdio', action='store_true', help='Обрабатывать JSON-запросы настольного приложения через стандартный ввод и вывод.')
     options = parser.parse_args()
+    if options.stdio:
+        from schema_engine.stdio import run
+
+        run()
+        return
     for family in DOCUMENTS:
         form_schema(family)
     with ThreadingHTTPServer((options.host, options.port), Handler) as server:

@@ -7,7 +7,10 @@ from functools import lru_cache
 import re
 from xml.etree import ElementTree as ET
 
-from .documents import DOCUMENTS, FAMILIES_BY_ROOT, SCHEMA_DIRECTORY, SCHEMA_LOCATION, document_version, resolve_version, schema_filename
+from .documents import (
+    DOCUMENTS, FAMILIES_BY_ROOT, LEGACY_CONCLUSION_VERSIONS, SCHEMA_DIRECTORY, SCHEMA_LOCATION,
+    document_version, resolve_version, schema_filename, source_versions,
+)
 from .xmlio import parse_document
 
 
@@ -28,6 +31,8 @@ ADDRESS_LABELS = {
 DATE_VALUE = r'\d{4}-\d{2}-\d{2}(?:Z|[+-]\d{2}:\d{2})?|\d{2}\.\d{2}\.\d{4}'
 DATE_TEXT = re.compile(rf'\s*({DATE_VALUE})(?:\s*[,;:–—]\s*(.+))?\s*', re.DOTALL)
 DATE_IN_SENTENCE = re.compile(rf'\b(?:по\s+состоянию\s+на|на\s+дату)\s+({DATE_VALUE})(?!\w)', re.IGNORECASE)
+FUNCTIONS_CODE = r'[0-9]{1,2}\.[0-9]{1,2}\.[0-9]{1,3}'
+LEGACY_SUMMARY_SEPARATOR = re.compile(r'(?<=[.!?])\s+|[\r\n;]+')
 
 
 @dataclass(frozen=True)
@@ -366,9 +371,79 @@ def _finance_owner(element, forward, path, warnings):
     return element
 
 
-def _project(source, name, definition, schema, forward, path, warnings):
+def _clean_legacy_address(element):
+    fields = ADDRESS_LABELS.keys() | {'Country', 'Note', 'Region'}
+    return _with_children(element, [
+        child for child in element
+        if child.tag not in fields or len(child) or child.attrib or (child.text or '').strip()
+    ])
+
+
+def _legacy_functions(element, type_name, path, warnings):
+    descriptions = element.findall('Functions')
+    if len(descriptions) != 1 or element.find('FunctionsClass') is not None:
+        return element
+    description = descriptions[0]
+    if len(description) or description.attrib:
+        return element
+    value = (description.text or '').strip()
+    suffix = r'\.[0-9]{1,3}'
+    if type_name == 'tObject':
+        suffix = f'(?:{suffix})?'
+    if re.fullmatch(FUNCTIONS_CODE + suffix, value):
+        warnings.append(f'{path}/FunctionsClass: в исходном поле назначения указан код. Код перенесён без изменения.')
+        return _with_children(element, [
+            _value_element('FunctionsClass', value) if child is description else child for child in element
+        ])
+    if value:
+        warnings.append(f'{path}/Functions: текст назначения доступен в оригинале. Для 01.04 выберите код классификатора.')
+        return _with_children(element, [child for child in element if child is not description])
+    return element
+
+
+def _statement_key(value):
+    return ' '.join(value.casefold().replace('ё', 'е').split()).rstrip('.')
+
+
+def _legacy_examination_summary(element, definition, schema, path, warnings):
+    value = (element.text or '').strip()
+    if len(element) or not value:
+        return element
+    particle, _ = schema.layout(definition)
+    choices = {}
+    for name, (_, field) in _ordered_fields(particle):
+        for option in schema.enumerated_values(field.get('type')):
+            choices.setdefault(_statement_key(option), []).append((name, option))
+    key = _statement_key(value)
+    statements = [value] if key in choices else LEGACY_SUMMARY_SEPARATOR.split(value)
+    matches = {}
+    unresolved = False
+    for statement in statements:
+        if not statement.strip():
+            continue
+        options = choices.get(_statement_key(statement), [])
+        if len(options) == 1:
+            name, option = options[0]
+            matches.setdefault(name, set()).add(option)
+        else:
+            unresolved = True
+    children = []
+    for name, options in matches.items():
+        if len(options) == 1:
+            children.append(_value_element(name, next(iter(options))))
+        else:
+            unresolved = True
+            warnings.append(f'{path}/{name}: в исходном выводе несколько вариантов. Выберите нужное значение по оригиналу.')
+    if unresolved:
+        warnings.append(f'{path}: часть исходного текста требует ручного выбора итоговых выводов 01.04. Полный текст доступен в оригинале.')
+    return _with_children(element, children)
+
+
+def _project(source, name, definition, schema, forward, path, warnings, historical=False):
     type_name = definition.get('type')
     if forward and type_name in {'tAddress', 'tObjectAddress', 'tPostAddress'}:
+        if historical:
+            source = _clean_legacy_address(source)
         source = _upgrade_address(source, type_name, path, warnings)
     elif not forward and type_name in {'tAddress', 'tPostAddress'}:
         source = _downgrade_address(source, type_name, path, warnings)
@@ -376,6 +451,10 @@ def _project(source, name, definition, schema, forward, path, warnings):
         source = (_upgrade_date if forward else _downgrade_date)(source, path, warnings)
     if name == 'FinanceOwner':
         source = _finance_owner(source, forward, path, warnings)
+    if historical and type_name in {'tObject', 'tObjectPart'}:
+        source = _legacy_functions(source, type_name, path, warnings)
+    if historical and type_name == 'tExaminationSummary':
+        source = _legacy_examination_summary(source, definition, schema, path, warnings)
 
     particle, attributes = schema.layout(definition)
     fields = dict(_ordered_fields(particle))
@@ -433,7 +512,8 @@ def _project(source, name, definition, schema, forward, path, warnings):
     for _, candidate, child_definition, child in sorted(accepted, key=lambda item: item[0]):
         positions[candidate] += 1
         suffix = f'[{positions[candidate]}]' if counts[candidate] > 1 else ''
-        result.append(_project(child, candidate, child_definition, schema, forward, f'{path}/{candidate}{suffix}', warnings))
+        result.append(_project(child, candidate, child_definition, schema, forward, f'{path}/{candidate}{suffix}',
+                               warnings, historical))
     _check_required(particle, counts, path, warnings)
     return result
 
@@ -450,11 +530,15 @@ def migrate_xml(xml: str, target_version: str | None = None) -> dict:
     document = DOCUMENTS[family]
     target_version = resolve_version(family, target_version)
     source_version = document_version(root, family)
-    if source_version not in document.versions:
+    versions = source_versions(family)
+    if source_version not in versions:
         if source_version and re.fullmatch(r'[0-9]{2}\.[0-9]{2}', source_version):
             raise ValueError(f'Версия {source_version} для {document.root} не поддерживается. '
-                             f'Доступные версии: {", ".join(document.versions)}.')
-        raise ValueError(f'У {document.root} отсутствует поддерживаемый атрибут SchemaVersion ({", ".join(document.versions)}).')
+                             f'Доступные версии: {", ".join(versions)}.')
+        raise ValueError(f'У {document.root} отсутствует поддерживаемый атрибут SchemaVersion ({", ".join(versions)}).')
+    historical = family == 'conclusion' and source_version in LEGACY_CONCLUSION_VERSIONS
+    if historical and target_version != '01.04':
+        raise ValueError(f'Заключение версии {source_version} можно преобразовать в 01.04.')
     warnings: list[str] = []
     if source_version != target_version:
         if family == 'explanatorynote':
@@ -463,7 +547,8 @@ def migrate_xml(xml: str, target_version: str | None = None) -> dict:
             result, warnings = migrate_note(root, source_version, target_version)
         else:
             schema = _schema(target_version)
-            result = _project(root, 'Conclusion', schema.root, schema, target_version == '01.04', '/Conclusion', warnings)
+            result = _project(root, 'Conclusion', schema.root, schema, target_version == '01.04', '/Conclusion',
+                              warnings, historical)
         result.set('SchemaVersion', target_version)
         ET.indent(result, space='  ')
         xml = ET.tostring(result, encoding='unicode', xml_declaration=True)

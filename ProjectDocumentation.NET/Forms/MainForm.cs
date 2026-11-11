@@ -301,6 +301,12 @@ namespace ProjectDocumentation.NET.Forms
                         return;
                     }
 
+                    if (Conclusion0104Document.IsHistoricalVersion(version))
+                    {
+                        ExportHistoricalConclusion(current);
+                        return;
+                    }
+
                     if (!CheckConclusionVersion(version))
                     {
                         return;
@@ -418,6 +424,12 @@ namespace ProjectDocumentation.NET.Forms
                     return;
                 }
 
+                if (Conclusion0104Document.IsHistoricalVersion(version))
+                {
+                    await ConvertConclusionAsync(conclusionXPO);
+                    return;
+                }
+
                 if (!CheckConclusionVersion(version))
                 {
                     return;
@@ -505,6 +517,12 @@ namespace ProjectDocumentation.NET.Forms
                     return;
                 }
 
+                if (Conclusion0104Document.IsHistoricalVersion(version))
+                {
+                    await ConvertConclusionAsync(conclusionXPO);
+                    return;
+                }
+
                 if (!CheckConclusionVersion(version))
                 {
                     return;
@@ -554,6 +572,12 @@ namespace ProjectDocumentation.NET.Forms
                 if (version == Conclusion0104Document.CurrentVersion)
                 {
                     ViewCurrentConclusion(conclusionXPO);
+                    return;
+                }
+
+                if (Conclusion0104Document.IsHistoricalVersion(version))
+                {
+                    ViewHistoricalConclusion(conclusionXPO, version);
                     return;
                 }
 

@@ -2,7 +2,8 @@ param(
     [string]$OutputRoot = '',
     [string]$Python = 'python.exe',
     [string]$SchemaPython = '',
-    [switch]$SkipNuGetRestore
+    [switch]$SkipNuGetRestore,
+    [switch]$DesktopOnly
 )
 
 $ErrorActionPreference = 'Stop'
@@ -33,12 +34,14 @@ try {
     Invoke-Checked $SchemaPython @('-m', 'pip', 'install', '--disable-pip-version-check', '-r', 'schema_engine/requirements-build.txt')
     Invoke-Checked $SchemaPython @('-X', 'utf8', '-m', 'unittest', 'discover', '-s', 'schema_engine/tests', '-v')
 
-    Push-Location -LiteralPath (Join-Path $repo 'portal')
-    try {
-        Invoke-Checked 'npm.cmd' @('ci')
-        Invoke-Checked 'npm.cmd' @('run', 'build')
-    } finally {
-        Pop-Location
+    if (-not $DesktopOnly) {
+        Push-Location -LiteralPath (Join-Path $repo 'portal')
+        try {
+            Invoke-Checked 'npm.cmd' @('ci')
+            Invoke-Checked 'npm.cmd' @('run', 'build')
+        } finally {
+            Pop-Location
+        }
     }
 
     if (-not $SkipNuGetRestore) {
@@ -72,13 +75,14 @@ try {
     $bundleWork = (New-Item -ItemType Directory -Path (Join-Path $tempRoot ('PD-' + [guid]::NewGuid().ToString('N').Substring(0, 10)))).FullName
     try {
         $bundles = Join-Path $bundleWork 'dist'
-        Invoke-Checked $SchemaPython @(
+        $bundleArguments = @(
             '-m', 'PyInstaller', '--noconfirm', '--onedir', '--name', 'ProjectDocumentation.Schema',
             '--distpath', $bundles, '--workpath', (Join-Path $bundleWork 'build'), '--specpath', $bundleWork,
             '--paths', $repo, '--collect-data', 'xmlschema', '--collect-data', 'elementpath',
-            '--add-data', "${schemaData}:schema_engine/schemas", '--add-data', "${portalData}:portal/dist",
-            'schema_engine/__main__.py'
+            '--add-data', "${schemaData}:schema_engine/schemas"
         )
+        if (-not $DesktopOnly) { $bundleArguments += @('--add-data', "${portalData}:portal/dist") }
+        Invoke-Checked $SchemaPython ($bundleArguments + 'schema_engine/__main__.py')
         $engine = Join-Path $bundles 'ProjectDocumentation.Schema'
         Get-ChildItem -LiteralPath $engine | Copy-Item -Destination $desktop -Recurse
     } finally {
@@ -87,15 +91,19 @@ try {
             Remove-Item -LiteralPath $resolved -Recurse -Force
         }
     }
-    Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'Start-Portal.cmd') -Destination $desktop
-    foreach ($required in 'ProjectDocumentation.NET.exe', 'ProjectDocumentation.Schema.exe', 'Start-Portal.cmd', '_internal\portal\dist\index.html') {
+    $requiredFiles = @('ProjectDocumentation.NET.exe', 'ProjectDocumentation.Schema.exe')
+    if (-not $DesktopOnly) {
+        Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'Start-Portal.cmd') -Destination $desktop
+        $requiredFiles += @('Start-Portal.cmd', '_internal\portal\dist\index.html')
+    }
+    foreach ($required in $requiredFiles) {
         if (-not (Test-Path -LiteralPath (Join-Path $desktop $required) -PathType Leaf)) {
             throw "Отсутствует файл комплекта $required."
         }
     }
 
     Write-Output "Desktop: $desktop"
-    Write-Output "Portal entry point: $(Join-Path $desktop 'Start-Portal.cmd')"
+    if (-not $DesktopOnly) { Write-Output "Portal entry point: $(Join-Path $desktop 'Start-Portal.cmd')" }
 } finally {
     Pop-Location
 }

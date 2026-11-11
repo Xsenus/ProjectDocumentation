@@ -4,7 +4,6 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Net.Http;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -13,139 +12,132 @@ namespace ProjectDocumentation.NET.Services
 {
     internal sealed class ConclusionSchemaService : IDisposable
     {
-        private const string ServerArguments = "--host 127.0.0.1 --port 0";
-        private readonly SemaphoreSlim startup = new SemaphoreSlim(1, 1);
-        private readonly HttpClient client = new HttpClient(new HttpClientHandler
-        {
-            AllowAutoRedirect = false,
-            UseProxy = false,
-            UseCookies = false
-        }) { Timeout = TimeSpan.FromSeconds(45) };
-
+        private const string WorkerArguments = "--stdio";
+        private static readonly Encoding Utf8 = new UTF8Encoding(false);
+        private readonly SemaphoreSlim requests = new SemaphoreSlim(1, 1);
+        private readonly object engineLock = new object();
         private Process engine;
-        private Uri address;
+        private StreamWriter input;
         private bool disposed;
 
-        public async Task<Uri> GetAddressAsync()
+        public Task<JObject> GetSchemaAsync(string family, string version = null)
+            => RequestAsync<JObject>("schema", new JObject { ["family"] = family, ["version"] = version });
+
+        public async Task<string> CreateAsync(string family = null)
         {
-            await startup.WaitAsync();
+            var document = await RequestAsync<JObject>("new", new JObject { ["family"] = family });
+            return document.Value<string>("xml");
+        }
+
+        public Task<ConclusionValidation> ValidateAsync(string xml)
+            => RequestAsync<ConclusionValidation>("validate", new JObject { ["xml"] = xml });
+
+        public Task<ConclusionMigration> MigrateAsync(string xml, string targetVersion)
+            => RequestAsync<ConclusionMigration>("migrate", new JObject { ["xml"] = xml, ["targetVersion"] = targetVersion });
+
+        public async Task<string> PreviewAsync(string xml)
+        {
+            var preview = await RequestAsync<JObject>("preview", new JObject { ["xml"] = xml });
+            return preview.Value<string>("html");
+        }
+
+        public async Task<byte[]> GetSchemaAssetAsync(string filename)
+        {
+            var asset = await RequestAsync<JObject>("asset", new JObject { ["name"] = filename });
+            return Convert.FromBase64String(asset.Value<string>("base64"));
+        }
+
+        private async Task<T> RequestAsync<T>(string operation, JObject request) where T : class
+        {
+            await requests.WaitAsync().ConfigureAwait(false);
             try
+            {
+                var process = EnsureWorker(out var writer);
+                request["operation"] = operation;
+                var response = await ReceiveAsync(process, writer, request.ToString(Formatting.None)).ConfigureAwait(false);
+                if (response.Value<string>("error") is string error)
+                {
+                    throw new InvalidOperationException(error);
+                }
+
+                return response["result"]?.ToObject<T>()
+                    ?? throw new InvalidOperationException("Комплектный валидатор XML вернул пустой ответ.");
+            }
+            finally
+            {
+                requests.Release();
+            }
+        }
+
+        private async Task<JObject> ReceiveAsync(Process process, StreamWriter writer, string request)
+        {
+            try
+            {
+                using (var timer = new CancellationTokenSource())
+                {
+                    var transfer = ExchangeAsync(process, writer, request);
+                    var timeout = Task.Delay(TimeSpan.FromSeconds(60), timer.Token);
+                    if (await Task.WhenAny(transfer, timeout).ConfigureAwait(false) != transfer)
+                    {
+                        StopWorker(process);
+                        _ = transfer.ContinueWith(task => { _ = task.Exception; }, TaskContinuationOptions.OnlyOnFaulted);
+                        throw new TimeoutException("Комплектный валидатор XML не ответил за 60 секунд.");
+                    }
+
+                    timer.Cancel();
+                    return await transfer.ConfigureAwait(false);
+                }
+            }
+            catch (Exception error) when (error is IOException || error is JsonException)
+            {
+                StopWorker(process);
+                throw new InvalidOperationException("Комплектный валидатор XML завершился или вернул повреждённый ответ. Повторите действие.", error);
+            }
+        }
+
+        private static async Task<JObject> ExchangeAsync(Process process, StreamWriter writer, string request)
+        {
+            await writer.WriteLineAsync(request).ConfigureAwait(false);
+            await writer.FlushAsync().ConfigureAwait(false);
+            var line = await process.StandardOutput.ReadLineAsync().ConfigureAwait(false);
+            if (string.IsNullOrWhiteSpace(line))
+            {
+                throw new EndOfStreamException();
+            }
+
+            return JObject.Parse(line);
+        }
+
+        private Process EnsureWorker(out StreamWriter writer)
+        {
+            lock (engineLock)
             {
                 if (disposed)
                 {
                     throw new ObjectDisposedException(nameof(ConclusionSchemaService));
                 }
 
-                if (engine != null && !engine.HasExited && address != null)
+                if (engine == null || engine.HasExited)
                 {
-                    return address;
+                    StopWorker();
+                    var process = new Process { StartInfo = GetStartInfo() };
+                    process.ErrorDataReceived += (_, __) => { };
+                    engine = process;
+                    try
+                    {
+                        process.Start();
+                        process.BeginErrorReadLine();
+                        input = new StreamWriter(process.StandardInput.BaseStream, Utf8, 4096, leaveOpen: true);
+                    }
+                    catch
+                    {
+                        StopWorker(process);
+                        throw;
+                    }
                 }
 
-                StopEngine();
-                var process = new Process { StartInfo = GetStartInfo() };
-                process.ErrorDataReceived += (_, __) => { };
-                engine = process;
-                try
-                {
-                    process.Start();
-                    process.BeginErrorReadLine();
-                    var read = process.StandardOutput.ReadLineAsync();
-                    if (await Task.WhenAny(read, Task.Delay(TimeSpan.FromSeconds(30))) != read)
-                    {
-                        throw new InvalidOperationException("Служба проверки XML не запустилась за 30 секунд.");
-                    }
-
-                    var line = await read;
-                    if (string.IsNullOrWhiteSpace(line))
-                    {
-                        throw new InvalidOperationException("Служба проверки XML завершилась при запуске. Проверьте комплект установки.");
-                    }
-
-                    var url = JObject.Parse(line).Value<string>("url");
-                    if (!Uri.TryCreate(url, UriKind.Absolute, out var uri) || uri.Scheme != Uri.UriSchemeHttp
-                        || uri.Host != "127.0.0.1" || uri.IsDefaultPort || uri.AbsolutePath != "/"
-                        || uri.UserInfo.Length != 0 || uri.Query.Length != 0 || uri.Fragment.Length != 0)
-                    {
-                        throw new InvalidOperationException("Служба проверки XML вернула недопустимый локальный адрес.");
-                    }
-
-                    if (disposed)
-                    {
-                        throw new ObjectDisposedException(nameof(ConclusionSchemaService));
-                    }
-
-                    address = uri;
-                    return uri;
-                }
-                catch
-                {
-                    StopEngine();
-                    throw;
-                }
-            }
-            finally
-            {
-                startup.Release();
-            }
-        }
-
-        public async Task<string> CreateAsync(string family = null)
-        {
-            var route = string.IsNullOrEmpty(family) ? "api/new" : "api/new?family=" + Uri.EscapeDataString(family);
-            var document = await RequestAsync<JObject>(route, null);
-            return document.Value<string>("xml");
-        }
-
-        public Task<ConclusionValidation> ValidateAsync(string xml)
-        {
-            return RequestAsync<ConclusionValidation>("api/validate", new JObject { ["xml"] = xml });
-        }
-
-        public Task<ConclusionMigration> MigrateAsync(string xml, string targetVersion)
-        {
-            return RequestAsync<ConclusionMigration>("api/migrate", new JObject
-            {
-                ["xml"] = xml,
-                ["targetVersion"] = targetVersion
-            });
-        }
-
-        public async Task<byte[]> GetSchemaAssetAsync(string filename)
-        {
-            var origin = await GetAddressAsync();
-            return await client.GetByteArrayAsync(new Uri(origin, "schemas/" + Uri.EscapeDataString(filename)));
-        }
-
-        private async Task<T> RequestAsync<T>(string route, JObject body)
-        {
-            var origin = await GetAddressAsync();
-            using (var request = new HttpRequestMessage(body == null ? HttpMethod.Get : HttpMethod.Post, new Uri(origin, route)))
-            {
-                if (body != null)
-                {
-                    request.Content = new StringContent(body.ToString(Formatting.None), Encoding.UTF8, "application/json");
-                }
-
-                using (var response = await client.SendAsync(request))
-                {
-                    var payload = await response.Content.ReadAsStringAsync();
-                    if (!response.IsSuccessStatusCode)
-                    {
-                        string detail = null;
-                        try { detail = JObject.Parse(payload).Value<string>("error"); }
-                        catch (JsonException) { }
-                        catch (InvalidCastException) { }
-                        throw new InvalidOperationException(detail ?? $"Служба проверки XML вернула HTTP {(int)response.StatusCode}.");
-                    }
-
-                    var result = JsonConvert.DeserializeObject<T>(payload);
-                    if (result == null)
-                    {
-                        throw new InvalidOperationException("Служба проверки XML вернула пустой ответ.");
-                    }
-
-                    return result;
-                }
+                writer = input;
+                return engine;
             }
         }
 
@@ -153,7 +145,7 @@ namespace ProjectDocumentation.NET.Services
         {
             var directory = AppDomain.CurrentDomain.BaseDirectory;
             var executable = Path.Combine(directory, "ProjectDocumentation.Schema.exe");
-            var arguments = ServerArguments;
+            var arguments = WorkerArguments;
             if (!File.Exists(executable))
             {
                 var source = FindSource(directory);
@@ -167,7 +159,7 @@ namespace ProjectDocumentation.NET.Services
                 var localPython = Path.Combine(directory, ".venv", "Scripts", "python.exe");
                 executable = !string.IsNullOrWhiteSpace(pythonOverride) ? pythonOverride
                     : File.Exists(localPython) ? localPython : "python.exe";
-                arguments = "-m schema_engine " + ServerArguments;
+                arguments = "-m schema_engine " + WorkerArguments;
             }
 
             return new ProcessStartInfo
@@ -177,9 +169,10 @@ namespace ProjectDocumentation.NET.Services
                 Arguments = arguments,
                 UseShellExecute = false,
                 CreateNoWindow = true,
+                RedirectStandardInput = true,
                 RedirectStandardOutput = true,
                 RedirectStandardError = true,
-                StandardOutputEncoding = Encoding.UTF8
+                StandardOutputEncoding = Utf8
             };
         }
 
@@ -197,36 +190,41 @@ namespace ProjectDocumentation.NET.Services
             return null;
         }
 
-        private void StopEngine()
+        private void StopWorker(Process expected = null)
         {
-            address = null;
-            var process = engine;
-            engine = null;
-            if (process == null)
+            lock (engineLock)
             {
-                return;
-            }
-
-            try
-            {
-                if (!process.HasExited)
+                var process = engine;
+                if (process == null || (expected != null && process != expected))
                 {
-                    process.Kill();
+                    return;
                 }
-            }
-            catch (InvalidOperationException) { }
-            catch (System.ComponentModel.Win32Exception) { }
-            finally
-            {
-                process.Dispose();
+
+                engine = null;
+                input = null;
+                try
+                {
+                    if (!process.HasExited)
+                    {
+                        process.Kill();
+                    }
+                }
+                catch (InvalidOperationException) { }
+                catch (System.ComponentModel.Win32Exception) { }
+                finally
+                {
+                    process.Dispose();
+                }
             }
         }
 
         public void Dispose()
         {
-            disposed = true;
-            StopEngine();
-            client.Dispose();
+            lock (engineLock)
+            {
+                disposed = true;
+                StopWorker();
+            }
         }
     }
 

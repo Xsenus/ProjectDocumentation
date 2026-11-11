@@ -104,9 +104,9 @@ class ConclusionMigrationTests(unittest.TestCase):
         self.assertEqual(modern.findtext('Finance/FinanceOwner/Address/RussianAddress/RegionCode'), '54')
         self.assertIsNone(modern.find('Finance/FinanceOwner/Organization'))
 
-    def test_older_versions_are_not_silently_reinterpreted(self):
-        for root in ('Conclusion', 'ExplanatoryNote'):
-            for version in ('01.00', '01.01', '01.02'):
+    def test_unsupported_versions_are_not_silently_reinterpreted(self):
+        for root, versions in (('Conclusion', ('01.01',)), ('ExplanatoryNote', ('01.00', '01.01', '01.02'))):
+            for version in versions:
                 with self.subTest(root=root, version=version):
                     with self.assertRaisesRegex(ValueError, f'Версия {version} .* не поддерживается'):
                         migrate_xml(f'<{root} SchemaVersion="{version}"/>')
