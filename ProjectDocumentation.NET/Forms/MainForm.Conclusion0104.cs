@@ -13,6 +13,7 @@ namespace ProjectDocumentation.NET.Forms
 {
     public partial class MainForm
     {
+        private const string ClassicConclusionFormat = "официальной схеме заключения 01.03";
         private readonly ConclusionSchemaService conclusionSchema = new ConclusionSchemaService();
         private BarButtonItem convertConclusion;
         private BarButtonItem exportLegacyConclusion;
@@ -34,9 +35,14 @@ namespace ProjectDocumentation.NET.Forms
             var version = Conclusion0104Document.ReadVersion(conclusion?.GetObj());
             convertConclusion.Enabled = Conclusion0104Document.CanMigrate(version);
             exportLegacyConclusion.Enabled = version == Conclusion0104Document.CurrentVersion;
-            if (Conclusion0104Document.IsHistoricalVersion(version))
+            if (conclusion != null)
             {
-                barBtnBaseSetting.Enabled = false;
+                var canSetParameters = version == Conclusion0104Document.CurrentVersion || Conclusion0104Document.CanUseLegacyEditor(version);
+                var canOpen = canSetParameters || Conclusion0104Document.IsHistoricalVersion(version);
+                barBtnBaseSetting.Enabled = canSetParameters;
+                barBtnEdit.Enabled = canOpen;
+                barBtnView.Enabled = canOpen;
+                barBtnFill.Enabled = canOpen;
             }
         }
 
@@ -132,8 +138,11 @@ namespace ProjectDocumentation.NET.Forms
         }
 
         private void ViewHistoricalConclusion(ConclusionXPO record, string version)
+            => ViewSourceXml(record, $"Исходное заключение {version}");
+
+        private void ViewSourceXml(XmlObjXPO record, string title)
         {
-            using (var viewer = new XtraForm { Text = $"Исходное заключение {version} — {record.Name}",
+            using (var viewer = new XtraForm { Text = $"{title} — {record.Name}",
                 StartPosition = FormStartPosition.CenterParent, Size = new Size(980, 720) })
             using (var font = new Font(FontFamily.GenericMonospace, 10))
             {
@@ -174,13 +183,26 @@ namespace ProjectDocumentation.NET.Forms
             }
         }
 
-        private Task ExportConclusionAsync(string xml, string version, Guid? guid, System.Collections.Generic.IReadOnlyList<string> warnings = null)
-            => ExportSchemaDocumentAsync(xml, version, guid, "Conclusion", "conclusion", warnings);
+        private Task ExportConclusionAsync(string xml, string version, Guid? guid, System.Collections.Generic.IReadOnlyList<string> warnings = null,
+            bool allowClassicDraft = false)
+            => ExportSchemaDocumentAsync(xml, version, guid, "Conclusion", "conclusion", warnings, allowClassicDraft);
 
         private async Task ExportSchemaDocumentAsync(string xml, string version, Guid? guid, string rootName, string prefix,
-            System.Collections.Generic.IReadOnlyList<string> warnings = null)
+            System.Collections.Generic.IReadOnlyList<string> warnings = null, bool allowClassicDraft = false)
         {
-            SchemaXmlDocument.RequireValid(await conclusionSchema.ValidateAsync(xml), version);
+            var validation = await conclusionSchema.ValidateAsync(xml);
+            var isClassicDraft = allowClassicDraft && validation.Version == version && !validation.Valid;
+            if (isClassicDraft)
+            {
+                if (!ConfirmClassicDraft(validation, ClassicConclusionFormat, "Выгрузить XML как черновик?"))
+                {
+                    return;
+                }
+            }
+            else
+            {
+                SchemaXmlDocument.RequireValid(validation, version);
+            }
             if (warnings != null && warnings.Count > 0)
             {
                 var text = string.Join(Environment.NewLine, warnings.Take(10));
@@ -197,7 +219,7 @@ namespace ProjectDocumentation.NET.Forms
             }
 
             using (var picker = new SaveFileDialog { Filter = "XML (*.xml)|*.xml", DefaultExt = "xml", AddExtension = true,
-                FileName = $"{prefix}_{guid:D}.xml" })
+                FileName = $"{prefix}{(isClassicDraft ? "-draft" : "")}_{guid:D}.xml" })
             {
                 if (picker.ShowDialog(this) != DialogResult.OK)
                 {
@@ -207,6 +229,26 @@ namespace ProjectDocumentation.NET.Forms
                 var schema = $"{prefix}-{version.Replace('.', '-')}";
                 await SchemaXmlDocument.WriteExportWithAssetsAsync(conclusionSchema, picker.FileName, xml, rootName, schema);
             }
+        }
+
+        private static string ClassicValidationMessage(ConclusionValidation validation, string format)
+        {
+            var errors = validation.Errors;
+            var lines = errors?.Take(12).Select(error => $"{error.Path} {error.Message}") ?? Enumerable.Empty<string>();
+            var text = string.Join(Environment.NewLine, lines);
+            if (errors?.Count > 12)
+            {
+                text += Environment.NewLine + $"Ещё ошибок: {errors.Count - 12}.";
+            }
+
+            return $"XML не прошёл проверку по {format}." + Environment.NewLine + text;
+        }
+
+        private bool ConfirmClassicDraft(ConclusionValidation validation, string format, string prompt)
+        {
+            return XtraMessageBox.Show(Form.ActiveForm ?? this,
+                ClassicValidationMessage(validation, format) + Environment.NewLine + Environment.NewLine + prompt,
+                "Проверка XML", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes;
         }
 
         private void ShowConclusionError(Exception error)

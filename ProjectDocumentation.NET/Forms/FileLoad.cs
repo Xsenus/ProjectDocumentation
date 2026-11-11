@@ -116,8 +116,11 @@ namespace ProjectDocumentation.NET.Forms
                             throw new InvalidOperationException($"Версия заключения {version} не поддерживается.");
                         }
 
-                        result = await ConclusionController.ImportConclusionAsync(filePath, name, existing => AskImportConflict(existing,
-                            existing is ConclusionXPO && Conclusion0104Document.CanUseLegacyEditor(Conclusion0104Document.ReadVersion(existing.GetObj()))));
+                        Func<XmlObjXPO, ImportConflictAction> resolveConflict = existing => AskImportConflict(existing,
+                            existing is ConclusionXPO && Conclusion0104Document.CanUseLegacyEditor(Conclusion0104Document.ReadVersion(existing.GetObj())));
+                        result = version == Conclusion0104Document.LegacyVersion
+                            ? await ConclusionController.ImportConclusionAsync(document, filePath, name, resolveConflict)
+                            : await ConclusionController.ImportConclusionAsync(filePath, name, resolveConflict);
                         break;
                     case "ExplanatoryNote":
                         var noteVersion = ExplanatoryNote0107Document.ReadFileVersion(filePath);
@@ -165,7 +168,7 @@ namespace ProjectDocumentation.NET.Forms
                 {
                     // Раньше эти значения удалялись молча.
                     message += Environment.NewLine + Environment.NewLine
-                        + "При чтении удалены значения, которых нет в схеме:" + Environment.NewLine
+                        + "Замечания при чтении XML:" + Environment.NewLine
                         + string.Join(Environment.NewLine, result.Warnings);
                 }
 

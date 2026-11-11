@@ -1,4 +1,7 @@
 using ProjectDocumentation.NET.Services;
+using ComboBoxEdit = DevExpress.XtraEditors.ComboBoxEdit;
+using MemoEdit = DevExpress.XtraEditors.MemoEdit;
+using TextEdit = DevExpress.XtraEditors.TextEdit;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -192,9 +195,10 @@ namespace ProjectDocumentation.NET.Forms
             }
         }
 
-        private static Control ValueEditor(string value, NativeSchemaType type, bool readOnly, bool multiline, Action<string> changed)
+        private Control ValueEditor(string value, NativeSchemaType type, bool readOnly, bool multiline, Action<string> changed)
         {
             value = value ?? "";
+            if (IsSectionView) return SectionValueEditor(value, type, readOnly, multiline, changed);
             if (!readOnly && type?.Enumeration?.Count > 0)
             {
                 var options = new ComboBox { Dock = DockStyle.Top, DropDownStyle = ComboBoxStyle.DropDown, DropDownWidth = 550 };
@@ -218,6 +222,39 @@ namespace ProjectDocumentation.NET.Forms
                 text.Height = 95;
             }
             text.TextChanged += (_, __) => { if (!readOnly) changed(text.Text); };
+            return text;
+        }
+
+        private static Control SectionValueEditor(string value, NativeSchemaType type, bool readOnly, bool multiline, Action<string> changed)
+        {
+            if (!readOnly && type?.Enumeration?.Count > 0)
+            {
+                var editor = new ComboBoxEdit { Dock = DockStyle.Top };
+                editor.Properties.Items.AddRange(type.Enumeration.Cast<object>().ToArray());
+                editor.Properties.DropDownRows = 14;
+                editor.Properties.PopupFormSize = new Size(550, 0);
+                editor.EditValue = (object)type.Enumeration.FirstOrDefault(option => option.Value == value) ?? value;
+                editor.EditValueChanged += (_, __) => changed(
+                    editor.EditValue is NativeSchemaOption option ? option.Value : editor.Text);
+                return editor;
+            }
+
+            TextEdit text;
+            if (multiline)
+            {
+                var memo = new MemoEdit { Height = 95 };
+                memo.Properties.ScrollBars = ScrollBars.Vertical;
+                text = memo;
+            }
+            else
+            {
+                text = new TextEdit();
+            }
+            text.Dock = DockStyle.Top;
+            text.Properties.ReadOnly = readOnly;
+            text.Properties.MaxLength = SchemaXmlDocument.MaxXmlBytes;
+            text.Text = value;
+            if (!readOnly) text.EditValueChanged += (_, __) => changed(text.Text);
             return text;
         }
 

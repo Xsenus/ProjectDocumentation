@@ -1,3 +1,5 @@
+using DevExpress.XtraEditors;
+using DevExpress.XtraTab;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -9,15 +11,15 @@ namespace ProjectDocumentation.NET.Forms
 {
     internal partial class SchemaDocumentForm
     {
-        private readonly TabControl sectionTabs = new TabControl { Dock = DockStyle.Fill };
-        private readonly ListBox sectionBlocks = new ListBox { Dock = DockStyle.Fill, HorizontalScrollbar = true };
+        private readonly XtraTabControl sectionTabs = new XtraTabControl { Dock = DockStyle.Fill };
+        private readonly ListBoxControl sectionBlocks = new ListBoxControl { Dock = DockStyle.Fill, HorizontalScrollbar = true };
         private readonly Label sectionLocation = LabelFor("");
-        private readonly Button sectionBack = ActionButton("Назад");
-        private readonly Button sectionOpen = ActionButton("Вложенные поля");
-        private readonly Dictionary<string, TabPage> sectionByField = new Dictionary<string, TabPage>();
+        private readonly SimpleButton sectionBack = new SimpleButton { AutoSize = true, Text = "Назад" };
+        private readonly SimpleButton sectionOpen = new SimpleButton { AutoSize = true, Text = "Вложенные поля" };
+        private readonly Dictionary<string, XtraTabPage> sectionByField = new Dictionary<string, XtraTabPage>();
         private SplitContainer sectionBody;
         private TabPage previousFieldsPage;
-        private TabPage otherSection;
+        private XtraTabPage otherSection;
         private XElement sectionParent;
         private bool updatingSections;
 
@@ -62,7 +64,7 @@ namespace ProjectDocumentation.NET.Forms
             list.Controls.Add(sectionBlocks, 0, 1);
             list.Controls.Add(Toolbar(sectionBack, sectionOpen), 0, 2);
             sectionBody.Panel1.Controls.Add(list);
-            sectionTabs.SelectedIndexChanged += (_, __) =>
+            sectionTabs.SelectedPageChanged += (_, __) =>
             {
                 MountSectionBody();
                 if (!loaded || updatingSections) return;
@@ -79,17 +81,17 @@ namespace ProjectDocumentation.NET.Forms
 
         private void AddSection(string name, params string[] fields)
         {
-            var page = new TabPage(name);
+            var page = new XtraTabPage { Text = name };
             sectionTabs.TabPages.Add(page);
             foreach (var field in fields) sectionByField.Add(field, page);
         }
 
-        private TabPage SectionFor(string field)
+        private XtraTabPage SectionFor(string field)
         {
             if (sectionByField.TryGetValue(field, out var section)) return section;
             if (otherSection == null)
             {
-                otherSection = new TabPage("Прочие поля");
+                otherSection = new XtraTabPage { Text = "Прочие поля" };
                 sectionTabs.TabPages.Add(otherSection);
             }
             return otherSection;
@@ -97,7 +99,7 @@ namespace ProjectDocumentation.NET.Forms
 
         private void MountSectionBody()
         {
-            var page = sectionTabs.SelectedTab;
+            var page = sectionTabs.SelectedTabPage;
             if (page != null && sectionBody.Parent != page) page.Controls.Add(sectionBody);
         }
 
@@ -124,12 +126,12 @@ namespace ProjectDocumentation.NET.Forms
             ShowFields(item);
         }
 
-        private void SelectSectionTab(TabPage page)
+        private void SelectSectionTab(XtraTabPage page)
         {
-            if (sectionTabs.SelectedTab == page) return;
+            if (sectionTabs.SelectedTabPage == page) return;
             var previous = updatingSections;
             updatingSections = true;
-            try { sectionTabs.SelectedTab = page; }
+            try { sectionTabs.SelectedTabPage = page; }
             finally { updatingSections = previous; }
         }
 
@@ -140,12 +142,13 @@ namespace ProjectDocumentation.NET.Forms
             var root = parent.Element == document.Root;
             var previous = updatingSections;
             updatingSections = true;
+            var selectedIndex = -1;
             sectionBlocks.BeginUpdate();
             try
             {
                 sectionBlocks.Items.Clear();
-                sectionLocation.Text = root ? sectionTabs.SelectedTab.Text : XmlPath(parent.Element);
-                foreach (var element in parent.Element.Elements().Where(element => !root || SectionFor(element.Name.LocalName) == sectionTabs.SelectedTab))
+                sectionLocation.Text = root ? sectionTabs.SelectedTabPage.Text : XmlPath(parent.Element);
+                foreach (var element in parent.Element.Elements().Where(element => !root || SectionFor(element.Name.LocalName) == sectionTabs.SelectedTabPage))
                 {
                     var node = profile.ChildNode(parent, element);
                     var label = SectionCaption(node.Field, element.Name.LocalName);
@@ -153,7 +156,7 @@ namespace ProjectDocumentation.NET.Forms
                     if (occurrence > 0 || element.ElementsAfterSelf(element.Name).Any()) label += $" [{occurrence + 1}]";
                     var block = new SectionBlock(label, node, null);
                     sectionBlocks.Items.Add(block);
-                    if (ReferenceEquals(element, selected)) sectionBlocks.SelectedItem = block;
+                    if (ReferenceEquals(element, selected)) selectedIndex = sectionBlocks.Items.Count - 1;
                 }
 
                 if (!ReadOnlyDocument)
@@ -168,6 +171,7 @@ namespace ProjectDocumentation.NET.Forms
             finally
             {
                 sectionBlocks.EndUpdate();
+                sectionBlocks.SelectedIndex = selectedIndex;
                 updatingSections = previous;
             }
             UpdateSectionButtons();
@@ -251,11 +255,11 @@ namespace ProjectDocumentation.NET.Forms
 
         private IEnumerable<NativeSchemaChild> VisibleChildren(NativeSchemaNode node)
             => IsSectionView && node.Element == document.Root
-                ? node.Children.Where(child => SectionFor(child.Field.Name) == sectionTabs.SelectedTab)
+                ? node.Children.Where(child => SectionFor(child.Field.Name) == sectionTabs.SelectedTabPage)
                 : node.Children;
 
         private bool ShowRootAttributes(NativeSchemaNode node)
-            => !IsSectionView || node.Element != document.Root || sectionTabs.SelectedIndex == 0;
+            => !IsSectionView || node.Element != document.Root || sectionTabs.SelectedTabPageIndex == 0;
 
         private void SelectMissingField(string name)
         {

@@ -3,6 +3,7 @@ import json
 import subprocess
 import sys
 import unittest
+from xml.etree import ElementTree as ET
 
 from schema_engine.documents import SCHEMA_DIRECTORY
 
@@ -15,6 +16,8 @@ class DesktopWorkerTests(unittest.TestCase):
             {'operation': 'validate', 'xml': '<Conclusion SchemaVersion="01.04"/>'},
             {'operation': 'asset', 'name': 'conclusion-01-04.xsd'},
             {'operation': 'asset', 'name': '../conclusion-01-04.xsd'},
+            {'operation': 'normalize-legacy-conclusion',
+             'xml': '<Conclusion SchemaVersion="01.03"><Object/><ExpertOrganization/></Conclusion>'},
         ]
         lines = ''.join(json.dumps(request, ensure_ascii=False) + '\n' for request in requests)
         result = subprocess.run([sys.executable, '-m', 'schema_engine', '--stdio'], input=lines,
@@ -27,3 +30,5 @@ class DesktopWorkerTests(unittest.TestCase):
         self.assertEqual(base64.b64decode(replies[3]['result']['base64']),
                          (SCHEMA_DIRECTORY / 'conclusion-01-04.xsd').read_bytes())
         self.assertIn('error', replies[4])
+        normalized = ET.fromstring(replies[5]['result']['xml'])
+        self.assertEqual([element.tag for element in normalized], ['ExpertOrganization', 'Object'])

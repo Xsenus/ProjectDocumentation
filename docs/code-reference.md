@@ -115,21 +115,34 @@
 | `UpdateGridDataSource(rowHandle)` | То же с фокусом по номеру строки |
 | `gridView_PopupMenuShowing` | Включает или выключает пункты меню в зависимости от выбранной строки, показывает меню у курсора |
 | `barBtnLoad_ItemClick` | `FileLoad`; если что-то загружено — обновить таблицу и выделить запись |
-| `barBtnAddConclusion_ItemClick` | `ConclusionEdit()` → при сохранении `ConclusionXPO`, `ConclusionGuid = Guid` записи, сериализация, сохранение |
-| `barBtnAddExplanatoryNote_ItemClick` | То же для `ExplanatoryNoteEdit`; `id` записки не заполняется |
-| `EditGridViewObjectAsync` (Изменить / двойной клик) | Десериализует `Obj`, открывает форму, при сохранении пишет имя и новый XML |
+| `barBtnAddConclusion_ItemClick` | Открывает текущую форму заключения 01.04 |
+| `barBtnAddExplanatoryNote_ItemClick` | Открывает текущую форму пояснительной записки 01.07 |
+| «Классические формы 01.03» | Создаёт заключение в `ConclusionEdit` или записку в `ExplanatoryNoteEdit`. Сохранение использует отдельную запись XPO |
+| `EditGridViewObjectAsync` («Изменить» и двойной клик) | Выбирает редактор по корню и версии XML. Для архивных заключений предлагает преобразование в 01.04 |
 | `barBtnBaseSetting_ItemClick` | Только заключение: `ConclusionBaseSettingEdit(ExpertOrganization, Approver)` → запись обратно |
-| `barBtnView_ItemClick` | Только заключение: `ViewForm` |
-| `barBtnFill_ItemClick` | Выгрузка XML: имя `{conclusion|explanatoryNote}_{Guid}.xml`, подмена `xmlns:xsd` на `xsi:noNamespaceSchemaLocation`, для заключения дописывается `xml-stylesheet` (D-12) |
+| `barBtnView_ItemClick` | Для поддерживаемых схем выводит предпросмотр по XSL. Для архивного заключения доступен просмотр исходного XML |
+| `barBtnFill_ItemClick` | Выгружает XML выбранной записи. Для схем с комплектными файлами экспорт сохраняет соответствующие XSD и XSL |
 | `barBtnDel_ItemClick` | Подтверждение → `DeleteAsync` → обновление таблицы |
 
 ### Forms/FileLoad
 
-`btnFile_ButtonPressed`: «…» — выбор файла, «×» — очистка. `btnSave_Click` проверяет путь и наименование, по типу (`Conclusion` / `ExplanatoryNote`) вызывает `Create…ByPath`. Результат сохраняет в `ObjXPO` и показывает сообщение.
+`btnFile_ButtonPressed` открывает выбор файла или очищает путь. `btnSave_Click` определяет семейство по корню XML, версию по атрибуту, проверяет формат и сохраняет запись. Исходный XML архивных заключений остаётся доступен для отдельной выгрузки.
+
+### Актуальные редакторы и сервис XML
+
+| Файл | Назначение |
+|---|---|
+| `Forms/Conclusion0104Form.cs` | `SchemaDocumentForm` управляет документом, режимами ввода, черновиком, диагностикой и предпросмотром. Производные формы выбирают семейство и версию |
+| `Forms/NativeSchemaDocumentSections.cs` | Вкладки, список блоков и ввод в режиме «Разделы» на DevExpress. Правки попадают в тот же `XDocument`, что и правки из дерева |
+| `Forms/NativeSchemaDocumentFields.cs` | Дерево XSD, ввод полей, повторения, вложения, переход по ошибке и подстановка реквизитов |
+| `Services/ConclusionSchemaService.cs` | Обмен JSON с процессом XML-сервиса. `NormalizeLegacyConclusionAsync` исправляет порядок элементов после сериализации классической формы |
+| `Services/SchemaXmlDocument.cs` | Сохранение XML и идентификатора через XPO и подготовка выгрузки со схемой |
+| `schema_engine/schema.py`, `migration.py`, `note_migration.py`, `preview.py` | Профили XSD, проверка, преобразование и HTML-предпросмотр |
+| `portal/src/main.jsx`, `SchemaForm.jsx`, `xml.js` | Документ в браузере, отрисовка полей XSD, операции с XML и сохранение черновиков |
 
 ### Forms/ViewForm
 
-`ViewForm_Load` строит текст предпросмотра заключения: шапку («УТВЕРЖДАЮ»), результат, наименование, вид работ, предмет, разделы 1.1–2.1.3. Названия берутся из справочника (`GetValueXPOAsync`). Предпросмотр не доработан: заявитель, функциональное назначение и ТЭП закомментированы, циклы разделов 1.4 и 1.6 пустые, текст «повторной негосударственной» зашит (D-13).
+`ViewForm` относится к классическому интерфейсу. Актуальные схемы используют штатные XSL в RichEdit. Поведение пользовательских команд описано в [руководстве](user-guide.md).
 
 ### Forms/ObjectChange/ConclusionEdit
 
@@ -139,7 +152,7 @@
 |---|---|
 | конструкторы | `()` — новое заключение (создаётся в `Load`); `(Conclusion)` — правка существующего |
 | `ConclusionEdit_Load` | `FillFormControllersAsync` (списки из справочника), затем переносит значения модели в контролы. Коллекции модели копируются в приватные списки `_tDocuments`, `_experts` и т. д. |
-| `btnSave_Click` | Собирает модель из контролов по разделам I…VII. Заново создаёт `ExaminationObject`, `ExpertOrganization`, `Approver`, `EcologyExpertise`, `Object`, `ClimateConditions`; элементы списков **добавляет** в существующие коллекции модели (D-01). Любое исключение → сообщение и выход без `IsSave` |
+| `btnSave_Click` | Собирает модель 01.03 из контролов и списков. Главное окно подключает сохранение с нормализацией порядка элементов и проверкой XML |
 | `btnSearch_ButtonPressed` | DaData `FindParty` → реквизиты экспертной организации, ФИО и должность руководителя, адрес (D-04, D-05) |
 | `btnAddress_ButtonPressed`, `cmbObjectAddress_ButtonClick` | «…» — `AddressEdit`, лупа — DaData Clean, «×» — очистка |
 | `btnDeclarant_ButtonPressed` | `DeclarantEdit` |

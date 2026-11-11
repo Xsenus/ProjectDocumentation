@@ -548,6 +548,30 @@ def _project(source, name, definition, schema, forward, path, warnings, historic
     return result
 
 
+def normalize_legacy_conclusion(xml: str) -> str:
+    """Put the classic serializer's elements in the sequence required by XSD 01.03."""
+    try:
+        root = parse_document(xml)
+    except ET.ParseError as error:
+        raise ValueError(f'Ошибка XML классического заключения: {error}') from error
+    if root.tag != 'Conclusion' or root.get('SchemaVersion') != '01.03':
+        raise ValueError('Ожидается заключение версии 01.03.')
+    schema = _schema('01.03')
+
+    def reorder(element, definition):
+        particle, _ = schema.layout(definition)
+        fields = dict(_ordered_fields(particle))
+        for child in element:
+            if child.tag in fields:
+                reorder(child, fields[child.tag][1])
+        if fields:
+            last = (len(particle.children),)
+            element[:] = sorted(element, key=lambda child: fields[child.tag][0] if child.tag in fields else last)
+
+    reorder(root, schema.root)
+    return ET.tostring(root, encoding='unicode', xml_declaration=True)
+
+
 def migrate_xml(xml: str, target_version: str | None = None) -> dict:
     """Return a converted draft and field warnings; callers retain the input XML."""
     try:
