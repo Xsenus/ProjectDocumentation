@@ -34,7 +34,8 @@ namespace ProjectDocumentation.NET.Forms
         public int? Max { get; set; }
         public List<NativeSchemaParticle> Children { get; set; }
 
-        public IEnumerable<NativeSchemaChild> ChildFields(long max = 1, bool required = true, NativeSchemaParticle repeatedGroup = null)
+        public IEnumerable<NativeSchemaChild> ChildFields(long max = 1, bool required = true, NativeSchemaParticle repeatedGroup = null,
+            bool insideChoice = false)
         {
             var capacity = Max.HasValue ? Math.Min((long)int.MaxValue, max * Max.Value) : int.MaxValue;
             if (capacity == 0)
@@ -45,14 +46,14 @@ namespace ProjectDocumentation.NET.Forms
             var requiredHere = required && Min > 0;
             if (Kind == "element")
             {
-                yield return new NativeSchemaChild(this, capacity, requiredHere, repeatedGroup);
+                yield return new NativeSchemaChild(this, capacity, requiredHere, repeatedGroup, insideChoice);
                 yield break;
             }
 
             foreach (var child in Children ?? Enumerable.Empty<NativeSchemaParticle>())
             {
                 var group = repeatedGroup ?? (Max != 1 ? this : null);
-                foreach (var field in child.ChildFields(capacity, requiredHere && Kind != "choice", group))
+                foreach (var field in child.ChildFields(capacity, requiredHere && Kind != "choice", group, insideChoice || Kind == "choice"))
                 {
                     yield return field;
                 }
@@ -90,18 +91,20 @@ namespace ProjectDocumentation.NET.Forms
 
     internal sealed class NativeSchemaChild
     {
-        public NativeSchemaChild(NativeSchemaParticle field, long capacity, bool required, NativeSchemaParticle repeatedGroup)
+        public NativeSchemaChild(NativeSchemaParticle field, long capacity, bool required, NativeSchemaParticle repeatedGroup, bool insideChoice)
         {
             Field = field;
             Capacity = capacity;
             Required = required;
             RepeatedGroup = repeatedGroup;
+            InsideChoice = insideChoice;
         }
 
         public NativeSchemaParticle Field { get; }
         public long Capacity { get; }
         public bool Required { get; }
         public NativeSchemaParticle RepeatedGroup { get; }
+        public bool InsideChoice { get; }
         public override string ToString()
             => $"{Field.Name}{(Required ? " *" : "")}{(string.IsNullOrWhiteSpace(Field.Documentation) ? "" : " — " + Field.Documentation)}";
     }

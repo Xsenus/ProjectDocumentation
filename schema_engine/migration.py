@@ -31,8 +31,11 @@ ADDRESS_LABELS = {
 DATE_VALUE = r'\d{4}-\d{2}-\d{2}(?:Z|[+-]\d{2}:\d{2})?|\d{2}\.\d{2}\.\d{4}'
 DATE_TEXT = re.compile(rf'\s*({DATE_VALUE})(?:\s*[,;:–—]\s*(.+))?\s*', re.DOTALL)
 DATE_IN_SENTENCE = re.compile(rf'\b(?:по\s+состоянию\s+на|на\s+дату)\s+({DATE_VALUE})(?!\w)', re.IGNORECASE)
+REQUIREMENTS_DATE_FIELDS = {'EngineeringSurveySummaryDate', 'ProjectDocumentsSummaryDate'}
+LEGACY_DATE_PLACEHOLDERS = {'', '-', '–', '—'}
 FUNCTIONS_CODE = r'[0-9]{1,2}\.[0-9]{1,2}\.[0-9]{1,3}'
 LEGACY_SUMMARY_SEPARATOR = re.compile(r'(?<=[.!?])\s+|[\r\n;]+')
+ENGINEERING_SURVEYS_CONFORM = 'Результаты инженерных изысканий соответствуют требованиям технических регламентов.'
 
 
 @dataclass(frozen=True)
@@ -405,6 +408,22 @@ def _statement_key(value):
     return ' '.join(value.casefold().replace('ё', 'е').split()).rstrip('.')
 
 
+def _expand_primary_survey_summary(root, warnings):
+    examination = root.find('ExaminationObject')
+    if examination is None or (examination.findtext('ExaminationStage') or '').strip() != '1':
+        return
+    if not any((element.text or '').strip() == '1' for element in examination.findall('ExaminationType')):
+        return
+    summaries = root.findall('Summary/EngineeringSurveySummary')
+    if len(summaries) != 1 or root.find('ExpertEngineeringSurveys/Mismatches') is not None:
+        return
+    summary = summaries[0]
+    if not len(summary) and not summary.attrib and _statement_key(summary.text or '') in {'соответствует', 'соответствуют'}:
+        summary.text = ENGINEERING_SURVEYS_CONFORM
+        warnings.append('/Conclusion/Summary/EngineeringSurveySummary: краткий положительный вывод первичной '
+                        'экспертизы перенесён в установленную формулировку 01.04.')
+
+
 def _legacy_examination_summary(element, definition, schema, path, warnings):
     value = (element.text or '').strip()
     if len(element) or not value:
@@ -447,7 +466,7 @@ def _project(source, name, definition, schema, forward, path, warnings, historic
         source = _upgrade_address(source, type_name, path, warnings)
     elif not forward and type_name in {'tAddress', 'tPostAddress'}:
         source = _downgrade_address(source, type_name, path, warnings)
-    if name in {'EngineeringSurveySummaryDate', 'ProjectDocumentsSummaryDate'}:
+    if name in REQUIREMENTS_DATE_FIELDS:
         source = (_upgrade_date if forward else _downgrade_date)(source, path, warnings)
     if name == 'FinanceOwner':
         source = _finance_owner(source, forward, path, warnings)
@@ -476,8 +495,15 @@ def _project(source, name, definition, schema, forward, path, warnings, historic
     if not fields:
         result.text = source.text
         values = schema.enumerated_values(type_name)
-        if values and result.text is not None and result.text.strip() not in values:
-            warnings.append(f'{path}: значение отсутствует в справочнике целевой схемы. Выберите допустимое значение.')
+        if values and result.text is not None and result.text not in values:
+            matching_statements = []
+            if historical and path.startswith('/Conclusion/Summary/'):
+                key = _statement_key(result.text)
+                matching_statements = [value for value in values if _statement_key(value) == key]
+            if len(matching_statements) == 1:
+                result.text = matching_statements[0]
+            else:
+                warnings.append(f'{path}: значение отсутствует в справочнике целевой схемы. Выберите допустимое значение.')
         if type_name in {'tNotEmptyString', 'tNotBreakString'} and not (result.text or '').strip():
             warnings.append(f'{path}: в целевой схеме это поле не может быть пустым.')
         if type_name == 'tNotBreakString' and result.text and (len(result.text) > 50 or any(ch in result.text for ch in '\r\n')):
@@ -493,6 +519,10 @@ def _project(source, name, definition, schema, forward, path, warnings, historic
         candidate = child.tag
         original_positions[candidate] += 1
         suffix = f'[{original_positions[candidate]}]' if original_counts[candidate] > 1 else ''
+        if (historical and path == '/Conclusion/Summary' and candidate in REQUIREMENTS_DATE_FIELDS
+                and not len(child) and not child.attrib and (child.text or '').strip() in LEGACY_DATE_PLACEHOLDERS):
+            warnings.append(f'{path}/{candidate}{suffix}: в оригинале дата не указана. Внесите дату, если она обязательна для этого вида экспертизы.')
+            continue
         if forward and candidate == 'ForeignOrganization' and 'Organization' in fields:
             candidate = 'Organization'
             if child.find('RAFP') is None:
@@ -547,6 +577,8 @@ def migrate_xml(xml: str, target_version: str | None = None) -> dict:
             result, warnings = migrate_note(root, source_version, target_version)
         else:
             schema = _schema(target_version)
+            if historical:
+                _expand_primary_survey_summary(root, warnings)
             result = _project(root, 'Conclusion', schema.root, schema, target_version == '01.04', '/Conclusion',
                               warnings, historical)
         result.set('SchemaVersion', target_version)

@@ -136,17 +136,31 @@ def _validation_error(error, root_path):
 
 
 def _children_error(error, result):
-    expected = tuple(dict.fromkeys(element.local_name for element in error.expected or ()
-                                   if isinstance(element, XsdElement) and element.local_name))
+    expected_elements = [element for element in error.expected or ()
+                         if isinstance(element, XsdElement) and element.local_name]
+    expected = tuple(dict.fromkeys(element.local_name for element in expected_elements))
     child = error.invalid_child
     children = list(error.elem) if error.elem is not None else []
+    present = {node.tag for node in children}
     known_names = {element.name for element in error.validator.iter_elements()}
-    if len(expected) == 1 and not any(node.tag == expected[0] for node in children) and (
+    if len(expected) == 1 and expected[0] not in present and (
         child is None or child.tag in known_names
     ):
         name, = expected
         return {'path': f'{result["path"]}/{name}', 'code': 'required-element', 'message': f'Заполните обязательный элемент {name}.'}
     if child is not None:
+        # The validator may list both the missing required field and later members of the same sequence.
+        for index, element in enumerate(expected_elements):
+            if element.name != child.tag:
+                continue
+            group = element.parent
+            if isinstance(group, XsdGroup) and group.model == 'sequence' and group.max_occurs == 1:
+                for preceding in expected_elements[:index]:
+                    if preceding.parent is group and preceding.min_occurs > 0 and preceding.name not in present:
+                        name = preceding.local_name
+                        return {'path': f'{result["path"]}/{name}', 'code': 'required-element',
+                                'message': f'Заполните обязательный элемент {name}.'}
+            break
         siblings = [node for node in children if node.tag == child.tag]
         suffix = f'[{siblings.index(child) + 1}]' if len(siblings) > 1 else ''
         name = child.tag.rsplit('}', 1)[-1]

@@ -110,3 +110,45 @@ class ConclusionMigrationTests(unittest.TestCase):
                 with self.subTest(root=root, version=version):
                     with self.assertRaisesRegex(ValueError, f'Версия {version} .* не поддерживается'):
                         migrate_xml(f'<{root} SchemaVersion="{version}"/>')
+
+    def test_legacy_summary_normalizes_only_complete_statements(self):
+        xml = '''<Conclusion SchemaVersion="01.02"><Summary>
+            <EngineeringSurveySummary>Результаты инженерных изысканий
+                соответствуют требованиям технических регламентов</EngineeringSurveySummary>
+            <ProjectDocumentsSummary>Соответствует</ProjectDocumentsSummary>
+        </Summary></Conclusion>'''
+        migrated = migrate_xml(xml)
+        summary = ET.fromstring(migrated['xml']).find('Summary')
+        self.assertEqual(summary.findtext('EngineeringSurveySummary'),
+                         'Результаты инженерных изысканий соответствуют требованиям технических регламентов.')
+        self.assertEqual(summary.findtext('ProjectDocumentsSummary'), 'Соответствует')
+        self.assertTrue(any('/ProjectDocumentsSummary:' in warning for warning in migrated['warnings']))
+
+    def test_legacy_date_placeholder_is_absent_instead_of_an_invalid_date_block(self):
+        xml = '''<Conclusion SchemaVersion="01.00"><Summary>
+            <EngineeringSurveySummaryDate>01.01.2020</EngineeringSurveySummaryDate>
+            <ProjectDocumentsSummaryDate> — </ProjectDocumentsSummaryDate>
+        </Summary></Conclusion>'''
+        migrated = migrate_xml(xml)
+        summary = ET.fromstring(migrated['xml']).find('Summary')
+        self.assertEqual(summary.findtext('EngineeringSurveySummaryDate/Date'), '2020-01-01')
+        self.assertIsNone(summary.find('ProjectDocumentsSummaryDate'))
+        self.assertTrue(any('/ProjectDocumentsSummaryDate:' in warning and 'дата не указана' in warning
+                            for warning in migrated['warnings']))
+
+    def test_short_legacy_survey_summary_requires_explicit_primary_survey_scope(self):
+        for stage, scope, legacy_summary, expected in (
+            ('1', '1', 'Соответствует.', 'Результаты инженерных изысканий соответствуют требованиям технических регламентов.'),
+            ('2', '1', 'Соответствует.', 'Соответствует.'),
+            ('1', '2', 'Соответствует.', 'Соответствует.'),
+            ('1', '1', 'Не соответствует.', 'Не соответствует.'),
+        ):
+            with self.subTest(stage=stage, scope=scope, legacy_summary=legacy_summary):
+                xml = f'''<Conclusion SchemaVersion="01.00">
+                    <ExaminationObject>
+                        <ExaminationStage>{stage}</ExaminationStage><ExaminationType>{scope}</ExaminationType>
+                    </ExaminationObject>
+                    <Summary><EngineeringSurveySummary>{legacy_summary}</EngineeringSurveySummary></Summary>
+                </Conclusion>'''
+                result = ET.fromstring(migrate_xml(xml)['xml'])
+                self.assertEqual(result.findtext('Summary/EngineeringSurveySummary'), expected)

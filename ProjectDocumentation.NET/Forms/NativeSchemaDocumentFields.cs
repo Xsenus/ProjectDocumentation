@@ -19,6 +19,7 @@ namespace ProjectDocumentation.NET.Forms
         private readonly Panel details = new Panel { Dock = DockStyle.Fill, AutoScroll = true, Padding = new Padding(10, 0, 10, 10) };
         private readonly Dictionary<string, Control> fieldEditors = new Dictionary<string, Control>();
         private ComboBox childSelector;
+        private SplitterPanel treeDetailsHost;
 
         private Control CreateFieldsPanel()
         {
@@ -29,9 +30,9 @@ namespace ProjectDocumentation.NET.Forms
             split.Panel1.Padding = new Padding(8);
             split.Panel2.Padding = new Padding(8);
             xmlTree.BeforeExpand += (_, e) => PopulateTree(e.Node);
-            xmlTree.AfterSelect += (_, e) => ShowFields(e.Node);
+            xmlTree.AfterSelect += (_, e) => ShowSelectedFields(e.Node);
             split.Panel1.Controls.Add(xmlTree);
-            split.Panel2.Controls.Add(details);
+            treeDetailsHost = split.Panel2;
             return split;
         }
 
@@ -47,7 +48,8 @@ namespace ProjectDocumentation.NET.Forms
                 xmlTree.SelectedNode = section == null ? root
                     : root.Nodes.Cast<TreeNode>().FirstOrDefault(item => (item.Tag as NativeSchemaNode)?.Element.Name.LocalName == section) ?? root;
                 xmlTree.SelectedNode.EnsureVisible();
-                if (section != null && xmlTree.SelectedNode == root) SelectChild(section);
+                ShowSelectedFields(xmlTree.SelectedNode);
+                if (section != null && xmlTree.SelectedNode == root) SelectMissingField(section);
             }
             finally
             {
@@ -95,7 +97,7 @@ namespace ProjectDocumentation.NET.Forms
             item.Expand();
             xmlTree.SelectedNode = item.Nodes.Cast<TreeNode>().FirstOrDefault(n => ReferenceEquals(((NativeSchemaNode)n.Tag).Element, selected)) ?? item;
             xmlTree.SelectedNode.EnsureVisible();
-            ShowFields(xmlTree.SelectedNode);
+            ShowSelectedFields(xmlTree.SelectedNode);
         }
 
         private void ShowFields(TreeNode item)
@@ -116,7 +118,8 @@ namespace ProjectDocumentation.NET.Forms
                 if (string.IsNullOrWhiteSpace(documentation)) documentation = node.Type?.Documentation;
                 if (!string.IsNullOrWhiteSpace(documentation)) AddWide(layout, LabelFor(documentation));
 
-                var attributes = node.Type?.Attributes ?? new List<NativeSchemaAttribute>();
+                var attributes = !ShowRootAttributes(node) ? Enumerable.Empty<NativeSchemaAttribute>()
+                    : node.Type?.Attributes ?? Enumerable.Empty<NativeSchemaAttribute>();
                 foreach (var attribute in attributes)
                 {
                     var current = (string)node.Element.Attribute(attribute.Name);
@@ -147,6 +150,8 @@ namespace ProjectDocumentation.NET.Forms
                     fieldEditors["."] = editor;
                     AddField(layout, "Значение", editor, null);
                 }
+
+                if (IsSectionView) AddSectionValues(layout, item, node);
 
                 if (!ReadOnlyDocument)
                 {
@@ -213,8 +218,9 @@ namespace ProjectDocumentation.NET.Forms
 
         private void AddChildControls(TableLayoutPanel layout, TreeNode item, NativeSchemaNode node)
         {
-            var candidates = node.Children.GroupBy(child => child.Field.Name).Select(group => group.First())
-                .Where(child => node.Element.Elements(child.Field.Name).LongCount() < child.Capacity).ToArray();
+            var candidates = VisibleChildren(node).GroupBy(child => child.Field.Name).Select(group => group.First())
+                .Where(child => (!IsSectionView || !fieldEditors.ContainsKey(child.Field.Name)) &&
+                    node.Element.Elements(child.Field.Name).LongCount() < child.Capacity).ToArray();
             if (candidates.Length == 0) return;
             childSelector = new ComboBox { Dock = DockStyle.Top, DropDownStyle = ComboBoxStyle.DropDownList, DropDownWidth = 650, MaxDropDownItems = 18 };
             childSelector.Items.AddRange(candidates.Cast<object>().ToArray());
@@ -224,6 +230,11 @@ namespace ProjectDocumentation.NET.Forms
             add.Click += (_, __) =>
             {
                 if (!(childSelector.SelectedItem is NativeSchemaChild child) || !CanEditFields()) return;
+                if (node.Element.Elements(child.Field.Name).LongCount() >= child.Capacity)
+                {
+                    ShowFields(item);
+                    return;
+                }
                 var element = node.AddChild(child);
                 foreach (var attribute in profile.TypeOf(child.Field.Type)?.Attributes ?? new List<NativeSchemaAttribute>())
                     if (attribute.Fixed != null) element.SetAttributeValue(attribute.Name, attribute.Fixed);
@@ -309,11 +320,11 @@ namespace ProjectDocumentation.NET.Forms
                 }
                 item = next;
             }
-            tabs.SelectedTab = fieldsPage;
+            tabs.SelectedTab = previousFieldsPage ?? sectionsPage;
             xmlTree.SelectedNode = item;
             item.EnsureVisible();
             if (missing != null && fieldEditors.TryGetValue(missing, out var editor)) editor.Focus();
-            else if (missing != null) SelectChild(missing);
+            else if (missing != null) SelectMissingField(missing);
             else if (fieldEditors.TryGetValue(".", out editor)) editor.Focus();
         }
 

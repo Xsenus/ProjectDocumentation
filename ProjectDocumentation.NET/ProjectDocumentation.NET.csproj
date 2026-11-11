@@ -122,6 +122,7 @@
     <Compile Include="Forms\Conclusion0104Form.cs" />
     <Compile Include="Forms\NativeSchemaProfile.cs" />
     <Compile Include="Forms\NativeSchemaDocumentFields.cs" />
+    <Compile Include="Forms\NativeSchemaDocumentSections.cs" />
     <Compile Include="Forms\MainForm.Conclusion0104.cs" />
     <Compile Include="Forms\FileLoad.Conclusion0104.cs" />
     <Compile Include="Forms\MainForm.ExplanatoryNote0107.cs" />
