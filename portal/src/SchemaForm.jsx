@@ -1,5 +1,6 @@
 import { useId, useState } from 'react';
 import DesktopLookup from './DesktopLookup.jsx';
+import { fileFields, FileMetadataPicker, ImagePicker } from './LocalFilePicker.jsx';
 import { familyForDocument } from './documentFamilies.js';
 import { addBranch, directElements, insertElement, knownAttributeNames, leafNames, pathFor, readElementText, writeElementText } from './xml.js';
 
@@ -216,9 +217,12 @@ function ComplexContent({ element, type, context }) {
   const names = leafNames(type.particle);
   const unknown = Array.from(element.children).filter(child => !names.has(child.localName));
   const valueType = type.textType;
+  const fields = !context.readOnly && fileFields(type);
   return (
     <>
       <DesktopLookup element={element} type={type} context={context} />
+      {fields && <FileMetadataPicker element={element} type={type} fields={fields} context={context} />}
+      {!context.readOnly && <ImagePicker element={element} type={type} context={context} />}
       <Attributes element={element} type={type} context={context} />
       {valueType && (
         <Field spec={{ name: 'Значение', type: valueType, required: true }} types={context.types} value={readElementText(element)}
@@ -265,6 +269,7 @@ function ElementEditor({ parent, spec, parentParticle, context }) {
   const nodes = directElements(parent, new Set([spec.name]));
   const repeatable = spec.max === null || spec.max > 1;
   const canAdd = spec.max === null || nodes.length < (spec.max ?? 1);
+  const fields = !context.readOnly && canAdd && fileFields(type);
   const title = titleFor(spec, context.types);
   const fieldSpec = { ...spec, required: spec.min > 0 };
   const add = () => context.change(() => insertElement(parent, spec, parentParticle, context.types));
@@ -299,6 +304,8 @@ function ElementEditor({ parent, spec, parentParticle, context }) {
             onChange={value => updateSimple(element, value)}
             onRemove={nodes.length > spec.min ? () => context.change(() => element.remove()) : undefined} />
       )}
+      {fields && <FileMetadataPicker element={parent} type={type} fields={fields} context={context}
+        spec={spec} parentParticle={parentParticle} />}
       {!context.readOnly && canAdd && (
         <button type="button" className="button button-add" aria-label={'Добавить ' + title} onClick={add}>
           <span aria-hidden="true">+</span> {nodes.length || repeatable ? 'Добавить' : 'Заполнить'} {title}
@@ -358,6 +365,9 @@ function ChoiceEditor({ parent, spec, parentParticle, context }) {
   const count = present.reduce((total, matches, index) => total +
     (multiple && branches[index].kind === 'element' ? matches.length : Number(matches.length > 0)), 0);
   const selected = selection === '' ? null : Number(selection);
+  const selectedBranch = selected === null ? null : branches[selected];
+  const selectedType = context.types[selectedBranch?.type];
+  const selectedFiles = !multiple && selectedBranch?.kind === 'element' && fileFields(selectedType);
   const showOptions = !context.readOnly && (spec.max === null || count < (spec.max ?? 1));
   const activeBranches = branches.map((_, index) => index).filter(index => present[index].length > 0 ||
     (!multiple && index === selected && count === 0 && branches[index].kind !== 'element'));
@@ -387,6 +397,8 @@ function ChoiceEditor({ parent, spec, parentParticle, context }) {
             {branches.map((branch, index) => <option key={index} value={index}>{branchLabel(branch, context.types, index)}</option>)}
           </select>
           <button type="button" className="button button-quiet" disabled={selected === null} onClick={addSelected}>Добавить</button>
+          {selectedFiles && <FileMetadataPicker key={selectedBranch.name} element={parent} type={selectedType}
+            fields={selectedFiles} context={context} spec={selectedBranch} parentParticle={parentParticle} />}
         </div>
       )}
       {!context.readOnly && !multiple && count > 0 && (
