@@ -18,6 +18,7 @@
 |---|---|
 | Классическая форма заключения 01.03 | [Открыть](screenshots/classic-conclusion.png) |
 | Краткий просмотр заключения 01.03 | [Открыть](screenshots/classic-conclusion-view.png) |
+| Полный предпросмотр заключения 01.03 по XSL | [Открыть](screenshots/classic-conclusion-xsl.png) |
 | I. Общие положения и сведения о заключении | [Открыть](screenshots/classic-conclusion-section-1.png) |
 | I. Общая информация | [Открыть](screenshots/classic-conclusion-general-9.png) |
 | I. Экспертная организация и утверждающее лицо | [Открыть](screenshots/classic-conclusion-general-10.png) |

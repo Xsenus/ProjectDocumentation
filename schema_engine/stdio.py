@@ -34,7 +34,7 @@ def dispatch(request):
             return migrate_xml(xml, request.get('targetVersion'))
         if operation == 'normalize-legacy-conclusion':
             return {'xml': normalize_legacy_conclusion(xml)}
-        return {'html': render_preview(xml)}
+        return {'html': render_preview(xml, rich_edit=request.get('layout') == 'rich-edit')}
     raise ValueError('Неизвестная операция проверки XML.')
 
 

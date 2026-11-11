@@ -50,6 +50,25 @@ class FormDiagnosticsTests(unittest.TestCase):
                 self.assertTrue(any(error['path'] == '/ExplanatoryNote/ExplanatoryNoteYear'
                                     and message in error['message'] for error in errors), errors)
 
+    def test_desktop_preview_removes_the_negative_margin_only_from_the_generated_wrapper(self):
+        for name, value in (('conclusion-01-04.xml', 'Проверка сдвига'),
+                            ('explanatorynote-01-07.xml', 'Проверка полей')):
+            with self.subTest(name=name):
+                root = ET.parse(FIXTURES / name).getroot()
+                if root.tag == 'Conclusion':
+                    root.find('ExaminationObject/Name').text = value
+                else:
+                    root.find('NonIndustrialObject/Name').text = value
+                xml = ET.tostring(root, encoding='unicode')
+                original = render_preview(xml)
+                desktop = render_preview(xml, rich_edit=True)
+                self.assertIn('margin-left: -400px', original)
+                self.assertNotIn('margin-left: -400px', desktop)
+                self.assertIn(value, desktop)
+                if root.tag == 'ExplanatoryNote':
+                    self.assertIn('<div class="frame">', original)
+                    self.assertNotIn('<div class="frame">', desktop)
+
     def test_missing_snils_points_to_the_required_field_before_expert_type(self):
         root = ET.parse(FIXTURES / 'conclusion-01-04.xml').getroot()
         expert = root.find('Experts/Expert')
