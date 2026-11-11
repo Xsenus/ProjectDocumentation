@@ -84,17 +84,16 @@ try {
         if (-not $DesktopOnly) { $bundleArguments += @('--add-data', "${portalData}:portal/dist") }
         Invoke-Checked $SchemaPython ($bundleArguments + 'schema_engine/__main__.py')
         $engine = Join-Path $bundles 'ProjectDocumentation.Schema'
-        Get-ChildItem -LiteralPath $engine | Copy-Item -Destination $desktop -Recurse
+        Copy-Item -LiteralPath $engine -Destination (Join-Path $desktop 'engine') -Recurse
     } finally {
         $resolved = (Resolve-Path -LiteralPath $bundleWork).Path
         if ($resolved -eq $bundleWork -and (Split-Path -Parent $resolved) -eq $tempRoot) {
             Remove-Item -LiteralPath $resolved -Recurse -Force
         }
     }
-    $requiredFiles = @('ProjectDocumentation.NET.exe', 'ProjectDocumentation.Schema.exe')
+    $requiredFiles = @('ProjectDocumentation.NET.exe', 'engine\ProjectDocumentation.Schema.exe')
     if (-not $DesktopOnly) {
-        Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'Start-Portal.cmd') -Destination $desktop
-        $requiredFiles += @('Start-Portal.cmd', '_internal\portal\dist\index.html')
+        $requiredFiles += 'engine\_internal\portal\dist\index.html'
     }
     Copy-Item -LiteralPath (Join-Path $repo 'docs') -Destination $desktop -Recurse
     $portalDocs = Join-Path $desktop 'portal'
@@ -113,7 +112,6 @@ try {
     }
 
     Write-Output "Desktop: $desktop"
-    if (-not $DesktopOnly) { Write-Output "Portal entry point: $(Join-Path $desktop 'Start-Portal.cmd')" }
 } finally {
     Pop-Location
 }

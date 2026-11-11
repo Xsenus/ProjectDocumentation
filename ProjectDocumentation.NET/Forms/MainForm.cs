@@ -13,6 +13,7 @@ using DevExpress.XtraGrid.Views.Grid;
 using ProjectDocumentation.NET.Forms.ObjectChange;
 using ProjectDocumentation.NET.Services;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
@@ -79,8 +80,16 @@ namespace ProjectDocumentation.NET.Forms
             versions.AddItem(exportCompatibleExplanatoryNote);
 
             var history = new BarButtonItem(barManager, "История файлов");
+            history.ImageOptions.SvgImage = FileOperationHistoryForm.HistoryIcon;
             history.ItemClick += OpenFileOperationHistory_ItemClick;
-            AddDocumentBar("Документы", 0, create, barBtnLoad, barBtnFill, history);
+            var fileCommands = new List<BarItem> { create, barBtnLoad, barBtnFill, history };
+            if (ConclusionSchemaService.HasBundledPortal)
+            {
+                var browser = new BarButtonItem(barManager, "Открыть веб-редактор");
+                browser.ItemClick += OpenBrowserPortal_ItemClick;
+                fileCommands.Add(browser);
+            }
+            AddDocumentBar("Документы", 0, fileCommands.ToArray());
             AddDocumentBar("Действия с документом", 1, barBtnView, barBtnEdit, versions, checks);
 
             gridView.FocusedRowChanged += (_, __) => UpdateDocumentCommands(gridView.GetFocusedRow());
@@ -208,6 +217,25 @@ namespace ProjectDocumentation.NET.Forms
             {
                 checkingDocument = false;
                 if (!IsDisposed && !Disposing) UpdateDocumentCommands(gridView.GetFocusedRow());
+            }
+        }
+
+        private async void OpenBrowserPortal_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            e.Item.Enabled = false;
+            try
+            {
+                var address = await conclusionSchema.StartBrowserPortalAsync();
+                if (!IsDisposed && !Disposing) OpenExternalService(address);
+            }
+            catch (Exception error)
+            {
+                if (!IsDisposed && !Disposing)
+                    XtraMessageBox.Show(this, error.Message, "Не удалось открыть веб-редактор", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            finally
+            {
+                if (!IsDisposed && !Disposing) e.Item.Enabled = true;
             }
         }
 

@@ -13,12 +13,27 @@ namespace ProjectDocumentation.NET.Services
     internal sealed class ConclusionSchemaService : IDisposable
     {
         private const string WorkerArguments = "--stdio";
+        private const string WorkerExecutable = "ProjectDocumentation.Schema.exe";
+        private const string BrowserPortalAddress = "http://127.0.0.1:8765";
         private static readonly Encoding Utf8 = new UTF8Encoding(false);
         private readonly SemaphoreSlim requests = new SemaphoreSlim(1, 1);
         private readonly object engineLock = new object();
         private Process engine;
         private StreamWriter input;
         private bool disposed;
+
+        private static string BundledEngineDirectory => Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "engine");
+
+        public static bool HasBundledPortal => File.Exists(Path.Combine(BundledEngineDirectory, WorkerExecutable))
+            && File.Exists(Path.Combine(BundledEngineDirectory, "_internal", "portal", "dist", "index.html"));
+
+        public async Task<string> StartBrowserPortalAsync()
+        {
+            var result = await RequestAsync<JObject>("start-portal", new JObject());
+            if (result.Value<string>("url") != BrowserPortalAddress)
+                throw new InvalidOperationException("Не удалось определить адрес локального веб-редактора.");
+            return BrowserPortalAddress;
+        }
 
         public Task<JObject> GetSchemaAsync(string family, string version = null)
             => RequestAsync<JObject>("schema", new JObject { ["family"] = family, ["version"] = version });
@@ -149,9 +164,14 @@ namespace ProjectDocumentation.NET.Services
 
         private static ProcessStartInfo GetStartInfo()
         {
-            var directory = AppDomain.CurrentDomain.BaseDirectory;
-            var executable = Path.Combine(directory, "ProjectDocumentation.Schema.exe");
+            var directory = BundledEngineDirectory;
+            var executable = Path.Combine(directory, WorkerExecutable);
             var arguments = WorkerArguments;
+            if (!File.Exists(executable))
+            {
+                directory = AppDomain.CurrentDomain.BaseDirectory;
+                executable = Path.Combine(directory, WorkerExecutable);
+            }
             if (!File.Exists(executable))
             {
                 var source = FindSource(directory);
