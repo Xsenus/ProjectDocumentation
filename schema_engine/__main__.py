@@ -4,6 +4,7 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 import json
 import mimetypes
 from pathlib import Path
+import socket
 from threading import Thread
 from urllib.parse import parse_qs, unquote, urlsplit
 import webbrowser
@@ -14,6 +15,7 @@ from schema_engine.xmlio import MAX_REQUEST_SIZE
 
 
 PORTAL = SCHEMA_DIRECTORY.parent.parent / 'portal' / 'dist'
+PORTAL_PORT = 8765
 DEVELOPMENT_ORIGINS = {'http://127.0.0.1:5173', 'http://localhost:5173'}
 
 
@@ -136,22 +138,61 @@ class Handler(BaseHTTPRequestHandler):
             self._json(result)
 
 
+class PortalServer(ThreadingHTTPServer):
+    allow_reuse_address = not hasattr(socket, 'SO_EXCLUSIVEADDRUSE')
+
+    def server_bind(self):
+        # SO_REUSEADDR can bind to a running listener on Windows.
+        if not self.allow_reuse_address:
+            self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_EXCLUSIVEADDRUSE, 1)
+        super().server_bind()
+
+
+def create_portal_server(host, port):
+    server = PortalServer((host, port), Handler)
+    server.portal = PORTAL.resolve()
+    return server
+
+
+def run_desktop_worker(host, port):
+    from schema_engine.stdio import run
+
+    server = None
+
+    def start_portal():
+        nonlocal server
+        if server is None:
+            if not (PORTAL / 'index.html').is_file():
+                raise ValueError('В этом комплекте нет веб-редактора.')
+            try:
+                server = create_portal_server(host, port)
+            except OSError as error:
+                raise ValueError(f'Не удалось открыть веб-редактор на порту {port}. '
+                                 'Если он уже открыт из другой установки, закройте её и повторите.') from error
+            Thread(target=server.serve_forever, daemon=True).start()
+        return {'url': f'http://{host}:{server.server_port}'}
+
+    try:
+        run(start_portal)
+    finally:
+        if server is not None:
+            server.shutdown()
+            server.server_close()
+
+
 def main():
     parser = ArgumentParser(description='Локальный сервис проектной документации и React-портала.')
     parser.add_argument('--host', choices=['127.0.0.1'], default='127.0.0.1')
-    parser.add_argument('--port', type=int, default=8765)
+    parser.add_argument('--port', type=int, default=PORTAL_PORT)
     parser.add_argument('--open-browser', action='store_true')
     parser.add_argument('--stdio', action='store_true', help='Обрабатывать JSON-запросы настольного приложения через стандартный ввод и вывод.')
     options = parser.parse_args()
     if options.stdio:
-        from schema_engine.stdio import run
-
-        run()
+        run_desktop_worker(options.host, options.port)
         return
     for family in DOCUMENTS:
         form_schema(family)
-    with ThreadingHTTPServer((options.host, options.port), Handler) as server:
-        server.portal = PORTAL.resolve()
+    with create_portal_server(options.host, options.port) as server:
         url = f'http://{options.host}:{server.server_port}'
         print(json.dumps({'url': url}), flush=True)
         if options.open_browser:

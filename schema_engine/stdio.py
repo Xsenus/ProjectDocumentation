@@ -9,10 +9,12 @@ from .schema import form_schema, new_document, validate_document
 from .xmlio import MAX_REQUEST_SIZE
 
 
-def dispatch(request):
+def dispatch(request, start_portal):
     if not isinstance(request, dict):
         raise ValueError('Ожидается JSON-объект.')
     operation = request.get('operation')
+    if operation == 'start-portal':
+        return start_portal()
     if operation in ('schema', 'new'):
         family = request.get('family') or DEFAULT_FAMILY
         version = resolve_version(family, request.get('version'))
@@ -38,7 +40,7 @@ def dispatch(request):
     raise ValueError('Неизвестная операция проверки XML.')
 
 
-def run():
+def run(start_portal):
     source = sys.stdin.buffer
     target = sys.stdout.buffer
     while line := source.readline(MAX_REQUEST_SIZE + 1):
@@ -48,7 +50,7 @@ def run():
             response = {'error': 'Размер запроса превышает допустимый.'}
         else:
             try:
-                response = {'result': dispatch(json.loads(line.decode('utf-8')))}
+                response = {'result': dispatch(json.loads(line.decode('utf-8')), start_portal)}
             except ValueError as error:
                 response = {'error': str(error)}
         try:

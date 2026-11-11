@@ -12,6 +12,7 @@
 | Загрузка XML из файла | [Открыть](screenshots/classic-file-load.png) |
 | Результат локальной проверки выбранного XML | [Открыть](screenshots/desktop-validation.png) |
 | История файлов с замечаниями и повторным импортом | [Открыть](screenshots/desktop-file-history.png) |
+| История файлов в узком окне | [Открыть](screenshots/desktop-file-history-compact.png) |
 
 ### Заключение 01.03
 

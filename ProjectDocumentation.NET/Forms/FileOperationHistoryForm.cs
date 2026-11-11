@@ -1,6 +1,9 @@
 using Core.NET.Controllers;
+using DevExpress.Images;
+using DevExpress.LookAndFeel;
 using DevExpress.Utils;
 using DevExpress.XtraEditors;
+using DevExpress.XtraEditors.Controls;
 using DevExpress.XtraGrid;
 using DevExpress.XtraGrid.Views.Grid;
 using System;
@@ -13,24 +16,31 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using ComboBox = System.Windows.Forms.ComboBox;
 
 namespace ProjectDocumentation.NET.Forms
 {
     internal sealed class FileOperationHistoryForm : XtraForm
     {
-        private readonly GridControl grid = new GridControl { Dock = DockStyle.Fill };
+        private readonly GridControl grid = new GridControl { Dock = DockStyle.Fill, AccessibleName = "Операции с файлами", TabIndex = 1 };
         private readonly GridView view;
-        private readonly TextEdit search = new TextEdit { Width = 250, AccessibleName = "Поиск по истории файлов" };
-        private readonly ComboBox kindFilter = new ComboBox { Width = 126, DropDownStyle = ComboBoxStyle.DropDownList, AccessibleName = "Операция" };
-        private readonly ComboBox statusFilter = new ComboBox { Width = 146, DropDownStyle = ComboBoxStyle.DropDownList, AccessibleName = "Результат" };
+        private readonly ButtonEdit search = new ButtonEdit { Dock = DockStyle.Fill, AccessibleName = "Поиск по истории файлов" };
+        private readonly ComboBoxEdit kindFilter = new ComboBoxEdit { Dock = DockStyle.Fill, AccessibleName = "Операция" };
+        private readonly ComboBoxEdit statusFilter = new ComboBoxEdit { Dock = DockStyle.Fill, AccessibleName = "Результат" };
         private readonly MemoEdit details = new MemoEdit { Dock = DockStyle.Fill, AccessibleName = "Подробности операции" };
-        private readonly SimpleButton refresh = new SimpleButton { AutoSize = true, Text = "Обновить" };
+        private readonly SimpleButton refresh = new SimpleButton { Dock = DockStyle.Fill, Text = "Обновить" };
         private readonly SimpleButton retry = new SimpleButton { AutoSize = true, Text = "Повторить импорт" };
         private readonly SimpleButton openFolder = new SimpleButton { AutoSize = true, Text = "Открыть папку" };
         private readonly SimpleButton copy = new SimpleButton { AutoSize = true, Text = "Копировать подробности" };
+        private readonly GroupControl operations = new GroupControl { Dock = DockStyle.Fill, Text = "Операции", AccessibleName = "Операции" };
+        private readonly SplitContainerControl split = new SplitContainerControl
+        {
+            Dock = DockStyle.Fill,
+            FixedPanel = SplitFixedPanel.Panel2,
+            ShowSplitGlyph = DefaultBoolean.True
+        };
         private IReadOnlyList<FileOperationEntry> entries = Array.Empty<FileOperationEntry>();
         private bool loading;
+        private bool arranged;
 
         internal FileOperationEntry RetryEntry { get; private set; }
 
@@ -38,66 +48,84 @@ namespace ProjectDocumentation.NET.Forms
         {
             Text = "История файлов";
             StartPosition = FormStartPosition.CenterParent;
-            ClientSize = new Size(1050, 630);
-            MinimumSize = new Size(730, 470);
+            ClientSize = new Size(1180, 680);
+            MinimumSize = new Size(760, 520);
             AutoScaleMode = AutoScaleMode.Font;
+            if (!SystemInformation.HighContrast) LookAndFeel.SetSkinStyle(SkinStyle.WXI);
+
+            foreach (var style in new[]
+            {
+                grid.LookAndFeel, search.LookAndFeel, kindFilter.LookAndFeel, statusFilter.LookAndFeel, details.LookAndFeel,
+                refresh.LookAndFeel, retry.LookAndFeel, openFolder.LookAndFeel, copy.LookAndFeel, operations.LookAndFeel, split.LookAndFeel
+            })
+                style.ParentLookAndFeel = LookAndFeel;
 
             view = new GridView(grid);
             grid.ViewCollection.Add(view);
             grid.MainView = view;
-            view.OptionsBehavior.Editable = false;
-            view.OptionsView.ShowGroupPanel = false;
-            view.OptionsView.ColumnAutoWidth = false;
-            view.OptionsSelection.EnableAppearanceFocusedCell = false;
-            var date = view.Columns.AddVisible(nameof(HistoryRow.OccurredAt), "Дата и время");
-            date.DisplayFormat.FormatType = FormatType.DateTime;
-            date.DisplayFormat.FormatString = "dd.MM.yyyy HH:mm:ss";
-            date.Width = 151;
-            view.Columns.AddVisible(nameof(HistoryRow.Kind), "Операция").Width = 85;
-            view.Columns.AddVisible(nameof(HistoryRow.Status), "Результат").Width = 112;
-            view.Columns.AddVisible(nameof(HistoryRow.FileName), "Файл").Width = 230;
-            view.Columns.AddVisible(nameof(HistoryRow.DocumentName), "Документ").Width = 220;
-            view.Columns.AddVisible(nameof(HistoryRow.Version), "Схема").Width = 65;
-            view.Columns.AddVisible(nameof(HistoryRow.Summary), "Подробности").Width = 290;
-            view.FocusedRowChanged += (_, __) => ShowSelection();
+            ConfigureGrid();
 
             details.Properties.ReadOnly = true;
             details.Properties.WordWrap = true;
+            details.Properties.Appearance.FontSizeDelta = 2;
+            details.Properties.AppearanceReadOnly.FontSizeDelta = 2;
+            details.Properties.BorderStyle = BorderStyles.NoBorder;
+            search.ToolTip = "Поиск по истории (Ctrl+F)";
+            refresh.ToolTip = "Обновить историю (F5)";
             search.Properties.NullValuePrompt = "Файл, документ или ошибка";
-            kindFilter.Items.AddRange(new object[] { "Все операции", "Импорт", "Выгрузка" });
-            statusFilter.Items.Add("Все результаты");
+            search.Properties.ShowNullValuePrompt = ShowNullValuePromptOptions.EmptyValue | ShowNullValuePromptOptions.NullValue | ShowNullValuePromptOptions.EditorFocused;
+            search.Properties.Buttons.Clear();
+            search.Properties.Buttons.Add(new EditorButton(ButtonPredefines.Delete) { Visible = false, ToolTip = "Очистить поиск" });
+            search.ButtonClick += (_, __) => { search.EditValue = null; search.Focus(); };
+            kindFilter.Properties.TextEditStyle = TextEditStyles.DisableTextEditor;
+            statusFilter.Properties.TextEditStyle = TextEditStyles.DisableTextEditor;
+            kindFilter.Properties.Items.AddRange(new object[] { "Все операции", "Импорт", "Выгрузка" });
+            statusFilter.Properties.Items.Add("Все результаты");
             foreach (FileOperationStatus status in Enum.GetValues(typeof(FileOperationStatus)))
-                statusFilter.Items.Add(new StatusChoice(status));
+                statusFilter.Properties.Items.Add(new StatusChoice(status));
             kindFilter.SelectedIndex = 0;
             statusFilter.SelectedIndex = 0;
 
-            var split = new SplitContainer
+            SetButtonIcon(refresh, "xaf/action_refresh");
+            SetButtonIcon(retry, "scheduling/import");
+            SetButtonIcon(openFolder, "actions/open");
+            SetButtonIcon(copy, "edit/copy");
+            operations.Controls.Add(grid);
+            operations.AppearanceCaption.FontSizeDelta = 1;
+            operations.AppearanceCaption.FontStyleDelta = FontStyle.Bold;
+            var detailGroup = new GroupControl
             {
                 Dock = DockStyle.Fill,
-                Orientation = Orientation.Horizontal,
-                Size = new Size(1030, 550),
-                Panel1MinSize = 125,
-                Panel2MinSize = 105,
-                SplitterDistance = 330,
-                SplitterWidth = 6
+                Text = "Подробности операции",
+                Padding = new Padding(10, 8, 10, 10)
             };
-            split.Panel1.Controls.Add(grid);
-            split.Panel2.Controls.Add(details);
+            detailGroup.LookAndFeel.ParentLookAndFeel = LookAndFeel;
+            detailGroup.AppearanceCaption.FontSizeDelta = 1;
+            detailGroup.AppearanceCaption.FontStyleDelta = FontStyle.Bold;
+            detailGroup.Controls.Add(details);
+            split.Panel1.Controls.Add(operations);
+            split.Panel2.Controls.Add(detailGroup);
+            split.SizeChanged += (_, __) => ArrangePanels();
 
             var close = new SimpleButton { AutoSize = true, Text = "Закрыть", DialogResult = DialogResult.Cancel };
-            var searchLabel = new LabelControl { Text = "Поиск", Margin = new Padding(0, 6, 4, 0) };
-            var layout = new TableLayoutPanel { Dock = DockStyle.Fill, RowCount = 3, ColumnCount = 1, Padding = new Padding(9) };
+            close.LookAndFeel.ParentLookAndFeel = LookAndFeel;
+            var layout = new TableLayoutPanel { Dock = DockStyle.Fill, RowCount = 3, ColumnCount = 1, Padding = new Padding(16, 13, 16, 9) };
             layout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100));
             layout.RowStyles.Add(new RowStyle(SizeType.AutoSize));
             layout.RowStyles.Add(new RowStyle(SizeType.Percent, 100));
             layout.RowStyles.Add(new RowStyle(SizeType.AutoSize));
-            layout.Controls.Add(ButtonRow(searchLabel, search, kindFilter, statusFilter, refresh), 0, 0);
+            layout.Controls.Add(CreateFilters(), 0, 0);
             layout.Controls.Add(split, 0, 1);
-            layout.Controls.Add(ButtonRow(retry, openFolder, copy, close), 0, 2);
+            layout.Controls.Add(CreateCommands(close), 0, 2);
             Controls.Add(layout);
             CancelButton = close;
+            ActiveControl = grid;
 
-            search.EditValueChanged += (_, __) => ApplyFilters();
+            search.EditValueChanged += (_, __) =>
+            {
+                search.Properties.Buttons[0].Visible = !string.IsNullOrEmpty(search.Text);
+                ApplyFilters();
+            };
             kindFilter.SelectedIndexChanged += (_, __) => ApplyFilters();
             statusFilter.SelectedIndexChanged += (_, __) => ApplyFilters();
             refresh.Click += async (_, __) => await RefreshEntriesAsync();
@@ -125,11 +153,151 @@ namespace ProjectDocumentation.NET.Forms
 
         private FileOperationEntry SelectedEntry => (view.GetFocusedRow() as HistoryRow)?.Entry;
 
-        private static FlowLayoutPanel ButtonRow(params Control[] controls)
+        internal static DevExpress.Utils.Svg.SvgImage HistoryIcon =>
+            ImageResourceCache.Default.GetSvgImage("svgimages/outlook%20inspired/list.svg");
+
+        private static void SetButtonIcon(SimpleButton button, string resource)
         {
-            var panel = new FlowLayoutPanel { Dock = DockStyle.Fill, AutoSize = true, Padding = new Padding(0, 2, 0, 2) };
-            panel.Controls.AddRange(controls);
-            return panel;
+            button.ImageOptions.SvgImage = ImageResourceCache.Default.GetSvgImage($"svgimages/{resource}.svg");
+            button.ImageOptions.SvgImageSize = new Size(16, 16);
+        }
+
+        private void ConfigureGrid()
+        {
+            view.OptionsBehavior.Editable = false;
+            view.OptionsView.ShowGroupPanel = false;
+            view.OptionsView.ShowIndicator = false;
+            view.OptionsView.ShowVerticalLines = DefaultBoolean.False;
+            view.OptionsSelection.EnableAppearanceFocusedCell = false;
+            view.OptionsView.ColumnAutoWidth = true;
+            view.Appearance.HeaderPanel.FontStyleDelta = FontStyle.Bold;
+            view.Appearance.Row.FontSizeDelta = 1;
+            view.RowHeight = 34;
+            view.ColumnPanelRowHeight = 34;
+            var date = view.Columns.AddVisible(nameof(HistoryRow.OccurredAt), "Дата и время");
+            date.DisplayFormat.FormatType = FormatType.DateTime;
+            date.DisplayFormat.FormatString = "dd.MM.yyyy HH:mm:ss";
+            date.Width = date.MinWidth = 142;
+            date.OptionsColumn.FixedWidth = true;
+            var kind = view.Columns.AddVisible(nameof(HistoryRow.Kind), "Операция");
+            kind.Width = kind.MinWidth = 94;
+            kind.OptionsColumn.FixedWidth = true;
+            var file = view.Columns.AddVisible(nameof(HistoryRow.FileName), "Файл");
+            file.Width = 250;
+            file.MinWidth = 124;
+            var status = view.Columns.AddVisible(nameof(HistoryRow.Status), "Результат");
+            status.Width = status.MinWidth = 136;
+            status.OptionsColumn.FixedWidth = true;
+            var version = view.Columns.AddVisible(nameof(HistoryRow.Version), "Схема");
+            version.Width = version.MinWidth = 68;
+            version.OptionsColumn.FixedWidth = true;
+            view.Columns.AddField(nameof(HistoryRow.DocumentName)).Caption = "Документ";
+            view.Columns.AddField(nameof(HistoryRow.Summary)).Caption = "Подробности";
+            view.FocusedRowChanged += (_, __) => ShowSelection();
+            view.RowCellStyle += (_, e) =>
+            {
+                if (SystemInformation.HighContrast || e.Column != status || e.RowHandle == view.FocusedRowHandle ||
+                    !(view.GetRow(e.RowHandle) is HistoryRow row)) return;
+                var color = StatusColor(row.Entry.Status);
+                if (color.IsEmpty) return;
+                e.Appearance.ForeColor = color;
+                e.Appearance.FontStyleDelta = FontStyle.Bold;
+            };
+            view.CustomDrawEmptyForeground += (_, e) =>
+            {
+                if (view.RowCount > 0) return;
+                var message = loading ? "Загрузка истории…" : entries.Count == 0
+                    ? "Операции с файлами пока не записаны."
+                    : "По выбранным условиям ничего не найдено.";
+                TextRenderer.DrawText(e.Graphics, message, grid.Font, e.Bounds, grid.ForeColor,
+                    TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter | TextFormatFlags.WordBreak);
+                e.Handled = true;
+            };
+        }
+
+        private static Color StatusColor(FileOperationStatus status)
+        {
+            switch (status)
+            {
+                case FileOperationStatus.Completed: return Color.FromArgb(22, 111, 75);
+                case FileOperationStatus.Warning: return Color.FromArgb(126, 76, 10);
+                case FileOperationStatus.Rejected:
+                case FileOperationStatus.Failed: return Color.FromArgb(163, 44, 58);
+                default: return Color.Empty;
+            }
+        }
+
+        private TableLayoutPanel CreateFilters()
+        {
+            var filters = new TableLayoutPanel { Dock = DockStyle.Fill, AutoSize = true, ColumnCount = 5, RowCount = 1, Margin = new Padding(0, 0, 0, 10) };
+            filters.ColumnStyles.Add(new ColumnStyle(SizeType.AutoSize));
+            filters.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100));
+            filters.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 153));
+            filters.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 171));
+            filters.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 115));
+            var label = new LabelControl { Text = "&Поиск", Anchor = AnchorStyles.Left, Margin = new Padding(0, 0, 10, 0), AllowHtmlString = false };
+            label.LookAndFeel.ParentLookAndFeel = LookAndFeel;
+            search.Margin = new Padding(0, 0, 9, 0);
+            kindFilter.Margin = new Padding(0, 0, 9, 0);
+            statusFilter.Margin = new Padding(0, 0, 9, 0);
+            refresh.Margin = Padding.Empty;
+            refresh.MinimumSize = new Size(0, 30);
+            filters.Controls.Add(label, 0, 0);
+            filters.Controls.Add(search, 1, 0);
+            filters.Controls.Add(kindFilter, 2, 0);
+            filters.Controls.Add(statusFilter, 3, 0);
+            filters.Controls.Add(refresh, 4, 0);
+            return filters;
+        }
+
+        private TableLayoutPanel CreateCommands(SimpleButton close)
+        {
+            var commands = new TableLayoutPanel { Dock = DockStyle.Fill, AutoSize = true, ColumnCount = 2, RowCount = 1, Margin = new Padding(0, 9, 0, 0) };
+            commands.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100));
+            commands.ColumnStyles.Add(new ColumnStyle(SizeType.AutoSize));
+            var actions = new FlowLayoutPanel { Dock = DockStyle.Fill, AutoSize = true, WrapContents = false, Margin = Padding.Empty };
+            foreach (var button in new[] { retry, openFolder, copy })
+            {
+                button.Padding = new Padding(5, 0, 5, 0);
+                button.MinimumSize = new Size(0, 32);
+                button.Margin = new Padding(0, 0, 8, 0);
+                actions.Controls.Add(button);
+            }
+            close.MinimumSize = new Size(94, 32);
+            close.Margin = Padding.Empty;
+            commands.Controls.Add(actions, 0, 0);
+            commands.Controls.Add(close, 1, 0);
+            return commands;
+        }
+
+        private void ArrangePanels()
+        {
+            if (split.Width == 0 || split.Height == 0) return;
+            var wide = split.Width >= ScaleLogical(950);
+            if (arranged && split.Horizontal == wide) return;
+            arranged = true;
+            split.Horizontal = wide;
+            split.Panel1.MinSize = ScaleLogical(wide ? 590 : 145);
+            split.Panel2.MinSize = ScaleLogical(wide ? 285 : 165);
+            split.SplitterPosition = wide ? (int)(split.Width * .39) : (int)(split.Height * .55);
+        }
+
+        private int ScaleLogical(int value) => (int)Math.Round(value * DeviceDpi / 96d);
+
+        protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
+        {
+            if (keyData == (Keys.Control | Keys.F))
+            {
+                search.Focus();
+                search.SelectAll();
+                return true;
+            }
+            if (keyData == Keys.F5)
+            {
+                refresh.PerformClick();
+                return true;
+            }
+            return base.ProcessCmdKey(ref msg, keyData);
         }
 
         private async Task RefreshEntriesAsync()
@@ -138,6 +306,7 @@ namespace ProjectDocumentation.NET.Forms
             loading = true;
             refresh.Enabled = false;
             UseWaitCursor = true;
+            grid.Invalidate();
             try
             {
                 entries = await FileOperationHistory.ReadAsync();
@@ -155,6 +324,7 @@ namespace ProjectDocumentation.NET.Forms
                 {
                     refresh.Enabled = true;
                     UseWaitCursor = false;
+                    grid.Invalidate();
                 }
             }
         }
@@ -165,10 +335,18 @@ namespace ProjectDocumentation.NET.Forms
             var filter = (statusFilter.SelectedItem as StatusChoice)?.Value;
             var kind = kindFilter.SelectedIndex == 1 ? FileOperationKind.Import
                 : kindFilter.SelectedIndex == 2 ? (FileOperationKind?)FileOperationKind.Export : null;
-            grid.DataSource = entries.Where(entry =>
+            var previous = SelectedEntry;
+            var rows = entries.Where(entry =>
                     (!kind.HasValue || entry.Kind == kind) && (!filter.HasValue || entry.Status == filter) &&
                     Matches(entry, text))
                 .Select(entry => new HistoryRow(entry)).ToList();
+            grid.DataSource = rows;
+            operations.Text = rows.Count == entries.Count ? $"Операции ({rows.Count})" : $"Операции ({rows.Count} из {entries.Count})";
+            if (previous != null)
+            {
+                var previousIndex = rows.FindIndex(row => ReferenceEquals(row.Entry, previous));
+                if (previousIndex >= 0) view.FocusedRowHandle = view.GetRowHandle(previousIndex);
+            }
             ShowSelection();
         }
 
@@ -196,7 +374,8 @@ namespace ProjectDocumentation.NET.Forms
 
             var text = new StringBuilder()
                 .AppendLine($"{KindName(entry.Kind)} — {StatusName(entry.Status)}")
-                .AppendLine(entry.Summary);
+                .AppendLine(entry.Summary)
+                .AppendLine();
             if (!string.IsNullOrWhiteSpace(entry.FilePath)) text.AppendLine($"Путь: {entry.FilePath}");
             else if (!string.IsNullOrWhiteSpace(entry.FileName)) text.AppendLine($"Файл: {entry.FileName}");
             if (!string.IsNullOrWhiteSpace(entry.DocumentName)) text.AppendLine($"Документ: {entry.DocumentName}");
