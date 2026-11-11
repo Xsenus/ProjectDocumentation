@@ -259,6 +259,7 @@ button.error-path:hover { text-decoration: underline; }
 @media (max-width: 430px) {
   .editor-heading { flex-wrap: wrap; }
 }
+.local-file-picker p { margin: 5px 0 0; }
 .lookup-open { width: fit-content; }
 .lookup-panel { display: grid; gap: 9px; border: 1px solid #d8e6ef; border-radius: 8px; padding: 10px; background: #f4f8fb; }
 .lookup-query { display: grid; grid-template-columns: minmax(0,1fr) auto; gap: 6px; align-items: end; }

@@ -515,7 +515,8 @@ function App() {
   const assetVersion = hasSchemaAssets ? currentDocumentVersion : currentVersion;
   const assetBase = '/schemas/' + family.id + '-' + assetVersion.replace('.', '-');
   const context = { types: model?.types || {}, depth: 0, readOnly, lockGuid: Boolean(host),
-    idAttribute: family.idAttribute, bridge: host, errorPaths, change, keyFor };
+    idAttribute: family.idAttribute, familyId: family.id, bridge: host, errorPaths, change, keyFor,
+    isCurrent: element => element.isConnected && element.ownerDocument === documentRef.current };
 
   return (
     <div className="application">
