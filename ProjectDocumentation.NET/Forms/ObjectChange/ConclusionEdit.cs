@@ -45,11 +45,15 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
         private List<TTechnicalCustomer> _tProjectDocumentsTechnicalCustomer = new List<TTechnicalCustomer>();
         private List<Ttei> _Tteis = new List<Ttei>();
         private bool _isEepdUseInForm;
+        private bool _saving;
+        private List<TAddress> _additionalObjectAddresses = new List<TAddress>();
 
         public ConclusionEdit()
         {
             InitializeComponent();
             txtVersion.Properties.ReadOnly = true;
+            layoutControlItemExpertiseResultNote.Visibility = LayoutVisibility.Never;
+            layoutControlItemClimateConditionsNote.Text = layoutControlItemClimateConditionsNote.Text.TrimEnd(' ', '*');
         }
 
         public ConclusionEdit(Conclusion conclusion) : this()
@@ -917,8 +921,9 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
-        private void btnSave_Click(object sender, EventArgs e)
+        private async void btnSave_Click(object sender, EventArgs e)
         {
+            if (_saving) return;
             FileName = txtFileName.Text;
 
             try
@@ -954,45 +959,11 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                     Conclusion.ExaminationObject.ExaminationType.Add(item);
                 }
 
-                //TODO: ЧТО ЗА ХУЙНЯ
-                //if (cmbProjectDocumentationIM.EditValue is GeneralizedDictionaryXPO valueProjectDocumentationIM)
-                //{
-                //    Conclusion.ExaminationObject.ProjectDocumentationIMSpecified = true;
-
-                //    if (valueProjectDocumentationIM.Value == TYesNo.да.GetEnumDescription())
-                //    {
-                //        Conclusion.ExaminationObject.ProjectDocumentationIM = TYesNo.да;
-                //    }
-                //    else
-                //    {
-                //        Conclusion.ExaminationObject.ProjectDocumentationIM = TYesNo.нет;
-                //    }
-                //}
-                //else
-                //{
-                //    Conclusion.ExaminationObject.ProjectDocumentationIMSpecified = false;
-                //}
-
-                //if (cmbEngineeringSurveysIM.EditValue is GeneralizedDictionaryXPO valueEngineeringSurveysIM)
-                //{
-                //    Conclusion.ExaminationObject.EngineeringSurveysIMSpecified = true;
-
-                //    if (valueEngineeringSurveysIM.Value == TYesNo.да.GetEnumDescription())
-                //    {
-                //        Conclusion.ExaminationObject.EngineeringSurveysIM = TYesNo.да;
-                //    }
-                //    else
-                //    {
-                //        Conclusion.ExaminationObject.EngineeringSurveysIM = TYesNo.нет;
-                //    }
-                //}
-                //else
-                //{
-                //    Conclusion.ExaminationObject.EngineeringSurveysIMSpecified = false;
-                //}
-
-                Conclusion.ExaminationObject.ExaminationStageNote = GetStringValue(memoExaminationStageNote.Text, isNullAble: true);
-                //Conclusion.ExpertiseResultNote = GetStringValue(memoExpertiseResultNote.Text, isNullAble: true) ?? string.Empty;
+                Conclusion.ExaminationObject.ProjectDocumentationIm = GetOptionalEnum<TYesNo>(cmbProjectDocumentationIM, out bool projectImSpecified);
+                Conclusion.ExaminationObject.ProjectDocumentationImSpecified = projectImSpecified;
+                Conclusion.ExaminationObject.EngineeringSurveysIm = GetOptionalEnum<TYesNo>(cmbEngineeringSurveysIM, out bool surveyImSpecified);
+                Conclusion.ExaminationObject.EngineeringSurveysImSpecified = surveyImSpecified;
+                Conclusion.ExaminationObject.ExaminationStageNote = OptionalXmlText(memoExaminationStageNote.Text);
                 #endregion
 
                 #region Page I_2
@@ -1067,8 +1038,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                 Conclusion.EcologyExpertise = new TEcologyExpertise();
                 Conclusion.EcologyExpertise.NeedExpertise = GetEnumByAttributeValue<TYesNo>(GetValueGeneralizedDictionary(cmbEcologyExpertiseNeedExpertise,
                     message: "Заполните поле требуется ли экологическая экспертиза")?.Value);
-                Conclusion.EcologyExpertise.Comment = GetStringValue(memoEcologyExpertiseNote.EditValue,
-                    memoEcologyExpertiseNote, "Заполните поле обоснование необходимости экологической экспертизы", isNullAble: true) ?? string.Empty;
+                Conclusion.EcologyExpertise.Comment = OptionalXmlText(memoEcologyExpertiseNote.EditValue);
                 #endregion
 
                 #region Page II_1
@@ -1087,11 +1057,9 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                 {
                     Conclusion.Object.Address.Add(objectAddress);
                 }
-                else
+                foreach (var additionalAddress in _additionalObjectAddresses)
                 {
-                    //XtraMessageBox.Show("Укажите адрес объекта.", "Информационное сообщение", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    //cmbObjectAddress.Focus();
-                    //return;
+                    Conclusion.Object.Address.Add(additionalAddress);
                 }
                 if (_Tteis.Count > 0)
                 {
@@ -1157,7 +1125,10 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                 #endregion
 
                 #region Page II_3
-                Conclusion.ClimateConditions = new TClimateConditions();
+                Conclusion.ClimateConditions = new TClimateConditions
+                {
+                    SeismicActivityCalculatedValue = Conclusion.ClimateConditions?.SeismicActivityCalculatedValue
+                };
 
                 var climateDistrict = GetCheckComboBoxItems<TClimateDistrict>(checkCmbClimateDistrict, isNullAble: true).ToArray();
                 foreach (var item in climateDistrict)
@@ -1189,7 +1160,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                     Conclusion.ClimateConditions.SnowDistrict.Add(item);
                 }
 
-                Conclusion.ClimateConditionsNote = GetStringValue(memoClimateConditionsNote.EditValue, memoClimateConditionsNote, "Заполните поле дополнительных сведений о природных и техногенных условиях");
+                Conclusion.ClimateConditionsNote = OptionalXmlText(memoClimateConditionsNote.EditValue);
                 #endregion
 
                 #region Page II_4
@@ -1381,7 +1352,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                 Conclusion.Summary.EngineeringSurveySummary = GetOptionalEnum<TEngineeringSurveysSummary>(cmbEngineeringSurveysSummary, out bool engineeringSurveysSummarySpecified);
                 Conclusion.Summary.EngineeringSurveySummarySpecified = engineeringSurveysSummarySpecified;
                 
-                Conclusion.Summary.EngineeringSurveySummaryDate = GetStringValue(memoEngineeringSurveySummaryDate.EditValue, memoEngineeringSurveySummaryDate, "Заполните поле сведения о дате, по состоянию на которую действовали требования, примененные в соответствии с частью 5.2 статьи 49 Градостроительного кодекса Российской Федерации (в части экспертизы результатов инженерных изысканий)");
+                Conclusion.Summary.EngineeringSurveySummaryDate = OptionalXmlText(memoEngineeringSurveySummaryDate.EditValue);
 
                 var engineeringSurveyType = GetCheckComboBoxItems<TEngineeringSurveyType>(checkCmbEngineeringSurveyType, "Заполните поле вид инженерных изысканий, на соответствие которым проводилась экспертиза проектной документации").ToArray();
                 Conclusion.Summary.EngineeringSurveyType.Clear();
@@ -1397,7 +1368,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                 Conclusion.Summary.ProjectDocumentsSummary = GetOptionalEnum<TProjectDocumentationSummary>(cmbProjectDocumentationSummary, out bool projectDocumentationSummarySpecified);
                 Conclusion.Summary.ProjectDocumentsSummarySpecified = projectDocumentationSummarySpecified;
 
-                Conclusion.Summary.ProjectDocumentsSummaryDate = GetStringValue(memoProjectDocumentsSummaryDate.EditValue, memoProjectDocumentsSummaryDate, "Заполните поле сведения о дате, по состоянию на которую действовали требования, примененные в соответствии с частью 5.2 статьи 49 Градостроительного кодекса Российской Федерации (в части экспертизы проектной документации)");
+                Conclusion.Summary.ProjectDocumentsSummaryDate = OptionalXmlText(memoProjectDocumentsSummaryDate.EditValue);
                                 
                 // Необязательный элемент схемы: без флага Specified значение не попадает в XML.
                 Conclusion.Summary.EstimateNormsAndWorksSummary = GetOptionalEnum<TEstimateNormsAndWorksSummary>(cmbEstimateNormsAndWorksSummary, out bool estimateNormsAndWorksSummarySpecified);
@@ -1477,6 +1448,21 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                     }
                 }
                 #endregion
+
+                if (SaveConclusionAsync != null)
+                {
+                    _saving = true;
+                    layoutControl.Enabled = false;
+                    try
+                    {
+                        if (!await SaveConclusionAsync(Conclusion, FileName)) return;
+                    }
+                    finally
+                    {
+                        _saving = false;
+                        if (!IsDisposed) layoutControl.Enabled = true;
+                    }
+                }
             }
             catch (Exception ex)
             {
@@ -1721,21 +1707,11 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
             SetCheckComboBoxByItems(Conclusion?.ExaminationObject?.ExaminationType, checkCmbExaminationType);
             memoName.Text = Conclusion?.ExaminationObject?.Name;
 
-            //if (Conclusion?.ExaminationObject?.ProjectDocumentationIMSpecified is true)
-            //{
-            //    cmbProjectDocumentationIM.EditValue = cmbProjectDocumentationIM.Properties.Items
-            //      ?.Cast<GeneralizedDictionaryXPO>()
-            //      ?.Where(w => w.GeneralizedDictionary == GeneralizedDictionary.LogicalAnswer)
-            //      ?.FirstOrDefault(f => f.Value == Conclusion?.ExaminationObject?.ProjectDocumentationIM.GetEnumXmlAttributeValue().ToString());
-            //}
-
-            //if (Conclusion?.ExaminationObject?.EngineeringSurveysIMSpecified is true)
-            //{
-            //    cmbEngineeringSurveysIM.EditValue = cmbEngineeringSurveysIM.Properties.Items
-            //        ?.Cast<GeneralizedDictionaryXPO>()
-            //        ?.Where(w => w.GeneralizedDictionary == GeneralizedDictionary.LogicalAnswer)
-            //        ?.FirstOrDefault(f => f.Value == Conclusion?.ExaminationObject?.EngineeringSurveysIM.GetEnumXmlAttributeValue().ToString());
-            //}
+            var examination = Conclusion.ExaminationObject;
+            SetLogicalAnswer(cmbProjectDocumentationIM,
+                examination?.ProjectDocumentationImSpecified == true ? (TYesNo?)examination.ProjectDocumentationIm : null);
+            SetLogicalAnswer(cmbEngineeringSurveysIM,
+                examination?.EngineeringSurveysImSpecified == true ? (TYesNo?)examination.EngineeringSurveysIm : null);
             memoExaminationStageNote.Text = Conclusion?.ExaminationObject?.ExaminationStageNote;
             #endregion
 
@@ -1817,8 +1793,6 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
             memoEcologyExpertiseNote.Text = Conclusion?.EcologyExpertise?.Comment;
             #endregion
 
-            //memoExpertiseResultNote.Text = Conclusion?.ExpertiseResultNote;
-
             #region Page II_1
             memoObjectName.EditValue = Conclusion?.Object?.Name;
             cmbObjectType.EditValue = cmbObjectType.Properties.Items
@@ -1827,6 +1801,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
               ?.FirstOrDefault(f => f.ValueInt == Conclusion?.Object?.Type.GetEnumXmlAttributeValueInt());
             cmbFunctionsClass.EditValue = Conclusion?.Object?.FunctionsClass;
             cmbObjectAddress.EditValue = Conclusion?.Object?.Address?.FirstOrDefault();
+            _additionalObjectAddresses = Conclusion?.Object?.Address?.Skip(1).ToList() ?? new List<TAddress>();
             _Tteis = Conclusion?.Object?.Tei?.ToList() ?? new List<Ttei>();
             gridControlTEI.DataSource = _Tteis;
             if (gridViewTEI.Columns[nameof(Ttei.Name)] is GridColumn gridTEIName)
@@ -1890,10 +1865,6 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
             SetCheckComboBoxByItems(Conclusion?.ClimateConditions?.GeologicalConditions, checkCmbGeologicalConditions);
             SetCheckComboBoxByItems(Conclusion?.ClimateConditions?.SnowDistrict, checkCmbSnowDistrict);
             memoClimateConditionsNote.EditValue = Conclusion?.ClimateConditionsNote;
-            if (string.IsNullOrWhiteSpace(Conclusion?.ClimateConditionsNote))
-            {
-                memoClimateConditionsNote.EditValue = "Сведения отсутствуют.";
-            }
             #endregion
 
             #region Page II_4
@@ -2571,6 +2542,25 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
         public Conclusion Conclusion { get; private set; }
         public string FileName { get; private set; }
         public bool IsSave { get; private set; }
+        internal Func<Conclusion, string, Task<bool>> SaveConclusionAsync { get; set; }
+
+        protected override void OnFormClosing(FormClosingEventArgs e)
+        {
+            if (_saving && e.CloseReason == CloseReason.UserClosing) e.Cancel = true;
+            base.OnFormClosing(e);
+        }
+
+        private static void SetLogicalAnswer(ComboBoxEdit editor, TYesNo? value)
+        {
+            var code = value.HasValue ? value.Value.GetEnumXmlAttributeValue()?.ToString() : null;
+            editor.EditValue = editor.Properties.Items.OfType<GeneralizedDictionaryXPO>().FirstOrDefault(item => item.Value == code);
+        }
+
+        private static string OptionalXmlText(object value)
+        {
+            var text = value?.ToString();
+            return string.IsNullOrWhiteSpace(text) ? null : text;
+        }
 
         private class CadastralNumber
         {

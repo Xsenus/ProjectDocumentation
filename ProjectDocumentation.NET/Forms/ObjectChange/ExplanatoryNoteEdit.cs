@@ -30,6 +30,8 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
         private Session Session => SessionController.GetSession();
         public string FileName { get; private set; }
         public bool IsSave { get; private set; }
+        internal Func<ExplanatoryNote, string, Task<bool>> SaveNoteAsync { get; set; }
+        private bool _saving;
         public ExplanatoryNote ExplanatoryNote { get; private set; }
 
         private List<tModification> _tModifications = new List<tModification>();
@@ -388,8 +390,9 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
-        private void btnSave_Click(object sender, EventArgs e)
+        private async void btnSave_Click(object sender, EventArgs e)
         {
+            if (_saving) return;
             FileName = txtFileName.Text;
 
             try
@@ -568,6 +571,21 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                     ExplanatoryNote.ProjectInitialDocuments = null;
                 }
                 #endregion
+
+                if (SaveNoteAsync != null)
+                {
+                    _saving = true;
+                    layoutControlExplanatoryNote.Enabled = false;
+                    try
+                    {
+                        if (!await SaveNoteAsync(ExplanatoryNote, FileName)) return;
+                    }
+                    finally
+                    {
+                        _saving = false;
+                        if (!IsDisposed) layoutControlExplanatoryNote.Enabled = true;
+                    }
+                }
             }
             catch (Exception ex)
             {
@@ -609,6 +627,12 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
         private void btnCancel_Click(object sender, EventArgs e)
         {
             Close();
+        }
+
+        protected override void OnFormClosing(FormClosingEventArgs e)
+        {
+            if (_saving && e.CloseReason == CloseReason.UserClosing) e.Cancel = true;
+            base.OnFormClosing(e);
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]

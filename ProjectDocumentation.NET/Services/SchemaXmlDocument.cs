@@ -113,6 +113,12 @@ namespace ProjectDocumentation.NET.Services
             }
 
             RequireValid(await service.ValidateAsync(xml), version);
+            return await PersistAsync(xml, name, guid, create, existing, previousName, previousXml);
+        }
+
+        internal static async Task<T> PersistAsync<T>(string xml, string name, Guid guid, Func<Session, T> create,
+            T existing = null, string previousName = null, string previousXml = null) where T : XmlObjXPO
+        {
             var session = SessionController.GetSession();
             int oid;
             using (var unit = new UnitOfWork(session.DataLayer))
@@ -138,7 +144,7 @@ namespace ProjectDocumentation.NET.Services
                     }
                 }
 
-                record.Name = name.Trim();
+                record.Name = name?.Trim();
                 record.SetObj(xml);
                 unit.Save(record);
                 await unit.CommitChangesAsync();

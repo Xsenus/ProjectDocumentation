@@ -2,7 +2,7 @@ import unittest
 from pathlib import Path
 from xml.etree import ElementTree as ET
 
-from schema_engine.migration import migrate_xml
+from schema_engine.migration import migrate_xml, normalize_legacy_conclusion
 from schema_engine.schema import validate_document
 
 
@@ -152,3 +152,18 @@ class ConclusionMigrationTests(unittest.TestCase):
                 </Conclusion>'''
                 result = ET.fromstring(migrate_xml(xml)['xml'])
                 self.assertEqual(result.findtext('Summary/EngineeringSurveySummary'), expected)
+
+    def test_normalization_corrects_classic_serializer_order(self):
+        xml = ET.tostring(self.current, encoding='unicode')
+        legacy = ET.fromstring(migrate_xml(xml, '01.03')['xml'])
+        organization = legacy.find('ExpertOrganization')
+        legacy[:] = list(reversed(legacy))
+        organization[:] = list(reversed(organization))
+        unordered = ET.tostring(legacy, encoding='unicode')
+        self.assertFalse(validate_document(unordered)['valid'])
+
+        normalized = normalize_legacy_conclusion(unordered)
+        self.assert_valid(normalized)
+        result = ET.fromstring(normalized)
+        self.assertEqual(result.get('ConclusionGUID'), legacy.get('ConclusionGUID'))
+        self.assertEqual(result.findtext('ExpertOrganization/OrgFullName'), organization.findtext('OrgFullName'))

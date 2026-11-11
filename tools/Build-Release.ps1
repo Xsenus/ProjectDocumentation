@@ -96,6 +96,16 @@ try {
         Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'Start-Portal.cmd') -Destination $desktop
         $requiredFiles += @('Start-Portal.cmd', '_internal\portal\dist\index.html')
     }
+    Copy-Item -LiteralPath (Join-Path $repo 'docs') -Destination $desktop -Recurse
+    $portalDocs = Join-Path $desktop 'portal'
+    New-Item -ItemType Directory -Path $portalDocs -Force | Out-Null
+    Copy-Item -LiteralPath (Join-Path $repo 'portal\README.md') -Destination $portalDocs
+    $examples = Join-Path $desktop 'schema_engine\tests\fixtures'
+    New-Item -ItemType Directory -Path $examples -Force | Out-Null
+    foreach ($example in @('conclusion-01-04.xml', 'explanatorynote-01-07.xml')) {
+        Copy-Item -LiteralPath (Join-Path $repo "schema_engine\tests\fixtures\$example") -Destination $examples
+    }
+    $requiredFiles += 'docs\user-guide.md'
     foreach ($required in $requiredFiles) {
         if (-not (Test-Path -LiteralPath (Join-Path $desktop $required) -PathType Leaf)) {
             throw "Отсутствует файл комплекта $required."

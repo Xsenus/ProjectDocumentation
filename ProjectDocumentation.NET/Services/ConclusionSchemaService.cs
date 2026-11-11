@@ -35,6 +35,12 @@ namespace ProjectDocumentation.NET.Services
         public Task<ConclusionMigration> MigrateAsync(string xml, string targetVersion)
             => RequestAsync<ConclusionMigration>("migrate", new JObject { ["xml"] = xml, ["targetVersion"] = targetVersion });
 
+        public async Task<string> NormalizeLegacyConclusionAsync(string xml)
+        {
+            var document = await RequestAsync<JObject>("normalize-legacy-conclusion", new JObject { ["xml"] = xml });
+            return document.Value<string>("xml") ?? throw new InvalidOperationException("Не удалось подготовить заключение 01.03.");
+        }
+
         public async Task<string> PreviewAsync(string xml)
         {
             var preview = await RequestAsync<JObject>("preview", new JObject { ["xml"] = xml });

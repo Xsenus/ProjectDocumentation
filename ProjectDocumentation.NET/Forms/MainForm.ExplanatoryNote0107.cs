@@ -30,11 +30,15 @@ namespace ProjectDocumentation.NET.Forms
             var note = row as ExplanatoryNoteXPO;
             var xml = note?.GetObj();
             var version = ExplanatoryNote0107Document.ReadVersion(xml);
-            convertExplanatoryNote.Enabled = note != null && (version == ExplanatoryNote0107Document.CompatibleVersion || ExplanatoryNoteController.IsLegacyXml(xml));
+            var legacy = note != null && ExplanatoryNoteController.IsLegacyXml(xml);
+            convertExplanatoryNote.Enabled = version == ExplanatoryNote0107Document.CompatibleVersion || legacy;
             exportCompatibleExplanatoryNote.Enabled = version == ExplanatoryNote0107Document.CurrentVersion;
             if (note != null)
             {
-                barBtnView.Enabled = CanPreviewExplanatoryNote(version);
+                var previewable = CanPreviewExplanatoryNote(version);
+                barBtnView.Enabled = previewable || legacy;
+                barBtnEdit.Enabled = previewable || legacy;
+                barBtnFill.Enabled = previewable || legacy;
             }
         }
 

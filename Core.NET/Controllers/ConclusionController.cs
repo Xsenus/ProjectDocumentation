@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 using System.Xml.Serialization;
 
 namespace Core.NET.Controllers
@@ -43,6 +44,29 @@ namespace Core.NET.Controllers
                     }
 
                     return conclusion.SerializeObject();
+                });
+        }
+
+        public static Task<ImportResult> ImportConclusionAsync(XDocument document, string path, string name,
+            Func<XmlObjXPO, ImportConflictAction> resolveConflict = null)
+        {
+            if (document?.Root?.Name != XName.Get("Conclusion") || (string)document.Root.Attribute("SchemaVersion") != "01.03")
+                throw new InvalidOperationException("Ожидается заключение версии 01.03.");
+
+            var result = new ImportResult();
+            var imported = new XDocument(document);
+            var hasGuid = Guid.TryParseExact((string)imported.Root.Attribute("ConclusionGUID"), "D", out var sourceGuid);
+            var guid = hasGuid ? sourceGuid : GetGuidByFile(path) ?? Guid.NewGuid();
+            if (!hasGuid)
+                result.Warnings.Add("В исходном XML не указан корректный ConclusionGUID. Идентификатор заполнен при импорте.");
+
+            // A model round trip can reorder elements or omit fields the classic form does not expose.
+            return ImportController.SaveAsync(result, name, guid, resolveConflict, session => new ConclusionXPO(session),
+                newGuid =>
+                {
+                    if (newGuid.HasValue || !hasGuid)
+                        imported.Root.SetAttributeValue("ConclusionGUID", (newGuid ?? guid).ToString("D"));
+                    return imported.ToString(SaveOptions.DisableFormatting);
                 });
         }
 

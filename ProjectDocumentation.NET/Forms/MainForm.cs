@@ -1,5 +1,6 @@
 ﻿using AutoUpdaterDotNET;
 using Core.NET.AutoModels.ConclusionObj;
+using Core.NET.AutoModels.ExplanatoryNoteObj;
 using Core.NET.Controllers;
 using Core.NET.Extensions;
 using Core.NET.Models.XPO;
@@ -12,7 +13,6 @@ using DevExpress.XtraGrid.Views.Grid;
 using ProjectDocumentation.NET.Forms.ObjectChange;
 using ProjectDocumentation.NET.Services;
 using System;
-using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -29,34 +29,70 @@ namespace ProjectDocumentation.NET.Forms
             InitializeComponent();
             InitializeConclusionCommands();
             InitializeExplanatoryNoteCommands();
+            InitializeDocumentToolbar();
+        }
+
+        private void InitializeDocumentToolbar()
+        {
+            var classic = new BarSubItem(barManager, "Классические формы 01.03");
+            var addConclusion = new BarButtonItem(barManager, "Добавить заключение 01.03");
+            addConclusion.ItemClick += AddClassicConclusion_ItemClick;
+            classic.AddItem(addConclusion);
+            var addNote = new BarButtonItem(barManager, "Добавить пояснительную записку 01.03");
+            addNote.ItemClick += AddClassicExplanatoryNote_ItemClick;
+            classic.AddItem(addNote);
+            popupMenu.AddItem(classic);
+
+            var toolbar = new Bar { BarName = "Документы" };
+            toolbar.OptionsBar.AllowQuickCustomization = false;
+            toolbar.OptionsBar.DrawDragBorder = false;
+            toolbar.OptionsBar.UseWholeRow = true;
+            barManager.Bars.Add(toolbar);
+            toolbar.DockStyle = BarDockStyle.Top;
+            foreach (var item in new BarItem[]
+            {
+                barBtnAddConclusion, barBtnAddExplanatoryNote, classic, barBtnLoad,
+                barBtnView, barBtnEdit, barBtnFill
+            })
+            {
+                item.PaintStyle = BarItemPaintStyle.CaptionGlyph;
+                toolbar.AddItem(item);
+            }
+
+            gridView.FocusedRowChanged += (_, __) => UpdateDocumentCommands(gridView.GetFocusedRow());
+            popupMenu.CloseUp += (_, __) => UpdateDocumentCommands(gridView.GetFocusedRow());
+            UpdateDocumentCommands(null);
+        }
+
+        private void UpdateDocumentCommands(object row)
+        {
+            var isDocument = row is XmlObjXPO;
+            barBtnView.Enabled = isDocument;
+            barBtnBaseSetting.Enabled = row is ConclusionXPO;
+            barBtnEdit.Enabled = isDocument;
+            barBtnDel.Enabled = isDocument;
+            barBtnFill.Enabled = isDocument;
+            UpdateConclusionCommands(row);
+            UpdateExplanatoryNoteCommands(row);
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
         private void gridView_PopupMenuShowing(object sender, PopupMenuShowingEventArgs e)
         {
-            if (sender is GridView gridView)
+            var clickedRow = e.HitInfo?.InDataRow == true;
+            if (!(sender is GridView view) || (!clickedRow && e.MenuType != GridMenuType.User))
             {
-                if (gridView.GetRow(gridView.FocusedRowHandle) is XmlObjXPO)
-                {
-                    barBtnView.Enabled = true;
-                    barBtnBaseSetting.Enabled = true;
-                    barBtnEdit.Enabled = true;
-                    barBtnDel.Enabled = true;
-                    barBtnFill.Enabled = true;
-                }
-                else
-                {
-                    barBtnView.Enabled = false;
-                    barBtnBaseSetting.Enabled = false;
-                    barBtnEdit.Enabled = false;
-                    barBtnDel.Enabled = false;
-                    barBtnFill.Enabled = false;
-                }
-
-                UpdateConclusionCommands(gridView.GetFocusedRow());
-                UpdateExplanatoryNoteCommands(gridView.GetFocusedRow());
-                popupMenu.ShowPopup(new Point(Cursor.Position.X, Cursor.Position.Y));
+                return;
             }
+
+            if (clickedRow)
+            {
+                view.FocusedRowHandle = e.HitInfo.RowHandle;
+            }
+
+            UpdateDocumentCommands(clickedRow ? view.GetRow(e.HitInfo.RowHandle) : null);
+            e.Allow = false;
+            popupMenu.ShowPopup(Cursor.Position);
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
@@ -213,6 +249,7 @@ namespace ProjectDocumentation.NET.Forms
             {
                 gridView.FocusedRowHandle = gridView.LocateByValue(columnName, obj);
             }
+            UpdateDocumentCommands(gridView.GetFocusedRow());
         }
 
         private async Task UpdateGridDataSource(int focusedRowHandle)
@@ -221,6 +258,7 @@ namespace ProjectDocumentation.NET.Forms
                 .OrderByDescending(o => o.DateCreate)
                 .ToListAsync();
             gridView.FocusedRowHandle = focusedRowHandle;
+            UpdateDocumentCommands(gridView.GetFocusedRow());
         }
 
         private void InitialSetupGridControl()
@@ -304,6 +342,13 @@ namespace ProjectDocumentation.NET.Forms
                     if (Conclusion0104Document.IsHistoricalVersion(version))
                     {
                         ExportHistoricalConclusion(current);
+                        return;
+                    }
+
+                    if (version == Conclusion0104Document.LegacyVersion)
+                    {
+                        var normalized = await conclusionSchema.NormalizeLegacyConclusionAsync(xml);
+                        await ExportConclusionAsync(normalized, version, current.Guid, allowClassicDraft: true);
                         return;
                     }
 
@@ -406,10 +451,100 @@ namespace ProjectDocumentation.NET.Forms
             await AddCurrentExplanatoryNoteAsync();
         }
 
+        private async void AddClassicConclusion_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            try
+            {
+                using (var form = new ConclusionEdit())
+                {
+                    var guid = Guid.NewGuid();
+                    form.SetFileName("Заключение 01.03");
+                    form.SaveConclusionAsync = (conclusion, name) => SaveClassicConclusionAsync(conclusion, name, guid);
+                    form.ShowDialog(this);
+                    if (form.IsSave) await UpdateGridDataSourceAsync(nameof(XmlObjXPO.Guid), guid);
+                }
+            }
+            catch (Exception error)
+            {
+                ShowConclusionError(error);
+            }
+        }
+
+        private async void AddClassicExplanatoryNote_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            try
+            {
+                using (var form = new ExplanatoryNoteEdit())
+                {
+                    var guid = Guid.NewGuid();
+                    form.SetFileName("Пояснительная записка 01.03");
+                    form.SaveNoteAsync = (note, name) => SaveClassicNoteAsync(note, name, guid);
+                    form.ShowDialog(this);
+                    if (form.IsSave) await UpdateGridDataSourceAsync(nameof(XmlObjXPO.Guid), guid);
+                }
+            }
+            catch (Exception error)
+            {
+                ShowExplanatoryNoteError(error);
+            }
+        }
+
+        private async Task<bool> SaveClassicConclusionAsync(Conclusion conclusion, string name, Guid guid,
+            ConclusionXPO existing = null, string previousName = null, string previousXml = null)
+        {
+            if (existing == null || string.IsNullOrWhiteSpace(conclusion.ConclusionGuid))
+            {
+                conclusion.ConclusionGuid = guid.ToString("D");
+            }
+
+            var xml = conclusion.GetSerializeConclusion();
+            if (!CheckSerialized(xml)) return false;
+
+            xml = await conclusionSchema.NormalizeLegacyConclusionAsync(xml);
+            if (!await ConfirmClassicSaveAsync(xml, previousXml, Conclusion0104Document.LegacyVersion,
+                ClassicConclusionFormat)) return false;
+
+            await SchemaXmlDocument.PersistAsync(xml, name, guid, session => new ConclusionXPO(session),
+                existing, previousName, previousXml);
+            return true;
+        }
+
+        private async Task<bool> SaveClassicNoteAsync(ExplanatoryNote note, string name, Guid guid,
+            ExplanatoryNoteXPO existing = null, string previousName = null, string previousXml = null)
+        {
+            var xml = note.GetSerializeExplanatoryNote();
+            if (!CheckSerialized(xml)) return false;
+            if (!await ConfirmClassicSaveAsync(xml, previousXml, ExplanatoryNote0107Document.LegacyVersion,
+                "локальному формату записки 01.03")) return false;
+            await SchemaXmlDocument.PersistAsync(xml, name, guid, session => new ExplanatoryNoteXPO(session),
+                existing, previousName, previousXml);
+            return true;
+        }
+
+        private async Task<bool> ConfirmClassicSaveAsync(string xml, string previousXml, string version, string format)
+        {
+            var validation = await conclusionSchema.ValidateAsync(xml);
+            if (validation.Version != version)
+                throw new InvalidOperationException(ClassicValidationMessage(validation, format));
+            if (validation.Valid) return true;
+            if (previousXml != null && (await conclusionSchema.ValidateAsync(previousXml)).Valid)
+                throw new InvalidOperationException(ClassicValidationMessage(validation, format));
+
+            return ConfirmClassicDraft(validation, format, "Сохранить изменения как черновик?");
+        }
+
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
         private async void gridView_DoubleClick(object sender, EventArgs e)
         {
-            await EditGridViewObjectAsync();
+            if (sender is GridView view)
+            {
+                var hit = view.CalcHitInfo(gridControl.PointToClient(Cursor.Position));
+                if (hit.InDataRow)
+                {
+                    view.FocusedRowHandle = hit.RowHandle;
+                    await EditGridViewObjectAsync();
+                }
+            }
         }
 
         private async Task EditGridViewObjectAsync()
@@ -443,22 +578,15 @@ namespace ProjectDocumentation.NET.Forms
 
                 OfferDuplicateCleanup(conclusion);
 
-                var form = new ConclusionEdit(conclusion);
-                form.SetFileName(conclusionXPO.Name);
-                using (form)
+                var previousName = conclusionXPO.Name;
+                using (var form = new ConclusionEdit(conclusion))
                 {
-                    form.ShowDialog();
-
-                    if (form.IsSave)
-                    {
-                        var newXml = form.Conclusion.GetSerializeConclusion();
-                        if (CheckSerialized(newXml))
-                        {
-                            conclusionXPO.Name = form.FileName;
-                            conclusionXPO.SetObj(newXml);
-                            await Session.SaveAsync(conclusionXPO);
-                        }
-                    }
+                    form.SetFileName(previousName);
+                    form.SaveConclusionAsync = (edited, name) => SaveClassicConclusionAsync(edited, name,
+                        conclusionXPO.Guid ?? throw new InvalidOperationException("У заключения отсутствует идентификатор в базе."),
+                        conclusionXPO, previousName, xml);
+                    form.ShowDialog(this);
+                    if (form.IsSave) await UpdateGridDataSourceAsync(nameof(XmlObjXPO.Guid), conclusionXPO.Guid);
                 }
             }
             else if (gridView.GetRow(gridView.FocusedRowHandle) is ExplanatoryNoteXPO explanatoryNoteXPO)
@@ -483,25 +611,17 @@ namespace ProjectDocumentation.NET.Forms
                     return;
                 }
 
-                var form = new ExplanatoryNoteEdit(explanatoryNote);
-                form.SetFileName(explanatoryNoteXPO.Name);
-                using (form)
+                var previousName = explanatoryNoteXPO.Name;
+                using (var form = new ExplanatoryNoteEdit(explanatoryNote))
                 {
-                    form.ShowDialog();
-
-                    if (form.IsSave)
-                    {
-                        var newXml = form.ExplanatoryNote.GetSerializeExplanatoryNote();
-                        if (CheckSerialized(newXml))
-                        {
-                            explanatoryNoteXPO.Name = form.FileName;
-                            explanatoryNoteXPO.SetObj(newXml);
-                            await Session.SaveAsync(explanatoryNoteXPO);
-                        }
-                    }
+                    form.SetFileName(previousName);
+                    form.SaveNoteAsync = (edited, name) => SaveClassicNoteAsync(edited, name,
+                        explanatoryNoteXPO.Guid ?? throw new InvalidOperationException("У записки отсутствует идентификатор в базе."),
+                        explanatoryNoteXPO, previousName, xml);
+                    form.ShowDialog(this);
+                    if (form.IsSave) await UpdateGridDataSourceAsync(nameof(XmlObjXPO.Guid), explanatoryNoteXPO.Guid);
                 }
             }
-            await UpdateGridDataSource(gridView.FocusedRowHandle);
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
@@ -534,23 +654,26 @@ namespace ProjectDocumentation.NET.Forms
                     return;
                 }
 
-                using (var form = new ConclusionBaseSettingEdit(conclusion.ExpertOrganization, conclusion.Approver))
+                try
                 {
-                    form.ShowDialog();
-
-                    if (form.IsSave)
+                    var previousName = conclusionXPO.Name;
+                    using (var form = new ConclusionBaseSettingEdit(conclusion.ExpertOrganization, conclusion.Approver))
                     {
+                        form.ShowDialog(this);
+                        if (!form.IsSave) return;
+
                         conclusion.ExpertOrganization = form.Organization;
                         conclusion.Approver = form.Person;
-                        var newXml = conclusion.GetSerializeConclusion();
-                        if (CheckSerialized(newXml))
+                        var guid = conclusionXPO.Guid ?? throw new InvalidOperationException("У заключения отсутствует идентификатор в базе.");
+                        if (await SaveClassicConclusionAsync(conclusion, previousName, guid, conclusionXPO, previousName, xml))
                         {
-                            conclusionXPO.SetObj(newXml);
-                            await Session.SaveAsync(conclusionXPO);
+                            await UpdateGridDataSourceAsync(nameof(XmlObjXPO.Guid), guid);
                         }
                     }
-
-                    await UpdateGridDataSource(gridView.FocusedRowHandle);
+                }
+                catch (Exception error)
+                {
+                    ShowConclusionError(error);
                 }
             }
         }
@@ -558,10 +681,13 @@ namespace ProjectDocumentation.NET.Forms
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
         private void barBtnView_ItemClick(object sender, ItemClickEventArgs e)
         {
-            if (gridView.GetFocusedRow() is ExplanatoryNoteXPO note &&
-                CanPreviewExplanatoryNote(ExplanatoryNote0107Document.ReadVersion(note.GetObj())))
+            if (gridView.GetFocusedRow() is ExplanatoryNoteXPO note)
             {
-                ViewExplanatoryNote(note);
+                var xml = note.GetObj();
+                if (CanPreviewExplanatoryNote(ExplanatoryNote0107Document.ReadVersion(xml)))
+                    ViewExplanatoryNote(note);
+                else if (ExplanatoryNoteController.IsLegacyXml(xml))
+                    ViewSourceXml(note, "Исходная пояснительная записка 01.03");
                 return;
             }
 
