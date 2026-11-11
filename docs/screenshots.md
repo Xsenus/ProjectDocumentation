@@ -9,12 +9,14 @@
 | Что показано | Снимок |
 |---|---|
 | Главное окно и команды для документов | [Открыть](screenshots/devexpress-main.png) |
+| Загрузка XML из файла | [Открыть](screenshots/classic-file-load.png) |
 
 ### Заключение 01.03
 
 | Что показано | Снимок |
 |---|---|
 | Классическая форма заключения 01.03 | [Открыть](screenshots/classic-conclusion.png) |
+| Краткий просмотр заключения 01.03 | [Открыть](screenshots/classic-conclusion-view.png) |
 | I. Общие положения и сведения о заключении | [Открыть](screenshots/classic-conclusion-section-1.png) |
 | I. Общая информация | [Открыть](screenshots/classic-conclusion-general-9.png) |
 | I. Экспертная организация и утверждающее лицо | [Открыть](screenshots/classic-conclusion-general-10.png) |
@@ -80,6 +82,11 @@
 |---|---|---|---|
 | Заключение 01.04 | [Сведения об экспертной организации](screenshots/native-conclusion-sections.png) | [Дерево заключения](screenshots/native-conclusion-tree.png) | [Представление по XSL 01.04](screenshots/native-conclusion-preview.png) |
 | Пояснительная записка 01.07 | [Разделы записки](screenshots/native-note-sections.png) | [Дерево записки](screenshots/native-note-tree.png) | [Представление по XSL 01.07](screenshots/native-note-preview.png) |
+
+| Документ | Исходный XML | Проверка XML |
+|---|---|---|
+| Заключение 01.04 | [XML черновика](screenshots/native-conclusion-xml.png) | [Ошибки заполнения](screenshots/native-conclusion-validation.png) |
+| Пояснительная записка 01.07 | [XML черновика](screenshots/native-note-xml.png) | [Пример пропущенного поля](screenshots/native-note-validation.png) |
 
 ## Веб-редактор
 
