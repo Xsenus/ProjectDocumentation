@@ -1,5 +1,7 @@
 ﻿using AutoUpdaterDotNET;
+using Core.NET.AutoModels.ConclusionObj;
 using Core.NET.Controllers;
+using Core.NET.Extensions;
 using Core.NET.Models.XPO;
 using DevExpress.Utils;
 using DevExpress.Xpo;
@@ -92,6 +94,108 @@ namespace ProjectDocumentation.NET.Forms
             await UpdateGridDataSourceAsync();
             InitialSetupGridControl();
             await CheckUpdates();
+        }
+
+        /// <summary>
+        /// Перед выгрузкой заключение проверяется по ограничениям схемы из модели (обязательность, длина, формат).
+        /// При замечаниях пользователь решает, сохранять ли файл: ведомственная система может его не принять.
+        /// </summary>
+        private static bool ConfirmSchemaRemarks(string xml)
+        {
+            var conclusion = Utf8StringSerialize.DeSerializeObjectByString<Conclusion>(xml, lenient: false);
+            if (conclusion is null)
+            {
+                XtraMessageBox.Show(
+                    "Не удалось прочитать XML заключения. Файл не сформирован.",
+                    "Проверка заключения",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
+                return false;
+            }
+
+            var remarks = ModelValidator.Validate(conclusion);
+            if (remarks.Count == 0)
+            {
+                return true;
+            }
+
+            const int shown = 15;
+            var text = string.Join(Environment.NewLine, remarks.Take(shown).Select(remark => "• " + remark));
+            if (remarks.Count > shown)
+            {
+                text += Environment.NewLine + $"… и ещё {remarks.Count - shown}.";
+            }
+
+            return XtraMessageBox.Show(
+                $"Заключение не соответствует ограничениям схемы (замечаний: {remarks.Count}):" + Environment.NewLine + Environment.NewLine +
+                text + Environment.NewLine + Environment.NewLine +
+                "Такой XML может не принять система, в которую он загружается. Всё равно сформировать файл?",
+                "Проверка заключения",
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Warning) == DialogResult.Yes;
+        }
+
+        /// <summary>
+        /// Старая версия при каждом пересохранении удваивала списки заключения.
+        /// Если в документе есть одинаковые записи, предлагаем удалить повторы до открытия формы;
+        /// в базу изменения попадут только при сохранении формы.
+        /// </summary>
+        private static void OfferDuplicateCleanup(Conclusion conclusion)
+        {
+            var duplicates = conclusion.RemoveDuplicateItems(apply: false);
+            if (duplicates == 0)
+            {
+                return;
+            }
+
+            var answer = XtraMessageBox.Show(
+                $"В заключении найдено повторяющихся записей: {duplicates} (полностью одинаковые документы, эксперты, финансирование и т. п.)." + Environment.NewLine +
+                "Обычно это последствие ошибки сохранения в прежней версии программы." + Environment.NewLine + Environment.NewLine +
+                "Удалить повторы? Останется по одной записи; изменения сохранятся в базе, когда вы нажмёте «Сохранить» в форме.",
+                "Повторяющиеся записи",
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Question);
+
+            if (answer == DialogResult.Yes)
+            {
+                conclusion.RemoveDuplicateItems();
+            }
+        }
+
+        /// <summary>
+        /// Сериализация возвращает null при ошибке: такую запись сохранять нельзя, иначе документ станет пустым.
+        /// </summary>
+        private static bool CheckSerialized(string xml)
+        {
+            if (!string.IsNullOrWhiteSpace(xml))
+            {
+                return true;
+            }
+
+            XtraMessageBox.Show(
+                "Не удалось сформировать XML документа. Изменения не сохранены.",
+                "Информационное сообщение",
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Error);
+            return false;
+        }
+
+        /// <summary>
+        /// Если XML из базы не прочитался, форма открылась бы пустой и при сохранении перезаписала бы документ.
+        /// </summary>
+        private static bool CheckDeserialized(object obj)
+        {
+            if (obj != null)
+            {
+                return true;
+            }
+
+            XtraMessageBox.Show(
+                "Не удалось прочитать XML документа из базы. Документ не открыт, чтобы не перезаписать его пустыми данными.",
+                "Информационное сообщение",
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Error);
+            return false;
         }
 
         private async Task UpdateGridDataSourceAsync(string columnName = default, object obj = default)
@@ -197,6 +301,11 @@ namespace ProjectDocumentation.NET.Forms
                 {
                     var xmlFileName = $"{fileName}_{xmlObjXPO.Guid}.xml";
 
+                    if (xmlObjXPO is ConclusionXPO && !ConfirmSchemaRemarks(xmlObjXPO.GetObj()))
+                    {
+                        return;
+                    }
+
                     using (var fbd = new FolderBrowserDialog())
                     {
                         if (fbd.ShowDialog() == DialogResult.OK)
@@ -210,7 +319,8 @@ namespace ProjectDocumentation.NET.Forms
                             {
                                 case "conclusion":
                                     result = result.Replace("xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\"", $"xsi:noNamespaceSchemaLocation=\"{fileName}.xsd\"");
-                                    result += "<?xml-stylesheet type=\"text/xsl\" href=\"conclusion.xsl\" ?>";
+                                    // Инструкция xml-stylesheet должна стоять в прологе: после корневого элемента браузер её игнорирует.
+                                    result = result.InsertIntoXmlProlog("<?xml-stylesheet type=\"text/xsl\" href=\"conclusion.xsl\" ?>");
                                     break;
 
                                 case "explanatoryNote":
@@ -245,40 +355,56 @@ namespace ProjectDocumentation.NET.Forms
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
         private async void barBtnAddConclusion_ItemClick(object sender, ItemClickEventArgs e)
         {
-            var form = new ConclusionEdit();
-            form.ShowDialog();
-
-            if (form.IsSave)
+            using (var form = new ConclusionEdit())
             {
-                var conclusionXPO = new ConclusionXPO(Session)
+                form.ShowDialog();
+
+                if (form.IsSave)
                 {
-                    Name = form.FileName
-                };
+                    var conclusionXPO = new ConclusionXPO(Session)
+                    {
+                        Name = form.FileName
+                    };
 
-                form.Conclusion.ConclusionGuid = conclusionXPO.Guid?.ToString();
-                conclusionXPO.SetObj(form.Conclusion.GetSerializeConclusion());
-                await Session.SaveAsync(conclusionXPO);
+                    form.Conclusion.ConclusionGuid = conclusionXPO.Guid?.ToString();
+                    var xml = form.Conclusion.GetSerializeConclusion();
+                    if (!CheckSerialized(xml))
+                    {
+                        return;
+                    }
 
-                await UpdateGridDataSourceAsync(nameof(XmlObjXPO.Guid), conclusionXPO.Guid);
+                    conclusionXPO.SetObj(xml);
+                    await Session.SaveAsync(conclusionXPO);
+
+                    await UpdateGridDataSourceAsync(nameof(XmlObjXPO.Guid), conclusionXPO.Guid);
+                }
             }
         }
 
         private async void barBtnAddExplanatoryNote_ItemClick(object sender, ItemClickEventArgs e)
         {
-            var form = new ExplanatoryNoteEdit();
-            form.ShowDialog();
-
-            if (form.IsSave)
+            using (var form = new ExplanatoryNoteEdit())
             {
-                var explanatoryNoteXPO = new ExplanatoryNoteXPO(Session)
+                form.ShowDialog();
+
+                if (form.IsSave)
                 {
-                    Name = form.FileName
-                };
+                    var explanatoryNoteXPO = new ExplanatoryNoteXPO(Session)
+                    {
+                        Name = form.FileName
+                    };
 
-                explanatoryNoteXPO.SetObj(form.ExplanatoryNote.GetSerializeExplanatoryNote());
-                await Session.SaveAsync(explanatoryNoteXPO);
+                    var xml = form.ExplanatoryNote.GetSerializeExplanatoryNote();
+                    if (!CheckSerialized(xml))
+                    {
+                        return;
+                    }
 
-                await UpdateGridDataSourceAsync(nameof(XmlObjXPO.Guid), explanatoryNoteXPO.Guid);
+                    explanatoryNoteXPO.SetObj(xml);
+                    await Session.SaveAsync(explanatoryNoteXPO);
+
+                    await UpdateGridDataSourceAsync(nameof(XmlObjXPO.Guid), explanatoryNoteXPO.Guid);
+                }
             }
         }
 
@@ -294,30 +420,56 @@ namespace ProjectDocumentation.NET.Forms
             {
                 var xml = conclusionXPO.GetObj();
                 var conclusion = ConclusionController.GetConclusionByString(xml);
+                if (!CheckDeserialized(conclusion))
+                {
+                    return;
+                }
+
+                OfferDuplicateCleanup(conclusion);
+
                 var form = new ConclusionEdit(conclusion);
                 form.SetFileName(conclusionXPO.Name);
-                form.ShowDialog();
-
-                if (form.IsSave)
+                using (form)
                 {
-                    conclusionXPO.Name = form.FileName;
-                    conclusionXPO.SetObj(form.Conclusion.GetSerializeConclusion());
-                    await Session.SaveAsync(conclusionXPO);
+                    form.ShowDialog();
+
+                    if (form.IsSave)
+                    {
+                        var newXml = form.Conclusion.GetSerializeConclusion();
+                        if (CheckSerialized(newXml))
+                        {
+                            conclusionXPO.Name = form.FileName;
+                            conclusionXPO.SetObj(newXml);
+                            await Session.SaveAsync(conclusionXPO);
+                        }
+                    }
                 }
             }
             else if (gridView.GetRow(gridView.FocusedRowHandle) is ExplanatoryNoteXPO explanatoryNoteXPO)
             {
                 var xml = explanatoryNoteXPO.GetObj();
                 var explanatoryNote = ExplanatoryNoteController.GetExplanatoryNoteByString(xml);
+                if (!CheckDeserialized(explanatoryNote))
+                {
+                    return;
+                }
+
                 var form = new ExplanatoryNoteEdit(explanatoryNote);
                 form.SetFileName(explanatoryNoteXPO.Name);
-                form.ShowDialog();
-
-                if (form.IsSave)
+                using (form)
                 {
-                    explanatoryNoteXPO.Name = form.FileName;
-                    explanatoryNoteXPO.SetObj(form.ExplanatoryNote.GetSerializeExplanatoryNote());
-                    await Session.SaveAsync(explanatoryNoteXPO);
+                    form.ShowDialog();
+
+                    if (form.IsSave)
+                    {
+                        var newXml = form.ExplanatoryNote.GetSerializeExplanatoryNote();
+                        if (CheckSerialized(newXml))
+                        {
+                            explanatoryNoteXPO.Name = form.FileName;
+                            explanatoryNoteXPO.SetObj(newXml);
+                            await Session.SaveAsync(explanatoryNoteXPO);
+                        }
+                    }
                 }
             }
             await UpdateGridDataSource(gridView.FocusedRowHandle);
@@ -330,18 +482,29 @@ namespace ProjectDocumentation.NET.Forms
             {
                 var xml = conclusionXPO.GetObj();
                 var conclusion = ConclusionController.GetConclusionByString(xml);
-                var form = new ConclusionBaseSettingEdit(conclusion.ExpertOrganization, conclusion.Approver);
-                form.ShowDialog();
-
-                if (form.IsSave)
+                if (!CheckDeserialized(conclusion))
                 {
-                    conclusion.ExpertOrganization = form.Organization;
-                    conclusion.Approver = form.Person;
-                    conclusionXPO.SetObj(conclusion.GetSerializeConclusion());
-                    await Session.SaveAsync(conclusionXPO);
+                    return;
                 }
 
-                await UpdateGridDataSource(gridView.FocusedRowHandle);
+                using (var form = new ConclusionBaseSettingEdit(conclusion.ExpertOrganization, conclusion.Approver))
+                {
+                    form.ShowDialog();
+
+                    if (form.IsSave)
+                    {
+                        conclusion.ExpertOrganization = form.Organization;
+                        conclusion.Approver = form.Person;
+                        var newXml = conclusion.GetSerializeConclusion();
+                        if (CheckSerialized(newXml))
+                        {
+                            conclusionXPO.SetObj(newXml);
+                            await Session.SaveAsync(conclusionXPO);
+                        }
+                    }
+
+                    await UpdateGridDataSource(gridView.FocusedRowHandle);
+                }
             }
         }
 
@@ -352,8 +515,15 @@ namespace ProjectDocumentation.NET.Forms
             {
                 var xml = conclusionXPO.GetObj();
                 var conclusion = ConclusionController.GetConclusionByString(xml);
-                var form = new ViewForm(conclusion);
-                form.ShowDialog();
+                if (!CheckDeserialized(conclusion))
+                {
+                    return;
+                }
+
+                using (var form = new ViewForm(conclusion))
+                {
+                    form.ShowDialog();
+                }
             }
         }
     }

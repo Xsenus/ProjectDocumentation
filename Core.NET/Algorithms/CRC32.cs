@@ -44,13 +44,19 @@ namespace Core.NET.Algorithms
         public ComputeHash ComputeHashFile(byte[] data)
         {
             HashResult chars = HashFactory.Checksum.CreateCRC32(CRC32Polynomials.IEEE_802_3).ComputeBytes(data);
-            return new ComputeHash(chars.ToString().Reverse().ToString(), chars.GetBytes());
+            // Раньше ToString().Reverse().ToString() давал имя типа итератора вместо хэша.
+            // HashLib возвращает байты от младшего к старшему; приводим к тому же виду, что и ComputeHashFile(path).
+            var bytes = chars.GetBytes().Reverse().ToArray();
+            return new ComputeHash(BitConverter.ToString(bytes).Replace("-", string.Empty), bytes);
         }
 
         public ComputeHash ComputeHashString(string str)
         {
             HashResult chars = HashFactory.Checksum.CreateCRC32(CRC32Polynomials.IEEE_802_3).ComputeChars(str.ToCharArray());
-            return new ComputeHash(chars.ToString().Reverse().ToString(), chars.GetBytes());
+            // Раньше ToString().Reverse().ToString() давал имя типа итератора вместо хэша.
+            // HashLib возвращает байты от младшего к старшему; приводим к тому же виду, что и ComputeHashFile(path).
+            var bytes = chars.GetBytes().Reverse().ToArray();
+            return new ComputeHash(BitConverter.ToString(bytes).Replace("-", string.Empty), bytes);
         }
 
         public ComputeHash ComputeHashString(System.IO.Stream stream)

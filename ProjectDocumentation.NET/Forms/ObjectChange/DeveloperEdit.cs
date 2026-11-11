@@ -2,6 +2,7 @@
 using Core.NET.AutoModels.ExplanatoryNoteObj;
 using Core.NET.Controllers;
 using Core.NET.DaDataObj;
+using Core.NET.Extensions;
 using Core.NET.Models.XPO;
 using DevExpress.Xpo;
 using DevExpress.XtraEditors;
@@ -51,10 +52,13 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                         form = new AddressEdit();
                     }
 
-                    form.ShowDialog();
-                    if (form.IsSave)
+                    using (form)
                     {
-                        buttonEdit.EditValue = form.Address;
+                        form.ShowDialog();
+                        if (form.IsSave)
+                        {
+                            buttonEdit.EditValue = form.Address;
+                        }
                     }
                 }
                 else if (e.Button.Kind == ButtonPredefines.Search)
@@ -79,7 +83,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
 
                             try
                             {
-                                var region = ConclusionEdit.GetEnumByAttributeValue<TRegionsRf>(addressData.region_kladr_id?.Replace("0", string.Empty));
+                                var region = ConclusionEdit.GetEnumByAttributeValue<TRegionsRf>(addressData.region_kladr_id.GetKladrRegionCode(), isNullAble: false);
                                 address.Region = region;
                             }
                             catch (Exception)
@@ -120,10 +124,13 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                         form = new PostAddressEdit();
                     }
 
-                    form.ShowDialog();
-                    if (form.IsSave)
+                    using (form)
                     {
-                        buttonEdit.EditValue = form.PostAddress;
+                        form.ShowDialog();
+                        if (form.IsSave)
+                        {
+                            buttonEdit.EditValue = form.PostAddress;
+                        }
                     }
                 }
                 else if (e.Button.Kind == ButtonPredefines.Search)
@@ -149,7 +156,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
 
                             try
                             {
-                                var region = ConclusionEdit.GetEnumByAttributeValue<TRegionsRf>(addressData.region_kladr_id?.Replace("0", string.Empty));
+                                var region = ConclusionEdit.GetEnumByAttributeValue<TRegionsRf>(addressData.region_kladr_id.GetKladrRegionCode(), isNullAble: false);
                                 postAddress.Region = region;
                             }
                             catch (Exception)
@@ -302,7 +309,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                         var data = party?.suggestions?.FirstOrDefault()?.data;
                         if (data != null)
                         {
-                            txtOrgFullName.EditValue = data.name?.full_with_opf ?? data.name.ToString();
+                            txtOrgFullName.EditValue = data.name?.full_with_opf ?? data.name?.full;
                             txtOrgOGRN.EditValue = data.ogrn;
                             txtOrgKPP.EditValue = data.kpp;
                             txtOrgINN.EditValue = data.inn;
@@ -324,7 +331,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
 
                                 try
                                 {
-                                    var region = ConclusionEdit.GetEnumByAttributeValue<TRegionsRf>(addressData.region_kladr_id?.Replace("0", string.Empty));
+                                    var region = ConclusionEdit.GetEnumByAttributeValue<TRegionsRf>(addressData.region_kladr_id.GetKladrRegionCode(), isNullAble: false);
                                     address.Region = region;
                                 }
                                 catch (Exception)
@@ -394,7 +401,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
 
                                 try
                                 {
-                                    var region = ConclusionEdit.GetEnumByAttributeValue<TRegionsRf>(addressData.region_kladr_id?.Replace("0", string.Empty));
+                                    var region = ConclusionEdit.GetEnumByAttributeValue<TRegionsRf>(addressData.region_kladr_id.GetKladrRegionCode(), isNullAble: false);
                                     postAddress.Region = region;
                                 }
                                 catch (Exception)

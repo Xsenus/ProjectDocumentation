@@ -34,24 +34,28 @@ namespace ProjectDocumentation.NET.Forms
                 AddValueToString($"{conclusion.Approver?.FamilyName} {conclusion.Approver?.FirstName} {conclusion.Approver?.SecondName}");
                 AddValueToString();
 
-                var examinationResult = await GetValueXPOAsync(GeneralizedDictionary.ExaminationResult, conclusion.ExaminationObject.ExaminationResult);
-                AddValueToString($"{examinationResult.Replace("ый", "ое")} заключение повторной негосударственной экспертизы");
+                // Раздел может отсутствовать в импортированном файле: пустой объект вместо NullReferenceException.
+                var examinationObject = conclusion.ExaminationObject ?? new TExaminationObject();
+
+                // Форма и стадия берутся из данных (раньше формулировка была зашита в код).
+                var stage = examinationObject.ExaminationStage.GetStageAdjective();
+                AddValueToString(conclusion.ExaminationObject.GetConclusionTitle());
                 AddValueToString();
 
                 AddValueToString($"Наименование объекта экспертизы:");
-                AddValueToString($"{conclusion.ExaminationObject.Name}");
+                AddValueToString($"{examinationObject.Name}");
                 AddValueToString();
 
                 AddValueToString($"Вид работ:");
-                AddValueToString($"{await GetValueXPOAsync(GeneralizedDictionary.ConstructionType, conclusion.ExaminationObject.ConstructionType)}");
+                AddValueToString($"{await GetValueXPOAsync(GeneralizedDictionary.ConstructionType, examinationObject.ConstructionType)}");
                 AddValueToString();
 
                 AddValueToString($"Объект экспертизы:");
-                AddValueToString($"{await GetValueXPOAsync(GeneralizedDictionary.ExaminationStage, conclusion.ExaminationObject.ExaminationStage)}");
+                AddValueToString($"{await GetValueXPOAsync(GeneralizedDictionary.ExaminationStage, examinationObject.ExaminationStage)}");
                 AddValueToString();
 
                 AddValueToString($"Предмет экспертизы:");
-                foreach (var item in conclusion.ExaminationObject.ExaminationType)
+                foreach (var item in examinationObject.ExaminationType)
                 {
                     AddValueToString($"{await GetValueXPOAsync(GeneralizedDictionary.ExaminationType, item)}");
                 }
@@ -60,7 +64,7 @@ namespace ProjectDocumentation.NET.Forms
                 AddValueToString($"I. Общие положения и сведения о заключении экспертизы");
                 AddValueToString();
 
-                AddValueToString($"1.1. Сведения об организации по проведению повторной экспертизы");
+                AddValueToString($"1.1. Сведения об организации по проведению {stage}экспертизы");
                 AddValueToString($"{conclusion.ExpertOrganization?.GetCounterPartyDescription()}");
                 AddValueToString();
 
@@ -68,14 +72,14 @@ namespace ProjectDocumentation.NET.Forms
                 //AddValueToString($"{conclusion.Declarant?.Item?.GetCounterPartyDescription()}");
                 AddValueToString();
 
-                AddValueToString($"1.3. Основания для проведения повторной экспертизы");
+                AddValueToString($"1.3. Основания для проведения {stage}экспертизы");
                 var documentCount = 0;
 
                 if (conclusion.Documents != null)
                 {
                     foreach (var document in conclusion.Documents)
                     {
-                        if (document.DocType.GetEnumXmlAttributeValue().ToString().Contains("01."))
+                        if ((document.DocType.GetEnumXmlAttributeValue()?.ToString() ?? string.Empty).Contains("01."))
                         {
                             documentCount++;
                             var documentValue = $"{documentCount}. {document.DocName} от {document.DocDate.ToShortDateString()} № {document.DocNumber}";
@@ -97,7 +101,7 @@ namespace ProjectDocumentation.NET.Forms
                 {
                     foreach (var document in conclusion.Documents)
                     {
-                        if (document.DocType.GetEnumXmlAttributeValue().ToString().Contains("03."))
+                        if ((document.DocType.GetEnumXmlAttributeValue()?.ToString() ?? string.Empty).Contains("03."))
                         {
                             //documentCount++;
                             //var documentValue = $"{documentCount}. {document.DocName} от {document.DocDate.ToShortDateString()} № {document.DocNumber}";
@@ -112,13 +116,13 @@ namespace ProjectDocumentation.NET.Forms
                 }
                 AddValueToString();
 
-                AddValueToString($"1.5. Сведения о составе документов, представленных для проведения повторной экспертизы");
+                AddValueToString($"1.5. Сведения о составе документов, представленных для проведения {stage}экспертизы");
                 documentCount = 0;
                 if (conclusion?.Documents != null)
                 {
                     foreach (var document in conclusion.Documents)
                     {
-                        if (document.DocType.GetEnumXmlAttributeValue().ToString().Contains("03."))
+                        if ((document.DocType.GetEnumXmlAttributeValue()?.ToString() ?? string.Empty).Contains("03."))
                         {
                             documentCount++;
                             var documentValue = $"{documentCount}. {document.DocName} от {document.DocDate.ToShortDateString()} № {document.DocNumber}";
@@ -133,12 +137,12 @@ namespace ProjectDocumentation.NET.Forms
                 }
                 AddValueToString();
 
-                AddValueToString($"1.6. Сведения о ранее выданных заключениях экспертизы проектной документации и (или) результатов инженерных изысканий в отношении объекта капитального строительства, проектная документация и (или) результаты инженерных изысканий по которому представлены для проведения повторной экспертизы");
+                AddValueToString($"1.6. Сведения о ранее выданных заключениях экспертизы проектной документации и (или) результатов инженерных изысканий в отношении объекта капитального строительства, проектная документация и (или) результаты инженерных изысканий по которому представлены для проведения {stage}экспертизы");
                 if (conclusion?.Documents != null)
                 {
                     foreach (var document in conclusion.Documents)
                     {
-                        if (document.DocType.GetEnumXmlAttributeValue().ToString().Contains("03."))
+                        if ((document.DocType.GetEnumXmlAttributeValue()?.ToString() ?? string.Empty).Contains("03."))
                         {
                             //documentCount++;
                             //var documentValue = $"{documentCount}. {document.DocName} от {document.DocDate.ToShortDateString()} № {document.DocNumber}";
@@ -153,7 +157,7 @@ namespace ProjectDocumentation.NET.Forms
                 }
                 AddValueToString();
 
-                AddValueToString($"II. Сведения, содержащиеся в документах, представленных для проведения повторной экспертизы проектной документации");
+                AddValueToString($"II. Сведения, содержащиеся в документах, представленных для проведения {stage}экспертизы проектной документации");
                 AddValueToString();
 
                 AddValueToString($"2.1. Сведения об объекте капитального строительства, применительно к которому подготовлена проектная документация");
@@ -193,7 +197,7 @@ namespace ProjectDocumentation.NET.Forms
                 var result = new List<string>();
                 foreach (var item in collection)
                 {
-                    var name = item.Name;
+                    var name = item.Name ?? string.Empty;
                     while (name.Length < maxLenght)
                     {
                         name += " ";

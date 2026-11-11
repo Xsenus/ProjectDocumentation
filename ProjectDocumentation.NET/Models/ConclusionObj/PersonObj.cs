@@ -140,6 +140,12 @@ namespace ProjectDocumentation.NET.Models.ConclusionObj
                       ?? declarant.Ip
                       ?? (object)declarant.Person;
             }
+            else if (Obj is tDeveloper developer)
+            {
+                // Застройщик пояснительной записки: организация/ИП/ФЛ лежит в Item.
+                BaseObj = developer;
+                Obj = developer.Item;
+            }
 
             if (Obj is TForeignOrganization fo)
             {

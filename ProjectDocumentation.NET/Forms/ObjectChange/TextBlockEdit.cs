@@ -175,10 +175,13 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                 {
                     form = new ImageEdit();
                 }
-                form.ShowDialog();
-                if (form.IsSave)
+                using (form)
                 {
-                    itemsObj.Value = form.Image;
+                    form.ShowDialog();
+                    if (form.IsSave)
+                    {
+                        itemsObj.Value = form.Image;
+                    }
                 }
             }
             else if (itemsObj.ItemsChoiceType == ItemsChoiceType.Table)
@@ -192,10 +195,13 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                 {
                     form = new TableEdit();
                 }
-                form.ShowDialog();
-                if (form.IsSave)
+                using (form)
                 {
-                    itemsObj.Value = form.Table;
+                    form.ShowDialog();
+                    if (form.IsSave)
+                    {
+                        itemsObj.Value = form.Table;
+                    }
                 }
             }
         }

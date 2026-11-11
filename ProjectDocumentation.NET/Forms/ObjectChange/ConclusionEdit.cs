@@ -44,6 +44,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
         private List<TDeclarant> _tProjectDocumentsDevelopers = new List<TDeclarant>();
         private List<TTechnicalCustomer> _tProjectDocumentsTechnicalCustomer = new List<TTechnicalCustomer>();
         private List<Ttei> _Tteis = new List<Ttei>();
+        private bool _isEepdUseInForm;
 
         public ConclusionEdit()
         {
@@ -82,13 +83,15 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
         private void barBtnDesignersAdd_ItemClick(object sender, ItemClickEventArgs e)
         {
-            var form = new DesignerEdit();
-            form.ShowDialog();
-            if (form.IsSave)
+            using (var form = new DesignerEdit())
             {
-                _tDesigners.Add(form.Designer);
-                gridControlDesigners.DataSource = PersonObjController.GetPersonObjByDesigner(_tDesigners)?.ToArray();
-                gridControlDesigners.RefreshDataSource();
+                form.ShowDialog();
+                if (form.IsSave)
+                {
+                    _tDesigners.Add(form.Designer);
+                    gridControlDesigners.DataSource = PersonObjController.GetPersonObjByDesigner(_tDesigners)?.ToArray();
+                    gridControlDesigners.RefreshDataSource();
+                }
             }
         }
 
@@ -106,7 +109,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                     if (obj.BaseObj is TDesigner TDesigner)
                     {
                         _tDesigners.Remove(TDesigner);
-                        gridControlDesigners.DataSource = PersonObjController.GetPersonObj(_tDesigners?.ToArray())?.ToArray();
+                        gridControlDesigners.DataSource = PersonObjController.GetPersonObjByDesigner(_tDesigners)?.ToArray();
                         gridControlDesigners.RefreshDataSource();
                     }
                 }
@@ -118,12 +121,14 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
         {
             if (gridViewDesigners.GetRow(gridViewDesigners.FocusedRowHandle) is PersonObj obj)
             {
-                var form = new DesignerEdit(obj.BaseObj);
-                form.ShowDialog();
-                if (form.IsSave)
+                using (var form = new DesignerEdit(obj.BaseObj))
                 {
-                    gridControlDesigners.DataSource = PersonObjController.GetPersonObjByDesigner(_tDesigners?.ToArray())?.ToArray();
-                    gridControlDesigners.RefreshDataSource();
+                    form.ShowDialog();
+                    if (form.IsSave)
+                    {
+                        gridControlDesigners.DataSource = PersonObjController.GetPersonObjByDesigner(_tDesigners?.ToArray())?.ToArray();
+                        gridControlDesigners.RefreshDataSource();
+                    }
                 }
             }
         }
@@ -131,13 +136,15 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
         private void barBtnDocumentsAdd_ItemClick(object sender, ItemClickEventArgs e)
         {
-            var form = new DocumentEdit();
-            form.ShowDialog();
-            if (form.IsSave)
+            using (var form = new DocumentEdit())
             {
-                _tDocuments.Add(form.Document);
-                gridControlDocuments.DataSource = DocumentObjController.GetDocumentObjS(_tDocuments).ToArray();
-                gridControlDocuments.RefreshDataSource();
+                form.ShowDialog();
+                if (form.IsSave)
+                {
+                    _tDocuments.Add(form.Document);
+                    gridControlDocuments.DataSource = DocumentObjController.GetDocumentObjS(_tDocuments).ToArray();
+                    gridControlDocuments.RefreshDataSource();
+                }
             }
         }
 
@@ -164,12 +171,14 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
         {
             if (gridViewDocuments.GetRow(gridViewDocuments.FocusedRowHandle) is DocumentObj obj)
             {
-                var form = new DocumentEdit(obj.Document);
-                form.ShowDialog();
-                if (form.IsSave)
+                using (var form = new DocumentEdit(obj.Document))
                 {
-                    gridControlDocuments.DataSource = DocumentObjController.GetDocumentObjS(_tDocuments).ToArray();
-                    gridControlDocuments.RefreshDataSource();
+                    form.ShowDialog();
+                    if (form.IsSave)
+                    {
+                        gridControlDocuments.DataSource = DocumentObjController.GetDocumentObjS(_tDocuments).ToArray();
+                        gridControlDocuments.RefreshDataSource();
+                    }
                 }
             }
         }
@@ -177,13 +186,15 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
         private void barBtnEngineeringSurveyAddressAdd_ItemClick(object sender, ItemClickEventArgs e)
         {
-            var form = new EngineeringSurveyAddressEdit();
-            form.ShowDialog();
-            if (form.IsSave)
+            using (var form = new EngineeringSurveyAddressEdit())
             {
-                _tEngineeringSurveyAddresses.Add(form.EngineeringSurveyAddress);
-                gridControlEngineeringSurveyAddress.DataSource = EngineeringSurveyAddressController.GetEngineeringSurveyAddress(_tEngineeringSurveyAddresses);
-                gridControlEngineeringSurveyAddress.RefreshDataSource();
+                form.ShowDialog();
+                if (form.IsSave)
+                {
+                    _tEngineeringSurveyAddresses.Add(form.EngineeringSurveyAddress);
+                    gridControlEngineeringSurveyAddress.DataSource = EngineeringSurveyAddressController.GetEngineeringSurveyAddress(_tEngineeringSurveyAddresses);
+                    gridControlEngineeringSurveyAddress.RefreshDataSource();
+                }
             }
         }
 
@@ -210,12 +221,14 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
         {
             if (gridViewEngineeringSurveyAddress.GetRow(gridViewEngineeringSurveyAddress.FocusedRowHandle) is EngineeringSurveyAddress obj)
             {
-                var form = new EngineeringSurveyAddressEdit(obj.EngineeringSurveyAddressObj);
-                form.ShowDialog();
-                if (form.IsSave)
+                using (var form = new EngineeringSurveyAddressEdit(obj.EngineeringSurveyAddressObj))
                 {
-                    gridControlEngineeringSurveyAddress.DataSource = EngineeringSurveyAddressController.GetEngineeringSurveyAddress(_tEngineeringSurveyAddresses);
-                    gridControlEngineeringSurveyAddress.RefreshDataSource();
+                    form.ShowDialog();
+                    if (form.IsSave)
+                    {
+                        gridControlEngineeringSurveyAddress.DataSource = EngineeringSurveyAddressController.GetEngineeringSurveyAddress(_tEngineeringSurveyAddresses);
+                        gridControlEngineeringSurveyAddress.RefreshDataSource();
+                    }
                 }
             }
         }
@@ -223,13 +236,15 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
         private void barBtnEngineeringSurveyDeveloperAdd_ItemClick(object sender, ItemClickEventArgs e)
         {
-            var form = new DeclarantEdit();
-            form.ShowDialog();
-            if (form.IsSave)
+            using (var form = new DeclarantEdit())
             {
-                _tEngineeringSurveyDeveloper.Add(form.Declarant);
-                gridControlEngineeringSurveyDeveloper.DataSource = PersonObjController.GetPersonObjByDeclarator(_tEngineeringSurveyDeveloper).ToArray();
-                gridControlEngineeringSurveyDeveloper.RefreshDataSource();
+                form.ShowDialog();
+                if (form.IsSave)
+                {
+                    _tEngineeringSurveyDeveloper.Add(form.Declarant);
+                    gridControlEngineeringSurveyDeveloper.DataSource = PersonObjController.GetPersonObjByDeclarator(_tEngineeringSurveyDeveloper).ToArray();
+                    gridControlEngineeringSurveyDeveloper.RefreshDataSource();
+                }
             }
         }
 
@@ -259,12 +274,14 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
         {
             if (gridViewEngineeringSurveyDeveloper.GetRow(gridViewEngineeringSurveyDeveloper.FocusedRowHandle) is PersonObj obj)
             {
-                var form = new DeclarantEdit(obj.BaseObj);
-                form.ShowDialog();
-                if (form.IsSave)
+                using (var form = new DeclarantEdit(obj.BaseObj))
                 {
-                    gridControlEngineeringSurveyDeveloper.DataSource = PersonObjController.GetPersonObjByDeclarator(_tEngineeringSurveyDeveloper).ToArray();
-                    gridControlEngineeringSurveyDeveloper.RefreshDataSource();
+                    form.ShowDialog();
+                    if (form.IsSave)
+                    {
+                        gridControlEngineeringSurveyDeveloper.DataSource = PersonObjController.GetPersonObjByDeclarator(_tEngineeringSurveyDeveloper).ToArray();
+                        gridControlEngineeringSurveyDeveloper.RefreshDataSource();
+                    }
                 }
             }
         }
@@ -272,13 +289,15 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
         private void barBtnEngineeringSurveyTechnicalCustomerAdd_ItemClick(object sender, ItemClickEventArgs e)
         {
-            var form = new TechnicalCustomerEdit();
-            form.ShowDialog();
-            if (form.IsSave)
+            using (var form = new TechnicalCustomerEdit())
             {
-                _tEngineeringSurveyTechnicalCustomer.Add(form.TechnicalCustomer);
-                gridControlEngineeringSurveyTechnicalCustomer.DataSource = PersonObjController.GetPersonObjByTechnicalCustomer(_tEngineeringSurveyTechnicalCustomer).ToArray();
-                gridControlEngineeringSurveyTechnicalCustomer.RefreshDataSource();
+                form.ShowDialog();
+                if (form.IsSave)
+                {
+                    _tEngineeringSurveyTechnicalCustomer.Add(form.TechnicalCustomer);
+                    gridControlEngineeringSurveyTechnicalCustomer.DataSource = PersonObjController.GetPersonObjByTechnicalCustomer(_tEngineeringSurveyTechnicalCustomer).ToArray();
+                    gridControlEngineeringSurveyTechnicalCustomer.RefreshDataSource();
+                }
             }
         }
 
@@ -308,12 +327,14 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
         {
             if (gridViewEngineeringSurveyTechnicalCustomer.GetRow(gridViewEngineeringSurveyTechnicalCustomer.FocusedRowHandle) is PersonObj obj)
             {
-                var form = new TechnicalCustomerEdit(obj.BaseObj);
-                form.ShowDialog();
-                if (form.IsSave)
+                using (var form = new TechnicalCustomerEdit(obj.BaseObj))
                 {
-                    gridControlEngineeringSurveyTechnicalCustomer.DataSource = PersonObjController.GetPersonObjByTechnicalCustomer(_tEngineeringSurveyTechnicalCustomer).ToArray();
-                    gridControlEngineeringSurveyTechnicalCustomer.RefreshDataSource();
+                    form.ShowDialog();
+                    if (form.IsSave)
+                    {
+                        gridControlEngineeringSurveyTechnicalCustomer.DataSource = PersonObjController.GetPersonObjByTechnicalCustomer(_tEngineeringSurveyTechnicalCustomer).ToArray();
+                        gridControlEngineeringSurveyTechnicalCustomer.RefreshDataSource();
+                    }
                 }
             }
         }
@@ -368,13 +389,15 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
         private void barBtnExpertEngineeringSurveysAdd_ItemClick(object sender, ItemClickEventArgs e)
         {
-            var form = new ExpertEngineeringSurveyEdit();
-            form.ShowDialog();
-            if (form.IsSave)
+            using (var form = new ExpertEngineeringSurveyEdit())
             {
-                _tExpertEngineeringSurveys.Add(form.ExpertEngineeringSurvey);
-                gridControlExpertEngineeringSurveys.DataSource = ExpertEngineeringSurveysController.GetExpertEngineeringSurveys(_tExpertEngineeringSurveys).ToArray();
-                gridControlExpertEngineeringSurveys.RefreshDataSource();
+                form.ShowDialog();
+                if (form.IsSave)
+                {
+                    _tExpertEngineeringSurveys.Add(form.ExpertEngineeringSurvey);
+                    gridControlExpertEngineeringSurveys.DataSource = ExpertEngineeringSurveysController.GetExpertEngineeringSurveys(_tExpertEngineeringSurveys).ToArray();
+                    gridControlExpertEngineeringSurveys.RefreshDataSource();
+                }
             }
         }
 
@@ -401,12 +424,14 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
         {
             if (gridViewExpertEngineeringSurveys.GetRow(gridViewExpertEngineeringSurveys.FocusedRowHandle) is ExpertEngineeringSurvey obj)
             {
-                var form = new ExpertEngineeringSurveyEdit(obj.ExpertEngineeringSurveys);
-                form.ShowDialog();
-                if (form.IsSave)
+                using (var form = new ExpertEngineeringSurveyEdit(obj.ExpertEngineeringSurveys))
                 {
-                    gridControlExpertEngineeringSurveys.DataSource = ExpertEngineeringSurveysController.GetExpertEngineeringSurveys(_tExpertEngineeringSurveys).ToArray();
-                    gridControlExpertEngineeringSurveys.RefreshDataSource();
+                    form.ShowDialog();
+                    if (form.IsSave)
+                    {
+                        gridControlExpertEngineeringSurveys.DataSource = ExpertEngineeringSurveysController.GetExpertEngineeringSurveys(_tExpertEngineeringSurveys).ToArray();
+                        gridControlExpertEngineeringSurveys.RefreshDataSource();
+                    }
                 }
             }
         }
@@ -414,13 +439,15 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
         private void barBtnExpertProjectDocumentsAdd_ItemClick(object sender, ItemClickEventArgs e)
         {
-            var form = new ExpertProjectDocumentsEdit();
-            form.ShowDialog();
-            if (form.IsSave)
+            using (var form = new ExpertProjectDocumentsEdit())
             {
-                _tExpertProjectDocuments.Add(form.ExpertProjectDocuments);
-                gridControlExpertProjectDocuments.DataSource = ExpertProjectDocumentController.GetExpertProjectDocuments(_tExpertProjectDocuments).ToArray();
-                gridControlExpertProjectDocuments.RefreshDataSource();
+                form.ShowDialog();
+                if (form.IsSave)
+                {
+                    _tExpertProjectDocuments.Add(form.ExpertProjectDocuments);
+                    gridControlExpertProjectDocuments.DataSource = ExpertProjectDocumentController.GetExpertProjectDocuments(_tExpertProjectDocuments).ToArray();
+                    gridControlExpertProjectDocuments.RefreshDataSource();
+                }
             }
         }
 
@@ -447,12 +474,14 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
         {
             if (gridViewExpertProjectDocuments.GetRow(gridViewExpertProjectDocuments.FocusedRowHandle) is ExpertProjectDocument obj)
             {
-                var form = new ExpertProjectDocumentsEdit(obj.ExpertProjectDocuments);
-                form.ShowDialog();
-                if (form.IsSave)
+                using (var form = new ExpertProjectDocumentsEdit(obj.ExpertProjectDocuments))
                 {
-                    gridControlExpertProjectDocuments.DataSource = ExpertProjectDocumentController.GetExpertProjectDocuments(_tExpertProjectDocuments).ToArray();
-                    gridControlExpertProjectDocuments.RefreshDataSource();
+                    form.ShowDialog();
+                    if (form.IsSave)
+                    {
+                        gridControlExpertProjectDocuments.DataSource = ExpertProjectDocumentController.GetExpertProjectDocuments(_tExpertProjectDocuments).ToArray();
+                        gridControlExpertProjectDocuments.RefreshDataSource();
+                    }
                 }
             }
         }
@@ -460,13 +489,15 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
         private void barBtnFinanceAdd_ItemClick(object sender, ItemClickEventArgs e)
         {
-            var form = new FundingInformationEdit();
-            form.ShowDialog();
-            if (form.IsSave)
+            using (var form = new FundingInformationEdit())
             {
-                _tFinances.Add(form.Finance);
-                gridControlFinances.DataSource = FinanceObjController.GetFinanceObj(_tFinances);
-                gridControlFinances.RefreshDataSource();
+                form.ShowDialog();
+                if (form.IsSave)
+                {
+                    _tFinances.Add(form.Finance);
+                    gridControlFinances.DataSource = FinanceObjController.GetFinanceObj(_tFinances);
+                    gridControlFinances.RefreshDataSource();
+                }
             }
         }
 
@@ -493,12 +524,14 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
         {
             if (gridViewFinances.GetRow(gridViewFinances.FocusedRowHandle) is FinanceObj obj)
             {
-                var form = new FundingInformationEdit(obj.TFinance);
-                form.ShowDialog();
-                if (form.IsSave)
+                using (var form = new FundingInformationEdit(obj.TFinance))
                 {
-                    gridControlFinances.DataSource = FinanceObjController.GetFinanceObj(_tFinances);
-                    gridControlFinances.RefreshDataSource();
+                    form.ShowDialog();
+                    if (form.IsSave)
+                    {
+                        gridControlFinances.DataSource = FinanceObjController.GetFinanceObj(_tFinances);
+                        gridControlFinances.RefreshDataSource();
+                    }
                 }
             }
         }
@@ -553,12 +586,14 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
         private void barBtnObjectPartAdd_ItemClick(object sender, ItemClickEventArgs e)
         {
-            var form = new ObjPartEdit();
-            form.ShowDialog();
-            if (form.IsSave)
+            using (var form = new ObjPartEdit())
             {
-                _tObjectParts.Add(form.ObjectPart);
-                gridControlObjectPart.RefreshDataSource();
+                form.ShowDialog();
+                if (form.IsSave)
+                {
+                    _tObjectParts.Add(form.ObjectPart);
+                    gridControlObjectPart.RefreshDataSource();
+                }
             }
         }
 
@@ -584,11 +619,13 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
         {
             if (gridViewObjectPart.GetRow(gridViewObjectPart.FocusedRowHandle) is TObjectPart obj)
             {
-                var form = new ObjPartEdit(obj);
-                form.ShowDialog();
-                if (form.IsSave)
+                using (var form = new ObjPartEdit(obj))
                 {
-                    gridControlObjectPart.RefreshDataSource();
+                    form.ShowDialog();
+                    if (form.IsSave)
+                    {
+                        gridControlObjectPart.RefreshDataSource();
+                    }
                 }
             }
         }
@@ -596,12 +633,14 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
         private void barBtnPreviousConclusionsAdd_ItemClick(object sender, ItemClickEventArgs e)
         {
-            var form = new PreviousConclusionEdit();
-            form.ShowDialog();
-            if (form.IsSave)
+            using (var form = new PreviousConclusionEdit())
             {
-                _tPreviousConclusions.Add(form.PreviousConclusion);
-                gridControlPreviousConclusions.RefreshDataSource();
+                form.ShowDialog();
+                if (form.IsSave)
+                {
+                    _tPreviousConclusions.Add(form.PreviousConclusion);
+                    gridControlPreviousConclusions.RefreshDataSource();
+                }
             }
         }
 
@@ -627,11 +666,13 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
         {
             if (gridViewPreviousConclusions.GetRow(gridViewPreviousConclusions.FocusedRowHandle) is TPreviousConclusion obj)
             {
-                var form = new PreviousConclusionEdit(obj);
-                form.ShowDialog();
-                if (form.IsSave)
+                using (var form = new PreviousConclusionEdit(obj))
                 {
-                    gridControlPreviousConclusions.RefreshDataSource();
+                    form.ShowDialog();
+                    if (form.IsSave)
+                    {
+                        gridControlPreviousConclusions.RefreshDataSource();
+                    }
                 }
             }
         }
@@ -639,13 +680,15 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
         private void barBtnProjectDocumentsDeveloperAdd_ItemClick(object sender, ItemClickEventArgs e)
         {
-            var form = new DeclarantEdit();
-            form.ShowDialog();
-            if (form.IsSave)
+            using (var form = new DeclarantEdit())
             {
-                _tProjectDocumentsDevelopers.Add(form.Declarant);
-                gridControlProjectDocumentsDeveloper.DataSource = PersonObjController.GetPersonObjByDeclarator(_tProjectDocumentsDevelopers).ToArray();
-                gridControlProjectDocumentsDeveloper.RefreshDataSource();
+                form.ShowDialog();
+                if (form.IsSave)
+                {
+                    _tProjectDocumentsDevelopers.Add(form.Declarant);
+                    gridControlProjectDocumentsDeveloper.DataSource = PersonObjController.GetPersonObjByDeclarator(_tProjectDocumentsDevelopers).ToArray();
+                    gridControlProjectDocumentsDeveloper.RefreshDataSource();
+                }
             }
         }
 
@@ -675,12 +718,14 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
         {
             if (gridViewProjectDocumentsDeveloper.GetRow(gridViewProjectDocumentsDeveloper.FocusedRowHandle) is PersonObj obj)
             {
-                var form = new DeclarantEdit(obj.BaseObj);
-                form.ShowDialog();
-                if (form.IsSave)
+                using (var form = new DeclarantEdit(obj.BaseObj))
                 {
-                    gridControlProjectDocumentsDeveloper.DataSource = PersonObjController.GetPersonObjByDeclarator(_tProjectDocumentsDevelopers).ToArray();
-                    gridControlProjectDocumentsDeveloper.RefreshDataSource();
+                    form.ShowDialog();
+                    if (form.IsSave)
+                    {
+                        gridControlProjectDocumentsDeveloper.DataSource = PersonObjController.GetPersonObjByDeclarator(_tProjectDocumentsDevelopers).ToArray();
+                        gridControlProjectDocumentsDeveloper.RefreshDataSource();
+                    }
                 }
             }
         }
@@ -688,13 +733,15 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
         private void barBtnProjectDocumentsTechnicalCustomerAdd_ItemClick(object sender, ItemClickEventArgs e)
         {
-            var form = new TechnicalCustomerEdit();
-            form.ShowDialog();
-            if (form.IsSave)
+            using (var form = new TechnicalCustomerEdit())
             {
-                _tProjectDocumentsTechnicalCustomer.Add(form.TechnicalCustomer);
-                gridControlProjectDocumentsTechnicalCustomer.DataSource = PersonObjController.GetPersonObjByTechnicalCustomer(_tProjectDocumentsTechnicalCustomer).ToArray();
-                gridControlProjectDocumentsTechnicalCustomer.RefreshDataSource();
+                form.ShowDialog();
+                if (form.IsSave)
+                {
+                    _tProjectDocumentsTechnicalCustomer.Add(form.TechnicalCustomer);
+                    gridControlProjectDocumentsTechnicalCustomer.DataSource = PersonObjController.GetPersonObjByTechnicalCustomer(_tProjectDocumentsTechnicalCustomer).ToArray();
+                    gridControlProjectDocumentsTechnicalCustomer.RefreshDataSource();
+                }
             }
         }
 
@@ -724,12 +771,14 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
         {
             if (gridViewProjectDocumentsTechnicalCustomer.GetRow(gridViewProjectDocumentsTechnicalCustomer.FocusedRowHandle) is PersonObj obj)
             {
-                var form = new TechnicalCustomerEdit(obj.BaseObj);
-                form.ShowDialog();
-                if (form.IsSave)
+                using (var form = new TechnicalCustomerEdit(obj.BaseObj))
                 {
-                    gridControlProjectDocumentsTechnicalCustomer.DataSource = PersonObjController.GetPersonObjByTechnicalCustomer(_tProjectDocumentsTechnicalCustomer).ToArray();
-                    gridControlProjectDocumentsTechnicalCustomer.RefreshDataSource();
+                    form.ShowDialog();
+                    if (form.IsSave)
+                    {
+                        gridControlProjectDocumentsTechnicalCustomer.DataSource = PersonObjController.GetPersonObjByTechnicalCustomer(_tProjectDocumentsTechnicalCustomer).ToArray();
+                        gridControlProjectDocumentsTechnicalCustomer.RefreshDataSource();
+                    }
                 }
             }
         }
@@ -779,10 +828,13 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                         form = new AddressEdit();
                     }
 
-                    form.ShowDialog();
-                    if (form.IsSave)
+                    using (form)
                     {
-                        buttonEdit.EditValue = form.Address;
+                        form.ShowDialog();
+                        if (form.IsSave)
+                        {
+                            buttonEdit.EditValue = form.Address;
+                        }
                     }
                 }
                 else if (e.Button.Kind == ButtonPredefines.Search)
@@ -807,7 +859,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
 
                             try
                             {
-                                var region = ConclusionEdit.GetEnumByAttributeValue<TRegionsRf>(addressData.region_kladr_id?.Replace("0", string.Empty));
+                                var region = ConclusionEdit.GetEnumByAttributeValue<TRegionsRf>(addressData.region_kladr_id.GetKladrRegionCode(), isNullAble: false);
                                 address.Region = region;
                             }
                             catch (Exception)
@@ -851,10 +903,13 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                     {
                         form = new DeclarantEdit();
                     }
-                    form.ShowDialog();
-                    if (form.IsSave)
+                    using (form)
                     {
-                        buttonEdit.EditValue = form.Declarant;
+                        form.ShowDialog();
+                        if (form.IsSave)
+                        {
+                            buttonEdit.EditValue = form.Declarant;
+                        }
                     }
                 }
             }
@@ -989,6 +1044,8 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                 #endregion
 
                 #region Page I_5
+                // Списки формы — единственный источник: очищаем коллекцию, иначе повторное сохранение дублирует записи.
+                Conclusion.Documents.Clear();
                 if (_tDocuments.Count > 0)
                 {
                     foreach (var item in _tDocuments)
@@ -999,6 +1056,8 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                 #endregion
 
                 #region Page 1_6
+                // Списки формы — единственный источник: очищаем коллекцию, иначе повторное сохранение дублирует записи.
+                Conclusion.PreviousConclusions.Clear();
                 if (_tPreviousConclusions.Count > 0)
                 {
                     foreach (var item in _tPreviousConclusions)
@@ -1089,6 +1148,8 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                 #endregion
 
                 #region Page II_2
+                // Списки формы — единственный источник: очищаем коллекцию, иначе повторное сохранение дублирует записи.
+                Conclusion.Finance.Clear();
                 if (_tFinances.Count > 0)
                 {
                     foreach (var item in _tFinances)
@@ -1136,6 +1197,8 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                 #endregion
 
                 #region Page II_4
+                // Списки формы — единственный источник: очищаем коллекцию, иначе повторное сохранение дублирует записи.
+                Conclusion.Designer.Clear();
                 if (_tDesigners.Count > 0)
                 {
                     foreach (var item in _tDesigners)
@@ -1170,6 +1233,13 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                 //    }
                 //}
 
+                // Форма показывает только первую запись EepdUse: заменяем её, остальные записи из файла сохраняем.
+                if (_isEepdUseInForm && Conclusion.EepdUse.Count > 0)
+                {
+                    Conclusion.EepdUse.RemoveAt(0);
+                }
+                _isEepdUseInForm = false;
+
                 if (checkEEPDUse.Checked)
                 {
                     var eEPDUse = new TeepdUse
@@ -1193,11 +1263,14 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                     }
 
                     eEPDUse.EepdNumber = number;
-                    Conclusion.EepdUse.Add(eEPDUse);
+                    Conclusion.EepdUse.Insert(0, eEPDUse);
+                    _isEepdUseInForm = true;
                 }
                 #endregion
 
                 #region Page II_6
+                // Списки формы — единственный источник: очищаем коллекцию, иначе повторное сохранение дублирует записи.
+                Conclusion.CadastralNumber.Clear();
                 if (_cadastralNumbers?.Count() > 0)
                 {
                     var cadastralNumbers = new List<string>();
@@ -1228,6 +1301,8 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
 
                 #region Page II_7
 
+                // Списки формы — единственный источник: очищаем коллекцию, иначе повторное сохранение дублирует записи.
+                Conclusion.ProjectDocumentsDeveloper.Clear();
                 if (_tProjectDocumentsDevelopers?.Count() > 0)
                 {
                     foreach (var item in _tProjectDocumentsDevelopers)
@@ -1236,6 +1311,8 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                     }
                 }
 
+                // Списки формы — единственный источник: очищаем коллекцию, иначе повторное сохранение дублирует записи.
+                Conclusion.ProjectDocumentsTechnicalCustomer.Clear();
                 if (_tProjectDocumentsTechnicalCustomer?.Count() > 0)
                 {
                     foreach (var item in _tProjectDocumentsTechnicalCustomer)
@@ -1244,6 +1321,8 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                     }
                 }
 
+                // Списки формы — единственный источник: очищаем коллекцию, иначе повторное сохранение дублирует записи.
+                Conclusion.EngineeringSurveyDeveloper.Clear();
                 if (_tEngineeringSurveyDeveloper?.Count() > 0)
                 {
                     foreach (var item in _tEngineeringSurveyDeveloper)
@@ -1252,6 +1331,8 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                     }
                 }
 
+                // Списки формы — единственный источник: очищаем коллекцию, иначе повторное сохранение дублирует записи.
+                Conclusion.EngineeringSurveyTechnicalCustomer.Clear();
                 if (_tEngineeringSurveyTechnicalCustomer?.Count() > 0)
                 {
                     foreach (var item in _tEngineeringSurveyTechnicalCustomer)
@@ -1263,6 +1344,8 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                 #endregion
 
                 #region Page III
+                // Списки формы — единственный источник: очищаем коллекцию, иначе повторное сохранение дублирует записи.
+                Conclusion.ExpertProjectDocuments.Clear();
                 if (_tExpertProjectDocuments?.Count() > 0)
                 {
                     foreach (var item in _tExpertProjectDocuments)
@@ -1271,6 +1354,8 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                     }
                 }
 
+                // Списки формы — единственный источник: очищаем коллекцию, иначе повторное сохранение дублирует записи.
+                Conclusion.EngineeringSurveyAddress.Clear();
                 if (_tEngineeringSurveyAddresses?.Count() > 0)
                 {
                     foreach (var item in _tEngineeringSurveyAddresses)
@@ -1279,6 +1364,8 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                     }
                 }
 
+                // Списки формы — единственный источник: очищаем коллекцию, иначе повторное сохранение дублирует записи.
+                Conclusion.ExpertEngineeringSurveys.Clear();
                 if (_tExpertEngineeringSurveys?.Count() > 0)
                 {
                     foreach (var item in _tExpertEngineeringSurveys)
@@ -1294,14 +1381,14 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                     Conclusion.Summary = new TSummary();
                 }
 
-                Conclusion.Summary.EngineeringSurveySummary =
-                    GetEnumByAttributeValue<TEngineeringSurveysSummary>(GetValueGeneralizedDictionary(
-                        cmbEngineeringSurveysSummary,
-                        message: "Заполните поле вывод о соответствии результатов инженерных изысканий требованиям технических регламентов")?.Value);
+                // Необязательный элемент схемы: без флага Specified значение не попадает в XML.
+                Conclusion.Summary.EngineeringSurveySummary = GetOptionalEnum<TEngineeringSurveysSummary>(cmbEngineeringSurveysSummary, out bool engineeringSurveysSummarySpecified);
+                Conclusion.Summary.EngineeringSurveySummarySpecified = engineeringSurveysSummarySpecified;
                 
                 Conclusion.Summary.EngineeringSurveySummaryDate = GetStringValue(memoEngineeringSurveySummaryDate.EditValue, memoEngineeringSurveySummaryDate, "Заполните поле сведения о дате, по состоянию на которую действовали требования, примененные в соответствии с частью 5.2 статьи 49 Градостроительного кодекса Российской Федерации (в части экспертизы результатов инженерных изысканий)");
 
                 var engineeringSurveyType = GetCheckComboBoxItems<TEngineeringSurveyType>(checkCmbEngineeringSurveyType, "Заполните поле вид инженерных изысканий, на соответствие которым проводилась экспертиза проектной документации").ToArray();
+                Conclusion.Summary.EngineeringSurveyType.Clear();
                 if (engineeringSurveyType.Count() > 0)
                 {
                     foreach (var item in engineeringSurveyType)
@@ -1310,21 +1397,19 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                     }
                 }
 
-                Conclusion.Summary.ProjectDocumentsSummary = GetEnumByAttributeValue<TProjectDocumentationSummary>(GetValueGeneralizedDictionary(
-                    cmbProjectDocumentationSummary,
-                    message: "Заполните поле вывод о соответствии технической части проектной документации результатам инженерных изысканий, заданию застройщика или технического заказчика на проектирование и требованиям технических регламентов")?.Value);
+                // Необязательный элемент схемы: без флага Specified значение не попадает в XML.
+                Conclusion.Summary.ProjectDocumentsSummary = GetOptionalEnum<TProjectDocumentationSummary>(cmbProjectDocumentationSummary, out bool projectDocumentationSummarySpecified);
+                Conclusion.Summary.ProjectDocumentsSummarySpecified = projectDocumentationSummarySpecified;
 
                 Conclusion.Summary.ProjectDocumentsSummaryDate = GetStringValue(memoProjectDocumentsSummaryDate.EditValue, memoProjectDocumentsSummaryDate, "Заполните поле сведения о дате, по состоянию на которую действовали требования, примененные в соответствии с частью 5.2 статьи 49 Градостроительного кодекса Российской Федерации (в части экспертизы проектной документации)");
                                 
-                Conclusion.Summary.EstimateNormsAndWorksSummary = GetEnumByAttributeValue<TEstimateNormsAndWorksSummary>(GetValueGeneralizedDictionary(
-                    cmbEstimateNormsAndWorksSummary,
-                    message: "Заполните поле вывод о соответствии расчетов, содержащихся в сметной документации, утвержденным сметным нормативам, сведения о которых включены в федеральный реестр сметных нормативов, физическим объемам работ, конструктивным, организационно - технологическим и другим решениям, предусмотренным проектной документацией или Выводы о соответствии(несоответствии) расчетов, содержащихся в сметной документации, физическим объемам работ, включенным в ведомость объемов работ, акт, утвержденный застройщиком или техническим заказчиком и содержащий перечень дефектов оснований, строительных конструкций, систем инженерно - технического обеспечения и сетей инженерно - технического обеспечения с указанием качественных и количественных характеристик таких дефектов, при проведении проверки достоверности определения сметной стоимости капитального ремонта")?.Value);
+                // Необязательный элемент схемы: без флага Specified значение не попадает в XML.
+                Conclusion.Summary.EstimateNormsAndWorksSummary = GetOptionalEnum<TEstimateNormsAndWorksSummary>(cmbEstimateNormsAndWorksSummary, out bool estimateNormsAndWorksSummarySpecified);
+                Conclusion.Summary.EstimateNormsAndWorksSummarySpecified = estimateNormsAndWorksSummarySpecified;
 
-                Conclusion.Summary.EstimateSummary =
-                    GetEnumByAttributeValue<TEstimateValidationSummary>(
-                        GetValueGeneralizedDictionary(
-                            cmbEstimateSummary,
-                            message: "Заполните поле вывод о достоверности определения сметной стоимости")?.Value);
+                // Необязательный элемент схемы: без флага Specified значение не попадает в XML.
+                Conclusion.Summary.EstimateSummary = GetOptionalEnum<TEstimateValidationSummary>(cmbEstimateSummary, out bool estimateSummarySpecified);
+                Conclusion.Summary.EstimateSummarySpecified = estimateSummarySpecified;
                 #endregion
 
                 #region Page VI
@@ -1334,46 +1419,60 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                 if (Conclusion.Summary.ExaminationSummary is null)
                     Conclusion.Summary.ExaminationSummary = new TExaminationSummary();
 
-                Conclusion.Summary.ExaminationSummary.EngineeringSurveysResultsSummary =
-                    GetEnumByAttributeValue<TEngineeringSurveysResultsSummary>(
-                        GetValueGeneralizedDictionary(
-                            cmbEngineeringSurveysResultsSummary,
-                            message: "Заполните вывод о результатах инженерных изысканий")?.Value);
+                // Необязательный элемент схемы: без флага Specified значение не попадает в XML.
+                Conclusion.Summary.ExaminationSummary.EngineeringSurveysResultsSummary = GetOptionalEnum<TEngineeringSurveysResultsSummary>(cmbEngineeringSurveysResultsSummary, out bool engineeringSurveysResultsSummarySpecified);
+                Conclusion.Summary.ExaminationSummary.EngineeringSurveysResultsSummarySpecified = engineeringSurveysResultsSummarySpecified;
 
-                Conclusion.Summary.ExaminationSummary.EstimateSummary =
-                    GetEnumByAttributeValue<TEstimateValidationSummary>(
-                        GetValueGeneralizedDictionary(
-                            cmbEstimateValidationSummary,
-                            message: "Заполните общий вывод о достоверности определения сметной стоимости")?.Value);
+                // Необязательный элемент схемы: без флага Specified значение не попадает в XML.
+                Conclusion.Summary.ExaminationSummary.EstimateSummary = GetOptionalEnum<TEstimateValidationSummary>(cmbEstimateValidationSummary, out bool estimateValidationSummarySpecified);
+                Conclusion.Summary.ExaminationSummary.EstimateSummarySpecified = estimateValidationSummarySpecified;
 
                 Conclusion.Summary.EstimateSummary1315 =
                     GetStringValue(memoEstimateSummary1315.EditValue,
                                    memoEstimateSummary1315,
                                    "Вывод об оценке достоверности определения сметной стоимости (ПП РФ №1315)");
 
-                if (Conclusion.Summary.ExaminationSummary.ProjectDocumentsSummary is null)
-                    Conclusion.Summary.ExaminationSummary.ProjectDocumentsSummary = new TProjectDocumentsSummary();
+                // Блок выводов по ПД в схеме необязателен (например, экспертиза только изысканий):
+                // если ни один вывод не выбран — блок не пишется; если выбран хотя бы один — обязательны все три.
+                var isProjectDocumentsSummarySelected = new[]
+                {
+                    cmbProjectDocumentationEngineeringSurveysResultsSummary.EditValue,
+                    cmbProjectDocumentationDesignAssignmentSummary.EditValue,
+                    cmbProjectDocumentationTechnicalRequirementsSummary.EditValue
+                }.Any(value => value is GeneralizedDictionaryXPO);
 
-                Conclusion.Summary.ExaminationSummary.ProjectDocumentsSummary.ProjectDocumentationEngineeringSurveysResultsSummary =
-                    GetEnumByAttributeValue<TProjectDocumentationEngineeringSurveysResultsSummary>(
-                        GetValueGeneralizedDictionary(
-                            cmbProjectDocumentationEngineeringSurveysResultsSummary,
-                            message: "Заполните вывод о соответствии ПД результатам инженерных изысканий")?.Value);
+                if (isProjectDocumentsSummarySelected is false)
+                {
+                    Conclusion.Summary.ExaminationSummary.ProjectDocumentsSummary = null;
+                }
+                else
+                {
+                    if (Conclusion.Summary.ExaminationSummary.ProjectDocumentsSummary is null)
+                        Conclusion.Summary.ExaminationSummary.ProjectDocumentsSummary = new TProjectDocumentsSummary();
 
-                Conclusion.Summary.ExaminationSummary.ProjectDocumentsSummary.ProjectDocumentationDesignAssignmentSummary =
-                    GetEnumByAttributeValue<TProjectDocumentationDesignAssignmentSummary>(
-                        GetValueGeneralizedDictionary(
-                            cmbProjectDocumentationDesignAssignmentSummary,
-                            message: "Заполните вывод о соответствии ПД заданию на проектирование")?.Value);
+                    Conclusion.Summary.ExaminationSummary.ProjectDocumentsSummary.ProjectDocumentationEngineeringSurveysResultsSummary =
+                        GetEnumByAttributeValue<TProjectDocumentationEngineeringSurveysResultsSummary>(
+                            GetValueGeneralizedDictionary(
+                                cmbProjectDocumentationEngineeringSurveysResultsSummary,
+                                message: "Заполните вывод о соответствии ПД результатам инженерных изысканий")?.Value);
 
-                Conclusion.Summary.ExaminationSummary.ProjectDocumentsSummary.ProjectDocumentationTechnicalRequirementsSummary =
-                    GetEnumByAttributeValue<TProjectDocumentationTechnicalRequirementsSummary>(
-                        GetValueGeneralizedDictionary(
-                            cmbProjectDocumentationTechnicalRequirementsSummary,
-                            message: "Заполните вывод о соответствии ПД требованиям технических регламентов и иным требованиям")?.Value);
+                    Conclusion.Summary.ExaminationSummary.ProjectDocumentsSummary.ProjectDocumentationDesignAssignmentSummary =
+                        GetEnumByAttributeValue<TProjectDocumentationDesignAssignmentSummary>(
+                            GetValueGeneralizedDictionary(
+                                cmbProjectDocumentationDesignAssignmentSummary,
+                                message: "Заполните вывод о соответствии ПД заданию на проектирование")?.Value);
+
+                    Conclusion.Summary.ExaminationSummary.ProjectDocumentsSummary.ProjectDocumentationTechnicalRequirementsSummary =
+                        GetEnumByAttributeValue<TProjectDocumentationTechnicalRequirementsSummary>(
+                            GetValueGeneralizedDictionary(
+                                cmbProjectDocumentationTechnicalRequirementsSummary,
+                                message: "Заполните вывод о соответствии ПД требованиям технических регламентов и иным требованиям")?.Value);
+                }
                 #endregion
 
                 #region Page VII
+                // Списки формы — единственный источник: очищаем коллекцию, иначе повторное сохранение дублирует записи.
+                Conclusion.Experts.Clear();
                 if (_experts.Count > 0)
                 {
                     foreach (var item in _experts)
@@ -1412,13 +1511,13 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                         var data = party?.suggestions?.FirstOrDefault()?.data;
                         if (data != null)
                         {
-                            txtOrgFullName.EditValue = data.name?.full_with_opf ?? data.name.ToString();
+                            txtOrgFullName.EditValue = data.name?.full_with_opf ?? data.name?.full;
                             txtOrgOGRN.EditValue = data.ogrn;
                             txtOrgKPP.EditValue = data.kpp;
                             txtOrgINN.EditValue = data.inn;
 
                             var splitsSplitsName = data.management?.name?.Split();
-                            if (splitsSplitsName.Length >= 3)
+                            if (splitsSplitsName?.Length >= 3)
                             {
                                 txtFamilyName.EditValue = splitsSplitsName[0];
                                 txtFirstName.EditValue = splitsSplitsName[1];
@@ -1443,7 +1542,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
 
                                 try
                                 {
-                                    var region = ConclusionEdit.GetEnumByAttributeValue<TRegionsRf>(addressData.region_kladr_id?.Replace("0", string.Empty));
+                                    var region = ConclusionEdit.GetEnumByAttributeValue<TRegionsRf>(addressData.region_kladr_id.GetKladrRegionCode(), isNullAble: false);
                                     address.Region = region;
                                 }
                                 catch (Exception)
@@ -1533,12 +1632,15 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                     {
                         form = new AddressEdit();
                     }
-                    form.ShowDialog();
-
-                    if (form.IsSave)
+                    using (form)
                     {
-                        buttonEdit.EditValue = form.Address;
-                        buttonEdit.Refresh();
+                        form.ShowDialog();
+
+                        if (form.IsSave)
+                        {
+                            buttonEdit.EditValue = form.Address;
+                            buttonEdit.Refresh();
+                        }
                     }
                 }
                 else if (e.Button.Kind == ButtonPredefines.Search)
@@ -1563,7 +1665,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
 
                             try
                             {
-                                var region = GetEnumByAttributeValue<TRegionsRf>(addressData.region_kladr_id?.Replace("0", string.Empty));
+                                var region = GetEnumByAttributeValue<TRegionsRf>(addressData.region_kladr_id.GetKladrRegionCode(), isNullAble: false);
                                 address.Region = region;
                             }
                             catch (Exception)
@@ -1820,6 +1922,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                 if (number != null)
                 {
                     checkEEPDUse.EditValue = true;
+                    _isEepdUseInForm = true;
 
                     if (!string.IsNullOrWhiteSpace(number.Egrz))
                     {
@@ -1967,7 +2070,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
 
             #region Page V
 
-            cmbEngineeringSurveysSummary.EditValue = cmbEngineeringSurveysSummary.Properties.Items
+            cmbEngineeringSurveysSummary.EditValue = Conclusion?.Summary?.EngineeringSurveySummarySpecified != true ? null : cmbEngineeringSurveysSummary.Properties.Items
                 ?.Cast<GeneralizedDictionaryXPO>()
                 ?.Where(w => w.GeneralizedDictionary == GeneralizedDictionary.EngineeringSurveysSummary)
                 ?.FirstOrDefault(f => f.Value == Conclusion?.Summary?.EngineeringSurveySummary.GetEnumXmlAttributeValue().ToString());
@@ -1976,19 +2079,19 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
 
             SetCheckComboBoxByItems(Conclusion?.Summary?.EngineeringSurveyType, checkCmbEngineeringSurveyType);
 
-            cmbProjectDocumentationSummary.EditValue = cmbProjectDocumentationSummary.Properties.Items
+            cmbProjectDocumentationSummary.EditValue = Conclusion?.Summary?.ProjectDocumentsSummarySpecified != true ? null : cmbProjectDocumentationSummary.Properties.Items
                 ?.Cast<GeneralizedDictionaryXPO>()
                 ?.Where(w => w.GeneralizedDictionary == GeneralizedDictionary.ProjectDocumentationSummary)
                 ?.FirstOrDefault(f => f.Value == Conclusion?.Summary?.ProjectDocumentsSummary.GetEnumXmlAttributeValue().ToString());
 
             memoProjectDocumentsSummaryDate.EditValue = Conclusion?.Summary?.ProjectDocumentsSummaryDate;
 
-            cmbEstimateNormsAndWorksSummary.EditValue = cmbEstimateNormsAndWorksSummary.Properties.Items
+            cmbEstimateNormsAndWorksSummary.EditValue = Conclusion?.Summary?.EstimateNormsAndWorksSummarySpecified != true ? null : cmbEstimateNormsAndWorksSummary.Properties.Items
                 ?.Cast<GeneralizedDictionaryXPO>()
                 ?.Where(w => w.GeneralizedDictionary == GeneralizedDictionary.EstimateNormsAndWorksSummary)
                 ?.FirstOrDefault(f => f.Value == Conclusion?.Summary?.EstimateNormsAndWorksSummary.GetEnumXmlAttributeValue().ToString());
 
-            cmbEstimateSummary.EditValue = cmbEstimateSummary.Properties.Items
+            cmbEstimateSummary.EditValue = Conclusion?.Summary?.EstimateSummarySpecified != true ? null : cmbEstimateSummary.Properties.Items
                 ?.Cast<GeneralizedDictionaryXPO>()
                 ?.Where(w => w.GeneralizedDictionary == GeneralizedDictionary.EstimateSummary)
                 ?.FirstOrDefault(f => f.Value == Conclusion?.Summary?.EstimateSummary.GetEnumXmlAttributeValue().ToString());
@@ -2000,7 +2103,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
 
             var pds = Conclusion?.Summary?.ExaminationSummary?.ProjectDocumentsSummary;
 
-            cmbEngineeringSurveysResultsSummary.EditValue =
+            cmbEngineeringSurveysResultsSummary.EditValue = Conclusion?.Summary?.ExaminationSummary?.EngineeringSurveysResultsSummarySpecified != true ? null :
                 cmbEngineeringSurveysResultsSummary.Properties.Items
                     ?.Cast<GeneralizedDictionaryXPO>()
                     ?.Where(w => w.GeneralizedDictionary == GeneralizedDictionary.EngineeringSurveysResultsSummary)
@@ -2024,7 +2127,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                     ?.Where(w => w.GeneralizedDictionary == GeneralizedDictionary.ProjectDocumentationTechnicalRequirementsSummary)
                     ?.FirstOrDefault(f => f.Value == pds?.ProjectDocumentationTechnicalRequirementsSummary.GetEnumXmlAttributeValue().ToString());
 
-            cmbEstimateValidationSummary.EditValue =
+            cmbEstimateValidationSummary.EditValue = Conclusion?.Summary?.ExaminationSummary?.EstimateSummarySpecified != true ? null :
                 cmbEstimateValidationSummary.Properties.Items
                     ?.Cast<GeneralizedDictionaryXPO>()
                     ?.Where(w => w.GeneralizedDictionary == GeneralizedDictionary.EstimateValidationSummary)
@@ -2155,36 +2258,6 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
             checkCmbEngineeringSurveyType.Properties.Items.AddRange(collection
                 .Where(w => w.GeneralizedDictionary == GeneralizedDictionary.EngineeringSurveyType).ToArray());
             #endregion
-        }
-
-        private static MethodInfo GetMethodName(string methodName)
-        {
-            var filePath = "Core.NET.dll";
-            if (File.Exists(filePath) is false)
-            {
-                filePath = "dll\\Core.NET.dll";
-                if (File.Exists(filePath) is false)
-                {
-                    throw new Exception("Не найден Core.NET.dll.");
-                }
-            }
-
-            var targetType = typeof(Enum);
-            var fileInfo = new FileInfo(filePath);
-            var assemblyPath = fileInfo.FullName;
-            var externalAssembly = Assembly.LoadFile(assemblyPath);
-
-            var extensionMethods = externalAssembly
-                .GetTypes()
-                .SelectMany(t => t.GetMethods())
-                .Where(m => m.IsDefined(typeof(ExtensionAttribute), false))
-                .ToArray();
-
-            var matchingExtensions = extensionMethods
-                .Where(m => m.GetParameters()[0].ParameterType == targetType)
-                .ToArray();
-
-            return matchingExtensions.FirstOrDefault(f => f.Name == methodName);
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
@@ -2386,19 +2459,16 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
             throw new Exception(message ?? "Не заполнен один из параметров.");
         }
 
+        /// <summary>
+        /// Значение перечисления по коду из XmlEnum (код хранится в <see cref="GeneralizedDictionaryXPO.Value"/>).
+        /// Если код не найден: при <paramref name="isNullAble"/> = true возвращается default(T)
+        /// (первое значение перечисления), иначе бросается исключение.
+        /// </summary>
         public static T GetEnumByAttributeValue<T>(string value, bool isNullAble = true)
         {
-            if (typeof(T).GetTypeInfo().BaseType == typeof(Enum))
+            if (EnumExtension.TryGetEnumByXmlAttributeValue(value, out T result))
             {
-                var method = GetMethodName("GetEnumXmlAttributeValue");
-                foreach (T type in Enum.GetValues(typeof(T)))
-                {
-                    var typeValue = method.Invoke(type, new object[] { type })?.ToString();
-                    if (!string.IsNullOrWhiteSpace(typeValue) && typeValue.Equals(value))
-                    {
-                        return type;
-                    }
-                }
+                return result;
             }
 
             if (isNullAble)
@@ -2406,7 +2476,18 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                 return default;
             }
 
-            throw new Exception();
+            throw new Exception($"Не найдено значение \"{value}\" в перечислении {typeof(T).Name}.");
+        }
+
+        /// <summary>
+        /// Необязательное поле-перечисление (в модели есть свойство ...Specified):
+        /// <paramref name="specified"/> = true, только если в списке выбрано значение из схемы.
+        /// </summary>
+        public static T GetOptionalEnum<T>(object sender, out bool specified)
+        {
+            var item = GetValueGeneralizedDictionary(sender, isNullAble: true);
+            specified = item != null && EnumExtension.TryGetEnumByXmlAttributeValue(item.Value, out T _);
+            return GetEnumByAttributeValue<T>(item?.Value);
         }
 
         public static string GetStringValue(object sender, object control = default, string message = default, bool isNullAble = true)
@@ -2430,8 +2511,15 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
             throw new Exception(message ?? "Не заполнен один из параметров.");
         }
 
-        public static GeneralizedDictionaryXPO GetValueGeneralizedDictionary(object sender, string message = default, bool isNullAble = true)
+        /// <summary>
+        /// Выбранная запись справочника.
+        /// Если <paramref name="isNullAble"/> не задан, поле обязательно, когда передан <paramref name="message"/>:
+        /// пустой выбор иначе превращался бы в первое значение перечисления и попадал в XML как ложные данные.
+        /// </summary>
+        public static GeneralizedDictionaryXPO GetValueGeneralizedDictionary(object sender, string message = default, bool? isNullAble = null)
         {
+            var allowNull = isNullAble ?? string.IsNullOrEmpty(message);
+
             if (sender is ButtonEdit buttonEdit)
             {
                 if (buttonEdit.EditValue is GeneralizedDictionaryXPO result)
@@ -2447,7 +2535,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                 }
             }
 
-            if (isNullAble)
+            if (allowNull)
             {
                 return default;
             }

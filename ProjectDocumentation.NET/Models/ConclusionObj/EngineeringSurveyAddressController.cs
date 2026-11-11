@@ -4,6 +4,7 @@ using Core.NET.Extensions;
 using Core.NET.Models.XPO;
 using DevExpress.Xpo;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace ProjectDocumentation.NET.Models.ConclusionObj
 {
@@ -28,14 +29,14 @@ namespace ProjectDocumentation.NET.Models.ConclusionObj
             EngineeringSurveyDistrict = EngineeringSurveyAddressObj.EngineeringSurveyDistrict;
         }
 
-        public async void SetEnumObj()
+        public void SetEnumObj()
         {
             var session = SessionController.GetSession();
 
             if (EngineeringSurveyAddressObj != null)
             {
-                var engineeringSurveyType = await new XPQuery<GeneralizedDictionaryXPO>(session)?
-                 .FirstOrDefaultAsync(f => f.GeneralizedDictionary == GeneralizedDictionary.Region
+                var engineeringSurveyType = new XPQuery<GeneralizedDictionaryXPO>(session)?
+                 .FirstOrDefault(f => f.GeneralizedDictionary == GeneralizedDictionary.Region
                      && f.Value == EngineeringSurveyAddressObj.EngineeringSurveyRegion.GetEnumXmlAttributeValue().ToString());
                 EngineeringSurveyRegion = engineeringSurveyType?.Name;
             }

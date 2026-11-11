@@ -68,33 +68,55 @@ namespace ProjectDocumentation.NET.Forms
                     return;
                 }
 
+                var isConclusion = radioGroupType.EditValue?.ToString() == "Conclusion";
+                ImportResult result;
                 switch (radioGroupType.EditValue?.ToString())
                 {
                     case "Conclusion":
-                        ObjXPO = await ConclusionController.CreateConclusionByPath(filePath, name);
+                        result = await ConclusionController.ImportConclusionAsync(filePath, name, existing => AskImportConflict(existing, isConclusion));
                         break;
-
                     case "ExplanatoryNote":
-                        ObjXPO = await ExplanatoryNoteController.CreateExplanatoryNoteByPath(filePath, name);
+                        result = await ExplanatoryNoteController.ImportExplanatoryNoteAsync(filePath, name, existing => AskImportConflict(existing, isConclusion));
                         break;
-                }               
+                    default:
+                        result = new ImportResult();
+                        break;
+                }
 
+                if (result.IsCancelled)
+                {
+                    return;
+                }
+
+                ObjXPO = result.Document;
                 if (ObjXPO is null)
                 {
-                    XtraMessageBox.Show("Ошибка загрузки файла.",
+                    XtraMessageBox.Show("Ошибка загрузки файла: файл не соответствует выбранному типу документа или повреждён.",
                                     "Информационное сообщение",
                                     MessageBoxButtons.OK,
                                     MessageBoxIcon.Warning);
                     return;
                 }
-                else
+
+                var message = result.IsReplaced
+                    ? "Содержимое существующего документа заменено."
+                    : result.IsCopy
+                        ? $"Файл загружен как копия с новым ID: {ObjXPO.Guid}."
+                        : "Файл успешно обработан.";
+
+                if (result.Warnings.Count > 0)
                 {
-                    XtraMessageBox.Show("Файл успешно обработан.",
-                                    "Информационное сообщение",
-                                    MessageBoxButtons.OK,
-                                    MessageBoxIcon.Information);
-                    Close();
+                    // Раньше эти значения удалялись молча.
+                    message += Environment.NewLine + Environment.NewLine
+                        + "При чтении удалены значения, которых нет в схеме:" + Environment.NewLine
+                        + string.Join(Environment.NewLine, result.Warnings);
                 }
+
+                XtraMessageBox.Show(message,
+                                "Информационное сообщение",
+                                MessageBoxButtons.OK,
+                                result.Warnings.Count > 0 ? MessageBoxIcon.Warning : MessageBoxIcon.Information);
+                Close();
             }
             else
             {
@@ -106,6 +128,45 @@ namespace ProjectDocumentation.NET.Forms
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
+        /// <summary>
+        /// В базе уже есть документ с тем же ID: заменить его (только тот же тип), загрузить копию или отменить.
+        /// </summary>
+        private static ImportConflictAction AskImportConflict(XmlObjXPO existing, bool isConclusion)
+        {
+            var isSameType = isConclusion ? existing is ConclusionXPO : existing is ExplanatoryNoteXPO;
+            var header = $"Документ с ID {existing.Guid} уже загружен: «{existing.Name}» от {existing.DateCreate:dd.MM.yyyy HH:mm}.";
+
+            if (isSameType)
+            {
+                var answer = XtraMessageBox.Show(
+                    header + Environment.NewLine + Environment.NewLine +
+                    "Да — заменить его содержимое этим файлом." + Environment.NewLine +
+                    "Нет — загрузить копию с новым ID." + Environment.NewLine +
+                    "Отмена — не загружать.",
+                    "Документ уже загружен",
+                    MessageBoxButtons.YesNoCancel,
+                    MessageBoxIcon.Question);
+
+                switch (answer)
+                {
+                    case DialogResult.Yes:
+                        return ImportConflictAction.Replace;
+                    case DialogResult.No:
+                        return ImportConflictAction.CreateCopy;
+                    default:
+                        return ImportConflictAction.Cancel;
+                }
+            }
+
+            var copyAnswer = XtraMessageBox.Show(
+                header + Environment.NewLine + "Это документ другого типа. Загрузить файл как новый документ с новым ID?",
+                "Документ уже загружен",
+                MessageBoxButtons.OKCancel,
+                MessageBoxIcon.Question);
+
+            return copyAnswer == DialogResult.OK ? ImportConflictAction.CreateCopy : ImportConflictAction.Cancel;
+        }
+
         private void btnCancel_Click(object sender, EventArgs e)
         {
             Close();
