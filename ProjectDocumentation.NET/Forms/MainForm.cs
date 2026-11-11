@@ -102,7 +102,17 @@ namespace ProjectDocumentation.NET.Forms
         /// </summary>
         private static bool ConfirmSchemaRemarks(string xml)
         {
-            var conclusion = ConclusionController.GetConclusionByString(xml);
+            var conclusion = Utf8StringSerialize.DeSerializeObjectByString<Conclusion>(xml, lenient: false);
+            if (conclusion is null)
+            {
+                XtraMessageBox.Show(
+                    "Не удалось прочитать XML заключения. Файл не сформирован.",
+                    "Проверка заключения",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
+                return false;
+            }
+
             var remarks = ModelValidator.Validate(conclusion);
             if (remarks.Count == 0)
             {

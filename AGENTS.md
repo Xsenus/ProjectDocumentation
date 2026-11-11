@@ -43,7 +43,7 @@
 - В этом проекте миграций нет: SQLite-база `xml.s3db` создаётся и обновляется автоматически средствами DevExpress XPO (`AutoCreateOption.DatabaseAndSchema` в `Core.NET/Controllers/SessionController.cs`) по классам `Core.NET/Models/XPO`. Изменения этих классов меняют схему у пользователей — опиши их в PR.
 
 ### Проверки перед PR
-CI (`.github/workflows`) в репозитории нет, тестов и линтеров тоже нет — проверяй хотя бы сборку. Новые инструменты без согласования не добавлять.
+Release-сборку для `master` и PR владельца выполняет [Windows CI](docs/WINDOWS_RUNNERS.md). Тестов и линтеров в репозитории нет. Новые инструменты без согласования не добавлять.
 
 Решение `ProjectDocumentation.sln` (.NET Framework 4.7.2, WinForms, DevExpress 24.2, пакеты через `packages.config`) собирается только на Windows с установленным и лицензированным DevExpress 24.2 и Visual Studio / Build Tools:
 

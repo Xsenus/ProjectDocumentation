@@ -28,7 +28,7 @@ nuget restore ProjectDocumentation.sln
 msbuild ProjectDocumentation.sln /p:Configuration=Release /m
 ```
 
-Тестов и CI в репозитории нет. Подробнее — в [AGENTS.md](AGENTS.md), раздел «Проверки перед PR».
+Автоматических тестов в репозитории нет. Release-сборку для `master` и PR владельца выполняет [Windows CI](docs/WINDOWS_RUNNERS.md).
 
 ## Документация
 

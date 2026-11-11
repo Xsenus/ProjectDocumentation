@@ -39,7 +39,7 @@ namespace ProjectDocumentation.NET.Forms
 
                 // Форма и стадия берутся из данных (раньше формулировка была зашита в код).
                 var stage = examinationObject.ExaminationStage.GetStageAdjective();
-                AddValueToString(examinationObject.GetConclusionTitle());
+                AddValueToString(conclusion.ExaminationObject.GetConclusionTitle());
                 AddValueToString();
 
                 AddValueToString($"Наименование объекта экспертизы:");

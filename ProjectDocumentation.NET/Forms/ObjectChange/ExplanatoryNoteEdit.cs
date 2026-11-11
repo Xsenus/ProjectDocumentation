@@ -511,13 +511,13 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                         message: "Заполните поле сведения о категории земель, на которых располагается (будет располагаться) объект капитального строительства")?.Value);
 
                     // Части объекта и прочие элементы Items сохраняются; меняются только значения из формы.
+                    var fireDangerCategory = ConclusionEdit.GetOptionalEnum<tFireDangerCategory>(
+                        cmbFireDangerCategory, out bool fireDangerCategorySpecified);
+                    var responsibilityLevel = ConclusionEdit.GetOptionalEnum<tResponsibilityLevel>(
+                        cmbResponsibilityLevel, out bool responsibilityLevelSpecified);
                     noteObject.SetEditedItems(
-                        ConclusionEdit.GetEnumByAttributeValue<tFireDangerCategory>(ConclusionEdit.GetValueGeneralizedDictionary(
-                            cmbFireDangerCategory,
-                            message: "Заполните поле категория пожарной и взрывопожарной опасности")?.Value),
-                        ConclusionEdit.GetEnumByAttributeValue<tResponsibilityLevel>(ConclusionEdit.GetValueGeneralizedDictionary(
-                            cmbResponsibilityLevel,
-                            message: "Заполните поле уровень ответственности")?.Value),
+                        fireDangerCategorySpecified ? fireDangerCategory : (tFireDangerCategory?)null,
+                        responsibilityLevelSpecified ? responsibilityLevel : (tResponsibilityLevel?)null,
                         btnPeoplePermanentStay.EditValue as tTextBlock);
                     #endregion
                 }

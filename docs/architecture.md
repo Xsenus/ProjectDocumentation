@@ -33,14 +33,14 @@ ProjectDocumentation.NET/
 
 1. `Program.Main` вызывает `SessionController.GetSession()`: создаётся или открывается SQLite-файл `xml.s3db`, XPO обновляет схему (`AutoCreateOption.DatabaseAndSchema`).
 2. Открывается `MainForm`. В `MainForm_Load` последовательно:
-   - `DataBaseController.FillingDataBaseAsync()` — заполняет справочники `GeneralizedDictionaryXPO`, если категория пуста;
+   - `DataBaseController.FillingDataBaseAsync()` — синхронизирует справочники `GeneralizedDictionaryXPO` со встроенным списком кодов;
    - `UpdateGridDataSourceAsync()` — грузит все документы (`XmlObjXPO`), отсортированные по дате создания (новые сверху);
    - `InitialSetupGridControl()` — показывает в таблице только колонки «Наименование», «ID», «Дата создания»;
    - `CheckUpdates()` — читает настройку `UpdatePath` (по умолчанию FTP-адрес) и запускает обязательное обновление через AutoUpdater.NET.
 
 ## Хранение данных
 
-База — один файл SQLite `xml.s3db`. Путь относительный, то есть файл лежит в текущей рабочей папке процесса (обычно рядом с exe). Миграций нет: схему по классам создаёт и обновляет XPO.
+База хранится в файле SQLite `xml.s3db` рядом с исполняемым файлом. При запуске XPO синхронно создаёт и обновляет схему по классам модели.
 
 | Класс (таблица) | Поля | Назначение |
 |---|---|---|

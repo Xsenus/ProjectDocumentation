@@ -738,6 +738,7 @@ namespace Core.NET.Controllers
                 if (row.Name != name)
                 {
                     row.Name = name;
+                    session.Save(row);
                 }
             }
 

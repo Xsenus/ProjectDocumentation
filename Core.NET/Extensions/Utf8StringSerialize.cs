@@ -51,9 +51,9 @@ namespace Core.NET.Extensions
             catch
             {
                 if (!lenient) return default;
-                var cleaned = NormalizeProblematicEnums(xml, warnings);
                 try
                 {
+                    var cleaned = NormalizeProblematicEnums(xml, warnings);
                     return DeserializeStrict<T>(cleaned);
                 }
                 catch
