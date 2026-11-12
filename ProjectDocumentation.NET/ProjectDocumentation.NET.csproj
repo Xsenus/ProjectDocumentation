@@ -36,6 +36,8 @@
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationIcon>icon.ico</ApplicationIcon>
+    <DevExpress24RussianResourcesDir Condition="'$(DevExpress24RussianResourcesDir)' == '' and Exists('D:\Soft\Visual Studio\DExperience_24.2.5\DevExpressLocalizedResources_2024.2_ru\Framework')">D:\Soft\Visual Studio\DExperience_24.2.5\DevExpressLocalizedResources_2024.2_ru\Framework</DevExpress24RussianResourcesDir>
+    <DisableFastUpToDateCheck Condition="'$(Configuration)' == 'Release' and '$(BuildingInsideVisualStudio)' == 'true' and '$(SkipAutomaticReleasePackaging)' != 'true'">true</DisableFastUpToDateCheck>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Accessibility" />
@@ -514,6 +516,17 @@
   <Import Project="..\packages\EntityFramework.6.5.1\build\EntityFramework.targets" Condition="Exists('..\packages\EntityFramework.6.5.1\build\EntityFramework.targets')" />
   <Import Project="..\packages\Microsoft.Web.WebView2.1.0.2592.51\build\Microsoft.Web.WebView2.targets" Condition="Exists('..\packages\Microsoft.Web.WebView2.1.0.2592.51\build\Microsoft.Web.WebView2.targets')" />
   <Import Project="..\packages\Stub.System.Data.SQLite.Core.NetFramework.1.0.119.0\build\net46\Stub.System.Data.SQLite.Core.NetFramework.targets" Condition="Exists('..\packages\Stub.System.Data.SQLite.Core.NetFramework.1.0.119.0\build\net46\Stub.System.Data.SQLite.Core.NetFramework.targets')" />
+  <Target Name="CopyDevExpressRussianResources"
+          AfterTargets="Build"
+          Condition="'$(DesignTimeBuild)' != 'true' and '$(DevExpress24RussianResourcesDir)' != ''">
+    <Exec Command="powershell.exe -NoProfile -File &quot;$(MSBuildProjectDirectory)\..\tools\Copy-DevExpressRussianResources.ps1&quot; -BuildDirectory &quot;$(TargetDir).&quot; -ResourcesDirectory &quot;$(DevExpress24RussianResourcesDir)\.&quot;" />
+  </Target>
+  <Target Name="PrepareCompactRelease"
+          AfterTargets="Build"
+          DependsOnTargets="CopyDevExpressRussianResources"
+          Condition="'$(Configuration)' == 'Release' and '$(BuildingInsideVisualStudio)' == 'true' and '$(DesignTimeBuild)' != 'true' and '$(SkipAutomaticReleasePackaging)' != 'true'">
+    <Exec Command="powershell.exe -NoProfile -File &quot;$(MSBuildProjectDirectory)\..\tools\Build-Release.ps1&quot; -WinFormsOutputDirectory &quot;$(TargetDir).&quot;" />
+  </Target>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

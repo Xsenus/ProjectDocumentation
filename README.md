@@ -32,9 +32,13 @@ nuget restore ProjectDocumentation.sln
 msbuild ProjectDocumentation.sln /p:Configuration=Release /m
 ```
 
-Для сборки с веб-редактором запустите `.\tools\Build-Release.ps1`. Ключ `-DesktopOnly` оставляет в комплекте настольный интерфейс и XML-движок. Оба режима запускают тесты XML и помещают результат в `artifacts`. Release-сборку решения для `master` и PR владельца выполняет [Windows CI](docs/WINDOWS_RUNNERS.md).
+В Visual Studio выберите **Release** и **Собрать решение**. После компиляции Visual Studio подготовит переносимый комплект с веб-редактором. Путь появится в окне «Вывод» в строке `Desktop: ...`. Для упаковки нужны Python и Node.js с npm в `PATH`.
 
-Для переносимой сборки запускайте `ProjectDocumentation.NET.exe` из `artifacts/release-*/desktop`. Библиотеки и тексты лицензий находятся в `dll`, XML-движок в `engine`. Команда «Собрать» в Visual Studio записывает обычный результат компиляции в `bin`. Руководство и примеры доступны в репозитории.
+Запускайте `ProjectDocumentation.NET.exe` из `artifacts/release-*/desktop`. Библиотеки и тексты лицензий находятся в `dll`, XML-движок в `engine`. Для сборки из PowerShell используйте `.\tools\Build-Release.ps1`. Ключ `-DesktopOnly` собирает настольный интерфейс и XML-движок.
+
+На ПК ILYA русские ресурсы DevExpress 24.2 берутся из того же комплекта, что и в RentalAccounting. На другом ПК укажите путь к папке `Framework` комплекта `DevExpressLocalizedResources_2024.2_ru` в переменной среды `DevExpress24RussianResourcesDir` до запуска Visual Studio или PowerShell. При наличии комплекта совместимые DLL копируются в `dll/ru`.
+
+Release-сборку решения для `master` и PR владельца выполняет [Windows CI](docs/WINDOWS_RUNNERS.md). Руководство и примеры доступны в репозитории.
 
 ## Документация
 
