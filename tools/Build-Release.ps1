@@ -1,4 +1,4 @@
-param(
+﻿param(
     [string]$OutputRoot = '',
     [string]$Python = 'python.exe',
     [string]$SchemaPython = '',
@@ -17,6 +17,11 @@ New-Item -ItemType Directory -Path $desktop -Force | Out-Null
 function Invoke-Checked([string]$Executable, [string[]]$Arguments) {
     & $Executable @Arguments
     if ($LASTEXITCODE -ne 0) { throw "$Executable returned exit code $LASTEXITCODE." }
+}
+
+function Read-LicenseNotice([string]$Component, [string]$Path) {
+    $license = Get-Content -LiteralPath $Path -Raw -Encoding utf8
+    "$Component`r`n`r`n$license"
 }
 
 $vswhere = Join-Path ${env:ProgramFiles(x86)} 'Microsoft Visual Studio\Installer\vswhere.exe'
@@ -66,6 +71,8 @@ try {
             $env:NUGET_HTTP_CACHE_PATH = $oldHttpCache
         }
     }
+    $licenseNotices = [System.Collections.Generic.List[string]]::new()
+    $licenseNotices.Add((Read-LicenseNotice 'ProjectDocumentation' (Join-Path $repo 'LICENSE.txt')))
     $schemaData = Join-Path $repo 'schema_engine\schemas'
     $portalData = Join-Path $repo 'portal\dist'
     # PyInstaller's nested lxml resources need room under the Windows path limit.
@@ -83,13 +90,16 @@ try {
             $_.Extension -eq '.dll' -or $_.Name.EndsWith('.dll.config', [StringComparison]::OrdinalIgnoreCase)
         }
         Copy-Item -LiteralPath $libraries.FullName -Destination $dll
-        foreach ($folder in @('ru', 'x86', 'x64', 'runtimes')) {
-            $dependency = Join-Path $winforms $folder
-            if (Test-Path -LiteralPath $dependency -PathType Container) {
-                Copy-Item -LiteralPath $dependency -Destination $dll -Recurse
-            }
+        $dependencyFolders = Get-ChildItem -LiteralPath $winforms -Directory | Where-Object {
+            $_.Name -in @('ru', 'x86', 'x64', 'runtimes') -or $_.Name -like 'ru-*'
         }
-        Copy-Item -LiteralPath (Join-Path $winforms 'licenses') -Destination $desktop -Recurse
+        foreach ($folder in $dependencyFolders) {
+            Copy-Item -LiteralPath $folder.FullName -Destination $dll -Recurse
+        }
+        $webViewLicenses = Join-Path $winforms 'licenses\WebView2'
+        foreach ($file in @('LICENSE.txt', 'NOTICE.txt')) {
+            $licenseNotices.Add((Read-LicenseNotice "WebView2 / $file" (Join-Path $webViewLicenses $file)))
+        }
 
         $bundles = Join-Path $bundleWork 'dist'
         $bundleArguments = @(
@@ -120,8 +130,6 @@ try {
             Remove-Item -LiteralPath $resolved -Recurse -Force
         }
     }
-    Copy-Item -LiteralPath (Join-Path $repo 'LICENSE.txt') -Destination $desktop
-    $licenses = Join-Path $desktop 'licenses'
     $findPythonLicenses = @'
 from importlib.metadata import distribution
 from sys import argv
@@ -134,12 +142,14 @@ for path in package.files or ():
     foreach ($package in @('xmlschema', 'elementpath', 'lxml')) {
         $files = @(Invoke-Checked $SchemaPython @('-c', $findPythonLicenses, $package))
         if (-not $files) { throw "Не найдена лицензия $package." }
-        $destination = (New-Item -ItemType Directory -Path (Join-Path $licenses $package)).FullName
-        Copy-Item -LiteralPath $files -Destination $destination
+        foreach ($file in $files) {
+            $licenseNotices.Add((Read-LicenseNotice "$package / $([IO.Path]::GetFileName($file))" $file))
+        }
     }
 
     $requiredFiles = @(
         'ProjectDocumentation.NET.exe', 'ProjectDocumentation.NET.exe.config', 'dll\Core.NET.dll',
+        'dll\ThirdPartyNotices.txt', 'dll\ru\AutoUpdater.NET.resources.dll',
         'dll\System.Data.SQLite.dll', 'dll\x86\SQLite.Interop.dll', 'dll\x64\SQLite.Interop.dll',
         'dll\Microsoft.Web.WebView2.Core.dll', 'dll\Microsoft.Web.WebView2.WinForms.dll',
         'dll\runtimes\win-x86\native\WebView2Loader.dll', 'dll\runtimes\win-x64\native\WebView2Loader.dll',
@@ -148,9 +158,10 @@ for path in package.files or ():
     if (-not $DesktopOnly) {
         $requiredFiles += 'engine\_internal\portal\dist\index.html'
         foreach ($package in @('react', 'react-dom')) {
-            Copy-Item -LiteralPath (Join-Path $repo "portal\node_modules\$package\LICENSE") -Destination (Join-Path $licenses "$package.txt")
+            $licenseNotices.Add((Read-LicenseNotice $package (Join-Path $repo "portal\node_modules\$package\LICENSE")))
         }
     }
+    $licenseNotices -join "`r`n`r`n" | Set-Content -LiteralPath (Join-Path $dll 'ThirdPartyNotices.txt') -Encoding utf8
     foreach ($required in $requiredFiles) {
         if (-not (Test-Path -LiteralPath (Join-Path $desktop $required) -PathType Leaf)) {
             throw "Отсутствует файл комплекта $required."

@@ -34,7 +34,7 @@ msbuild ProjectDocumentation.sln /p:Configuration=Release /m
 
 Для сборки с веб-редактором запустите `.\tools\Build-Release.ps1`. Ключ `-DesktopOnly` оставляет в комплекте настольный интерфейс и XML-движок. Оба режима запускают тесты XML и помещают результат в `artifacts`. Release-сборку решения для `master` и PR владельца выполняет [Windows CI](docs/WINDOWS_RUNNERS.md).
 
-Запускайте `ProjectDocumentation.NET.exe` из `artifacts/release-*/desktop`. В этой папке находятся библиотеки в `dll`, XML-движок в `engine` и лицензии. Руководство и примеры доступны в репозитории.
+Для переносимой сборки запускайте `ProjectDocumentation.NET.exe` из `artifacts/release-*/desktop`. Библиотеки и тексты лицензий находятся в `dll`, XML-движок в `engine`. Команда «Собрать» в Visual Studio записывает обычный результат компиляции в `bin`. Руководство и примеры доступны в репозитории.
 
 ## Документация
 
