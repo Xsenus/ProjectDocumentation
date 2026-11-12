@@ -51,4 +51,4 @@
 .\tools\Build-Release.ps1 -DesktopOnly
 ```
 
-Готовые файлы появятся в `artifacts/release-*/desktop`. Среда Python и валидатор входят в архив. Команда с `-DesktopOnly` собирает комплект WinForms. [Запуск портала из исходников](../portal/README.md)
+Запускайте `ProjectDocumentation.NET.exe` из `artifacts/release-*/desktop`. Валидатор и среда Python находятся в папке `engine`. Команда с `-DesktopOnly` собирает комплект WinForms. [Запуск портала из исходников](../portal/README.md)
