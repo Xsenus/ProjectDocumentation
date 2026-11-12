@@ -49,6 +49,7 @@
     <Reference Include="DevExpress.CodeParser.v24.2, Version=24.2.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
     <Reference Include="DevExpress.Data.Desktop.v24.2" />
     <Reference Include="DevExpress.Data.v24.2" />
+    <Reference Include="DevExpress.Dialogs.v24.2.Core, Version=24.2.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
     <Reference Include="DevExpress.DataAccess.v24.2, Version=24.2.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
     <Reference Include="DevExpress.Images.v24.2, Version=24.2.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
     <Reference Include="DevExpress.Office.v24.2.Core, Version=24.2.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
@@ -119,6 +120,7 @@
   <ItemGroup>
     <Compile Include="Services\ConclusionSchemaService.cs" />
     <Compile Include="Services\ConclusionDaData.cs" />
+    <Compile Include="Services\FileDialogLocalization.cs" />
     <Compile Include="Services\Conclusion0104Document.cs" />
     <Compile Include="Services\ExplanatoryNote0107Document.cs" />
     <Compile Include="Services\SchemaXmlDocument.cs" />
