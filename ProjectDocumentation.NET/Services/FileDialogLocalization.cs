@@ -27,7 +27,7 @@ namespace ProjectDocumentation.NET.Services
             }
         }
 
-        private sealed class RussianDialogLocalizer : DialogsLocalizer
+        private sealed class RussianDialogLocalizer : DialogsResXLocalizer
         {
             public override string GetLocalizedString(DialogsStringId id)
             {
