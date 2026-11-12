@@ -21,6 +21,11 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
         public DeveloperEdit()
         {
             InitializeComponent();
+            ClassicRequiredFields.HighlightExisting(this);
+            ClassicRequiredFields.Unmark(txtFOrgFullName, txtFOrgKPP, btnFAddress, txtFOrgINN,
+                txtFamilyName, txtFirstName, txtSecondName, txtOGRNIP, btnPostAddress,
+                txtOrgFullName, txtOrgOGRN, txtOrgKPP, txtOrgINN, btnAddress,
+                txtFamilyNamePerson, txtFirstNamePerson, txtSNILS, btnPostAddressPerson, txtSecondNamePerson);
         }
 
         public DeveloperEdit(tDeveloper obj) : this()
@@ -118,11 +123,11 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                     PostAddressEdit form;
                     if (buttonEdit.EditValue is TPostAddress postAddress)
                     {
-                        form = new PostAddressEdit(postAddress);
+                        form = new PostAddressEdit(postAddress, requirePostIndex: false);
                     }
                     else
                     {
-                        form = new PostAddressEdit();
+                        form = new PostAddressEdit(requirePostIndex: false);
                     }
 
                     using (form)
@@ -195,15 +200,6 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                         {
                             entity.Address = address;
                         }
-                        else
-                        {
-                            btnAddress.Focus();
-                            XtraMessageBox.Show("Заполните адрес организации",
-                                "Информационное сообщение",
-                                MessageBoxButtons.OK,
-                                MessageBoxIcon.Error);
-                            return;
-                        }
                         Developer.Item = entity;
                         break;
 
@@ -218,15 +214,6 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                         if (btnFAddress.EditValue is TAddress addressF)
                         {
                             foreignLegalEntity.Address = addressF;
-                        }
-                        else
-                        {
-                            btnFAddress.Focus();
-                            XtraMessageBox.Show("Заполните адрес организации",
-                                "Информационное сообщение",
-                                MessageBoxButtons.OK,
-                                MessageBoxIcon.Error);
-                            return;
                         }
                         Developer.Item = foreignLegalEntity;
                         break;
@@ -244,15 +231,6 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                         {
                             Tip.PostAddress = TPostAddress;
                         }
-                        else
-                        {
-                            btnPostAddress.Focus();
-                            XtraMessageBox.Show("Заполните адрес",
-                                "Информационное сообщение",
-                                MessageBoxButtons.OK,
-                                MessageBoxIcon.Error);
-                            return;
-                        }
                         Developer.Item = Tip;
                         break;
 
@@ -268,15 +246,6 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                         if (btnPostAddressPerson.EditValue is TPostAddress tPostAddressPerson)
                         {
                             TPerson.PostAddress = tPostAddressPerson;
-                        }
-                        else
-                        {
-                            btnPostAddressPerson.Focus();
-                            XtraMessageBox.Show("Заполните адрес",
-                                "Информационное сообщение",
-                                MessageBoxButtons.OK,
-                                MessageBoxIcon.Error);
-                            return;
                         }
                         Developer.Item = TPerson;
                         break;

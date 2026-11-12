@@ -17,6 +17,8 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
         public EngineeringSurveyAddressEdit()
         {
             InitializeComponent();
+            ClassicRequiredFields.HighlightExisting(this);
+            ClassicRequiredFields.Mark(memoEngineeringSurveyDistrict);
         }
 
         public EngineeringSurveyAddressEdit(TEngineeringSurveyAddress address) : this()

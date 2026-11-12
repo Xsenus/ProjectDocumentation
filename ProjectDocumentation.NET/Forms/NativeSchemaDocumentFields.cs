@@ -190,8 +190,18 @@ namespace ProjectDocumentation.NET.Forms
                 var nil = IsNil(node.Element);
                 if (node.Field?.Nillable == true) AddNilControl(layout, item, node.Element, nil);
 
-                var attributes = !ShowRootAttributes(node) ? Enumerable.Empty<NativeSchemaAttribute>()
-                    : node.Type?.Attributes ?? Enumerable.Empty<NativeSchemaAttribute>();
+                var attributes = (!ShowRootAttributes(node) ? Enumerable.Empty<NativeSchemaAttribute>()
+                    : node.Type?.Attributes ?? Enumerable.Empty<NativeSchemaAttribute>()).ToArray();
+                var summary = WrappedLabelFor("");
+                summary.AccessibleName = "Обязательные поля и группы";
+                UpdateRequirementSummary(summary, node, attributes, nil);
+                if (summary.Text.Length > 0)
+                    AddWide(layout, summary);
+                else
+                {
+                    summary.Dispose();
+                    summary = null;
+                }
                 foreach (var attribute in attributes)
                 {
                     var current = (string)node.Element.Attribute(attribute.Name);
@@ -203,7 +213,8 @@ namespace ProjectDocumentation.NET.Forms
                         MarkChanged();
                     });
                     fieldEditors["@" + attribute.Name] = editor;
-                    AddField(layout, "@" + attribute.Name + (attribute.Required ? " *" : ""), editor, attribute.Documentation);
+                    AddField(layout, "@" + attribute.Name, editor, attribute.Documentation,
+                        attribute.Required ? (Func<bool>)(() => MissingAttribute(node.Element, attribute)) : null);
                 }
 
                 if (!nil && node.Type?.Particle == null && !node.Element.HasElements)
@@ -220,7 +231,8 @@ namespace ProjectDocumentation.NET.Forms
                             MarkChanged();
                         });
                     fieldEditors["."] = editor;
-                    AddField(layout, "Значение", editor, null);
+                    AddField(layout, "Значение", editor, null,
+                        RequiresValue(type) ? (Func<bool>)(() => string.IsNullOrWhiteSpace(node.Element.Value)) : null);
                 }
 
                 if (!nil && IsSectionView) AddSectionValues(layout, item, node);
@@ -240,6 +252,9 @@ namespace ProjectDocumentation.NET.Forms
                     }
                     if (item.ParentNode != null) AddTreeCommands(layout, item, node.Element);
                 }
+                if (summary != null)
+                    foreach (var editor in fieldEditors.Values.OfType<BaseEdit>())
+                        editor.EditValueChanged += (_, __) => UpdateRequirementSummary(summary, node, attributes, nil);
             }
             finally
             {
@@ -294,13 +309,24 @@ namespace ProjectDocumentation.NET.Forms
         private static void AddWide(LayoutControl layout, Control control)
             => AddLayoutItem(layout, control, AddLayoutRow(layout), columnSpan: 2);
 
-        private static void AddField(LayoutControl layout, string label, Control editor, string documentation)
+        private static void AddField(LayoutControl layout, string label, Control editor, string documentation, Func<bool> isMissing = null)
         {
             var row = AddLayoutRow(layout);
             editor.AccessibleName = label;
-            if (editor is BaseControl control && !string.IsNullOrWhiteSpace(documentation))
+            if (editor is ComboBoxEdit combo)
+            {
+                void UpdateToolTip()
+                {
+                    combo.ToolTip = string.Join(Environment.NewLine, new[] { documentation, combo.EditValue?.ToString() }
+                        .Where(text => !string.IsNullOrWhiteSpace(text)));
+                }
+                UpdateToolTip();
+                combo.EditValueChanged += (_, __) => UpdateToolTip();
+            }
+            else if (editor is BaseControl control && !string.IsNullOrWhiteSpace(documentation))
                 control.ToolTip = documentation;
-            AddLayoutItem(layout, WrappedLabelFor(label), row);
+            var caption = WrappedLabelFor(isMissing == null ? label : label + " *");
+            AddLayoutItem(layout, caption, row);
             var item = AddLayoutItem(layout, editor, row, 1);
             if (editor is MemoEdit)
             {
@@ -310,6 +336,93 @@ namespace ProjectDocumentation.NET.Forms
             }
             if (!string.IsNullOrWhiteSpace(documentation))
                 AddLayoutItem(layout, WrappedLabelFor(documentation), AddLayoutRow(layout), 1);
+            if (isMissing != null && editor is BaseEdit edit)
+            {
+                void Update()
+                {
+                    var missing = isMissing();
+                    edit.AccessibleDescription = missing ? "Обязательное поле не заполнено." : "Обязательное поле заполнено.";
+                    edit.ErrorText = missing ? edit.AccessibleDescription : "";
+                    caption.Appearance.FontStyleDelta = missing ? FontStyle.Bold : FontStyle.Regular;
+                }
+                Update();
+                edit.EditValueChanged += (_, __) => Update();
+            }
+        }
+
+        private bool RequiresValue(NativeSchemaType type)
+            => (type?.TextType == null ? type : profile.TypeOf(type.TextType))?.AllowsEmpty == false;
+
+        private bool MissingAttribute(XElement element, NativeSchemaAttribute attribute)
+        {
+            var current = element.Attribute(attribute.Name);
+            return current == null || RequiresValue(profile.TypeOf(attribute.Type)) && string.IsNullOrWhiteSpace(current.Value);
+        }
+
+        private bool MissingElementValue(XElement element, NativeSchemaParticle field)
+            => !IsNil(element) && !element.HasElements && RequiresValue(profile.TypeOf(field.Type)) && string.IsNullOrWhiteSpace(element.Value);
+
+        private static string RequirementCaption(string name, string documentation)
+        {
+            var caption = DocumentationCaption(documentation);
+            return caption.Length == 0 || caption.Length > 64 || string.Equals(caption, name, StringComparison.OrdinalIgnoreCase)
+                ? name : $"{caption} ({name})";
+        }
+
+        private void UpdateRequirementSummary(LabelControl summary, NativeSchemaNode node, NativeSchemaAttribute[] attributes, bool nil)
+        {
+            if (summary.IsDisposed) return;
+            NativeSchemaParticle ChildField(string name) => node.Children.FirstOrDefault(child => child.Field.Name == name)?.Field;
+            string ChildCaption(string name) => RequirementCaption(name, ChildField(name)?.Documentation);
+            var requiredAttributes = attributes.Where(attribute => attribute.Required).ToArray();
+            var missing = requiredAttributes.Where(attribute => MissingAttribute(node.Element, attribute))
+                .Select(attribute => RequirementCaption("@" + attribute.Name, attribute.Documentation)).ToList();
+            var choices = new List<NativeSchemaChoiceRequirement>();
+            var hasRequirements = requiredAttributes.Length > 0;
+            if (!nil)
+            {
+                var visible = new HashSet<string>(VisibleChildren(node).Select(child => child.Field.Name));
+                var requirements = node.GetRequirements();
+                var fields = requirements.Elements.Where(requirement => visible.Contains(requirement.Field.Name)).ToArray();
+                foreach (var requirement in fields)
+                {
+                    var name = requirement.Field.Name;
+                    if (requirement.IsMissing || node.Element.Elements(name).Any(element => MissingElementValue(element, requirement.Field)))
+                        missing.Add(RequirementCaption(name, requirement.Field.Documentation));
+                }
+                choices.AddRange(requirements.Choices.Where(choice => choice.Alternatives.SelectMany(alternative => alternative).Any(visible.Contains)));
+                foreach (var name in choices.SelectMany(choice => choice.Selected).Distinct())
+                {
+                    var field = ChildField(name);
+                    if (field != null && node.Element.Elements(name).Any(element => MissingElementValue(element, field)))
+                        missing.Add(RequirementCaption(name, field.Documentation));
+                }
+                var valueRequired = node.Type?.Particle == null && !node.Element.HasElements && RequiresValue(node.Type);
+                if (valueRequired && string.IsNullOrWhiteSpace(node.Element.Value)) missing.Add("значение элемента");
+                hasRequirements |= fields.Length > 0 || choices.Count > 0 || valueRequired;
+            }
+
+            var lines = new List<string>();
+            if (missing.Count > 0)
+                lines.Add("Не заполнены обязательные поля: " + string.Join(", ", missing.Distinct()) + ".");
+            foreach (var choice in choices)
+            {
+                var alternatives = string.Join(" или ", choice.Alternatives.Select(branch => string.Join(" + ", branch.Select(ChildCaption))));
+                if (choice.HasConflict)
+                    lines.Add("Выберите один из вариантов: " + alternatives + ".");
+                else if (choice.IsMissing && choice.Minimum > 1)
+                    lines.Add($"Обязательная группа: добавлено {choice.Present} из {choice.Minimum}. Варианты: {alternatives}.");
+                else if (choice.IsMissing)
+                    lines.Add("Выберите обязательный вариант: " + alternatives + ".");
+                else
+                    lines.Add("Выбран вариант: " + string.Join(", ", choice.Selected.Select(ChildCaption)) + ".");
+            }
+            if (hasRequirements && lines.Count == 0)
+                lines.Add("Обязательные поля этого уровня заполнены.");
+            var text = string.Join(Environment.NewLine, lines);
+            if (summary.Text != text) summary.Text = text;
+            summary.Appearance.FontStyleDelta = missing.Count > 0 || choices.Any(choice => choice.IsMissing || choice.HasConflict)
+                ? FontStyle.Bold : FontStyle.Regular;
         }
 
         private static Control ValueEditor(string value, NativeSchemaType type, bool readOnly, bool multiline, Action<string> changed)
@@ -355,7 +468,10 @@ namespace ProjectDocumentation.NET.Forms
             childSelector.Properties.DropDownRows = 14;
             childSelector.Properties.PopupFormSize = new Size(650, 0);
             childSelector.Properties.Items.AddRange(candidates.Cast<object>().ToArray());
-            childSelector.SelectedItem = candidates.FirstOrDefault(child => child.Required && node.Element.Element(child.Field.Name) == null) ?? candidates[0];
+            var requirements = node.GetRequirements();
+            var missingNames = new HashSet<string>(requirements.Elements.Where(requirement => requirement.IsMissing).Select(requirement => requirement.Field.Name)
+                .Concat(requirements.Choices.Where(choice => choice.IsMissing).SelectMany(choice => choice.Alternatives.SelectMany(branch => branch))));
+            childSelector.SelectedItem = candidates.FirstOrDefault(child => missingNames.Contains(child.Field.Name)) ?? candidates[0];
             AddField(layout, "Вложенное поле", childSelector, null);
             var add = ActionButton("Добавить выбранное поле");
             add.Click += (_, __) =>
@@ -383,7 +499,7 @@ namespace ProjectDocumentation.NET.Forms
                 if (attribute.Fixed != null) element.SetAttributeValue(attribute.Name, attribute.Fixed);
             MarkChanged();
             RebuildBranch(item, element);
-            if (fieldEditors.TryGetValue(".", out var editor)) editor.Focus();
+            if (fieldEditors.TryGetValue(".", out var editor)) FocusField(editor);
         }
 
         private void AddTreeCommands(LayoutControl layout, TreeListNode item, XElement element)
@@ -543,9 +659,10 @@ namespace ProjectDocumentation.NET.Forms
             }
             tabs.SelectedTabPage = previousFieldsPage ?? sectionsPage;
             SelectTreeElement(((NativeSchemaNode)item.Tag).Element);
-            if (missing != null && fieldEditors.TryGetValue(missing, out var editor)) editor.Focus();
+            if (missing != null && fieldEditors.TryGetValue(missing, out var editor)) FocusField(editor);
             else if (missing != null) SelectMissingField(missing);
-            else if (fieldEditors.TryGetValue(".", out editor)) editor.Focus();
+            else if (fieldEditors.TryGetValue(".", out editor)) FocusField(editor);
+            else if (childSelector != null) FocusField(childSelector);
         }
 
         private void FindField()
@@ -680,7 +797,13 @@ namespace ProjectDocumentation.NET.Forms
             var option = childSelector?.Properties.Items.OfType<NativeSchemaChild>().FirstOrDefault(child => child.Field.Name == name);
             if (option == null) return;
             childSelector.SelectedItem = option;
-            childSelector.Focus();
+            FocusField(childSelector);
+        }
+
+        private static void FocusField(Control editor)
+        {
+            if (editor.Parent is LayoutControl layout) layout.ScrollControlIntoView(editor);
+            editor.Focus();
         }
 
         private void EditStructuredTable(TreeListNode item, NativeSchemaNode node)

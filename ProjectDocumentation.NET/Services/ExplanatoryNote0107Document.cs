@@ -30,12 +30,12 @@ namespace ProjectDocumentation.NET.Services
         public static string WithGuid(XDocument document, Guid guid) => SchemaXmlDocument.WithGuid(document, GuidAttribute, guid);
 
         public static Task<ExplanatoryNoteXPO> SaveAsync(ConclusionSchemaService service, string xml, string name,
-            Guid guid, ExplanatoryNoteXPO existing = null, string version = CurrentVersion)
+            Guid guid, ExplanatoryNoteXPO existing = null, string version = CurrentVersion, DocumentStatus initialStatus = DocumentStatus.New)
         {
             if (version != CurrentVersion && version != CompatibleVersion)
                 throw new ArgumentOutOfRangeException(nameof(version));
             return SchemaXmlDocument.SaveAsync(service, xml, name, guid, RootName, version, GuidAttribute,
-                session => new ExplanatoryNoteXPO(session), existing);
+                session => new ExplanatoryNoteXPO(session), existing, initialStatus);
         }
 
         public static string WithMigrationVersion(string xml)

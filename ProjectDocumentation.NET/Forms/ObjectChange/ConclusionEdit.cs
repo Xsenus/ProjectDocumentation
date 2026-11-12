@@ -59,6 +59,21 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
         public ConclusionEdit()
         {
             InitializeComponent();
+            ClassicRequiredFields.HighlightExisting(this);
+            ClassicRequiredFields.Mark(btnDeclarant, cmbEcologyExpertiseNeedExpertise, cmbFunctionsClass);
+            ClassicRequiredFields.MarkGroups(layoutControlGroup13);
+            ClassicRequiredFields.MarkTabs(xtraTabPage8, xtraTabPageForm7);
+            ClassicRequiredFields.Unmark(txtSecondName, memoClimateConditionsNote, cmbEstimateNormsAndWorksSummary, cmbEstimateSummary);
+            ClassicRequiredFields.MarkWhen(checkCmbExaminationType,
+                () => HasExaminationType(TExaminationType.Item2), memoProjectDocumentsSummaryDate,
+                cmbProjectDocumentationEngineeringSurveysResultsSummary, cmbProjectDocumentationDesignAssignmentSummary,
+                cmbProjectDocumentationTechnicalRequirementsSummary);
+            ClassicRequiredFields.MarkWhen(checkCmbExaminationType,
+                () => HasExaminationType(TExaminationType.Item1), gridControlEngineeringSurveyAddress,
+                cmbEngineeringSurveysResultsSummary);
+            ClassicRequiredFields.MarkWhen(cmbExaminationStage,
+                () => (cmbExaminationStage.EditValue as GeneralizedDictionaryXPO)?.Value is string stage && stage != "1",
+                gridControlPreviousConclusions);
             var draftButton = new SimpleButton { Name = "btnSaveDraft", Text = "Черновик XML…" };
             layoutControl.AddItem(draftButton.Text, draftButton, layoutControlItemSave, InsertType.Left).TextVisible = false;
             draftButton.Click += async (_, __) => await SaveFormAsync(draft: true);
@@ -80,7 +95,6 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
             GridContextMenus.Attach(gridViewExpert, popupMenuExpert, barBtnExpertAdd);
             txtVersion.Properties.ReadOnly = true;
             layoutControlItemExpertiseResultNote.Visibility = LayoutVisibility.Never;
-            layoutControlItemClimateConditionsNote.Text = layoutControlItemClimateConditionsNote.Text.TrimEnd(' ', '*');
             layoutControlGroup5.AddItem("Расчётная интенсивность сейсмического воздействия", _seismicMinimum,
                 layoutControlItemClimateConditionsNote, InsertType.Top);
             layoutControlGroup5.AddItem("Максимум диапазона (при наличии)", _seismicMaximum,
@@ -106,6 +120,9 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
         {
             Conclusion = conclusion;
         }
+
+        private bool HasExaminationType(TExaminationType type)
+            => GetCheckComboBoxItems<TExaminationType>(checkCmbExaminationType).Contains(type);
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
         private void barBtnCadastralNumberAdd_ItemClick(object sender, ItemClickEventArgs e)
@@ -2537,7 +2554,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
 
             if (sender is Control control)
             {
-                control.Focus();
+                ClassicRequiredFields.Focus(control);
             }
 
             throw new Exception(message ?? "Не заполнен один из параметров.");
@@ -2583,7 +2600,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                 omitted.Add(path);
                 return default;
             }
-            editor.Focus();
+            ClassicRequiredFields.Focus(editor);
             throw new InvalidOperationException(message);
         }
 
@@ -2602,7 +2619,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
 
             if (control is Control obj)
             {
-                obj.Focus();
+                ClassicRequiredFields.Focus(obj);
             }
 
             throw new Exception(message ?? "Не заполнен один из параметров.");
@@ -2639,7 +2656,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
 
             if (sender is Control control)
             {
-                control.Focus();
+                ClassicRequiredFields.Focus(control);
             }
 
             throw new Exception(message ?? "Не заполнен один из параметров.");

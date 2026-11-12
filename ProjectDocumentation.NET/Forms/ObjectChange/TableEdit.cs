@@ -45,10 +45,12 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
             gridView.OptionsCustomization.AllowGroup = false;
             gridView.OptionsCustomization.AllowColumnMoving = false;
             gridView.OptionsView.ShowIndicator = true;
-            gridView.IndicatorWidth = 85;
+            gridView.IndicatorWidth = 104;
             gridView.CustomDrawRowIndicator += (_, e) =>
             {
-                if (e.RowHandle >= 0) e.Info.DisplayText = e.RowHandle == 0 ? "Заголовок" : e.RowHandle.ToString();
+                if (e.RowHandle < 0) return;
+                e.Info.Appearance.TextOptions.WordWrap = WordWrap.NoWrap;
+                e.Info.DisplayText = e.RowHandle == 0 ? "Заголовок" : e.RowHandle.ToString();
             };
             gridView.FocusedRowChanged += (_, __) => RefreshAlignment();
             gridView.FocusedColumnChanged += (_, __) => RefreshAlignment();

@@ -26,7 +26,12 @@ namespace ProjectDocumentation.NET.Forms
         {
             this.conclusionSchema = conclusionSchema;
             InitializeComponent();
-            btnFile.EditValueChanged += (_, __) => txtDocumentType.EditValue = null;
+            btnFile.EditValueChanged += (_, __) =>
+            {
+                btnFile.ToolTip = btnFile.EditValue?.ToString();
+                txtDocumentType.EditValue = null;
+            };
+            txtName.EditValueChanged += (_, __) => txtName.ToolTip = txtName.EditValue?.ToString();
             btnFile.Validated += (_, __) => DescribeSelectedFile();
             FormClosing += (_, e) =>
             {

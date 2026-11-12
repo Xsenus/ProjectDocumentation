@@ -25,6 +25,9 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
         public ObjPartEdit()
         {
             InitializeComponent();
+            ClassicRequiredFields.HighlightExisting(this);
+            ClassicRequiredFields.Unmark(cmbObjectType);
+            ClassicRequiredFields.Mark(cmbFunctionsClass);
             GridContextMenus.Attach(gridViewTEI, popupMenuTEI, barBtnTEIAdd);
         }
 

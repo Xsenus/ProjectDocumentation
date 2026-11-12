@@ -24,6 +24,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
         public ExpertEngineeringSurveyEdit()
         {
             InitializeComponent();
+            ClassicRequiredFields.HighlightExisting(this);
             GridContextMenus.Attach(gridViewMismatches, popupMenuMismatches, barBtnMismatchesAdd);
         }
 

@@ -82,8 +82,7 @@ namespace Core.NET.Controllers
                             return result;
                         }
 
-                        existing.Name = name;
-                        existing.SetObj(replacedXml);
+                        existing.SetDocument(name, replacedXml);
                         await session.SaveAsync(existing);
 
                         result.Document = existing;
@@ -98,7 +97,6 @@ namespace Core.NET.Controllers
             }
 
             var xpoObj = create(session);
-            xpoObj.Name = name;
             if (guid != null)
             {
                 xpoObj.SetGuid(guid.Value);
@@ -110,7 +108,8 @@ namespace Core.NET.Controllers
                 return result;
             }
 
-            xpoObj.SetObj(xml);
+            xpoObj.SetDocument(name, xml);
+            xpoObj.SetStatus(DocumentStatus.InProgress);
             await session.SaveAsync(xpoObj);
 
             result.Document = xpoObj;

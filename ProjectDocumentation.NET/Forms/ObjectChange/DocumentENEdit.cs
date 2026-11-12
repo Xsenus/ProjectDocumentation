@@ -27,6 +27,9 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
         public DocumentENEdit()
         {
             InitializeComponent();
+            ClassicRequiredFields.HighlightExisting(this);
+            ClassicRequiredFields.Unmark(txtDocName);
+            ClassicRequiredFields.Mark(dateDocDate);
             GridContextMenus.Attach(gridViewItems, popupMenuItems, barBtnItemsAdd);
             layoutControlItemDocIssueAuthor.Text = layoutControlItemDocIssueAuthor.Text.TrimEnd(' ', '*');
         }

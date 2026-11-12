@@ -256,6 +256,7 @@
             this.Controls.Add(this.barDockControlBottom);
             this.Controls.Add(this.barDockControlTop);
             this.IconOptions.Image = global::ProjectDocumentation.NET.Properties.Resources.icon;
+            this.MinimumSize = new System.Drawing.Size(720, 380);
             this.Name = "MainForm";
             this.Text = "Экспертизы России";
             this.Load += new System.EventHandler(this.MainForm_Load);

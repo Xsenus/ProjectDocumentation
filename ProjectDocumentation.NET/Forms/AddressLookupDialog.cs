@@ -22,7 +22,8 @@ namespace ProjectDocumentation.NET.Forms
         private readonly ListBoxControl results = new ListBoxControl
         {
             Dock = DockStyle.Fill,
-            HorizontalScrollbar = true,
+            ItemAutoHeight = true,
+            ShowToolTipForTrimmedText = DefaultBoolean.True,
             AccessibleName = "Найденные адреса"
         };
         private readonly LabelControl status = new LabelControl { Dock = DockStyle.Fill, AutoSizeMode = LabelAutoSizeMode.None };
@@ -47,8 +48,10 @@ namespace ProjectDocumentation.NET.Forms
 
             query.Properties.MaxLength = 400;
             query.Text = initialQuery ?? "";
+            results.Appearance.TextOptions.WordWrap = WordWrap.Wrap;
             status.Appearance.TextOptions.WordWrap = WordWrap.Wrap;
             status.Text = "Введите адрес и выберите подходящий вариант из списка.";
+            status.TextChanged += (_, __) => status.ToolTip = status.Text;
 
             var close = new SimpleButton { Text = "Отмена", AutoSize = true, DialogResult = DialogResult.Cancel };
             var actions = new StackPanel { Dock = DockStyle.Fill, LayoutDirection = StackPanelLayoutDirection.LeftToRight };
@@ -171,6 +174,7 @@ namespace ProjectDocumentation.NET.Forms
         private void UpdateApply()
         {
             apply.Enabled = request == null && results.SelectedItem is AddressOption;
+            results.ShowFocusRect = SystemInformation.HighContrast || results.SelectedIndex < 0;
             AcceptButton = apply.Enabled ? apply : find;
         }
 

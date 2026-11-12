@@ -696,6 +696,7 @@
             this.gridViewProjectDocumentationAuthors.GridControl = this.gridControlProjectDocumentationAuthors;
             this.gridViewProjectDocumentationAuthors.Name = "gridViewProjectDocumentationAuthors";
             this.gridViewProjectDocumentationAuthors.OptionsBehavior.Editable = false;
+            DialogLayout.ShowRowFocus(this.gridViewProjectDocumentationAuthors);
             this.gridViewProjectDocumentationAuthors.OptionsView.ColumnHeaderAutoHeight = DevExpress.Utils.DefaultBoolean.True;
             this.gridViewProjectDocumentationAuthors.OptionsView.RowAutoHeight = true;
             this.gridViewProjectDocumentationAuthors.OptionsView.ShowGroupPanel = false;
@@ -735,6 +736,7 @@
             this.gridViewSigners.GridControl = this.gridControlSigners;
             this.gridViewSigners.Name = "gridViewSigners";
             this.gridViewSigners.OptionsBehavior.Editable = false;
+            DialogLayout.ShowRowFocus(this.gridViewSigners);
             this.gridViewSigners.OptionsView.ColumnHeaderAutoHeight = DevExpress.Utils.DefaultBoolean.True;
             this.gridViewSigners.OptionsView.RowAutoHeight = true;
             this.gridViewSigners.OptionsView.ShowGroupPanel = false;
@@ -859,6 +861,7 @@
             this.gridViewDeveloper.GridControl = this.gridControlDeveloper;
             this.gridViewDeveloper.Name = "gridViewDeveloper";
             this.gridViewDeveloper.OptionsBehavior.Editable = false;
+            DialogLayout.ShowRowFocus(this.gridViewDeveloper);
             this.gridViewDeveloper.OptionsView.ColumnHeaderAutoHeight = DevExpress.Utils.DefaultBoolean.True;
             this.gridViewDeveloper.OptionsView.RowAutoHeight = true;
             this.gridViewDeveloper.OptionsView.ShowGroupPanel = false;
@@ -883,6 +886,7 @@
             this.gridViewTechnicalCustomer.GridControl = this.gridControlTechnicalCustomer;
             this.gridViewTechnicalCustomer.Name = "gridViewTechnicalCustomer";
             this.gridViewTechnicalCustomer.OptionsBehavior.Editable = false;
+            DialogLayout.ShowRowFocus(this.gridViewTechnicalCustomer);
             this.gridViewTechnicalCustomer.OptionsView.ColumnHeaderAutoHeight = DevExpress.Utils.DefaultBoolean.True;
             this.gridViewTechnicalCustomer.OptionsView.RowAutoHeight = true;
             this.gridViewTechnicalCustomer.OptionsView.ShowGroupPanel = false;
@@ -1194,7 +1198,8 @@
             this.layoutControlGroupIndustrialObject.Location = new System.Drawing.Point(0, 0);
             this.layoutControlGroupIndustrialObject.Name = "layoutControlGroupIndustrialObject";
             this.layoutControlGroupIndustrialObject.Size = new System.Drawing.Size(772, 618);
-            this.layoutControlGroupIndustrialObject.Text = "Описание объекта капитального строительства производственного назначения";
+            this.layoutControlGroupIndustrialObject.Text = "Производственный объект";
+            this.layoutControlGroupIndustrialObject.OptionsToolTip.ToolTip = "Описание объекта капитального строительства производственного назначения";
             // 
             // layoutControlItemIndustrialObjectID
             // 

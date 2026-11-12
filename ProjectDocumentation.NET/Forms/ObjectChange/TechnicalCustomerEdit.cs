@@ -20,6 +20,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
         public TechnicalCustomerEdit()
         {
             InitializeComponent();
+            ClassicRequiredFields.HighlightExisting(this);
         }
 
         public TechnicalCustomerEdit(TTechnicalCustomer obj) : this()

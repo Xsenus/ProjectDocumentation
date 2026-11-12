@@ -46,10 +46,6 @@
             this.txtSecondName = new DevExpress.XtraEditors.TextEdit();
             this.txtPosition = new DevExpress.XtraEditors.TextEdit();
             this.Root = new DevExpress.XtraLayout.LayoutControlGroup();
-            this.emptySpaceItemSave = new DevExpress.XtraLayout.EmptySpaceItem();
-            this.layoutControlItemSave = new DevExpress.XtraLayout.LayoutControlItem();
-            this.layoutControlItemCancel = new DevExpress.XtraLayout.LayoutControlItem();
-            this.emptySpaceItemCancel = new DevExpress.XtraLayout.EmptySpaceItem();
             this.layoutControlGroupWorkPerson = new DevExpress.XtraLayout.LayoutControlGroup();
             this.layoutControlItemFamilyName = new DevExpress.XtraLayout.LayoutControlItem();
             this.layoutControlItemSecondName = new DevExpress.XtraLayout.LayoutControlItem();
@@ -67,10 +63,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.txtSecondName.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.txtPosition.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.Root)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.emptySpaceItemSave)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemSave)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemCancel)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.emptySpaceItemCancel)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlGroupWorkPerson)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemFamilyName)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemSecondName)).BeginInit();
@@ -86,8 +78,6 @@
             // layoutControl
             // 
             this.layoutControl.AllowCustomization = false;
-            this.layoutControl.Controls.Add(this.btnCancel);
-            this.layoutControl.Controls.Add(this.btnSave);
             this.layoutControl.Controls.Add(this.txtFamilyName);
             this.layoutControl.Controls.Add(this.txtFirstName);
             this.layoutControl.Controls.Add(this.txtSecondName);
@@ -105,23 +95,13 @@
             // 
             // btnCancel
             // 
-            this.btnCancel.Location = new System.Drawing.Point(559, 290);
-            this.btnCancel.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btnCancel.Name = "btnCancel";
-            this.btnCancel.Size = new System.Drawing.Size(183, 22);
-            this.btnCancel.StyleController = this.layoutControl;
-            this.btnCancel.TabIndex = 4;
             this.btnCancel.Text = "Отмена";
             this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
             // 
             // btnSave
             // 
-            this.btnSave.Location = new System.Drawing.Point(375, 290);
-            this.btnSave.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btnSave.Name = "btnSave";
-            this.btnSave.Size = new System.Drawing.Size(180, 22);
-            this.btnSave.StyleController = this.layoutControl;
-            this.btnSave.TabIndex = 5;
             this.btnSave.Text = "Сохранить";
             this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
             // 
@@ -162,50 +142,12 @@
             this.Root.EnableIndentsWithoutBorders = DevExpress.Utils.DefaultBoolean.True;
             this.Root.GroupBordersVisible = false;
             this.Root.Items.AddRange(new DevExpress.XtraLayout.BaseLayoutItem[] {
-            this.emptySpaceItemSave,
-            this.layoutControlItemSave,
-            this.layoutControlItemCancel,
-            this.emptySpaceItemCancel,
             this.layoutControlGroupWorkPerson,
             this.emptySpaceItemFooter});
             this.Root.Name = "Root";
             this.Root.Padding = new DevExpress.XtraLayout.Utils.Padding(4, 4, 4, 4);
             this.Root.Size = new System.Drawing.Size(748, 318);
             this.Root.TextVisible = false;
-            // 
-            // emptySpaceItemSave
-            // 
-            this.emptySpaceItemSave.AllowHotTrack = false;
-            this.emptySpaceItemSave.Location = new System.Drawing.Point(0, 284);
-            this.emptySpaceItemSave.Name = "emptySpaceItemSave";
-            this.emptySpaceItemSave.Size = new System.Drawing.Size(184, 26);
-            this.emptySpaceItemSave.TextSize = new System.Drawing.Size(0, 0);
-            // 
-            // layoutControlItemSave
-            // 
-            this.layoutControlItemSave.Control = this.btnSave;
-            this.layoutControlItemSave.Location = new System.Drawing.Point(369, 284);
-            this.layoutControlItemSave.Name = "layoutControlItemSave";
-            this.layoutControlItemSave.Size = new System.Drawing.Size(184, 26);
-            this.layoutControlItemSave.TextSize = new System.Drawing.Size(0, 0);
-            this.layoutControlItemSave.TextVisible = false;
-            // 
-            // layoutControlItemCancel
-            // 
-            this.layoutControlItemCancel.Control = this.btnCancel;
-            this.layoutControlItemCancel.Location = new System.Drawing.Point(553, 284);
-            this.layoutControlItemCancel.Name = "layoutControlItemCancel";
-            this.layoutControlItemCancel.Size = new System.Drawing.Size(187, 26);
-            this.layoutControlItemCancel.TextSize = new System.Drawing.Size(0, 0);
-            this.layoutControlItemCancel.TextVisible = false;
-            // 
-            // emptySpaceItemCancel
-            // 
-            this.emptySpaceItemCancel.AllowHotTrack = false;
-            this.emptySpaceItemCancel.Location = new System.Drawing.Point(184, 284);
-            this.emptySpaceItemCancel.Name = "emptySpaceItemCancel";
-            this.emptySpaceItemCancel.Size = new System.Drawing.Size(185, 26);
-            this.emptySpaceItemCancel.TextSize = new System.Drawing.Size(0, 0);
             // 
             // layoutControlGroupWorkPerson
             // 
@@ -357,10 +299,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.txtSecondName.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.txtPosition.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.Root)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.emptySpaceItemSave)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemSave)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemCancel)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.emptySpaceItemCancel)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlGroupWorkPerson)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemFamilyName)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemSecondName)).EndInit();
@@ -371,6 +309,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemConstructionRegistry)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.cmbEngineeringRegistry.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemEngineeringRegistry)).EndInit();
+            DialogLayout.AddActionFooter(this, this.btnSave, this.btnCancel);
             this.ResumeLayout(false);
 
         }
@@ -381,10 +320,6 @@
         private DevExpress.XtraLayout.LayoutControlGroup Root;
         private DevExpress.XtraEditors.SimpleButton btnCancel;
         private DevExpress.XtraEditors.SimpleButton btnSave;
-        private DevExpress.XtraLayout.EmptySpaceItem emptySpaceItemSave;
-        private DevExpress.XtraLayout.LayoutControlItem layoutControlItemSave;
-        private DevExpress.XtraLayout.LayoutControlItem layoutControlItemCancel;
-        private DevExpress.XtraLayout.EmptySpaceItem emptySpaceItemCancel;
         private DevExpress.XtraLayout.EmptySpaceItem emptySpaceItemFooter;
         private DevExpress.XtraEditors.TextEdit txtFamilyName;
         private DevExpress.XtraEditors.TextEdit txtFirstName;

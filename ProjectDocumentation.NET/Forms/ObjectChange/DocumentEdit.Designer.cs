@@ -150,6 +150,7 @@
             this.gridViewDeclarant.GridControl = this.gridControlDeclarant;
             this.gridViewDeclarant.Name = "gridViewDeclarant";
             this.gridViewDeclarant.OptionsBehavior.Editable = false;
+            DialogLayout.ShowRowFocus(this.gridViewDeclarant);
             this.gridViewDeclarant.OptionsView.ColumnHeaderAutoHeight = DevExpress.Utils.DefaultBoolean.True;
             this.gridViewDeclarant.OptionsView.RowAutoHeight = true;
             this.gridViewDeclarant.OptionsView.ShowGroupPanel = false;
@@ -177,6 +178,7 @@
             this.gridViewItems.GridControl = this.gridControlItems;
             this.gridViewItems.Name = "gridViewItems";
             this.gridViewItems.OptionsBehavior.Editable = false;
+            DialogLayout.ShowRowFocus(this.gridViewItems);
             this.gridViewItems.OptionsView.ColumnHeaderAutoHeight = DevExpress.Utils.DefaultBoolean.True;
             this.gridViewItems.OptionsView.RowAutoHeight = true;
             this.gridViewItems.OptionsView.ShowGroupPanel = false;

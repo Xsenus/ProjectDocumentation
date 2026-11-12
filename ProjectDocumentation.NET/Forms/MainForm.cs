@@ -7,7 +7,6 @@ using DevExpress.Utils;
 using DevExpress.Xpo;
 using DevExpress.XtraBars;
 using DevExpress.XtraEditors;
-using DevExpress.XtraGrid.Columns;
 using DevExpress.XtraGrid.Views.Grid;
 using ProjectDocumentation.NET.Forms.ObjectChange;
 using ProjectDocumentation.NET.Services;
@@ -38,6 +37,7 @@ namespace ProjectDocumentation.NET.Forms
             InitializeConclusionCommands();
             InitializeExplanatoryNoteCommands();
             InitializeDocumentToolbar();
+            InitialSetupGridControl();
         }
 
         private void InitializeDocumentToolbar()
@@ -99,7 +99,8 @@ namespace ProjectDocumentation.NET.Forms
                 fileCommands.Add(browser);
             }
             AddDocumentBar("Документы", 0, fileCommands.ToArray());
-            AddDocumentBar("Действия с документом", 1, barBtnView, barBtnEdit, versions, checks);
+            var status = CreateDocumentStatusMenu();
+            AddDocumentBar("Действия с документом", 1, barBtnView, barBtnEdit, versions, checks, status);
 
             InitializeDocumentContextMenus(create, versions, history);
             gridView.FocusedRowChanged += (_, __) => UpdateDocumentCommands(gridView.GetFocusedRow());
@@ -122,6 +123,7 @@ namespace ProjectDocumentation.NET.Forms
             popupMenu.AddItem(validateDocument).BeginGroup = true;
             popupMenu.AddItem(barBtnFill);
             var versionsLink = popupMenu.AddItem(contextVersions);
+            popupMenu.AddItem(documentStatusMenu);
             popupMenu.AddItem(barBtnDel).BeginGroup = true;
 
             GridContextMenus.Attach(gridView, hasRow =>
@@ -162,6 +164,7 @@ namespace ProjectDocumentation.NET.Forms
             barBtnFill.Enabled = isDocument;
             validateDocument.Enabled = isDocument && !checkingDocument;
             editLegacyFields.Enabled = row is XmlObjXPO record && CanEditLegacyFields(record, record.GetObj());
+            UpdateDocumentStatusCommands(row as XmlObjXPO);
             UpdateConclusionCommands(row);
             UpdateExplanatoryNoteCommands(row);
         }
@@ -341,7 +344,6 @@ namespace ProjectDocumentation.NET.Forms
         {
             await DataBaseController.FillingDataBaseAsync();
             await UpdateGridDataSourceAsync();
-            InitialSetupGridControl();
             await CheckUpdates();
         }
 
@@ -410,9 +412,7 @@ namespace ProjectDocumentation.NET.Forms
 
         private async Task UpdateGridDataSourceAsync(string columnName = default, object obj = default)
         {
-            gridControl.DataSource = await new XPQuery<XmlObjXPO>(Session)
-                .OrderByDescending(o => o.DateCreate)
-                .ToListAsync();
+            await ReloadDocumentsAsync();
 
             if (!string.IsNullOrWhiteSpace(columnName) && obj != null)
             {
@@ -423,51 +423,18 @@ namespace ProjectDocumentation.NET.Forms
 
         private async Task UpdateGridDataSource(int focusedRowHandle)
         {
-            gridControl.DataSource = await new XPQuery<XmlObjXPO>(Session)
-                .OrderByDescending(o => o.DateCreate)
-                .ToListAsync();
+            await ReloadDocumentsAsync();
             gridView.FocusedRowHandle = focusedRowHandle;
             UpdateDocumentCommands(gridView.GetFocusedRow());
         }
 
-        private void InitialSetupGridControl()
+        private async Task ReloadDocumentsAsync()
         {
-            foreach (GridColumn column in gridView.Columns.Cast<GridColumn>())
-            {
-                column.Visible = false;
-            }
-
-            if (gridView.Columns[nameof(XmlObjXPO.Name)] is GridColumn columnName)
-            {
-                columnName.Visible = true;
-                columnName.Caption = "Наименование";
-            }
-
-            if (gridView.Columns[nameof(XmlObjXPO.Guid)] is GridColumn columnGuid)
-            {
-                columnGuid.Visible = true;
-                columnGuid.Caption = "ID";
-
-                columnGuid.Width = 300;
-                columnGuid.OptionsColumn.FixedWidth = true;
-            }
-
-            if (gridView.Columns[nameof(XmlObjXPO.DateCreate)] is GridColumn columnDateCreate)
-            {
-                columnDateCreate.Visible = true;
-                columnDateCreate.Caption = "Дата создания";
-
-                columnDateCreate.Width = 150;
-                columnDateCreate.OptionsColumn.FixedWidth = true;
-
-                columnDateCreate.AppearanceCell.TextOptions.HAlignment = HorzAlignment.Center;
-                columnDateCreate.AppearanceCell.TextOptions.VAlignment = VertAlignment.Center;
-
-                columnDateCreate.DisplayFormat.FormatType = FormatType.DateTime;
-                columnDateCreate.DisplayFormat.FormatString = "dd.MM.yyyy (HH:mm:ss)";
-                columnDateCreate.RealColumnEdit.EditFormat.FormatType = FormatType.DateTime;
-                columnDateCreate.RealColumnEdit.EditFormat.FormatString = "dd.MM.yyyy (HH:mm:ss)";
-            }
+            var documents = await new XPQuery<XmlObjXPO>(Session)
+                .OrderByDescending(o => o.DateCreate)
+                .ToListAsync();
+            documentVersions.Clear();
+            gridControl.DataSource = documents;
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]

@@ -30,13 +30,15 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
         public DocumentEdit()
         {
             InitializeComponent();
+            ClassicRequiredFields.HighlightExisting(this);
             GridContextMenus.Attach(gridViewDeclarant, popupMenuDeclarant, barBtnDeclarantAdd);
             GridContextMenus.Attach(gridViewItems, popupMenuItems, barBtnItemsAdd);
             includedEditor.Name = "includedEditor";
             includedEditor.Properties.MaxLength = 1000;
             layoutControlObjPart.Controls.Add(includedEditor);
-            Root.AddItem("В составе другого документа", includedEditor, layoutControlItemItems, InsertType.Top)
+            Root.AddItem("Файлы или документ, в составе которого поступили материалы *", includedEditor, layoutControlItemItems, InsertType.Top)
                 .TextLocation = DevExpress.Utils.Locations.Top;
+            ClassicRequiredFields.Mark(includedEditor);
         }
 
         public DocumentEdit(TDocument TDocument) : this()
@@ -183,13 +185,13 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                 var included = includedEditor.Text.Trim();
                 if (included.Length != 0 && _tFiles.Count > 0)
                 {
-                    includedEditor.Focus();
+                    ClassicRequiredFields.Focus(includedEditor);
                     throw new InvalidOperationException("Укажите либо документ, в составе которого поступили материалы, либо файлы.");
                 }
                 var author = txtDocIssueAuthor.Text?.Trim();
                 if (_TDeclarants.Count == 0 && string.IsNullOrWhiteSpace(author))
                 {
-                    txtDocIssueAuthor.Focus();
+                    ClassicRequiredFields.Focus(txtDocIssueAuthor);
                     throw new InvalidOperationException("Укажите автора документа.");
                 }
                 Document.DocType = ConclusionEdit.GetEnumByAttributeValue<TDocumentType>(

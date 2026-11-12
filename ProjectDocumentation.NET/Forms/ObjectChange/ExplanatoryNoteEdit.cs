@@ -48,6 +48,9 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
         public ExplanatoryNoteEdit()
         {
             InitializeComponent();
+            ClassicRequiredFields.HighlightExisting(this);
+            ClassicRequiredFields.Mark(txtIndustrialObjectName, cmbLandCategory);
+            ClassicRequiredFields.Unmark(txtIndustrialObjectID, cmbFireDangerCategory, cmbResponsibilityLevel);
             var draftButton = new SimpleButton { Name = "btnSaveDraft", Text = "Черновик XML…" };
             layoutControlExplanatoryNote.AddItem(draftButton.Text, draftButton, layoutControlItemSave, InsertType.Left).TextVisible = false;
             draftButton.Click += async (_, __) => await SaveFormAsync(draft: true);
@@ -102,13 +105,16 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
             switch (objType)
             {
                 case ExplanatoryNoteObjType.NonIndustrialObject:
-                    layoutControlGroupIndustrialObject.Text = "Описание объекта капитального строительства непроизводственного назначения";
+                    layoutControlGroupIndustrialObject.Text = "Непроизводственный объект";
+                    layoutControlGroupIndustrialObject.OptionsToolTip.ToolTip = "Описание объекта капитального строительства непроизводственного назначения";
                     break;
                 case ExplanatoryNoteObjType.LinearObject:
-                    layoutControlGroupIndustrialObject.Text = "Описание линейного объекта капитального строительства";
+                    layoutControlGroupIndustrialObject.Text = "Линейный объект";
+                    layoutControlGroupIndustrialObject.OptionsToolTip.ToolTip = "Описание линейного объекта капитального строительства";
                     break;
                 default:
-                    layoutControlGroupIndustrialObject.Text = "Описание объекта капитального строительства производственного назначения";
+                    layoutControlGroupIndustrialObject.Text = "Производственный объект";
+                    layoutControlGroupIndustrialObject.OptionsToolTip.ToolTip = "Описание объекта капитального строительства производственного назначения";
                     break;
             }
             layoutControlItemDangerIndustrialClass.Visibility = objType == ExplanatoryNoteObjType.NonIndustrialObject
@@ -472,7 +478,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                     ? (ExplanatoryNoteObjType?)null : _explanatoryNoteObjType;
                 if (!draft && objectType == null)
                 {
-                    cmbExplanatoryNoteObjType.Focus();
+                    ClassicRequiredFields.Focus(cmbExplanatoryNoteObjType);
                     throw new InvalidOperationException("Выберите тип объекта строительства.");
                 }
                 IExplanatoryNoteObject noteObject;
@@ -537,7 +543,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                         noteObject.ConstructionDuration = constructionDuration;
                     else
                     {
-                        txtConstructionDuration.Focus();
+                        ClassicRequiredFields.Focus(txtConstructionDuration);
                         throw new InvalidOperationException("Введите продолжительность работ в месяцах. Например, 1,5.");
                     }
                     if (noteObject is IDangerousIndustrialObject dangerousIndustrialObject)

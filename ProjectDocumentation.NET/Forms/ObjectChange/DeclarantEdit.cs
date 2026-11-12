@@ -20,6 +20,8 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
         public DeclarantEdit()
         {
             InitializeComponent();
+            ClassicRequiredFields.HighlightExisting(this);
+            ClassicRequiredFields.Unmark(txtSecondName, txtSecondNamePerson);
         }
 
         public DeclarantEdit(TDeclarant obj) : this()

@@ -19,6 +19,8 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
         public WorkPersonEdit()
         {
             InitializeComponent();
+            ClassicRequiredFields.HighlightExisting(this);
+            ClassicRequiredFields.Unmark(txtFamilyName, txtFirstName, txtPosition);
         }
 
         public WorkPersonEdit(tWorkPerson person) : this()

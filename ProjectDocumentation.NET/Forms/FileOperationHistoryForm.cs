@@ -213,7 +213,7 @@ namespace ProjectDocumentation.NET.Forms
             view.OptionsView.ShowGroupPanel = false;
             view.OptionsView.ShowIndicator = false;
             view.OptionsView.ShowVerticalLines = DefaultBoolean.False;
-            view.OptionsSelection.EnableAppearanceFocusedCell = false;
+            DialogLayout.ShowRowFocus(view);
             view.OptionsView.ColumnAutoWidth = true;
             view.Appearance.HeaderPanel.FontStyleDelta = FontStyle.Bold;
             view.Appearance.Row.FontSizeDelta = 1;
