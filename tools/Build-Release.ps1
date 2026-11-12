@@ -96,11 +96,23 @@ try {
             '-m', 'PyInstaller', '--noconfirm', '--onedir', '--name', 'ProjectDocumentation.Schema',
             '--distpath', $bundles, '--workpath', (Join-Path $bundleWork 'build'), '--specpath', $bundleWork,
             '--paths', $repo, '--collect-data', 'xmlschema', '--collect-data', 'elementpath',
-            '--add-data', "${schemaData}:schema_engine/schemas"
+            '--add-data', "${schemaData}\*.xsd:schema_engine/schemas",
+            '--add-data', "${schemaData}\*.xsl:schema_engine/schemas"
         )
         if (-not $DesktopOnly) { $bundleArguments += @('--add-data', "${portalData}:portal/dist") }
         Invoke-Checked $SchemaPython ($bundleArguments + 'schema_engine/__main__.py')
         $engine = Join-Path $bundles 'ProjectDocumentation.Schema'
+        $locale = Join-Path $engine '_internal\xmlschema\locale'
+        if (Test-Path -LiteralPath $locale -PathType Container) {
+            $locale = (Resolve-Path -LiteralPath $locale).Path
+            Get-ChildItem -LiteralPath $locale -Directory | ForEach-Object {
+                $culture = (Resolve-Path -LiteralPath $_.FullName).Path
+                if ($_.Name -notin @('en', 'ru') -and (Split-Path -Parent $culture) -eq $locale) {
+                    Remove-Item -LiteralPath $culture -Recurse
+                }
+            }
+            Get-ChildItem -LiteralPath $locale -Recurse -File -Filter '*.po' | Remove-Item
+        }
         Copy-Item -LiteralPath $engine -Destination (Join-Path $desktop 'engine') -Recurse
     } finally {
         $resolved = (Resolve-Path -LiteralPath $bundleWork).Path
