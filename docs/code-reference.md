@@ -95,9 +95,10 @@
 | Метод | Поведение |
 |---|---|
 | `GetPartyAsync(query)` | Поиск организации по ИНН, ОГРН или ИНН/КПП через `findById/party` |
+| `SuggestAddressesAsync(query)` | Варианты адреса через `suggest/address` для выбора пользователем |
 | `GetAddressAsync(query)` | Платная стандартизация адреса через `clean/address` |
 
-Общий HTTP-клиент поддерживает ограничение времени и отмену. Ключи передаются через переменные окружения. `ConclusionDaData` проверяет однозначность ответа, а формы сохраняют ручной ввод.
+Общий HTTP-клиент поддерживает ограничение времени и отмену. Ключи передаются через переменные процесса или текущего пользователя Windows. Диалог поиска требует выбрать и применить подсказку адреса. `ConclusionDaData` переносит доступные реквизиты, сохраняя ручной ввод в редакторе по схеме.
 
 ## ProjectDocumentation.NET
 
@@ -157,7 +158,7 @@
 | `ConclusionEdit_Load` | `FillFormControllersAsync` (списки из справочника), затем переносит значения модели в контролы. Коллекции модели копируются в приватные списки `_tDocuments`, `_experts` и т. д. |
 | `btnSave_Click` | Собирает модель 01.03 из контролов и списков. Главное окно подключает сохранение с нормализацией порядка элементов и проверкой XML |
 | `btnSearch_ButtonPressed` | DaData `FindParty` → реквизиты экспертной организации, ФИО и должность руководителя, адрес (D-04, D-05) |
-| `btnAddress_ButtonPressed`, `cmbObjectAddress_ButtonClick` | «…» — `AddressEdit`, лупа — DaData Clean, «×» — очистка |
+| `btnAddress_ButtonPressed`, `cmbObjectAddress_ButtonClick` | «…» — `AddressEdit`, лупа — поиск адреса DaData, «×» — очистка |
 | `btnDeclarant_ButtonPressed` | `DeclarantEdit` |
 | `barBtn*Add/Edit/Del_ItemClick` | Добавление, правка, удаление строк в списках через дочерние формы, перерисовка таблицы. Удаление — с подтверждением |
 | `checkEEPDUse_CheckedChanged`, `radioGroupConclusionNumber_SelectedIndexChanged` | Видимость блока ЭЭПД и маска номера ЕГРЗ |

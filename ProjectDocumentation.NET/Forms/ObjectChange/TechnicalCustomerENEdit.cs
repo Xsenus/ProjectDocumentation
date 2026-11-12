@@ -68,7 +68,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
-        private async void btnAddress_ButtonClick(object sender, ButtonPressedEventArgs e)
+        private void btnAddress_ButtonClick(object sender, ButtonPressedEventArgs e)
         {
             if (sender is ButtonEdit buttonEdit)
             {
@@ -95,10 +95,10 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                 }
                 else if (e.Button.Kind == ButtonPredefines.Search)
                 {
-                    var obj = buttonEdit.EditValue as string;
-                    if (!string.IsNullOrWhiteSpace(obj))
+                    var obj = buttonEdit.EditValue;
+                    if (obj == null || obj is string)
                     {
-                        var addressData = await LegacyDaDataLookup.FindAddressAsync(buttonEdit, obj);
+                        var addressData = LegacyDaDataLookup.FindAddress(buttonEdit);
                         if (addressData != null)
                         {
                             var address = new TAddress()

@@ -2,6 +2,7 @@ using Core.NET.DaDataObj;
 using Core.NET.Extensions;
 using Dadata.Model;
 using DevExpress.XtraEditors;
+using ProjectDocumentation.NET.Forms;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,11 +22,6 @@ namespace ProjectDocumentation.NET.Services
             var parties = response?.suggestions?.Select(suggestion => suggestion?.data).Where(party => party?.type == PartyType.LEGAL);
             if (IsDigits(kpp, 9)) parties = parties?.Where(party => party?.kpp == kpp);
             return MapOrganization(parties, inn);
-        }
-
-        public static async Task<Dictionary<string, string>> NormalizeAddressAsync(string query, CancellationToken cancellationToken = default)
-        {
-            return MapAddress(await DaDataObj.GetAddressAsync(query, cancellationToken));
         }
 
         internal static Dictionary<string, string> MapOrganization(IEnumerable<Party> parties, string inn)
@@ -106,9 +102,12 @@ namespace ProjectDocumentation.NET.Services
 
     internal static class LegacyDaDataLookup
     {
-        public static Task<Address> FindAddressAsync(ButtonEdit source, string query)
+        public static Address FindAddress(ButtonEdit source)
         {
-            return RunAsync(source, token => DaDataObj.GetAddressAsync(query, token));
+            var owner = source.FindForm();
+            if (owner == null || owner.IsDisposed || owner.Disposing) return null;
+            if (source.EditValue != null && !(source.EditValue is string)) return null;
+            return AddressLookupDialog.ShowFor(owner, source.EditValue as string);
         }
 
         public static async Task<Party> FindPartyAsync(ButtonEdit source, string query, BaseEdit inn, BaseEdit ogrn,

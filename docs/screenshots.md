@@ -98,6 +98,7 @@
 | Что показано | Снимок |
 |---|---|
 | Поиск поля по имени и пути XML | [Открыть](screenshots/native-field-search.png) |
+| Поиск и выбор адреса DaData | [Открыть](screenshots/dadata-address.png) |
 | Строки, ячейки и выравнивание в записке 01.07 | [Открыть](screenshots/native-note-table.png) |
 | Пояснительная записка в узком окне | [Открыть](screenshots/native-note-compact.png) |
 | Обязательные поля после преобразования записки 01.05 в 01.07 | [Открыть](screenshots/native-note-0105-conversion.png) |
