@@ -6,6 +6,7 @@ using DevExpress.XtraEditors.Controls;
 using DevExpress.XtraEditors.Repository;
 using DevExpress.XtraGrid;
 using DevExpress.XtraGrid.Views.Grid;
+using DevExpress.XtraLayout;
 using DevExpress.XtraTreeList;
 using DevExpress.XtraTreeList.Nodes;
 using System;
@@ -33,7 +34,7 @@ namespace ProjectDocumentation.NET.Forms
         private readonly TreeList xmlTree = new TreeList { Dock = DockStyle.Fill, AccessibleName = "Дерево XML" };
         private readonly XtraScrollableControl details = new XtraScrollableControl
         {
-            Dock = DockStyle.Fill, AutoScroll = true, Padding = new Padding(8, 2, 9, 8), AccessibleName = "Поля выбранного элемента"
+            Dock = DockStyle.Fill, Padding = new Padding(8, 2, 9, 8), AccessibleName = "Поля выбранного элемента"
         };
         private readonly Dictionary<string, Control> fieldEditors = new Dictionary<string, Control>();
         private ComboBoxEdit childSelector;
@@ -169,14 +170,16 @@ namespace ProjectDocumentation.NET.Forms
         {
             if (!(item?.Tag is NativeSchemaNode node)) return;
             details.SuspendLayout();
+            LayoutControl layout = null;
             try
             {
                 while (details.Controls.Count > 0) details.Controls[0].Dispose();
                 fieldEditors.Clear();
                 childSelector = null;
-                var layout = new TableLayoutPanel { Dock = DockStyle.Top, AutoSize = true, ColumnCount = 2 };
-                layout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 34));
-                layout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 66));
+                layout = CreateLayout(Padding.Empty,
+                    new ColumnDefinition { SizeType = SizeType.Percent, Width = 34 },
+                    new ColumnDefinition { SizeType = SizeType.Percent, Width = 66 });
+                layout.BeginUpdate();
                 details.Controls.Add(layout);
                 var path = WrappedLabelFor(XmlPath(node.Element));
                 path.Appearance.FontStyleDelta = FontStyle.Bold;
@@ -230,7 +233,7 @@ namespace ProjectDocumentation.NET.Forms
                         {
                             var editTable = ActionButton("Редактировать таблицу…");
                             editTable.Click += (_, __) => EditStructuredTable(item, node);
-                            AddWide(layout, editTable);
+                            AddWide(layout, Toolbar(editTable));
                         }
                         AddChildControls(layout, item, node);
                         AddFileAndLookupControls(layout, item, node);
@@ -240,6 +243,7 @@ namespace ProjectDocumentation.NET.Forms
             }
             finally
             {
+                layout?.EndUpdate();
                 details.ResumeLayout(true);
             }
         }
@@ -250,7 +254,7 @@ namespace ProjectDocumentation.NET.Forms
             return value == "true" || value == "1";
         }
 
-        private void AddNilControl(TableLayoutPanel layout, TreeListNode item, XElement element, bool nil)
+        private void AddNilControl(LayoutControl layout, TreeListNode item, XElement element, bool nil)
         {
             var check = new CheckEdit
             {
@@ -287,25 +291,25 @@ namespace ProjectDocumentation.NET.Forms
         private static LabelControl WrappedLabelFor(string text)
             => new LabelControl { Text = text, AutoSizeMode = LabelAutoSizeMode.Vertical, Dock = DockStyle.Top, Margin = new Padding(3, 6, 3, 6) };
 
-        private static void AddWide(TableLayoutPanel layout, Control control)
-        {
-            var row = layout.RowCount++;
-            layout.Controls.Add(control, 0, row);
-            layout.SetColumnSpan(control, 2);
-        }
+        private static void AddWide(LayoutControl layout, Control control)
+            => AddLayoutItem(layout, control, AddLayoutRow(layout), columnSpan: 2);
 
-        private static void AddField(TableLayoutPanel layout, string label, Control editor, string documentation)
+        private static void AddField(LayoutControl layout, string label, Control editor, string documentation)
         {
-            var row = layout.RowCount++;
+            var row = AddLayoutRow(layout);
             editor.AccessibleName = label;
             if (editor is BaseControl control && !string.IsNullOrWhiteSpace(documentation))
                 control.ToolTip = documentation;
-            layout.Controls.Add(WrappedLabelFor(label), 0, row);
-            layout.Controls.Add(editor, 1, row);
-            if (!string.IsNullOrWhiteSpace(documentation))
+            AddLayoutItem(layout, WrappedLabelFor(label), row);
+            var item = AddLayoutItem(layout, editor, row, 1);
+            if (editor is MemoEdit)
             {
-                layout.Controls.Add(WrappedLabelFor(documentation), 1, layout.RowCount++);
+                item.SizeConstraintsType = SizeConstraintsType.Custom;
+                item.ControlMinSize = new Size(0, editor.Height);
+                item.ControlMaxSize = new Size(0, editor.Height);
             }
+            if (!string.IsNullOrWhiteSpace(documentation))
+                AddLayoutItem(layout, WrappedLabelFor(documentation), AddLayoutRow(layout), 1);
         }
 
         private static Control ValueEditor(string value, NativeSchemaType type, bool readOnly, bool multiline, Action<string> changed)
@@ -342,7 +346,7 @@ namespace ProjectDocumentation.NET.Forms
             return text;
         }
 
-        private void AddChildControls(TableLayoutPanel layout, TreeListNode item, NativeSchemaNode node)
+        private void AddChildControls(LayoutControl layout, TreeListNode item, NativeSchemaNode node)
         {
             var candidates = ChildCandidates(node).ToArray();
             if (candidates.Length == 0) return;
@@ -382,7 +386,7 @@ namespace ProjectDocumentation.NET.Forms
             if (fieldEditors.TryGetValue(".", out var editor)) editor.Focus();
         }
 
-        private void AddTreeCommands(TableLayoutPanel layout, TreeListNode item, XElement element)
+        private void AddTreeCommands(LayoutControl layout, TreeListNode item, XElement element)
         {
             var up = ActionButton("Вверх");
             var down = ActionButton("Вниз");
@@ -566,11 +570,9 @@ namespace ProjectDocumentation.NET.Forms
                 view.Columns.AddVisible(nameof(FieldSearchResult.Path), "Путь XML").Width = 365;
                 view.Columns.AddVisible(nameof(FieldSearchResult.Documentation), "Описание").Width = 295;
                 WrapListColumns(view);
-                var results = new TableLayoutPanel { Dock = DockStyle.Fill, ColumnCount = 1, RowCount = 2 };
-                results.RowStyles.Add(new RowStyle(SizeType.AutoSize));
-                results.RowStyles.Add(new RowStyle(SizeType.Percent, 100));
-                results.Controls.Add(hint, 0, 0);
-                results.Controls.Add(matches, 0, 1);
+                var results = CreateLayout(Padding.Empty);
+                AddLayoutItem(results, hint, AddLayoutRow(results));
+                AddLayoutItem(results, matches, AddLayoutRow(results, SizeType.Percent, 100));
                 dialog.Controls.Add(WithToolbar(results, LabelFor("Поиск"), query, go, close));
                 go.Enabled = false;
                 string target = null;
@@ -936,20 +938,14 @@ namespace ProjectDocumentation.NET.Forms
                     if (CommitCellEdit() && saveTable.Enabled) dialog.DialogResult = DialogResult.OK;
                 };
 
-                var body = new TableLayoutPanel { Dock = DockStyle.Fill, ColumnCount = 2, RowCount = 3, Padding = new Padding(8) };
-                body.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 200));
-                body.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100));
-                body.RowStyles.Add(new RowStyle(SizeType.AutoSize));
-                body.RowStyles.Add(new RowStyle(SizeType.Percent, 100));
-                body.RowStyles.Add(new RowStyle(SizeType.AutoSize));
-                var rowTools = Toolbar(addTitle, addRow, removeRow, addCell, removeCell);
-                body.Controls.Add(rowTools, 0, 0);
-                body.SetColumnSpan(rowTools, 2);
-                body.Controls.Add(rowList, 0, 1);
-                body.Controls.Add(cells, 1, 1);
-                var footer = Toolbar(saveTable, cancel, hint);
-                body.Controls.Add(footer, 0, 2);
-                body.SetColumnSpan(footer, 2);
+                var body = CreateLayout(new Padding(8),
+                    new ColumnDefinition { SizeType = SizeType.Absolute, Width = 200 },
+                    new ColumnDefinition { SizeType = SizeType.Percent, Width = 100 });
+                AddLayoutItem(body, Toolbar(addTitle, addRow, removeRow, addCell, removeCell), AddLayoutRow(body), columnSpan: 2);
+                var contentRow = AddLayoutRow(body, SizeType.Percent, 100);
+                AddLayoutItem(body, rowList, contentRow);
+                AddLayoutItem(body, cells, contentRow, 1);
+                AddLayoutItem(body, Toolbar(saveTable, cancel, hint), AddLayoutRow(body), columnSpan: 2);
                 dialog.Controls.Add(body);
 
                 if (!edited.Elements().Any()) edited.Add(new XElement("Row", new XElement("Cell")));
@@ -984,7 +980,7 @@ namespace ProjectDocumentation.NET.Forms
             }));
         }
 
-        private void AddFileAndLookupControls(TableLayoutPanel layout, TreeListNode item, NativeSchemaNode node)
+        private void AddFileAndLookupControls(LayoutControl layout, TreeListNode item, NativeSchemaNode node)
         {
             var fields = new HashSet<string>(node.Children.Select(child => child.Field.Name));
             var actions = new List<Control>();
@@ -1014,7 +1010,7 @@ namespace ProjectDocumentation.NET.Forms
         private async Task ChooseAttachmentAsync(TreeListNode item, NativeSchemaNode node)
         {
             if (!CanEditFields()) return;
-            using (var picker = new OpenFileDialog { CheckFileExists = true })
+            using (var picker = new XtraOpenFileDialog { CheckFileExists = true })
             {
                 if (picker.ShowDialog(this) != DialogResult.OK) return;
                 await RunAsync("Расчёт контрольной суммы…", async () =>
@@ -1049,7 +1045,7 @@ namespace ProjectDocumentation.NET.Forms
         private async Task ChooseImageAsync(TreeListNode item, NativeSchemaNode node)
         {
             if (!CanEditFields()) return;
-            using (var picker = new OpenFileDialog { Filter = "Изображения|*.png;*.jpg;*.jpeg;*.gif", CheckFileExists = true })
+            using (var picker = new XtraOpenFileDialog { Filter = "Изображения|*.png;*.jpg;*.jpeg;*.gif", CheckFileExists = true })
             {
                 if (picker.ShowDialog(this) != DialogResult.OK) return;
                 await RunAsync("Чтение изображения…", async () =>

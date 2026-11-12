@@ -95,9 +95,9 @@ namespace ProjectDocumentation.NET.Forms
                 }
                 else if (e.Button.Kind == ButtonPredefines.Ellipsis)
                 {
-                    using (var ofd = new OpenFileDialog() { Filter = "*.xml|*.xml" })
+                    using (var ofd = new XtraOpenFileDialog { Filter = "*.xml|*.xml", CheckFileExists = true })
                     {
-                        if (ofd.ShowDialog() == DialogResult.OK)
+                        if (ofd.ShowDialog(this) == DialogResult.OK)
                         {
                             buttonEdit.EditValue = ofd.FileName;
                             DescribeSelectedFile();

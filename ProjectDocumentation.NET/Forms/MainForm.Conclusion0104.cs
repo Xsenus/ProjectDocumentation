@@ -159,7 +159,7 @@ namespace ProjectDocumentation.NET.Forms
         {
             var original = record.Obj;
             await FileOperationJournal.ObserveSchemaAsync(attempt, conclusionSchema, xml);
-            using (var picker = new SaveFileDialog { Filter = "XML (*.xml)|*.xml", DefaultExt = "xml", AddExtension = true,
+            using (var picker = new XtraSaveFileDialog { Filter = "XML (*.xml)|*.xml", DefaultExt = "xml", AddExtension = true, OverwritePrompt = true,
                 FileName = attempt.FileName })
             {
                 if (picker.ShowDialog(this) == DialogResult.OK)
@@ -237,7 +237,7 @@ namespace ProjectDocumentation.NET.Forms
             }
 
             if (isClassicDraft) attempt.FileName = $"{attempt.Family}-draft_{attempt.DocumentId:D}.xml";
-            using (var picker = new SaveFileDialog { Filter = "XML (*.xml)|*.xml", DefaultExt = "xml", AddExtension = true,
+            using (var picker = new XtraSaveFileDialog { Filter = "XML (*.xml)|*.xml", DefaultExt = "xml", AddExtension = true, OverwritePrompt = true,
                 FileName = attempt.FileName })
             {
                 if (picker.ShowDialog(owner ?? this) != DialogResult.OK)

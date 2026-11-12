@@ -133,13 +133,13 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
         private void btnAdd_Click(object sender, EventArgs e)
         {
-            using (var openFileDialog = new OpenFileDialog())
+            using (var openFileDialog = new XtraOpenFileDialog { CheckFileExists = true })
             {
-                openFileDialog.Filter = "Image Files (*.jpg; *.jpeg; *.png; *.gif)|*.jpg; *.jpeg; *.png; *.gif|All Files (*.*)|*.*";
+                openFileDialog.Filter = "Image Files (*.jpg; *.jpeg; *.png; *.gif)|*.jpg;*.jpeg;*.png;*.gif|All Files (*.*)|*.*";
                 openFileDialog.Title = "Select an Image File";
                 openFileDialog.Multiselect = false;
 
-                if (openFileDialog.ShowDialog() == DialogResult.OK)
+                if (openFileDialog.ShowDialog(this) == DialogResult.OK)
                 {
                     var filePath = openFileDialog.FileName;
                     var base64String = GetBase64StringFromFile(filePath);
