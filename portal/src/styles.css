@@ -136,6 +136,11 @@ textarea { resize: vertical; line-height: 1.5; }
 .document-head { display: flex; justify-content: space-between; align-items: end; gap: 16px; margin: 0 0 18px; }
 .document-meta { display: flex; gap: 9px; flex-wrap: wrap; align-items: center; font-size: .78rem; color: var(--muted); margin-bottom: 7px; }
 .version-label { display: inline-block; color: #224b66; background: #dfecf4; border-radius: 6px; padding: 4px 7px; font-weight: 700; }
+.document-status {
+  display: inline-block; width: fit-content; padding: 4px 7px; border-radius: 6px;
+  color: #714718; background: #ffefd9; font-size: .78rem; font-weight: 700; white-space: nowrap;
+}
+.document-status.is-completed { color: #225849; background: #e1f2e9; }
 h1 { font-size: clamp(1.54rem, 2.5vw, 2.25rem); line-height: 1.17; letter-spacing: -.035em; overflow-wrap: anywhere; }
 h2 { font-size: 1.21rem; line-height: 1.27; letter-spacing: -.015em; }
 .document-actions, .inline-actions, .utility-actions { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
@@ -265,9 +270,9 @@ button.error-path:hover { text-decoration: underline; }
 .muted, .empty-state { font-size: .91rem; color: var(--muted); }
 .draft-list { list-style: none; padding: 0; margin: 0; display: grid; gap: 8px; }
 .draft-list li { display: flex; align-items: center; justify-content: space-between; gap: 11px; padding: 8px 10px; border: 1px solid var(--border); border-radius: 8px; }
-.draft-item { display: grid; gap: 4px; border: 0; padding: 4px 2px; background: transparent; text-align: left; color: var(--accent-strong); overflow-wrap: anywhere; }
+.draft-item { display: grid; gap: 4px; min-width: 0; border: 0; padding: 4px 2px; background: transparent; text-align: left; color: var(--accent-strong); overflow-wrap: anywhere; }
 .draft-item:hover strong { text-decoration: underline; }
-.draft-item span { font-size: .79rem; color: var(--muted); }
+.draft-meta { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 10px; font-size: .79rem; color: var(--muted); }
 .history-filters, .history-workspace { display: grid; gap: 14px; min-width: 0; }
 .history-filters { grid-template-columns: minmax(0, 1.3fr) repeat(2, minmax(0, 1fr)); }
 .history-filters label { display: grid; gap: 5px; min-width: 0; }
