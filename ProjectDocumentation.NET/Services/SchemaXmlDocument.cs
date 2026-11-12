@@ -93,7 +93,7 @@ namespace ProjectDocumentation.NET.Services
 
         public static async Task<T> SaveAsync<T>(ConclusionSchemaService service, string xml, string name,
             Guid guid, string rootName, string version, string guidAttribute, Func<Session, T> create, T existing,
-            DocumentStatus initialStatus = DocumentStatus.New) where T : XmlObjXPO
+            DocumentStatus initialStatus = DocumentStatus.New, bool allowIncomplete = false) where T : XmlObjXPO
         {
             if (string.IsNullOrWhiteSpace(name))
             {
@@ -113,7 +113,10 @@ namespace ProjectDocumentation.NET.Services
                 xml = WithGuid(document, guidAttribute, guid);
             }
 
-            RequireValid(await service.ValidateAsync(xml), version);
+            if (allowIncomplete)
+                initialStatus = DocumentStatus.InProgress;
+            else
+                RequireValid(await service.ValidateAsync(xml), version);
             return await PersistAsync(xml, name, guid, create, existing, previousName, previousXml, initialStatus);
         }
 
@@ -121,6 +124,9 @@ namespace ProjectDocumentation.NET.Services
             T existing = null, string previousName = null, string previousXml = null,
             DocumentStatus initialStatus = DocumentStatus.New) where T : XmlObjXPO
         {
+            if (string.IsNullOrWhiteSpace(name))
+                throw new InvalidOperationException("Укажите наименование документа.");
+
             var session = SessionController.GetSession();
             int oid;
             using (var unit = new UnitOfWork(session.DataLayer))
@@ -163,7 +169,7 @@ namespace ProjectDocumentation.NET.Services
                 return;
             }
 
-            var text = new StringBuilder($"XML не прошёл проверку по схеме {version}.");
+            var text = new StringBuilder(version == null ? "XML не прошёл проверку." : $"XML не прошёл проверку по схеме {version}.");
             if (result.Errors != null)
             {
                 foreach (var error in result.Errors.Take(12))

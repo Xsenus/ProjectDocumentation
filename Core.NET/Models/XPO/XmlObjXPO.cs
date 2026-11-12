@@ -17,6 +17,7 @@ namespace Core.NET.Models.XPO
     {
         private DateTime? dateModified;
         private DocumentStatus? workflowStatus;
+        private bool? completionValidated;
 
         public XmlObjXPO() : base() { }
         public XmlObjXPO(Session session) : base(session) { }
@@ -44,10 +45,35 @@ namespace Core.NET.Models.XPO
             private set => SetPropertyValue(nameof(WorkflowStatus), ref workflowStatus, value);
         }
 
-        [NonPersistent]
-        public DocumentStatus Status => WorkflowStatus ?? DocumentStatus.InProgress;
+        [Persistent]
+        public bool? CompletionValidated
+        {
+            get => completionValidated;
+            private set => SetPropertyValue(nameof(CompletionValidated), ref completionValidated, value);
+        }
 
-        public void SetStatus(DocumentStatus status) => WorkflowStatus = status;
+        [NonPersistent]
+        public DocumentStatus Status => WorkflowStatus == DocumentStatus.Completed && CompletionValidated != true
+            ? DocumentStatus.InProgress
+            : WorkflowStatus ?? DocumentStatus.InProgress;
+
+        public void SetStatus(DocumentStatus status)
+        {
+            if (status == DocumentStatus.Completed)
+                throw new InvalidOperationException("Чтобы завершить документ, сначала проверьте XML.");
+
+            WorkflowStatus = status;
+            CompletionValidated = null;
+        }
+
+        public void SetValidatedCompletion(string validatedXml)
+        {
+            if (string.IsNullOrEmpty(validatedXml) || GetObj() != validatedXml)
+                throw new InvalidOperationException("XML изменился. Повторите проверку перед завершением.");
+
+            WorkflowStatus = DocumentStatus.Completed;
+            CompletionValidated = true;
+        }
 
         public void SetObj(string obj) => SetDocument(Name, obj);
 

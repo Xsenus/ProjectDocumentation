@@ -552,9 +552,9 @@ namespace ProjectDocumentation.NET.Forms
                 using (var editor = new LegacySchemaDocumentForm(conclusionSchema,
                     SchemaXmlDocument.WithGuid(document, attribute, guid), "", family, async (xml, name) => note
                         ? (XmlObjXPO)await SchemaXmlDocument.SaveAsync(conclusionSchema, xml, name, guid, root, version,
-                            attribute, session => new ExplanatoryNoteXPO(session), existing: null)
+                            attribute, session => new ExplanatoryNoteXPO(session), existing: null, allowIncomplete: true)
                         : await SchemaXmlDocument.SaveAsync(conclusionSchema, xml, name, guid, root, version,
-                            attribute, session => new ConclusionXPO(session), existing: null)))
+                            attribute, session => new ConclusionXPO(session), existing: null, allowIncomplete: true)))
                 {
                     if (editor.ShowDialog(this) == DialogResult.OK && editor.Document != null)
                         await UpdateGridDataSourceAsync(nameof(XmlObjXPO.Guid), guid);
@@ -575,7 +575,7 @@ namespace ProjectDocumentation.NET.Forms
                 {
                     var guid = Guid.NewGuid();
                     form.SetFileName("Заключение 01.03");
-                    form.SaveConclusionAsync = (conclusion, name) => SaveClassicConclusionAsync(conclusion, name, guid);
+                    form.SaveConclusionAsync = (conclusion, name, omitted) => SaveClassicConclusionAsync(conclusion, name, guid, omitted: omitted);
                     form.SaveDraftAsync = (conclusion, name, omitted) => SaveClassicConclusionAsync(conclusion, name, guid,
                         draftOwner: form, omitted: omitted);
                     form.ShowDialog(this);
@@ -596,7 +596,7 @@ namespace ProjectDocumentation.NET.Forms
                 {
                     var guid = Guid.NewGuid();
                     form.SetFileName("Пояснительная записка 01.03");
-                    form.SaveNoteAsync = (note, name) => SaveClassicNoteAsync(note, name, guid);
+                    form.SaveNoteAsync = (note, name, omitted) => SaveClassicNoteAsync(note, name, guid, omitted: omitted);
                     form.SaveDraftAsync = (note, name, omitted) => SaveClassicNoteAsync(note, name, guid,
                         draftOwner: form, omitted: omitted);
                     form.ShowDialog(this);
@@ -629,10 +629,8 @@ namespace ProjectDocumentation.NET.Forms
                     ExportSchemaDocumentAsync(xml, attempt, Conclusion0104Document.RootName, saveAsDraft: true, owner: draftOwner));
                 return true;
             }
-            await ValidateClassicSaveAsync(xml, name, Conclusion0104Document.LegacyVersion, ClassicConclusionFormat);
-
             await SchemaXmlDocument.PersistAsync(xml, name, guid, session => new ConclusionXPO(session),
-                existing, previousName, previousXml);
+                existing, previousName, previousXml, initialStatus: DocumentStatus.InProgress);
             return true;
         }
 
@@ -643,17 +641,16 @@ namespace ProjectDocumentation.NET.Forms
             if (string.IsNullOrWhiteSpace(note.id)) note.id = guid.ToString("D");
             var xml = note.GetSerializeExplanatoryNote();
             if (!CheckSerialized(xml)) return false;
+            xml = RemoveDraftDefaults(xml, ExplanatoryNote0107Document.RootName, omitted);
             if (draftOwner != null)
             {
-                xml = RemoveDraftDefaults(xml, ExplanatoryNote0107Document.RootName, omitted);
                 await TrackExportAsync(ExplanatoryNote0107Document.Family, ExplanatoryNote0107Document.LegacyVersion,
                     guid, name, attempt => ExportSchemaDocumentAsync(xml, attempt, ExplanatoryNote0107Document.RootName,
                         saveAsDraft: true, owner: draftOwner));
                 return true;
             }
-            await ValidateClassicSaveAsync(xml, name, ExplanatoryNote0107Document.LegacyVersion, ClassicNoteFormat);
             await SchemaXmlDocument.PersistAsync(xml, name, guid, session => new ExplanatoryNoteXPO(session),
-                existing, previousName, previousXml);
+                existing, previousName, previousXml, initialStatus: DocumentStatus.InProgress);
             return true;
         }
 
@@ -665,21 +662,23 @@ namespace ProjectDocumentation.NET.Forms
             {
                 var segments = path.Split('/');
                 IEnumerable<XElement> parents = new[] { document.Root };
-                foreach (var segment in segments.Take(segments.Length - 1)) parents = parents.Elements(segment);
+                foreach (var segment in segments.Take(segments.Length - 1))
+                    parents = parents.SelectMany(parent => DraftElements(parent, segment));
                 var name = segments[segments.Length - 1];
                 if (name.StartsWith("@", StringComparison.Ordinal)) parents.Attributes(name.Substring(1)).Remove();
-                else parents.Elements(name).Remove();
+                else parents.SelectMany(parent => DraftElements(parent, name)).Remove();
             }
             return document.ToString(SaveOptions.DisableFormatting);
         }
 
-        private async Task ValidateClassicSaveAsync(string xml, string name, string version, string format)
+        private static IEnumerable<XElement> DraftElements(XElement parent, string segment)
         {
-            if (string.IsNullOrWhiteSpace(name)) throw new InvalidOperationException("Укажите наименование документа.");
-            var validation = await conclusionSchema.ValidateAsync(xml);
-            if (!validation.Valid || validation.Version != version)
-                throw new InvalidOperationException(ClassicValidationMessage(validation, format) + Environment.NewLine +
-                    "Исправьте замечания или сохраните отдельный XML-черновик.");
+            var bracket = segment.IndexOf('[');
+            if (bracket < 0) return parent.Elements(segment);
+
+            var index = int.Parse(segment.Substring(bracket + 1, segment.Length - bracket - 2),
+                System.Globalization.CultureInfo.InvariantCulture);
+            return parent.Elements(segment.Substring(0, bracket)).Skip(index - 1).Take(1);
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
@@ -733,8 +732,8 @@ namespace ProjectDocumentation.NET.Forms
                 {
                     form.SetFileName(previousName);
                     var guid = conclusionXPO.Guid ?? throw new InvalidOperationException("У заключения отсутствует идентификатор в базе.");
-                    form.SaveConclusionAsync = (edited, name) => SaveClassicConclusionAsync(edited, name, guid,
-                        conclusionXPO, previousName, xml);
+                    form.SaveConclusionAsync = (edited, name, omitted) => SaveClassicConclusionAsync(edited, name, guid,
+                        conclusionXPO, previousName, xml, omitted: omitted);
                     form.SaveDraftAsync = (edited, name, omitted) => SaveClassicConclusionAsync(edited, name, guid,
                         conclusionXPO, draftOwner: form, omitted: omitted);
                     form.ShowDialog(this);
@@ -763,8 +762,8 @@ namespace ProjectDocumentation.NET.Forms
                 {
                     form.SetFileName(previousName);
                     var guid = explanatoryNoteXPO.Guid ?? throw new InvalidOperationException("У записки отсутствует идентификатор в базе.");
-                    form.SaveNoteAsync = (edited, name) => SaveClassicNoteAsync(edited, name, guid,
-                        explanatoryNoteXPO, previousName, xml);
+                    form.SaveNoteAsync = (edited, name, omitted) => SaveClassicNoteAsync(edited, name, guid,
+                        explanatoryNoteXPO, previousName, xml, omitted: omitted);
                     form.SaveDraftAsync = (edited, name, omitted) => SaveClassicNoteAsync(edited, name, guid,
                         draftOwner: form, omitted: omitted);
                     form.ShowDialog(this);

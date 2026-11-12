@@ -59,6 +59,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
         public ConclusionEdit()
         {
             InitializeComponent();
+            btnSave.ToolTip = "Сохранить документ в базе. Недостающие поля можно заполнить позже.";
             ClassicRequiredFields.HighlightExisting(this);
             ClassicRequiredFields.Mark(btnDeclarant, cmbEcologyExpertiseNeedExpertise, cmbFunctionsClass);
             ClassicRequiredFields.MarkGroups(layoutControlGroup13);
@@ -1186,12 +1187,18 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
         {
             if (_saving || (draft && SaveDraftAsync == null)) return;
             FileName = txtFileName.Text;
-            var omitted = draft ? new List<string>() : null;
+            var omitted = new List<string>();
 
             T ReadRequiredEnum<T>(BaseEdit editor, string path, string message) => ReadEnumForSave<T>(editor, path, message, omitted);
 
             try
             {
+                if (!draft && string.IsNullOrWhiteSpace(FileName))
+                {
+                    ClassicRequiredFields.Focus(txtFileName);
+                    throw new InvalidOperationException("Укажите наименование документа.");
+                }
+
                 gridViewTEI.PostEditor();
                 gridViewTEI.UpdateCurrentRow();
                 gridViewCadastralNumber.PostEditor();
@@ -1232,11 +1239,11 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                 #region Page I_2
                 Conclusion.ExpertOrganization = new TOrganization
                 {
-                    OrgFullName = GetStringValue(txtOrgFullName.EditValue, txtOrgFullName, "Заполните наименование организации"),
-                    OrgOgrn = GetStringValue(txtOrgOGRN.EditValue, txtOrgOGRN, "Заполните ОГРН организации"),
-                    OrgKpp = GetStringValue(txtOrgKPP.EditValue, txtOrgKPP, "Заполните КПП организации"),
-                    OrgInn = GetStringValue(txtOrgINN.EditValue, txtOrgINN, "Заполните ИНН организации"),
-                    Email = GetStringValue(txtEmail.EditValue, txtEmail, isNullAble: true)
+                    OrgFullName = OptionalXmlText(txtOrgFullName.EditValue),
+                    OrgOgrn = OptionalXmlText(txtOrgOGRN.EditValue),
+                    OrgKpp = OptionalXmlText(txtOrgKPP.EditValue),
+                    OrgInn = OptionalXmlText(txtOrgINN.EditValue),
+                    Email = OptionalXmlText(txtEmail.EditValue)
                 };
                 if (btnAddress.EditValue is TAddress address)
                 {
@@ -1253,10 +1260,10 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                 }
                 Conclusion.Approver = new TWorkPerson
                 {
-                    FamilyName = GetStringValue(txtFamilyName.EditValue, txtFamilyName, "Заполните фамилию подписанта"),
-                    FirstName = GetStringValue(txtFirstName.EditValue, txtFirstName, "Заполните имя подписанта"),
-                    SecondName = GetStringValue(txtSecondName.EditValue, txtSecondName, "Заполните отчество подписанта"),
-                    Position = GetStringValue(txtPosition.EditValue, txtPosition, "Заполните должность подписанта")
+                    FamilyName = OptionalXmlText(txtFamilyName.EditValue),
+                    FirstName = OptionalXmlText(txtFirstName.EditValue),
+                    SecondName = OptionalXmlText(txtSecondName.EditValue),
+                    Position = OptionalXmlText(txtPosition.EditValue)
                 };
                 #endregion
 
@@ -1308,9 +1315,9 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                 #region Page II_1
                 Conclusion.Object = new TObject
                 {
-                    Name = GetStringValue(memoObjectName.Text, memoObjectName, "Заполните поле наименование объекта капитального строительства"),
+                    Name = OptionalXmlText(memoObjectName.Text),
                     Type = ReadRequiredEnum<TObjectType>(cmbObjectType, "Object/Type", "Укажите вид объекта капитального строительства."),
-                    FunctionsClass = GetStringValue(cmbFunctionsClass.EditValue?.ToString(), cmbFunctionsClass, "Функциональное назначение объекта капитального строительства (код по классификатору)")
+                    FunctionsClass = OptionalXmlText(cmbFunctionsClass.EditValue)
                 };
 
                 //Conclusion.FunctionsClass = GetStringValue(cmbFunctionsClass.EditValue?.ToString(), cmbFunctionsClass, "Функциональное назначение объекта капитального строительства (код по классификатору)");
@@ -1389,12 +1396,6 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                 #region Page II_3
                 var seismicMin = OptionalXmlText(_seismicMinimum.EditValue);
                 var seismicMax = OptionalXmlText(_seismicMaximum.EditValue);
-                if (!draft && seismicMin == null && seismicMax != null)
-                {
-                    _seismicMinimum.Focus();
-                    throw new InvalidOperationException("Укажите расчётную интенсивность сейсмического воздействия.");
-                }
-
                 Conclusion.ClimateConditions = new TClimateConditions
                 {
                     SeismicActivityCalculatedValue = seismicMin == null && seismicMax == null ? null
@@ -1482,25 +1483,24 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                 {
                     var eEPDUse = new TeepdUse
                     {
-                        EepdDate = dateEEPDDate.DateTime.Date,
-                        EepdNote = GetStringValue(memoEEPDNote.EditValue, memoEEPDNote, "Заполните поле сведения о разделах представленной на экспертизу проектной документации"),
-                        EepdNumber = new TConclusionNumber()
+                        EepdNote = OptionalXmlText(memoEEPDNote.EditValue)
                     };
+                    if (dateEEPDDate.EditValue is DateTime eepdDate) eEPDUse.EepdDate = eepdDate.Date;
+                    else omitted.Add("EEPDUse[1]/EEPDDate");
 
-                    var number = new TConclusionNumber();
-                    var itemChoiceType = (ItemChoiceType)radioGroupConclusionNumber.SelectedIndex;
-                    switch (itemChoiceType)
+                    var number = OptionalXmlText(txtEEPDNumber.EditValue);
+                    if (number != null)
                     {
-                        case ItemChoiceType.EGRZ:
-                            number.Egrz = ConclusionEdit.GetStringValue(txtEEPDNumber.EditValue, txtEEPDNumber, "Заполните поле номер заключения экспертизы *");
-                            break;
-
-                        case ItemChoiceType.noEGRZ:
-                            number.NoEgrz = ConclusionEdit.GetStringValue(txtEEPDNumber.EditValue, txtEEPDNumber, "Заполните поле номер заключения экспертизы *");
-                            break;
+                        switch ((ItemChoiceType)radioGroupConclusionNumber.SelectedIndex)
+                        {
+                            case ItemChoiceType.EGRZ:
+                                eEPDUse.EepdNumber = new TConclusionNumber { Egrz = number };
+                                break;
+                            case ItemChoiceType.noEGRZ:
+                                eEPDUse.EepdNumber = new TConclusionNumber { NoEgrz = number };
+                                break;
+                        }
                     }
-
-                    eEPDUse.EepdNumber = number;
                     Conclusion.EepdUse.Insert(0, eEPDUse);
                     _isEepdUseInForm = true;
                 }
@@ -1668,10 +1668,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                 Conclusion.Summary.ExaminationSummary.EstimateSummary = GetOptionalEnum<TEstimateValidationSummary>(cmbEstimateValidationSummary, out bool estimateValidationSummarySpecified);
                 Conclusion.Summary.ExaminationSummary.EstimateSummarySpecified = estimateValidationSummarySpecified;
 
-                Conclusion.Summary.EstimateSummary1315 =
-                    GetStringValue(memoEstimateSummary1315.EditValue,
-                                   memoEstimateSummary1315,
-                                   "Вывод об оценке достоверности определения сметной стоимости (ПП РФ №1315)");
+                Conclusion.Summary.EstimateSummary1315 = OptionalXmlText(memoEstimateSummary1315.EditValue);
 
                 // Блок выводов по ПД в схеме необязателен (например, экспертиза только изысканий):
                 // если ни один вывод не выбран — блок не пишется; если выбран хотя бы один — обязательны все три.
@@ -1720,15 +1717,14 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                 }
                 #endregion
 
-                Func<Conclusion, string, Task<bool>> save = SaveConclusionAsync;
-                if (draft) save = (value, name) => SaveDraftAsync(value, name, omitted);
+                var save = draft ? SaveDraftAsync : SaveConclusionAsync;
                 if (save != null)
                 {
                     _saving = true;
                     layoutControl.Enabled = false;
                     try
                     {
-                        if (!await save(Conclusion, FileName)) return;
+                        if (!await save(Conclusion, FileName, omitted)) return;
                     }
                     finally
                     {
@@ -2536,9 +2532,9 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
 
             foreach (var item in items)
             {
-                if (item.Value is GeneralizedDictionaryXPO obj)
+                if (item.Value is GeneralizedDictionaryXPO obj && EnumExtension.TryGetEnumByXmlAttributeValue(obj.Value, out T value))
                 {
-                    result.Add(GetEnumByAttributeValue<T>(GetValueGeneralizedDictionary(obj, message: message).Value));
+                    result.Add(value);
                 }
             }
 
@@ -2689,7 +2685,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
         public Conclusion Conclusion { get; private set; }
         public string FileName { get; private set; }
         public bool IsSave { get; private set; }
-        internal Func<Conclusion, string, Task<bool>> SaveConclusionAsync { get; set; }
+        internal Func<Conclusion, string, IReadOnlyList<string>, Task<bool>> SaveConclusionAsync { get; set; }
         internal Func<Conclusion, string, IReadOnlyList<string>, Task<bool>> SaveDraftAsync { get; set; }
 
         protected override void OnFormClosing(FormClosingEventArgs e)
@@ -2704,7 +2700,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
             editor.EditValue = editor.Properties.Items.OfType<GeneralizedDictionaryXPO>().FirstOrDefault(item => item.Value == code);
         }
 
-        private static string OptionalXmlText(object value)
+        internal static string OptionalXmlText(object value)
         {
             var text = value?.ToString();
             return string.IsNullOrWhiteSpace(text) ? null : text;

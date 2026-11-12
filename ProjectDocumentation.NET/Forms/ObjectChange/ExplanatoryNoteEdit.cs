@@ -31,7 +31,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
         private Session Session => SessionController.GetSession();
         public string FileName { get; private set; }
         public bool IsSave { get; private set; }
-        internal Func<ExplanatoryNote, string, Task<bool>> SaveNoteAsync { get; set; }
+        internal Func<ExplanatoryNote, string, IReadOnlyList<string>, Task<bool>> SaveNoteAsync { get; set; }
         internal Func<ExplanatoryNote, string, IReadOnlyList<string>, Task<bool>> SaveDraftAsync { get; set; }
         private bool _saving;
         public ExplanatoryNote ExplanatoryNote { get; private set; }
@@ -48,6 +48,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
         public ExplanatoryNoteEdit()
         {
             InitializeComponent();
+            btnSave.ToolTip = "Сохранить документ в базе. Недостающие поля можно заполнить позже.";
             ClassicRequiredFields.HighlightExisting(this);
             ClassicRequiredFields.Mark(txtIndustrialObjectName, cmbLandCategory);
             ClassicRequiredFields.Unmark(txtIndustrialObjectID, cmbFireDangerCategory, cmbResponsibilityLevel);
@@ -424,10 +425,16 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
         {
             if (_saving || (draft && SaveDraftAsync == null)) return;
             FileName = txtFileName.Text;
-            var omitted = draft ? new List<string>() : null;
+            var omitted = new List<string>();
 
             try
             {
+                if (!draft && string.IsNullOrWhiteSpace(FileName))
+                {
+                    ClassicRequiredFields.Focus(txtFileName);
+                    throw new InvalidOperationException("Укажите наименование документа.");
+                }
+
                 gridViewModifications.PostEditor();
                 gridViewModifications.UpdateCurrentRow();
                 gridViewUsedNorms.PostEditor();
@@ -435,8 +442,8 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                 ExplanatoryNote.SchemaVersion = "01.03";
 
                 #region Page General Information
-                ExplanatoryNote.ExplanatoryNoteNumber = ConclusionEdit.GetStringValue(txtExplanatoryNoteNumber.EditValue, txtExplanatoryNoteNumber, "Заполните шифр пояснительной записки");
-                ExplanatoryNote.ExplanatoryNoteYear = ConclusionEdit.GetStringValue(txtExplanatoryNoteYear.EditValue, txtExplanatoryNoteYear, "Заполните год составления пояснительной записки");
+                ExplanatoryNote.ExplanatoryNoteNumber = ConclusionEdit.OptionalXmlText(txtExplanatoryNoteNumber.EditValue);
+                ExplanatoryNote.ExplanatoryNoteYear = ConclusionEdit.OptionalXmlText(txtExplanatoryNoteYear.EditValue);
                 if (btnIssueAuthor.EditValue is tAuthor tAuthor)
                 {
                     ExplanatoryNote.IssueAuthor = tAuthor;
@@ -476,11 +483,6 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                 // которых нет в форме (адрес, ТЭП, функции, климат, ресурсы, части объекта и т. д.).
                 var objectType = string.IsNullOrWhiteSpace(cmbExplanatoryNoteObjType.Text)
                     ? (ExplanatoryNoteObjType?)null : _explanatoryNoteObjType;
-                if (!draft && objectType == null)
-                {
-                    ClassicRequiredFields.Focus(cmbExplanatoryNoteObjType);
-                    throw new InvalidOperationException("Выберите тип объекта строительства.");
-                }
                 IExplanatoryNoteObject noteObject;
                 switch (objectType)
                 {
@@ -507,36 +509,19 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                     var objectPath = objectType.Value.ToString();
                     T ReadRequiredEnum<T>(BaseEdit editor, string name, string message) =>
                         ConclusionEdit.ReadEnumForSave<T>(editor, $"{objectPath}/{name}", message, omitted);
-                    noteObject.ObjectID = ConclusionEdit.GetStringValue(txtIndustrialObjectID.EditValue, txtIndustrialObjectID, "Заполните идентификатор объекта (части объекта)");
+                    noteObject.ObjectID = ConclusionEdit.OptionalXmlText(txtIndustrialObjectID.EditValue);
                     noteObject.Placement = ReadRequiredEnum<tPlacement>(cmbPlacement, "@Placement",
                         "Укажите место расположения объекта капитального строительства.");
-                    if (cmbDangerousAndComplex.EditValue is GeneralizedDictionaryXPO)
-                    {
-                        noteObject.DangerousAndComplexSpecified = true;
-                        noteObject.DangerousAndComplex = ConclusionEdit.GetEnumByAttributeValue<tDangerousAndComplex>(ConclusionEdit.GetValueGeneralizedDictionary(
-                            cmbDangerousAndComplex,
-                            message: "Заполните поле сведения об отнесении объекта к особо опасным и технически сложным объектам (номер подпункта пункта 1 статьи 48.1 Градостроительного кодекса Российской Федерации)")?.Value);
-                    }
-                    else
-                    {
-                        noteObject.DangerousAndComplexSpecified = false;
-                    }
-                    if (cmbUnique.EditValue is GeneralizedDictionaryXPO)
-                    {
-                        noteObject.UniqueSpecified = true;
-                        noteObject.Unique = ConclusionEdit.GetEnumByAttributeValue<tUnique>(ConclusionEdit.GetValueGeneralizedDictionary(
-                            cmbUnique,
-                            message: "Заполните поле сведения об отнесении объекта к уникальным объектам (номер подпункта пункта 2 статьи 48.1 Градостроительного кодекса Российской Федерации)")?.Value);
-                    }
-                    else
-                    {
-                        noteObject.UniqueSpecified = false;
-                    }
-                    noteObject.Name = ConclusionEdit.GetStringValue(txtIndustrialObjectName.EditValue, txtIndustrialObjectName, "Заполните поле наименование объекта капитального строительства (части сложного (составного) объекта капитального строительства)");
+                    noteObject.DangerousAndComplex = ConclusionEdit.GetOptionalEnum<tDangerousAndComplex>(
+                        cmbDangerousAndComplex, out bool dangerousAndComplexSpecified);
+                    noteObject.DangerousAndComplexSpecified = dangerousAndComplexSpecified;
+                    noteObject.Unique = ConclusionEdit.GetOptionalEnum<tUnique>(cmbUnique, out bool uniqueSpecified);
+                    noteObject.UniqueSpecified = uniqueSpecified;
+                    noteObject.Name = ConclusionEdit.OptionalXmlText(txtIndustrialObjectName.EditValue);
                     noteObject.ConstructionType = ReadRequiredEnum<tConstructionType>(cmbConstructionType, "ConstructionType",
                         "Укажите вид работ, на который разрабатывается проектная документация.");
                     var constructionDurationText = txtConstructionDuration.Text.Trim().Replace(',', '.');
-                    if (draft && constructionDurationText.Length == 0)
+                    if (constructionDurationText.Length == 0)
                         omitted.Add($"{objectPath}/ConstructionDuration");
                     else if (decimal.TryParse(constructionDurationText, NumberStyles.AllowDecimalPoint | NumberStyles.AllowLeadingSign,
                         CultureInfo.InvariantCulture, out var constructionDuration))
@@ -617,15 +602,14 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                 }
                 #endregion
 
-                Func<ExplanatoryNote, string, Task<bool>> save = SaveNoteAsync;
-                if (draft) save = (value, name) => SaveDraftAsync(value, name, omitted);
+                var save = draft ? SaveDraftAsync : SaveNoteAsync;
                 if (save != null)
                 {
                     _saving = true;
                     layoutControlExplanatoryNote.Enabled = false;
                     try
                     {
-                        if (!await save(ExplanatoryNote, FileName)) return;
+                        if (!await save(ExplanatoryNote, FileName, omitted)) return;
                     }
                     finally
                     {

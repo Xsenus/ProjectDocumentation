@@ -28,7 +28,7 @@ namespace ProjectDocumentation.NET.Forms
         private BarSubItem CreateDocumentStatusMenu()
         {
             documentStatusMenu = new BarSubItem(barManager, "Статус");
-            markCompleted = new BarButtonItem(barManager, "Отметить завершённым");
+            markCompleted = new BarButtonItem(barManager, "Проверить XML и завершить");
             markInProgress = new BarButtonItem(barManager, "Перевести в работу");
             markCompleted.ItemClick += async (_, __) => await ChangeDocumentStatusAsync(DocumentStatus.Completed);
             markInProgress.ItemClick += async (_, __) => await ChangeDocumentStatusAsync(DocumentStatus.InProgress);
@@ -52,13 +52,27 @@ namespace ProjectDocumentation.NET.Forms
             UpdateDocumentStatusCommands(record);
             try
             {
+                var originalName = record.Name;
+                var originalXml = record.GetObj();
+                var originalStatus = record.Status;
+                if (status == DocumentStatus.Completed)
+                {
+                    var version = ReadDocumentVersion(record);
+                    var validation = await conclusionSchema.ValidateAsync(originalXml);
+                    SchemaXmlDocument.RequireValid(validation, version ?? validation.Version);
+                }
+
                 using (var unit = new UnitOfWork(Session.DataLayer))
                 {
                     var current = unit.GetObjectByKey<XmlObjXPO>(record.Oid);
-                    if (current == null || current.Guid != record.Guid || current.Name != record.Name || current.GetObj() != record.GetObj())
+                    if (current == null || current.Guid != record.Guid || current.Name != originalName ||
+                        current.GetObj() != originalXml || current.Status != originalStatus)
                         throw new InvalidOperationException("Документ изменился или был удалён. Обновите список документов.");
 
-                    current.SetStatus(status);
+                    if (status == DocumentStatus.Completed)
+                        current.SetValidatedCompletion(originalXml);
+                    else
+                        current.SetStatus(status);
                     await unit.CommitChangesAsync();
                 }
                 Session.GetObjectByKey<XmlObjXPO>(record.Oid, true);

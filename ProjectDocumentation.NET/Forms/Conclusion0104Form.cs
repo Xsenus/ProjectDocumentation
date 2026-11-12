@@ -199,6 +199,8 @@ namespace ProjectDocumentation.NET.Forms
         protected override async void OnShown(EventArgs e)
         {
             base.OnShown(e);
+            if (!ReadOnlyDocument && ImportAttempt == null)
+                saveButton.ToolTip = "Сохранить документ в базе. Недостающие поля можно заполнить позже.";
             status.Text = "Загрузка полей схемы…";
             try
             {
@@ -495,6 +497,11 @@ namespace ProjectDocumentation.NET.Forms
                 nameEditor.Focus();
                 return;
             }
+            if (commit && ImportAttempt == null)
+            {
+                await RunAsync("Сохранение документа в базе…", () => SaveAndCloseAsync(revision == 0 ? initialXml : Snapshot()));
+                return;
+            }
             await RunAsync(commit ? "Проверка перед сохранением…" : "Проверка XML…", async () =>
             {
                 var xml = Snapshot();
@@ -510,14 +517,19 @@ namespace ProjectDocumentation.NET.Forms
                     }
                 }
                 if (!result.Valid || !commit) return;
-                Document = await save(xml, nameEditor.Text);
-                dirty = false;
-                rawDirty = false;
-                DialogResult = DialogResult.OK;
-                Close();
+                await SaveAndCloseAsync(xml);
             }, captureImportFailure: commit);
             if (!IsDisposed && !Disposing && tabs.SelectedTabPage == validationPage && errorView.DataRowCount > 0)
                 errors.Focus();
+        }
+
+        private async Task SaveAndCloseAsync(string xml)
+        {
+            Document = await save(xml, nameEditor.Text);
+            dirty = false;
+            rawDirty = false;
+            DialogResult = DialogResult.OK;
+            Close();
         }
 
         private void ShowValidation(ConclusionValidation result)
