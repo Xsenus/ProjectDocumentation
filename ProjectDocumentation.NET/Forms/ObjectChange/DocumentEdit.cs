@@ -142,9 +142,9 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Стили именования", Justification = "<Ожидание>")]
         private void barBtnItemsAdd_ItemClick(object sender, ItemClickEventArgs e)
         {
-            using (var ofd = new OpenFileDialog() { Multiselect = true })
+            using (var ofd = new XtraOpenFileDialog { Multiselect = true, CheckFileExists = true })
             {
-                if (ofd.ShowDialog() == DialogResult.OK)
+                if (ofd.ShowDialog(this) == DialogResult.OK)
                 {
                     var files = ofd.FileNames;
                     AddFiles(files);

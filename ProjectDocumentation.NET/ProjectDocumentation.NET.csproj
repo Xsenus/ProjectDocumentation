@@ -59,6 +59,9 @@
     <Reference Include="DevExpress.Xpf.Core.v24.2, Version=24.2.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
     <Reference Include="DevExpress.Xpo.v24.2, Version=24.2.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
     <Reference Include="DevExpress.XtraBars.v24.2, Version=24.2.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
+    <Reference Include="DevExpress.XtraDialogs.v24.2, Version=24.2.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a">
+      <Private>True</Private>
+    </Reference>
     <Reference Include="DevExpress.XtraEditors.v24.2" />
     <Reference Include="DevExpress.Printing.v24.2.Core" />
     <Reference Include="DevExpress.Drawing.v24.2" />

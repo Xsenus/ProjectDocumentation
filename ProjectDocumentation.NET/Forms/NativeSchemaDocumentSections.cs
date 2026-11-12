@@ -1,4 +1,5 @@
 using DevExpress.XtraEditors;
+using DevExpress.XtraLayout;
 using DevExpress.XtraTab;
 using DevExpress.XtraTreeList.Nodes;
 using System;
@@ -57,13 +58,10 @@ namespace ProjectDocumentation.NET.Forms
             sectionBlocks.ToolTipController = fieldToolTips;
             sectionLocation.Appearance.FontStyleDelta = FontStyle.Bold;
 
-            var list = new TableLayoutPanel { Dock = DockStyle.Fill, ColumnCount = 1, RowCount = 3 };
-            list.RowStyles.Add(new RowStyle(SizeType.AutoSize));
-            list.RowStyles.Add(new RowStyle(SizeType.Percent, 100));
-            list.RowStyles.Add(new RowStyle(SizeType.AutoSize));
-            list.Controls.Add(sectionLocation, 0, 0);
-            list.Controls.Add(sectionBlocks, 0, 1);
-            list.Controls.Add(Toolbar(sectionBack, sectionOpen), 0, 2);
+            var list = CreateLayout(Padding.Empty);
+            AddLayoutItem(list, sectionLocation, AddLayoutRow(list));
+            AddLayoutItem(list, sectionBlocks, AddLayoutRow(list, SizeType.Percent, 100));
+            AddLayoutItem(list, Toolbar(sectionBack, sectionOpen), AddLayoutRow(list));
             sectionBody.Panel1.Controls.Add(list);
             sectionTabs.SelectedPageChanged += (_, __) =>
             {
@@ -278,7 +276,7 @@ namespace ProjectDocumentation.NET.Forms
             else SelectChild(name);
         }
 
-        private void AddSectionValues(TableLayoutPanel layout, TreeListNode item, NativeSchemaNode node)
+        private void AddSectionValues(LayoutControl layout, TreeListNode item, NativeSchemaNode node)
         {
             foreach (var field in VisibleChildren(node).Where(child => child.Capacity == 1 && !child.InsideChoice))
             {

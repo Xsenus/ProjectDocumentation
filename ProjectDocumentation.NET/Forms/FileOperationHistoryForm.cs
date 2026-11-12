@@ -2,6 +2,7 @@ using Core.NET.Controllers;
 using DevExpress.Images;
 using DevExpress.LookAndFeel;
 using DevExpress.Utils;
+using DevExpress.Utils.Layout;
 using DevExpress.XtraBars;
 using DevExpress.XtraEditors;
 using DevExpress.XtraEditors.Controls;
@@ -110,14 +111,20 @@ namespace ProjectDocumentation.NET.Forms
 
             var close = new SimpleButton { AutoSize = true, Text = "Закрыть", DialogResult = DialogResult.Cancel };
             close.LookAndFeel.ParentLookAndFeel = LookAndFeel;
-            var layout = new TableLayoutPanel { Dock = DockStyle.Fill, RowCount = 3, ColumnCount = 1, Padding = new Padding(16, 13, 16, 9) };
-            layout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100));
-            layout.RowStyles.Add(new RowStyle(SizeType.AutoSize));
-            layout.RowStyles.Add(new RowStyle(SizeType.Percent, 100));
-            layout.RowStyles.Add(new RowStyle(SizeType.AutoSize));
-            layout.Controls.Add(CreateFilters(), 0, 0);
-            layout.Controls.Add(split, 0, 1);
-            layout.Controls.Add(CreateCommands(close), 0, 2);
+            var layout = new TablePanel { Dock = DockStyle.Fill, Padding = new Padding(16, 13, 16, 9) };
+            layout.Columns.Add(new TablePanelColumn(TablePanelEntityStyle.Relative, 1));
+            layout.Rows.AddRange(new[]
+            {
+                new TablePanelRow(TablePanelEntityStyle.Absolute, 43),
+                new TablePanelRow(TablePanelEntityStyle.Relative, 1),
+                new TablePanelRow(TablePanelEntityStyle.Absolute, 46)
+            });
+            var filters = CreateFilters();
+            var commands = CreateCommands(close);
+            layout.Controls.AddRange(new Control[] { filters, split, commands });
+            layout.SetCell(filters, 0, 0);
+            layout.SetCell(split, 1, 0);
+            layout.SetCell(commands, 2, 0);
             Controls.Add(layout);
             CancelButton = close;
             ActiveControl = grid;
@@ -265,14 +272,18 @@ namespace ProjectDocumentation.NET.Forms
             }
         }
 
-        private TableLayoutPanel CreateFilters()
+        private TablePanel CreateFilters()
         {
-            var filters = new TableLayoutPanel { Dock = DockStyle.Fill, AutoSize = true, ColumnCount = 5, RowCount = 1, Margin = new Padding(0, 0, 0, 10) };
-            filters.ColumnStyles.Add(new ColumnStyle(SizeType.AutoSize));
-            filters.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100));
-            filters.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 153));
-            filters.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 171));
-            filters.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 115));
+            var filters = new TablePanel { Dock = DockStyle.Fill, Margin = new Padding(0, 0, 0, 8) };
+            filters.Columns.AddRange(new[]
+            {
+                new TablePanelColumn(TablePanelEntityStyle.Absolute, 50),
+                new TablePanelColumn(TablePanelEntityStyle.Relative, 1),
+                new TablePanelColumn(TablePanelEntityStyle.Absolute, 153),
+                new TablePanelColumn(TablePanelEntityStyle.Absolute, 171),
+                new TablePanelColumn(TablePanelEntityStyle.Absolute, 115)
+            });
+            filters.Rows.Add(new TablePanelRow(TablePanelEntityStyle.Relative, 1));
             var label = new LabelControl { Text = "&Поиск", Anchor = AnchorStyles.Left, Margin = new Padding(0, 0, 10, 0), AllowHtmlString = false };
             label.LookAndFeel.ParentLookAndFeel = LookAndFeel;
             search.Margin = new Padding(0, 0, 9, 0);
@@ -280,20 +291,25 @@ namespace ProjectDocumentation.NET.Forms
             statusFilter.Margin = new Padding(0, 0, 9, 0);
             refresh.Margin = Padding.Empty;
             refresh.MinimumSize = new Size(0, 30);
-            filters.Controls.Add(label, 0, 0);
-            filters.Controls.Add(search, 1, 0);
-            filters.Controls.Add(kindFilter, 2, 0);
-            filters.Controls.Add(statusFilter, 3, 0);
-            filters.Controls.Add(refresh, 4, 0);
+            var fields = new Control[] { label, search, kindFilter, statusFilter, refresh };
+            filters.Controls.AddRange(fields);
+            for (var column = 0; column < fields.Length; column++) filters.SetCell(fields[column], 0, column);
             return filters;
         }
 
-        private TableLayoutPanel CreateCommands(SimpleButton close)
+        private TablePanel CreateCommands(SimpleButton close)
         {
-            var commands = new TableLayoutPanel { Dock = DockStyle.Fill, AutoSize = true, ColumnCount = 2, RowCount = 1, Margin = new Padding(0, 9, 0, 0) };
-            commands.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100));
-            commands.ColumnStyles.Add(new ColumnStyle(SizeType.AutoSize));
-            var actions = new FlowLayoutPanel { Dock = DockStyle.Fill, AutoSize = true, WrapContents = false, Margin = Padding.Empty };
+            var commands = new TablePanel { Dock = DockStyle.Fill, Margin = new Padding(0, 9, 0, 0) };
+            commands.Columns.AddRange(new[]
+            {
+                new TablePanelColumn(TablePanelEntityStyle.Relative, 1),
+                new TablePanelColumn(TablePanelEntityStyle.Absolute, 94)
+            });
+            commands.Rows.Add(new TablePanelRow(TablePanelEntityStyle.Relative, 1));
+            var actions = new StackPanel
+            {
+                Dock = DockStyle.Fill, LayoutDirection = StackPanelLayoutDirection.LeftToRight, Margin = Padding.Empty
+            };
             foreach (var button in new[] { retry, openFolder, copy })
             {
                 button.Padding = new Padding(5, 0, 5, 0);
@@ -303,8 +319,10 @@ namespace ProjectDocumentation.NET.Forms
             }
             close.MinimumSize = new Size(94, 32);
             close.Margin = Padding.Empty;
-            commands.Controls.Add(actions, 0, 0);
-            commands.Controls.Add(close, 1, 0);
+            close.Dock = DockStyle.Fill;
+            commands.Controls.AddRange(new Control[] { actions, close });
+            commands.SetCell(actions, 0, 0);
+            commands.SetCell(close, 0, 1);
             return commands;
         }
 

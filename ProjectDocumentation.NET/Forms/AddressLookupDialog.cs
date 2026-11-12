@@ -2,6 +2,7 @@ using Core.NET.DaDataObj;
 using Dadata.Model;
 using DevExpress.XtraEditors;
 using DevExpress.Utils;
+using DevExpress.Utils.Layout;
 using System;
 using System.Drawing;
 using System.Threading;
@@ -50,33 +51,34 @@ namespace ProjectDocumentation.NET.Forms
             status.Text = "Введите адрес и выберите подходящий вариант из списка.";
 
             var close = new SimpleButton { Text = "Отмена", AutoSize = true, DialogResult = DialogResult.Cancel };
-            var actions = new FlowLayoutPanel { Dock = DockStyle.Fill, AutoSize = true, WrapContents = false };
+            var actions = new StackPanel { Dock = DockStyle.Fill, LayoutDirection = StackPanelLayoutDirection.LeftToRight };
             actions.Controls.Add(find);
             actions.Controls.Add(standardize);
-            var confirmation = new FlowLayoutPanel
+            var confirmation = new StackPanel
             {
-                Dock = DockStyle.Fill, AutoSize = true, WrapContents = false, FlowDirection = FlowDirection.RightToLeft
+                Dock = DockStyle.Fill, LayoutDirection = StackPanelLayoutDirection.RightToLeft
             };
             confirmation.Controls.Add(close);
             confirmation.Controls.Add(apply);
 
-            var layout = new TableLayoutPanel
+            var layout = new TablePanel { Dock = DockStyle.Fill, Padding = new Padding(12) };
+            layout.Columns.Add(new TablePanelColumn(TablePanelEntityStyle.Relative, 1));
+            layout.Rows.AddRange(new[]
             {
-                Dock = DockStyle.Fill, Padding = new Padding(12), ColumnCount = 1, RowCount = 6
+                new TablePanelRow(TablePanelEntityStyle.Absolute, 24),
+                new TablePanelRow(TablePanelEntityStyle.Absolute, 33),
+                new TablePanelRow(TablePanelEntityStyle.Absolute, 36),
+                new TablePanelRow(TablePanelEntityStyle.Relative, 1),
+                new TablePanelRow(TablePanelEntityStyle.Absolute, 49),
+                new TablePanelRow(TablePanelEntityStyle.Absolute, 34)
+            });
+            var fields = new Control[]
+            {
+                new LabelControl { Text = "Российский адрес", Anchor = AnchorStyles.Left },
+                query, actions, results, status, confirmation
             };
-            layout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100));
-            layout.RowStyles.Add(new RowStyle(SizeType.AutoSize));
-            layout.RowStyles.Add(new RowStyle(SizeType.AutoSize));
-            layout.RowStyles.Add(new RowStyle(SizeType.AutoSize));
-            layout.RowStyles.Add(new RowStyle(SizeType.Percent, 100));
-            layout.RowStyles.Add(new RowStyle(SizeType.Absolute, 52));
-            layout.RowStyles.Add(new RowStyle(SizeType.AutoSize));
-            layout.Controls.Add(new LabelControl { Text = "Российский адрес", Margin = new Padding(3, 0, 3, 4) }, 0, 0);
-            layout.Controls.Add(query, 0, 1);
-            layout.Controls.Add(actions, 0, 2);
-            layout.Controls.Add(results, 0, 3);
-            layout.Controls.Add(status, 0, 4);
-            layout.Controls.Add(confirmation, 0, 5);
+            layout.Controls.AddRange(fields);
+            for (var row = 0; row < fields.Length; row++) layout.SetCell(fields[row], row, 0);
             Controls.Add(layout);
 
             find.Click += async (_, __) => await SearchAsync(standardization: false);

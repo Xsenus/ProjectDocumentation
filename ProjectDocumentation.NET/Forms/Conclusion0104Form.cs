@@ -3,9 +3,12 @@ using Core.NET.Models.XPO;
 using DevExpress.Images;
 using DevExpress.Office.Services;
 using DevExpress.Utils;
+using DevExpress.Utils.Layout;
 using DevExpress.XtraEditors;
 using DevExpress.XtraGrid;
 using DevExpress.XtraGrid.Views.Grid;
+using DevExpress.XtraLayout;
+using DevExpress.XtraLayout.Utils;
 using DevExpress.XtraRichEdit;
 using DevExpress.XtraTab;
 using ProjectDocumentation.NET.Services;
@@ -19,6 +22,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml.Linq;
+using Padding = System.Windows.Forms.Padding;
 
 namespace ProjectDocumentation.NET.Forms
 {
@@ -115,6 +119,11 @@ namespace ProjectDocumentation.NET.Forms
                 status.Text = "Есть неприменённые изменения XML.";
             };
 
+            saveButton.Visible = !ReadOnlyDocument;
+            applyRawButton.Visible = !ReadOnlyDocument;
+            resetRawButton.Visible = !ReadOnlyDocument;
+            draftButton.Text = ReadOnlyDocument ? "Выгрузить исходный XML…" : draftButton.Text;
+
             fieldsPage.Controls.Add(CreateFieldsPanel());
             sectionsPage.Controls.Add(CreateSectionsPanel());
             fieldToolTips.GetActiveObjectInfo += FieldToolTip;
@@ -171,27 +180,18 @@ namespace ProjectDocumentation.NET.Forms
             applyRawButton.Click += (_, __) => ApplyRaw();
             resetRawButton.Click += (_, __) => ResetRawEditor();
             previewButton.Click += async (_, __) => await UpdatePreviewAsync();
-            saveButton.Visible = !ReadOnlyDocument;
-            applyRawButton.Visible = !ReadOnlyDocument;
-            resetRawButton.Visible = !ReadOnlyDocument;
-            draftButton.Text = ReadOnlyDocument ? "Выгрузить исходный XML…" : draftButton.Text;
-
             var commands = Toolbar(findFieldButton, checkButton, saveButton, draftButton);
-            var header = new TableLayoutPanel { AutoSize = true, Dock = DockStyle.Top, ColumnCount = 2, RowCount = 2, Margin = new Padding(0, 0, 0, 8) };
-            header.ColumnStyles.Add(new ColumnStyle(SizeType.AutoSize));
-            header.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100));
-            header.Controls.Add(new LabelControl { Text = "Название документа", Anchor = AnchorStyles.Left, Margin = new Padding(0, 0, 10, 0) }, 0, 0);
-            header.Controls.Add(nameEditor, 1, 0);
-            header.Controls.Add(commands, 0, 1);
-            header.SetColumnSpan(commands, 2);
-            var layout = new TableLayoutPanel { Dock = DockStyle.Fill, ColumnCount = 1, RowCount = 3, Padding = new Padding(14, 12, 14, 4) };
-            layout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100));
-            layout.RowStyles.Add(new RowStyle(SizeType.AutoSize));
-            layout.RowStyles.Add(new RowStyle(SizeType.Percent, 100));
-            layout.RowStyles.Add(new RowStyle(SizeType.AutoSize));
-            layout.Controls.Add(header, 0, 0);
-            layout.Controls.Add(tabs, 0, 1);
-            layout.Controls.Add(status, 0, 2);
+            var nameLabel = new LabelControl { Text = "Название документа", Margin = new Padding(0, 0, 10, 0) };
+            var captionWidth = nameLabel.GetPreferredSize(Size.Empty).Width + nameLabel.Margin.Horizontal;
+            var layout = CreateLayout(new Padding(14, 12, 14, 4),
+                new ColumnDefinition { SizeType = SizeType.Absolute, Width = captionWidth },
+                new ColumnDefinition { SizeType = SizeType.Percent, Width = 100 });
+            var nameRow = AddLayoutRow(layout);
+            AddLayoutItem(layout, nameLabel, nameRow).ControlAlignment = ContentAlignment.MiddleLeft;
+            AddLayoutItem(layout, nameEditor, nameRow, 1);
+            AddLayoutItem(layout, commands, AddLayoutRow(layout), columnSpan: 2);
+            AddLayoutItem(layout, tabs, AddLayoutRow(layout, SizeType.Percent, 100), columnSpan: 2);
+            AddLayoutItem(layout, status, AddLayoutRow(layout), columnSpan: 2);
             Controls.Add(layout);
             SetBusy(true);
         }
@@ -317,21 +317,84 @@ namespace ProjectDocumentation.NET.Forms
             view.OptionsView.RowAutoHeight = true;
         }
 
-        private static FlowLayoutPanel Toolbar(params Control[] controls)
+        private static LayoutControl CreateLayout(Padding padding, params ColumnDefinition[] columns)
         {
-            var panel = new FlowLayoutPanel { AutoSize = true, Dock = DockStyle.Top, WrapContents = false, Padding = new Padding(0, 2, 0, 2) };
-            panel.Controls.AddRange(controls);
-            return panel;
+            var layout = new LayoutControl { Dock = DockStyle.Fill, AllowCustomization = false };
+            var root = layout.Root;
+            root.GroupBordersVisible = false;
+            root.EnableIndentsWithoutBorders = DefaultBoolean.True;
+            root.Padding = new DevExpress.XtraLayout.Utils.Padding(padding.Left, padding.Right, padding.Top, padding.Bottom);
+            root.LayoutMode = LayoutMode.Table;
+            var definitions = root.OptionsTableLayoutGroup;
+            definitions.RowDefinitions.Clear();
+            definitions.ColumnDefinitions.Clear();
+            foreach (var column in columns.Length == 0
+                ? new[] { new ColumnDefinition { SizeType = SizeType.Percent, Width = 100 } }
+                : columns)
+                definitions.ColumnDefinitions.Add(column);
+            return layout;
+        }
+
+        private static int AddLayoutRow(LayoutControl layout, SizeType sizeType = SizeType.AutoSize, double height = 0)
+        {
+            var rows = layout.Root.OptionsTableLayoutGroup.RowDefinitions;
+            rows.Add(new RowDefinition { SizeType = sizeType, Height = height });
+            return rows.Count - 1;
+        }
+
+        private static LayoutControlItem AddLayoutItem(LayoutControl layout, Control control, int row, int column = 0, int columnSpan = 1)
+        {
+            control.Dock = DockStyle.None;
+            layout.Controls.Add(control);
+            var margin = control.Margin;
+            var item = new LayoutControlItem
+            {
+                Control = control,
+                TextVisible = false,
+                Padding = new DevExpress.XtraLayout.Utils.Padding(margin.Left, margin.Right, margin.Top, margin.Bottom)
+            };
+            item.OptionsTableLayoutItem.RowIndex = row;
+            item.OptionsTableLayoutItem.ColumnIndex = column;
+            item.OptionsTableLayoutItem.ColumnSpan = columnSpan;
+            if (control is StackPanel toolbar)
+            {
+                item.SizeConstraintsType = SizeConstraintsType.Custom;
+                item.ControlMinSize = toolbar.MinimumSize;
+                item.ControlMaxSize = toolbar.MaximumSize;
+            }
+            layout.Root.AddItem(item);
+            return item;
+        }
+
+        private static StackPanel Toolbar(params Control[] controls)
+        {
+            var toolbar = new StackPanel
+            {
+                LayoutDirection = StackPanelLayoutDirection.LeftToRight,
+                LabelVertAlignment = LabelVertAlignment.Center,
+                AutoSize = true,
+                AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink,
+                Padding = new Padding(0, 2, 0, 2)
+            };
+            var height = controls.Where(control => control.Visible)
+                .Select(control => Math.Max(control.Height, control.MinimumSize.Height) + control.Margin.Vertical)
+                .DefaultIfEmpty().Max() + toolbar.Padding.Vertical;
+            toolbar.MinimumSize = new Size(0, height);
+            toolbar.MaximumSize = new Size(0, height);
+            toolbar.Controls.AddRange(controls);
+            return toolbar;
         }
 
         private static Control WithToolbar(Control content, params Control[] controls)
         {
-            var panel = new TableLayoutPanel { Dock = DockStyle.Fill, ColumnCount = 1, RowCount = 2, Padding = new Padding(8) };
-            panel.RowStyles.Add(new RowStyle(SizeType.AutoSize));
-            panel.RowStyles.Add(new RowStyle(SizeType.Percent, 100));
+            var panel = CreateLayout(new Padding(8));
             if (controls.Length > 0)
-                panel.Controls.Add(Toolbar(controls), 0, 0);
-            panel.Controls.Add(content, 0, 1);
+            {
+                var toolbar = Toolbar(controls);
+                var height = toolbar.MinimumSize.Height + toolbar.Margin.Vertical;
+                AddLayoutItem(panel, toolbar, AddLayoutRow(panel, SizeType.Absolute, height));
+            }
+            AddLayoutItem(panel, content, AddLayoutRow(panel, SizeType.Percent, 100));
             return panel;
         }
 
@@ -539,7 +602,7 @@ namespace ProjectDocumentation.NET.Forms
         {
             if (busy) return;
             var text = rawDirty ? rawEditor.Text : document != null ? Snapshot() : initialXml;
-            using (var picker = new SaveFileDialog { Filter = "Документ XML (*.xml)|*.xml", DefaultExt = "xml", AddExtension = true })
+            using (var picker = new XtraSaveFileDialog { Filter = "Документ XML (*.xml)|*.xml", DefaultExt = "xml", AddExtension = true, OverwritePrompt = true })
             {
                 if (picker.ShowDialog(this) != DialogResult.OK) return;
                 var path = picker.FileName;

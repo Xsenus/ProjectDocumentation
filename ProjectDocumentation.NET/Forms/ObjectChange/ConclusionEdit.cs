@@ -6,6 +6,7 @@ using ProjectDocumentation.NET.Services;
 using Core.NET.Extensions;
 using Core.NET.Models.XPO;
 using DevExpress.Utils;
+using DevExpress.Utils.Layout;
 using DevExpress.Xpo;
 using DevExpress.XtraBars;
 using DevExpress.XtraEditors;
@@ -628,7 +629,11 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
 
         private void AddEstimateTableActions()
         {
-            var actions = new FlowLayoutPanel { WrapContents = false, Margin = System.Windows.Forms.Padding.Empty };
+            var actions = new StackPanel
+            {
+                LayoutDirection = StackPanelLayoutDirection.LeftToRight,
+                Margin = System.Windows.Forms.Padding.Empty
+            };
             var add = new SimpleButton { Text = "Добавить", Width = 90 };
             var edit = new SimpleButton { Text = "Изменить", Width = 90 };
             var delete = new SimpleButton { Text = "Удалить", Width = 90 };
@@ -646,7 +651,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
             var item = layoutControlGroup1.AddItem(string.Empty, actions, layoutControlItemMismatches, InsertType.Top);
             item.TextVisible = false;
             item.SizeConstraintsType = DevExpress.XtraLayout.SizeConstraintsType.Custom;
-            item.MinSize = new Size(285, 31);
+            item.MinSize = new Size(292, 31);
             item.MaxSize = new Size(0, 31);
         }
 

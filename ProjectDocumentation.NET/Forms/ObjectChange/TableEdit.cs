@@ -1,5 +1,6 @@
 using Core.NET.AutoModels.ExplanatoryNoteObj;
 using DevExpress.Utils;
+using DevExpress.Utils.Layout;
 using DevExpress.XtraEditors;
 using DevExpress.XtraEditors.Controls;
 using System;
@@ -24,16 +25,17 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
         public TableEdit()
         {
             InitializeComponent();
-            var actions = new FlowLayoutPanel { Dock = DockStyle.Top, AutoSize = true, Padding = new Padding(4) };
-            actions.Controls.Add(TableButton("Добавить столбец", () => AddColumn(true)));
-            actions.Controls.Add(TableButton("Добавить строку", AddRow));
-            actions.Controls.Add(TableButton("Удалить столбец", DeleteColumn));
-            actions.Controls.Add(TableButton("Удалить строку", DeleteRow));
+            var actions = new StackPanel
+            {
+                Dock = DockStyle.Top, LayoutDirection = StackPanelLayoutDirection.TopDown,
+                AutoSize = true, AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink, Padding = new Padding(4)
+            };
             alignment.Properties.TextEditStyle = TextEditStyles.DisableTextEditor;
             alignment.Properties.Items.AddRange(new[] { "По умолчанию", "По левому краю", "По правому краю", "По центру" });
             alignment.ToolTip = "Выравнивание выбранной ячейки";
             alignment.SelectedIndexChanged += (_, __) => ChangeAlignment();
-            actions.Controls.Add(alignment);
+            actions.Controls.Add(ActionRow(TableButton("Добавить столбец", () => AddColumn(true)), TableButton("Добавить строку", AddRow)));
+            actions.Controls.Add(ActionRow(TableButton("Удалить столбец", DeleteColumn), TableButton("Удалить строку", DeleteRow), alignment));
             Controls.Add(actions);
             layoutControlTextBlock.BringToFront();
             btnSave.AllowFocus = true;
@@ -82,6 +84,18 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
             var button = new SimpleButton { Text = name, Width = 115 };
             button.Click += (_, __) => handler();
             return button;
+        }
+
+        private static StackPanel ActionRow(params Control[] controls)
+        {
+            var row = new StackPanel
+            {
+                LayoutDirection = StackPanelLayoutDirection.LeftToRight,
+                AutoSize = true,
+                AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
+            };
+            row.Controls.AddRange(controls);
+            return row;
         }
 
         private void btnClose_Click(object sender, EventArgs e) => Close();

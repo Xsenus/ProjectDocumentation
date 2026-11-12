@@ -11,6 +11,8 @@
 | `schema_engine` | комплектный процесс | Проверка XSD 1.1, метаданные полей, преобразование версий и предпросмотр по XSL |
 | `portal` | React | Редактирование XML в браузере, черновики браузера и выгрузка файлов |
 
+При запуске WinForms в `ProjectDocumentation.NET/Program.cs` задаются общая иконка окон через `FormIconOptions.Default` и использование диалогов DevExpress. Диалоги открытия и сохранения файлов используют `XtraOpenFileDialog` и `XtraSaveFileDialog`. Их библиотека `DevExpress.XtraDialogs.v24.2.dll` включается в сборку приложения.
+
 ```
 Core.NET/
   AutoModels/
