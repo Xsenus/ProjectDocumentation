@@ -17,6 +17,7 @@ namespace Core.NET.DaDataObj
         private const string TokenSetting = "PROJECTDOCUMENTATION_DADATA_TOKEN";
         private const string SecretSetting = "PROJECTDOCUMENTATION_DADATA_SECRET";
         private static readonly Uri PartyEndpoint = new Uri("https://suggestions.dadata.ru/suggestions/api/4_1/rs/findById/party");
+        private static readonly Uri AddressSuggestionsEndpoint = new Uri("https://suggestions.dadata.ru/suggestions/api/4_1/rs/suggest/address");
         private static readonly Uri AddressEndpoint = new Uri("https://cleaner.dadata.ru/api/v1/clean/address");
         private static readonly HttpClient Client = new HttpClient(new HttpClientHandler { AllowAutoRedirect = false })
         {
@@ -27,7 +28,7 @@ namespace Core.NET.DaDataObj
         public static Task<SuggestResponse<Party>> GetPartyAsync(string query, CancellationToken cancellationToken = default,
             bool? individual = null)
         {
-            return GetPartyAsync(Client, Environment.GetEnvironmentVariable, query, cancellationToken, individual);
+            return GetPartyAsync(Client, GetConfiguredSetting, query, cancellationToken, individual);
         }
 
         internal static Task<SuggestResponse<Party>> GetPartyAsync(HttpClient client, Func<string, string> getSetting,
@@ -52,16 +53,28 @@ namespace Core.NET.DaDataObj
 
         public static Task<Address> GetAddressAsync(string query, CancellationToken cancellationToken = default)
         {
-            return GetAddressAsync(Client, Environment.GetEnvironmentVariable, query, cancellationToken);
+            return GetAddressAsync(Client, GetConfiguredSetting, query, cancellationToken);
+        }
+
+        public static Task<SuggestResponse<Address>> SuggestAddressesAsync(string query, CancellationToken cancellationToken = default)
+        {
+            return SuggestAddressesAsync(Client, GetConfiguredSetting, query, cancellationToken);
+        }
+
+        internal static Task<SuggestResponse<Address>> SuggestAddressesAsync(HttpClient client, Func<string, string> getSetting,
+            string query, CancellationToken cancellationToken)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            var body = new JObject { ["query"] = ReadAddressQuery(query, 300), ["count"] = 10 };
+            return SendAsync<SuggestResponse<Address>>(client, AddressSuggestionsEndpoint, body,
+                ReadSetting(getSetting, TokenSetting), null, cancellationToken);
         }
 
         internal static async Task<Address> GetAddressAsync(HttpClient client, Func<string, string> getSetting, string query,
             CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
-            query = query?.Trim();
-            if (string.IsNullOrEmpty(query) || query.Length < 3 || query.Length > 400)
-                throw new InvalidOperationException("Введите адрес от 3 до 400 символов.");
+            query = ReadAddressQuery(query, 400);
 
             var addresses = await SendAsync<Address[]>(client, AddressEndpoint, new[] { query },
                 ReadSetting(getSetting, TokenSetting), ReadSetting(getSetting, SecretSetting), cancellationToken).ConfigureAwait(false);
@@ -79,6 +92,22 @@ namespace Core.NET.DaDataObj
         public static bool IsDigits(string value, int length)
         {
             return value?.Length == length && value.All(character => character >= '0' && character <= '9');
+        }
+
+        private static string ReadAddressQuery(string query, int maximumLength)
+        {
+            query = query?.Trim();
+            if (string.IsNullOrEmpty(query) || query.Length < 3 || query.Length > maximumLength)
+                throw new InvalidOperationException($"Введите адрес от 3 до {maximumLength} символов.");
+            return query;
+        }
+
+        private static string GetConfiguredSetting(string name)
+        {
+            var processValue = Environment.GetEnvironmentVariable(name);
+            return string.IsNullOrWhiteSpace(processValue)
+                ? Environment.GetEnvironmentVariable(name, EnvironmentVariableTarget.User)
+                : processValue;
         }
 
         private static string ReadSetting(Func<string, string> getSetting, string name)
@@ -104,6 +133,13 @@ namespace Core.NET.DaDataObj
                 {
                     using (var response = await client.SendAsync(request, cancellationToken).ConfigureAwait(false))
                     {
+                        if (endpoint == AddressEndpoint && response.StatusCode == HttpStatusCode.Forbidden && response.Content != null)
+                        {
+                            var details = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+                            cancellationToken.ThrowIfCancellationRequested();
+                            if (details.IndexOf("Feature 'CLEAN' disabled", StringComparison.OrdinalIgnoreCase) >= 0)
+                                throw new InvalidOperationException("Для этого ключа DaData недоступна стандартизация адресов. Проверьте баланс или выберите адрес из подсказок.");
+                        }
                         if (response.StatusCode == HttpStatusCode.Unauthorized || response.StatusCode == HttpStatusCode.Forbidden)
                             throw new InvalidOperationException("DaData отклонила запрос. Проверьте ключи, состояние учётной записи и лимиты.");
                         if ((int)response.StatusCode == 429)

@@ -1004,7 +1004,7 @@ namespace ProjectDocumentation.NET.Forms
             var address = fields.Contains("RegionCode") && node.Element.Name.LocalName.StartsWith("Russian", StringComparison.Ordinal);
             if (organization || address)
             {
-                var lookup = ActionButton(organization ? "Найти по ИНН в DaData…" : "Заполнить адрес из DaData…");
+                var lookup = ActionButton(organization ? "Найти по ИНН в DaData…" : "Найти адрес в DaData…");
                 lookup.Click += async (_, __) => await LookupAsync(item, node, organization);
                 actions.Add(lookup);
             }
@@ -1093,16 +1093,23 @@ namespace ProjectDocumentation.NET.Forms
         private async Task LookupAsync(TreeListNode item, NativeSchemaNode node, bool organization)
         {
             if (!CanEditFields()) return;
-            var query = XtraInputBox.Show(organization ? "Введите ИНН юридического лица" : "Введите российский адрес",
-                "DaData", organization ? (string)node.Element.Element("INN") ?? "" : "");
-            query = query?.Trim();
-            if (string.IsNullOrWhiteSpace(query)) return;
-            if (organization ? !ConclusionDaData.IsDigits(query, 10) : query.Length < 3 || query.Length > 400)
+            if (!organization)
             {
-                status.Text = organization ? "ИНН юридического лица должен содержать 10 цифр." : "Введите адрес от 3 до 400 символов.";
+                var address = AddressLookupDialog.ShowFor(this);
+                if (address != null && !IsDisposed && !Disposing)
+                    ApplyLookupResult(item, node, ConclusionDaData.MapAddress(address));
                 return;
             }
-            if (organization && HasDifferentIdentifier(node.Element, "INN", query))
+
+            var query = XtraInputBox.Show("Введите ИНН юридического лица", "DaData", (string)node.Element.Element("INN") ?? "");
+            query = query?.Trim();
+            if (string.IsNullOrWhiteSpace(query)) return;
+            if (!ConclusionDaData.IsDigits(query, 10))
+            {
+                status.Text = "ИНН юридического лица должен содержать 10 цифр.";
+                return;
+            }
+            if (HasDifferentIdentifier(node.Element, "INN", query))
             {
                 status.Text = LookupInnConflict;
                 return;
@@ -1115,18 +1122,9 @@ namespace ProjectDocumentation.NET.Forms
                 {
                     await RunAsync("Поиск в DaData…", async () =>
                     {
-                        var values = organization
-                            ? await ConclusionDaData.FindOrganizationAsync(query, ((string)node.Element.Element("KPP"))?.Trim(), cancellation.Token)
-                            : await ConclusionDaData.NormalizeAddressAsync(query, cancellation.Token);
+                        var values = await ConclusionDaData.FindOrganizationAsync(query, ((string)node.Element.Element("KPP"))?.Trim(), cancellation.Token);
                         if (cancellation.IsCancellationRequested || IsDisposed || Disposing) return;
-                        if (values == null) throw new InvalidOperationException("DaData не нашла однозначного совпадения. Заполните поля вручную.");
-                        var populated = FillLookupFields(node, values, profile);
-                        if (populated)
-                        {
-                            MarkChanged();
-                            RebuildBranch(item);
-                        }
-                        status.Text = populated ? "Пустые поля заполнены из DaData." : "Подходящих пустых полей нет.";
+                        ApplyLookupResult(item, node, values);
                     });
                 }
                 finally
@@ -1134,6 +1132,22 @@ namespace ProjectDocumentation.NET.Forms
                     Disposed -= cancel;
                 }
             }
+        }
+
+        private void ApplyLookupResult(TreeListNode item, NativeSchemaNode node, Dictionary<string, string> values)
+        {
+            if (values == null)
+            {
+                status.Text = "DaData не вернула подходящих данных. Заполните поля вручную.";
+                return;
+            }
+            var populated = FillLookupFields(node, values, profile);
+            if (populated)
+            {
+                MarkChanged();
+                RebuildBranch(item);
+            }
+            status.Text = populated ? "Пустые поля заполнены из DaData." : "Подходящих пустых полей нет.";
         }
 
         private static bool HasDifferentIdentifier(XElement element, string name, string value)

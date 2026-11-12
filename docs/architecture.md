@@ -82,10 +82,10 @@ WinForms сохраняет историю импорта и выгрузки в
 
 | Сервис | Где | Зачем |
 |---|---|---|
-| DaData (Suggest `FindParty`, Clean `Address`) | `Core.NET/DaDataObj/DaDataObj.cs` | Заполнение реквизитов организации по ИНН/ОГРН и разбор адреса |
+| DaData (`findById/party`, `suggest/address`, `clean/address`) | `Core.NET/DaDataObj/DaDataObj.cs` | Поиск организации по ИНН/ОГРН, выбор подсказки адреса и платная стандартизация |
 | FTP-сервер обновлений | `MainForm.CheckUpdates`, настройка `UpdatePath` | Файл `ProjectDocumentation.NET.Update.xml` для AutoUpdater.NET |
 
-DaData читает `PROJECTDOCUMENTATION_DADATA_TOKEN` из окружения процесса. Для стандартизации адресов также нужен `PROJECTDOCUMENTATION_DADATA_SECRET`. После изменения переменных перезапустите приложение. При недоступности сервиса остаётся ручной ввод. Ключи прежней установки, попавшие в историю Git, нужно заменить в кабинете DaData.
+DaData читает `PROJECTDOCUMENTATION_DADATA_TOKEN` из окружения процесса или настроек текущего пользователя Windows. `PROJECTDOCUMENTATION_DADATA_SECRET` передаётся только в запросе стандартизации. Адрес из подсказок переносится после выбора в диалоге. Ключи прежней установки, попавшие в историю Git, нужно заменить в кабинете DaData.
 
 ## Версии
 

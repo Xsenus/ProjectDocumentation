@@ -125,6 +125,7 @@
     <Compile Include="Forms\NativeSchemaDocumentSections.cs" />
     <Compile Include="Forms\MainForm.Conclusion0104.cs" />
     <Compile Include="Forms\MainForm.FileHistory.cs" />
+    <Compile Include="Forms\AddressLookupDialog.cs" />
     <Compile Include="Forms\FileOperationHistoryForm.cs" />
     <Compile Include="Forms\GridContextMenus.cs" />
     <Compile Include="Forms\FileOperationJournal.cs" />
