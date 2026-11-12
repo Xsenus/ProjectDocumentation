@@ -15,6 +15,8 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
         public ConclusionBaseSettingEdit()
         {
             InitializeComponent();
+            ClassicRequiredFields.HighlightExisting(this);
+            ClassicRequiredFields.Unmark(txtSecondName);
         }
 
         public ConclusionBaseSettingEdit(TOrganization TOrganization, TWorkPerson person) : this()

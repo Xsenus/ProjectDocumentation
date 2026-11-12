@@ -26,8 +26,10 @@ namespace ProjectDocumentation.NET.Services
 
         public static string WithGuid(XDocument document, Guid guid) => SchemaXmlDocument.WithGuid(document, GuidAttribute, guid);
 
-        public static Task<ConclusionXPO> SaveAsync(ConclusionSchemaService service, string xml, string name, Guid guid, ConclusionXPO existing = null)
-            => SchemaXmlDocument.SaveAsync(service, xml, name, guid, RootName, CurrentVersion, GuidAttribute, session => new ConclusionXPO(session), existing);
+        public static Task<ConclusionXPO> SaveAsync(ConclusionSchemaService service, string xml, string name, Guid guid,
+            ConclusionXPO existing = null, DocumentStatus initialStatus = DocumentStatus.New)
+            => SchemaXmlDocument.SaveAsync(service, xml, name, guid, RootName, CurrentVersion, GuidAttribute,
+                session => new ConclusionXPO(session), existing, initialStatus);
 
         public static void RequireValid(ConclusionValidation result, string version) => SchemaXmlDocument.RequireValid(result, version);
 

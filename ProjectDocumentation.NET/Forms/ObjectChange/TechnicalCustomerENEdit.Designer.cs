@@ -46,10 +46,6 @@
             this.btnFAddress = new DevExpress.XtraEditors.ButtonEdit();
             this.txtFEmail = new DevExpress.XtraEditors.TextEdit();
             this.Root = new DevExpress.XtraLayout.LayoutControlGroup();
-            this.emptySpaceItemSave = new DevExpress.XtraLayout.EmptySpaceItem();
-            this.layoutControlItemSave = new DevExpress.XtraLayout.LayoutControlItem();
-            this.emptySpaceItemClose = new DevExpress.XtraLayout.EmptySpaceItem();
-            this.layoutControlItemClose = new DevExpress.XtraLayout.LayoutControlItem();
             this.layoutControlGroupForeignLegalEntity = new DevExpress.XtraLayout.LayoutControlGroup();
             this.layoutControlItemFOrgFullName = new DevExpress.XtraLayout.LayoutControlItem();
             this.layoutControlItemFOrgKPP = new DevExpress.XtraLayout.LayoutControlItem();
@@ -92,10 +88,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.btnFAddress.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.txtFEmail.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.Root)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.emptySpaceItemSave)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemSave)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.emptySpaceItemClose)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemClose)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlGroupForeignLegalEntity)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemFOrgFullName)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemFOrgKPP)).BeginInit();
@@ -121,8 +113,6 @@
             // layoutControlObjPart
             // 
             this.layoutControlObjPart.AllowCustomization = false;
-            this.layoutControlObjPart.Controls.Add(this.btnClose);
-            this.layoutControlObjPart.Controls.Add(this.btnSave);
             this.layoutControlObjPart.Controls.Add(this.radioGroupTypeOrganization);
             this.layoutControlObjPart.Controls.Add(this.txtOrgFullName);
             this.layoutControlObjPart.Controls.Add(this.txtOrgOGRN);
@@ -148,23 +138,13 @@
             // 
             // btnClose
             // 
-            this.btnClose.Location = new System.Drawing.Point(585, 540);
-            this.btnClose.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btnClose.Name = "btnClose";
-            this.btnClose.Size = new System.Drawing.Size(207, 22);
-            this.btnClose.StyleController = this.layoutControlObjPart;
-            this.btnClose.TabIndex = 12;
             this.btnClose.Text = "Отменить";
             this.btnClose.Click += new System.EventHandler(this.btnClose_Click);
             // 
             // btnSave
             // 
-            this.btnSave.Location = new System.Drawing.Point(392, 540);
-            this.btnSave.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btnSave.Name = "btnSave";
-            this.btnSave.Size = new System.Drawing.Size(189, 22);
-            this.btnSave.StyleController = this.layoutControlObjPart;
-            this.btnSave.TabIndex = 13;
             this.btnSave.Text = "Сохранить";
             this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
             // 
@@ -296,10 +276,6 @@
             this.Root.EnableIndentsWithoutBorders = DevExpress.Utils.DefaultBoolean.True;
             this.Root.GroupBordersVisible = false;
             this.Root.Items.AddRange(new DevExpress.XtraLayout.BaseLayoutItem[] {
-            this.emptySpaceItemSave,
-            this.layoutControlItemSave,
-            this.emptySpaceItemClose,
-            this.layoutControlItemClose,
             this.layoutControlGroupForeignLegalEntity,
             this.layoutControlGroupEntity,
             this.layoutControlItemTypeOrg,
@@ -308,40 +284,6 @@
             this.Root.Padding = new DevExpress.XtraLayout.Utils.Padding(4, 4, 4, 4);
             this.Root.Size = new System.Drawing.Size(798, 568);
             this.Root.TextVisible = false;
-            // 
-            // emptySpaceItemSave
-            // 
-            this.emptySpaceItemSave.AllowHotTrack = false;
-            this.emptySpaceItemSave.Location = new System.Drawing.Point(0, 534);
-            this.emptySpaceItemSave.Name = "emptySpaceItemSave";
-            this.emptySpaceItemSave.Size = new System.Drawing.Size(193, 26);
-            this.emptySpaceItemSave.TextSize = new System.Drawing.Size(0, 0);
-            // 
-            // layoutControlItemSave
-            // 
-            this.layoutControlItemSave.Control = this.btnSave;
-            this.layoutControlItemSave.Location = new System.Drawing.Point(386, 534);
-            this.layoutControlItemSave.Name = "layoutControlItemSave";
-            this.layoutControlItemSave.Size = new System.Drawing.Size(193, 26);
-            this.layoutControlItemSave.TextSize = new System.Drawing.Size(0, 0);
-            this.layoutControlItemSave.TextVisible = false;
-            // 
-            // emptySpaceItemClose
-            // 
-            this.emptySpaceItemClose.AllowHotTrack = false;
-            this.emptySpaceItemClose.Location = new System.Drawing.Point(193, 534);
-            this.emptySpaceItemClose.Name = "emptySpaceItemClose";
-            this.emptySpaceItemClose.Size = new System.Drawing.Size(193, 26);
-            this.emptySpaceItemClose.TextSize = new System.Drawing.Size(0, 0);
-            // 
-            // layoutControlItemClose
-            // 
-            this.layoutControlItemClose.Control = this.btnClose;
-            this.layoutControlItemClose.Location = new System.Drawing.Point(579, 534);
-            this.layoutControlItemClose.Name = "layoutControlItemClose";
-            this.layoutControlItemClose.Size = new System.Drawing.Size(211, 26);
-            this.layoutControlItemClose.TextSize = new System.Drawing.Size(0, 0);
-            this.layoutControlItemClose.TextVisible = false;
             // 
             // layoutControlGroupForeignLegalEntity
             // 
@@ -661,10 +603,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.btnFAddress.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.txtFEmail.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.Root)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.emptySpaceItemSave)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemSave)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.emptySpaceItemClose)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemClose)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlGroupForeignLegalEntity)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemFOrgFullName)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemFOrgKPP)).EndInit();
@@ -685,6 +623,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemSROMembership)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.barManagerSROMembership)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.popupMenuSROMembership)).EndInit();
+            DialogLayout.AddActionFooter(this, this.btnSave, this.btnClose);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -696,10 +635,6 @@
         private DevExpress.XtraLayout.LayoutControlGroup Root;
         private DevExpress.XtraEditors.SimpleButton btnClose;
         private DevExpress.XtraEditors.SimpleButton btnSave;
-        private DevExpress.XtraLayout.EmptySpaceItem emptySpaceItemSave;
-        private DevExpress.XtraLayout.LayoutControlItem layoutControlItemSave;
-        private DevExpress.XtraLayout.EmptySpaceItem emptySpaceItemClose;
-        private DevExpress.XtraLayout.LayoutControlItem layoutControlItemClose;
         private DevExpress.XtraEditors.RadioGroup radioGroupTypeOrganization;
         private DevExpress.XtraLayout.LayoutControlItem layoutControlItemTypeOrg;
         private DevExpress.XtraEditors.TextEdit txtOrgFullName;

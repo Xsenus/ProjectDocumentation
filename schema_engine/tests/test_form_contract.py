@@ -30,6 +30,7 @@ class FormContractTests(unittest.TestCase):
             if not component.is_complex():
                 self.assertEqual(entry['kind'], 'simple')
                 self.assertEqual(entry['base'], component.root_type.local_name)
+                self.assertIs(entry['allowsEmpty'], component.is_valid(''))
                 enumeration = component.get_facet(XSD + 'enumeration')
                 if enumeration is not None:
                     self.assertEqual([value['value'] for value in entry['enumeration']],

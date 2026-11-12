@@ -16,6 +16,8 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
         public ExpertEdit()
         {
             InitializeComponent();
+            ClassicRequiredFields.HighlightExisting(this);
+            ClassicRequiredFields.Unmark(txtSecondName);
         }
 
         public ExpertEdit(TExpert expert) : this()

@@ -17,6 +17,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
         public AddressEdit()
         {
             InitializeComponent();
+            ClassicRequiredFields.HighlightExisting(this);
         }
 
         public AddressEdit(TAddress address) : this()

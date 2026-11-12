@@ -29,6 +29,10 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
         public AuthorEdit()
         {
             InitializeComponent();
+            ClassicRequiredFields.HighlightExisting(this);
+            ClassicRequiredFields.Unmark(txtFOrgFullName, txtFOrgKPP, btnFAddress, txtFOrgINN,
+                txtFamilyName, txtFirstName, txtSecondName, txtOGRNIP, btnPostAddress,
+                txtOrgFullName, txtOrgOGRN, txtOrgKPP, txtOrgINN, btnAddress);
             GridContextMenus.Attach(gridViewSROMembership, popupMenuSROMembership, barBtnSROMembershipAdd);
         }
 
@@ -141,11 +145,11 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                     PostAddressEdit form;
                     if (buttonEdit.EditValue is TPostAddress postAddress)
                     {
-                        form = new PostAddressEdit(postAddress);
+                        form = new PostAddressEdit(postAddress, requirePostIndex: false);
                     }
                     else
                     {
-                        form = new PostAddressEdit();
+                        form = new PostAddressEdit(requirePostIndex: false);
                     }
 
                     using (form)
@@ -220,15 +224,6 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                         {
                             entity.Address = address;
                         }
-                        else
-                        {
-                            btnAddress.Focus();
-                            XtraMessageBox.Show("Заполните адрес организации",
-                                "Информационное сообщение",
-                                MessageBoxButtons.OK,
-                                MessageBoxIcon.Error);
-                            return;
-                        }
                         Author.Item = entity;
                         break;
 
@@ -243,15 +238,6 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                         if (btnFAddress.EditValue is TAddress addressF)
                         {
                             foreignLegalEntity.Address = addressF;
-                        }
-                        else
-                        {
-                            btnFAddress.Focus();
-                            XtraMessageBox.Show("Заполните адрес организации",
-                                "Информационное сообщение",
-                                MessageBoxButtons.OK,
-                                MessageBoxIcon.Error);
-                            return;
                         }
                         Author.Item = foreignLegalEntity;
                         break;
@@ -268,15 +254,6 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                         if (btnPostAddress.EditValue is TPostAddress TPostAddress)
                         {
                             Tip.PostAddress = TPostAddress;
-                        }
-                        else
-                        {
-                            btnPostAddress.Focus();
-                            XtraMessageBox.Show("Заполните адрес",
-                                "Информационное сообщение",
-                                MessageBoxButtons.OK,
-                                MessageBoxIcon.Error);
-                            return;
                         }
                         Author.Item = Tip;
                         break;

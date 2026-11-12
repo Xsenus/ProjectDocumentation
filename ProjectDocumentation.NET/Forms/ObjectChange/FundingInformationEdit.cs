@@ -20,6 +20,12 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
         public FundingInformationEdit()
         {
             InitializeComponent();
+            ClassicRequiredFields.HighlightExisting(this);
+            ClassicRequiredFields.MarkWhen(cmbFinanceType,
+                () => (cmbFinanceType.EditValue as GeneralizedDictionaryXPO)?.Value == "1", cmbBudgetType);
+            ClassicRequiredFields.MarkWhen(cmbFinanceType,
+                () => (cmbFinanceType.EditValue as GeneralizedDictionaryXPO)?.Value is string code && (code == "1" || code == "2"),
+                spinFinanceSize);
         }
 
         public FundingInformationEdit(TFinance obj) : this()

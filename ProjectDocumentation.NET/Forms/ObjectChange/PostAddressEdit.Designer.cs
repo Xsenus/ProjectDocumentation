@@ -50,10 +50,6 @@
             this.layoutControlItemCountry = new DevExpress.XtraLayout.LayoutControlItem();
             this.layoutControlItemDistrict = new DevExpress.XtraLayout.LayoutControlItem();
             this.layoutControlItemCity = new DevExpress.XtraLayout.LayoutControlItem();
-            this.emptySpaceItem1 = new DevExpress.XtraLayout.EmptySpaceItem();
-            this.layoutControlItem1 = new DevExpress.XtraLayout.LayoutControlItem();
-            this.layoutControlItem2 = new DevExpress.XtraLayout.LayoutControlItem();
-            this.emptySpaceItem2 = new DevExpress.XtraLayout.EmptySpaceItem();
             this.emptySpaceItem3 = new DevExpress.XtraLayout.EmptySpaceItem();
             this.layoutControlItemStreet = new DevExpress.XtraLayout.LayoutControlItem();
             this.layoutControlItemRegion = new DevExpress.XtraLayout.LayoutControlItem();
@@ -78,10 +74,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemCountry)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemDistrict)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemCity)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.emptySpaceItem1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem2)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.emptySpaceItem2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.emptySpaceItem3)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemStreet)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemRegion)).BeginInit();
@@ -94,8 +86,6 @@
             // 
             // layoutControlExpert
             // 
-            this.layoutControlExpert.Controls.Add(this.btnSave);
-            this.layoutControlExpert.Controls.Add(this.btnCancel);
             this.layoutControlExpert.Controls.Add(this.txtCountry);
             this.layoutControlExpert.Controls.Add(this.txtDistrict);
             this.layoutControlExpert.Controls.Add(this.txtCity);
@@ -118,23 +108,13 @@
             // 
             // btnSave
             // 
-            this.btnSave.Location = new System.Drawing.Point(276, 290);
-            this.btnSave.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btnSave.Name = "btnSave";
-            this.btnSave.Size = new System.Drawing.Size(130, 22);
-            this.btnSave.StyleController = this.layoutControlExpert;
-            this.btnSave.TabIndex = 4;
             this.btnSave.Text = "Сохранить";
             this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
             // 
             // btnCancel
             // 
-            this.btnCancel.Location = new System.Drawing.Point(410, 290);
-            this.btnCancel.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btnCancel.Name = "btnCancel";
-            this.btnCancel.Size = new System.Drawing.Size(132, 22);
-            this.btnCancel.StyleController = this.layoutControlExpert;
-            this.btnCancel.TabIndex = 5;
             this.btnCancel.Text = "Отмена";
             this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
             // 
@@ -243,10 +223,6 @@
             this.layoutControlItemCountry,
             this.layoutControlItemDistrict,
             this.layoutControlItemCity,
-            this.emptySpaceItem1,
-            this.layoutControlItem1,
-            this.layoutControlItem2,
-            this.emptySpaceItem2,
             this.emptySpaceItem3,
             this.layoutControlItemStreet,
             this.layoutControlItemRegion,
@@ -286,40 +262,6 @@
             this.layoutControlItemCity.Size = new System.Drawing.Size(540, 24);
             this.layoutControlItemCity.Text = "Город";
             this.layoutControlItemCity.TextSize = new System.Drawing.Size(31, 13);
-            // 
-            // emptySpaceItem1
-            // 
-            this.emptySpaceItem1.AllowHotTrack = false;
-            this.emptySpaceItem1.Location = new System.Drawing.Point(0, 284);
-            this.emptySpaceItem1.Name = "emptySpaceItem1";
-            this.emptySpaceItem1.Size = new System.Drawing.Size(135, 26);
-            this.emptySpaceItem1.TextSize = new System.Drawing.Size(0, 0);
-            // 
-            // layoutControlItem1
-            // 
-            this.layoutControlItem1.Control = this.btnSave;
-            this.layoutControlItem1.Location = new System.Drawing.Point(270, 284);
-            this.layoutControlItem1.Name = "layoutControlItem1";
-            this.layoutControlItem1.Size = new System.Drawing.Size(134, 26);
-            this.layoutControlItem1.TextSize = new System.Drawing.Size(0, 0);
-            this.layoutControlItem1.TextVisible = false;
-            // 
-            // layoutControlItem2
-            // 
-            this.layoutControlItem2.Control = this.btnCancel;
-            this.layoutControlItem2.Location = new System.Drawing.Point(404, 284);
-            this.layoutControlItem2.Name = "layoutControlItem2";
-            this.layoutControlItem2.Size = new System.Drawing.Size(136, 26);
-            this.layoutControlItem2.TextSize = new System.Drawing.Size(0, 0);
-            this.layoutControlItem2.TextVisible = false;
-            // 
-            // emptySpaceItem2
-            // 
-            this.emptySpaceItem2.AllowHotTrack = false;
-            this.emptySpaceItem2.Location = new System.Drawing.Point(135, 284);
-            this.emptySpaceItem2.Name = "emptySpaceItem2";
-            this.emptySpaceItem2.Size = new System.Drawing.Size(135, 26);
-            this.emptySpaceItem2.TextSize = new System.Drawing.Size(0, 0);
             // 
             // emptySpaceItem3
             // 
@@ -432,10 +374,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemCountry)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemDistrict)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemCity)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.emptySpaceItem1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem2)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.emptySpaceItem2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.emptySpaceItem3)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemStreet)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemRegion)).EndInit();
@@ -444,6 +382,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemNote)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemSettlement)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemPostIndex)).EndInit();
+            DialogLayout.AddActionFooter(this, this.btnSave, this.btnCancel);
             this.ResumeLayout(false);
 
         }
@@ -460,10 +399,6 @@
         private DevExpress.XtraLayout.LayoutControlItem layoutControlItemCountry;
         private DevExpress.XtraLayout.LayoutControlItem layoutControlItemDistrict;
         private DevExpress.XtraLayout.LayoutControlItem layoutControlItemCity;
-        private DevExpress.XtraLayout.EmptySpaceItem emptySpaceItem1;
-        private DevExpress.XtraLayout.LayoutControlItem layoutControlItem1;
-        private DevExpress.XtraLayout.LayoutControlItem layoutControlItem2;
-        private DevExpress.XtraLayout.EmptySpaceItem emptySpaceItem2;
         private DevExpress.XtraEditors.ComboBoxEdit cmbRegion;
         private DevExpress.XtraLayout.LayoutControlItem layoutControlItemRegion;
         private DevExpress.XtraLayout.EmptySpaceItem emptySpaceItem3;

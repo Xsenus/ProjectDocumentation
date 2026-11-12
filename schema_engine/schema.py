@@ -296,6 +296,7 @@ class _FormSchema:
                 result['textType'] = self.type_id(component.content)
         else:
             result['base'] = component.root_type.local_name
+            result['allowsEmpty'] = component.is_valid('')
             enumeration = component.get_facet(XSD + 'enumeration')
             if enumeration is not None:
                 result['enumeration'] = [

@@ -20,6 +20,8 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
         public DesignerEdit()
         {
             InitializeComponent();
+            ClassicRequiredFields.HighlightExisting(this);
+            ClassicRequiredFields.Unmark(txtSecondName);
         }
 
         public DesignerEdit(TDesigner obj) : this()

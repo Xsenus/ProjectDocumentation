@@ -35,6 +35,50 @@ namespace ProjectDocumentation.NET.Forms
         public int? Max { get; set; }
         public List<NativeSchemaParticle> Children { get; set; }
 
+        private bool AllowsOmission => Min == 0 || Max == 0 ||
+            (Kind == "choice" ? Members.Any(member => member.AllowsOmission) :
+                Kind != "element" && Members.All(member => member.AllowsOmission));
+
+        private IEnumerable<NativeSchemaParticle> Members => Children ?? Enumerable.Empty<NativeSchemaParticle>();
+
+        private IEnumerable<string> ElementNames => Kind == "element" ? new[] { Name } : Members.SelectMany(member => member.ElementNames);
+
+        internal void CollectRequirements(IReadOnlyDictionary<string, int> counts, NativeSchemaRequirements result)
+        {
+            if (Max == 0) return;
+            if (Kind == "element")
+            {
+                if (Min > 0) result.Elements.Add(new NativeSchemaElementRequirement(this, Count(counts, Name)));
+                return;
+            }
+
+            var selected = Members.Where(member => member.ElementNames.Any(name => Count(counts, name) > 0)).ToList();
+            if (Min == 0 && selected.Count == 0) return;
+            if (Kind == "choice")
+            {
+                if (Min > 0 && !Members.Any(member => member.AllowsOmission))
+                {
+                    var occurrences = Max == 1 ? Math.Min(selected.Count, 1) :
+                        selected.Sum(member => member.Kind == "element" ? Count(counts, member.Name) : 1);
+                    result.Choices.Add(new NativeSchemaChoiceRequirement(Min, occurrences,
+                        Members.Select(member => member.ElementNames.Distinct().ToArray()).ToArray(),
+                        selected.SelectMany(member => member.ElementNames).Where(name => Count(counts, name) > 0).Distinct().ToArray(),
+                        Max == 1 && selected.Count > 1));
+                }
+
+                // A selected sequence still requires its own members. Other alternatives have no independent minimum.
+                if (selected.Count == 1 && selected[0].Kind != "element")
+                    selected[0].CollectRequirements(counts, result);
+                return;
+            }
+
+            foreach (var member in Members)
+                member.CollectRequirements(counts, result);
+        }
+
+        private static int Count(IReadOnlyDictionary<string, int> counts, string name)
+            => counts.TryGetValue(name, out var count) ? count : 0;
+
         public IEnumerable<NativeSchemaChild> ChildFields(long max = 1, bool required = true, NativeSchemaParticle repeatedGroup = null,
             bool insideChoice = false)
         {
@@ -66,11 +110,51 @@ namespace ProjectDocumentation.NET.Forms
     {
         public string Kind { get; set; }
         public string Base { get; set; }
+        public bool? AllowsEmpty { get; set; }
         public string TextType { get; set; }
         public string Documentation { get; set; }
         public NativeSchemaParticle Particle { get; set; }
         public List<NativeSchemaAttribute> Attributes { get; set; }
         public List<NativeSchemaOption> Enumeration { get; set; }
+    }
+
+    internal sealed class NativeSchemaRequirements
+    {
+        internal List<NativeSchemaElementRequirement> Elements { get; } = new List<NativeSchemaElementRequirement>();
+        internal List<NativeSchemaChoiceRequirement> Choices { get; } = new List<NativeSchemaChoiceRequirement>();
+    }
+
+    internal sealed class NativeSchemaElementRequirement
+    {
+        internal NativeSchemaElementRequirement(NativeSchemaParticle field, int present)
+        {
+            Field = field;
+            Present = present;
+        }
+
+        internal NativeSchemaParticle Field { get; }
+        internal int Present { get; }
+        internal bool IsMissing => Present < Field.Min;
+    }
+
+    internal sealed class NativeSchemaChoiceRequirement
+    {
+        internal NativeSchemaChoiceRequirement(int minimum, int present, IReadOnlyList<string[]> alternatives, IReadOnlyList<string> selected,
+            bool hasConflict)
+        {
+            Minimum = minimum;
+            Present = present;
+            Alternatives = alternatives;
+            Selected = selected;
+            HasConflict = hasConflict;
+        }
+
+        internal int Minimum { get; }
+        internal int Present { get; }
+        internal IReadOnlyList<string[]> Alternatives { get; }
+        internal IReadOnlyList<string> Selected { get; }
+        internal bool IsMissing => Present < Minimum;
+        internal bool HasConflict { get; }
     }
 
     internal sealed class NativeSchemaAttribute
@@ -124,6 +208,15 @@ namespace ProjectDocumentation.NET.Forms
         public NativeSchemaParticle Field { get; }
         public NativeSchemaType Type { get; }
         public IReadOnlyList<NativeSchemaChild> Children { get; }
+
+        internal NativeSchemaRequirements GetRequirements()
+        {
+            var result = new NativeSchemaRequirements();
+            var counts = Element.Elements().Where(child => child.Name.Namespace == XNamespace.None)
+                .GroupBy(child => child.Name.LocalName).ToDictionary(group => group.Key, group => group.Count());
+            Type?.Particle?.CollectRequirements(counts, result);
+            return result;
+        }
 
         public XElement AddChild(NativeSchemaChild child)
         {

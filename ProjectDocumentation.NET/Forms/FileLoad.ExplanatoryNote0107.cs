@@ -43,7 +43,7 @@ namespace ProjectDocumentation.NET.Forms
             }
 
             using (var editor = new ExplanatoryNote0107Form(conclusionSchema, ExplanatoryNote0107Document.WithGuid(document, guid), name,
-                (xml, title) => ExplanatoryNote0107Document.SaveAsync(conclusionSchema, xml, title, guid, replace, version))
+                (xml, title) => ExplanatoryNote0107Document.SaveAsync(conclusionSchema, xml, title, guid, replace, version, DocumentStatus.InProgress))
                 { ImportAttempt = attempt })
             {
                 if (editor.ShowDialog(this) == DialogResult.OK && editor.Document != null)

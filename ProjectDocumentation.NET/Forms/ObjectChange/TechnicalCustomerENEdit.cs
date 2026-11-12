@@ -29,6 +29,9 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
         public TechnicalCustomerENEdit()
         {
             InitializeComponent();
+            ClassicRequiredFields.HighlightExisting(this);
+            ClassicRequiredFields.Unmark(txtFOrgFullName, txtFOrgKPP, btnFAddress, txtFOrgINN,
+                txtOrgFullName, txtOrgOGRN, txtOrgKPP, txtOrgINN, btnAddress);
             GridContextMenus.Attach(gridViewSROMembership, popupMenuSROMembership, barBtnSROMembershipAdd);
         }
 
@@ -161,15 +164,6 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                         {
                             entity.Address = address;
                         }
-                        else
-                        {
-                            btnAddress.Focus();
-                            XtraMessageBox.Show("Заполните адрес организации",
-                                "Информационное сообщение",
-                                MessageBoxButtons.OK,
-                                MessageBoxIcon.Error);
-                            return;
-                        }
                         TechnicalCustomer.Item = entity;
                         break;
 
@@ -184,15 +178,6 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
                         if (btnFAddress.EditValue is TAddress addressF)
                         {
                             foreignLegalEntity.Address = addressF;
-                        }
-                        else
-                        {
-                            btnFAddress.Focus();
-                            XtraMessageBox.Show("Заполните адрес организации",
-                                "Информационное сообщение",
-                                MessageBoxButtons.OK,
-                                MessageBoxIcon.Error);
-                            return;
                         }
                         TechnicalCustomer.Item = foreignLegalEntity;
                         break;

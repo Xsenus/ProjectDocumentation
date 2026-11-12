@@ -25,6 +25,8 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
         public EstimateMismatchEdit()
         {
             InitializeComponent();
+            ClassicRequiredFields.HighlightExisting(this);
+            ClassicRequiredFields.Unmark(txtSummary, txtPart);
             cmbEstimateMismatches.Properties.Items.Clear();
             cmbEstimateMismatches.Properties.Items.AddRange(KindNames);
             cmbEstimateMismatches.Properties.Buttons.RemoveAt(2);

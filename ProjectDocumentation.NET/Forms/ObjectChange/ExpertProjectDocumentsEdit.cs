@@ -27,6 +27,7 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
         public ExpertProjectDocumentsEdit()
         {
             InitializeComponent();
+            ClassicRequiredFields.HighlightExisting(this);
             GridContextMenus.Attach(gridViewProjectDocumentsMismatches, popupMenuMismatches, barBtnAdd);
 
             richEditControlProjectDocumentsReview.ActiveViewType = RichEditViewType.Simple;

@@ -1,3 +1,4 @@
+using DevExpress.Utils;
 using DevExpress.XtraEditors;
 using DevExpress.XtraLayout;
 using DevExpress.XtraTab;
@@ -14,7 +15,7 @@ namespace ProjectDocumentation.NET.Forms
     internal partial class SchemaDocumentForm
     {
         private readonly XtraTabControl sectionTabs = new XtraTabControl { Dock = DockStyle.Fill };
-        private readonly ListBoxControl sectionBlocks = new ListBoxControl { Dock = DockStyle.Fill, HorizontalScrollbar = true };
+        private readonly ListBoxControl sectionBlocks = new ListBoxControl { Dock = DockStyle.Fill };
         private readonly LabelControl sectionLocation = WrappedLabelFor("");
         private readonly SimpleButton sectionBack = ActionButton("Назад");
         private readonly SimpleButton sectionOpen = ActionButton("Вложенные поля");
@@ -55,6 +56,8 @@ namespace ProjectDocumentation.NET.Forms
             sectionTabs.AppearancePage.HeaderActive.FontStyleDelta = FontStyle.Bold;
             sectionBlocks.AccessibleName = "Блоки раздела";
             sectionBlocks.ItemHeight = 27;
+            sectionBlocks.Appearance.TextOptions.Trimming = Trimming.EllipsisCharacter;
+            sectionBlocks.Appearance.TextOptions.WordWrap = WordWrap.NoWrap;
             sectionBlocks.ToolTipController = fieldToolTips;
             sectionLocation.Appearance.FontStyleDelta = FontStyle.Bold;
 
@@ -142,6 +145,10 @@ namespace ProjectDocumentation.NET.Forms
             var previous = updatingSections;
             updatingSections = true;
             var selectedIndex = -1;
+            var requirements = parent.GetRequirements();
+            var requiredNames = new HashSet<string>(requirements.Elements.Select(requirement => requirement.Field.Name));
+            var choiceNames = new HashSet<string>(requirements.Choices.Where(choice => choice.IsMissing)
+                .SelectMany(choice => choice.Alternatives.SelectMany(branch => branch)));
             sectionBlocks.BeginUpdate();
             try
             {
@@ -150,7 +157,7 @@ namespace ProjectDocumentation.NET.Forms
                 foreach (var element in parent.Element.Elements().Where(element => !root || SectionFor(element.Name.LocalName) == sectionTabs.SelectedTabPage))
                 {
                     var node = profile.ChildNode(parent, element);
-                    var label = SectionCaption(node.Field, element.Name.LocalName);
+                    var label = (requiredNames.Contains(element.Name.LocalName) ? "* " : "") + SectionCaption(node.Field, element.Name.LocalName);
                     var occurrence = element.ElementsBeforeSelf(element.Name).Count();
                     if (occurrence > 0 || element.ElementsAfterSelf(element.Name).Any()) label += $" [{occurrence + 1}]";
                     var block = new SectionBlock(label, node, null);
@@ -163,7 +170,11 @@ namespace ProjectDocumentation.NET.Forms
                     foreach (var field in VisibleChildren(parent).GroupBy(candidate => candidate.Field.Name).Select(group => group.First()))
                     {
                         if (parent.Element.Element(field.Field.Name) == null)
-                            sectionBlocks.Items.Add(new SectionBlock("Добавить: " + SectionCaption(field.Field, field.Field.Name), null, field));
+                        {
+                            var prefix = requiredNames.Contains(field.Field.Name) ? "Обязательно: "
+                                : choiceNames.Contains(field.Field.Name) ? "Вариант: " : "Добавить: ";
+                            sectionBlocks.Items.Add(new SectionBlock(prefix + SectionCaption(field.Field, field.Field.Name), null, field));
+                        }
                     }
                 }
             }
@@ -272,12 +283,13 @@ namespace ProjectDocumentation.NET.Forms
 
         private void FocusChildEditor(string name)
         {
-            if (fieldEditors.TryGetValue(name, out var editor)) editor.Focus();
+            if (fieldEditors.TryGetValue(name, out var editor)) FocusField(editor);
             else SelectChild(name);
         }
 
         private void AddSectionValues(LayoutControl layout, TreeListNode item, NativeSchemaNode node)
         {
+            var required = new HashSet<string>(node.GetRequirements().Elements.Select(requirement => requirement.Field.Name));
             foreach (var field in VisibleChildren(node).Where(child => child.Capacity == 1 && !child.InsideChoice))
             {
                 var type = profile.TypeOf(field.Field.Type);
@@ -285,7 +297,7 @@ namespace ProjectDocumentation.NET.Forms
                 var element = node.Element.Element(field.Field.Name);
                 if (element?.HasElements == true || (element == null && ReadOnlyDocument)) continue;
                 var value = element?.Value ?? "";
-                var label = SectionCaption(field.Field, field.Field.Name) + (field.Required ? " *" : "");
+                var label = SectionCaption(field.Field, field.Field.Name);
                 var editor = ValueEditor(value, type, ReadOnlyDocument || field.Field.Fixed != null,
                     type.Base == "string" && (value.Length > 100 || field.Field.Name == "Text"), changed =>
                     {
@@ -298,7 +310,8 @@ namespace ProjectDocumentation.NET.Forms
                         MarkChanged();
                     });
                 fieldEditors[field.Field.Name] = editor;
-                AddField(layout, label, editor, null);
+                AddField(layout, label, editor, null, required.Contains(field.Field.Name)
+                    ? (Func<bool>)(() => element == null || MissingElementValue(element, field.Field)) : null);
             }
         }
 
@@ -319,11 +332,16 @@ namespace ProjectDocumentation.NET.Forms
 
         private static string SectionCaption(NativeSchemaParticle field, string fallback)
         {
-            var text = field?.Documentation?.Trim();
-            if (string.IsNullOrEmpty(text)) return fallback;
-            var sentence = text.IndexOf(". ", StringComparison.Ordinal);
-            if (sentence > 0) text = text.Substring(0, sentence);
+            var text = DocumentationCaption(field?.Documentation);
+            if (text.Length == 0) return fallback;
             return text.Length > 82 ? text.Substring(0, 81) + "…" : text;
+        }
+
+        private static string DocumentationCaption(string documentation)
+        {
+            var text = documentation?.Trim() ?? "";
+            var sentence = text.IndexOf(". ", StringComparison.Ordinal);
+            return sentence > 0 ? text.Substring(0, sentence) : text;
         }
 
         private sealed class SectionBlock

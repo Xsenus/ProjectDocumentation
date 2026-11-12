@@ -18,6 +18,8 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
         public PreviousConclusionEdit()
         {
             InitializeComponent();
+            ClassicRequiredFields.HighlightExisting(this);
+            ClassicRequiredFields.Unmark(memoName);
         }
 
         public PreviousConclusionEdit(TPreviousConclusion TPreviousConclusion) : this()

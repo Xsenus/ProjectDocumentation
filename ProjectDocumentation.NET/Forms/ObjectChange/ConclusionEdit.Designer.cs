@@ -702,6 +702,7 @@
             this.xtraTabControlBase.Location = new System.Drawing.Point(6, 6);
             this.xtraTabControlBase.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.xtraTabControlBase.MultiLine = DevExpress.Utils.DefaultBoolean.True;
+            this.xtraTabControlBase.ShowToolTips = DevExpress.Utils.DefaultBoolean.True;
             this.xtraTabControlBase.Name = "xtraTabControlBase";
             this.xtraTabControlBase.SelectedTabPage = this.xtraTabPageForm1;
             this.xtraTabControlBase.Size = new System.Drawing.Size(786, 655);
@@ -721,7 +722,8 @@
             this.xtraTabPageForm1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.xtraTabPageForm1.Name = "xtraTabPageForm1";
             this.xtraTabPageForm1.Size = new System.Drawing.Size(784, 538);
-            this.xtraTabPageForm1.Text = "I. Общие положения и сведения о заключении экспертизы";
+            this.xtraTabPageForm1.Text = "I. Общие положения";
+            this.xtraTabPageForm1.Tooltip = "I. Общие положения и сведения о заключении экспертизы";
             // 
             // layoutControl_I
             // 
@@ -1422,6 +1424,7 @@
             this.gridViewPreviousConclusions.GridControl = this.gridControlPreviousConclusions;
             this.gridViewPreviousConclusions.Name = "gridViewPreviousConclusions";
             this.gridViewPreviousConclusions.OptionsBehavior.Editable = false;
+            DialogLayout.ShowRowFocus(this.gridViewPreviousConclusions);
             this.gridViewPreviousConclusions.OptionsView.ColumnHeaderAutoHeight = DevExpress.Utils.DefaultBoolean.True;
             this.gridViewPreviousConclusions.OptionsView.RowAutoHeight = true;
             this.gridViewPreviousConclusions.OptionsView.ShowGroupPanel = false;
@@ -1446,6 +1449,7 @@
             this.gridViewExpertProjectDocuments2.GridControl = this.gridControlExpertProjectDocuments2;
             this.gridViewExpertProjectDocuments2.Name = "gridViewExpertProjectDocuments2";
             this.gridViewExpertProjectDocuments2.OptionsBehavior.Editable = false;
+            DialogLayout.ShowRowFocus(this.gridViewExpertProjectDocuments2);
             this.gridViewExpertProjectDocuments2.OptionsView.ColumnHeaderAutoHeight = DevExpress.Utils.DefaultBoolean.True;
             this.gridViewExpertProjectDocuments2.OptionsView.RowAutoHeight = true;
             this.gridViewExpertProjectDocuments2.OptionsView.ShowGroupPanel = false;
@@ -1470,6 +1474,7 @@
             this.gridViewDocuments.GridControl = this.gridControlDocuments;
             this.gridViewDocuments.Name = "gridViewDocuments";
             this.gridViewDocuments.OptionsBehavior.Editable = false;
+            DialogLayout.ShowRowFocus(this.gridViewDocuments);
             this.gridViewDocuments.OptionsView.ColumnHeaderAutoHeight = DevExpress.Utils.DefaultBoolean.True;
             this.gridViewDocuments.OptionsView.RowAutoHeight = true;
             this.gridViewDocuments.OptionsView.ShowGroupPanel = false;
@@ -1694,6 +1699,9 @@
             this.layoutControlItemProjectDocumentationIM.Name = "layoutControlItemProjectDocumentationIM";
             this.layoutControlItemProjectDocumentationIM.Size = new System.Drawing.Size(762, 24);
             this.layoutControlItemProjectDocumentationIM.Text = "Сведения о подготовке проектной документации в форме информационной модели";
+            this.layoutControlItemProjectDocumentationIM.TextLocation = DevExpress.Utils.Locations.Top;
+            this.layoutControlItemProjectDocumentationIM.AppearanceItemCaption.Options.UseTextOptions = true;
+            this.layoutControlItemProjectDocumentationIM.AppearanceItemCaption.TextOptions.WordWrap = DevExpress.Utils.WordWrap.Wrap;
             this.layoutControlItemProjectDocumentationIM.TextSize = new System.Drawing.Size(428, 13);
             // 
             // layoutControlItemEngineeringSurveysIM
@@ -1706,6 +1714,9 @@
             this.layoutControlItemEngineeringSurveysIM.Size = new System.Drawing.Size(762, 24);
             this.layoutControlItemEngineeringSurveysIM.Text = "Сведения о подготовке отчетной документации о выполнении инженерных изысканий в ф" +
     "орме информационной модели";
+            this.layoutControlItemEngineeringSurveysIM.TextLocation = DevExpress.Utils.Locations.Top;
+            this.layoutControlItemEngineeringSurveysIM.AppearanceItemCaption.Options.UseTextOptions = true;
+            this.layoutControlItemEngineeringSurveysIM.AppearanceItemCaption.TextOptions.WordWrap = DevExpress.Utils.WordWrap.Wrap;
             this.layoutControlItemEngineeringSurveysIM.TextSize = new System.Drawing.Size(620, 13);
             // 
             // layoutControlItemExpertiseResultNote
@@ -1922,7 +1933,8 @@
             this.layoutControlGroup12.Location = new System.Drawing.Point(0, 0);
             this.layoutControlGroup12.Name = "layoutControlGroup12";
             this.layoutControlGroup12.Size = new System.Drawing.Size(762, 424);
-            this.layoutControlGroup12.Text = "Сведения о положительном заключении государственной экологической экспертизы";
+            this.layoutControlGroup12.Text = "Экологическая экспертиза";
+            this.layoutControlGroup12.OptionsToolTip.ToolTip = "Сведения о положительном заключении государственной экологической экспертизы";
             // 
             // layoutControlItemEcologyExpertiseNeedExpertise
             // 
@@ -1954,7 +1966,8 @@
             this.layoutControlGroup13.Location = new System.Drawing.Point(0, 0);
             this.layoutControlGroup13.Name = "layoutControlGroup13";
             this.layoutControlGroup13.Size = new System.Drawing.Size(762, 424);
-            this.layoutControlGroup13.Text = "Сведения о составе документов, предоставленных для проведения экспертизы";
+            this.layoutControlGroup13.Text = "Документы для экспертизы";
+            this.layoutControlGroup13.OptionsToolTip.ToolTip = "Сведения о составе документов, предоставленных для проведения экспертизы";
             // 
             // layoutControlItemDocuments
             // 
@@ -1976,7 +1989,8 @@
             this.layoutControlGroup14.Location = new System.Drawing.Point(0, 0);
             this.layoutControlGroup14.Name = "layoutControlGroup14";
             this.layoutControlGroup14.Size = new System.Drawing.Size(762, 424);
-            this.layoutControlGroup14.Text = resources.GetString("layoutControlGroup14.Text");
+            this.layoutControlGroup14.Text = "Ранее выданные заключения";
+            this.layoutControlGroup14.OptionsToolTip.ToolTip = resources.GetString("layoutControlGroup14.Text");
             // 
             // layoutControlItemPreviousConclusions
             // 
@@ -2009,7 +2023,8 @@
             this.xtraTabPageForm2.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.xtraTabPageForm2.Name = "xtraTabPageForm2";
             this.xtraTabPageForm2.Size = new System.Drawing.Size(784, 538);
-            this.xtraTabPageForm2.Text = "II. Сведения, содержащиеся в документах, представленных для проведения экспертизы" +
+            this.xtraTabPageForm2.Text = "II. Сведения из документов";
+            this.xtraTabPageForm2.Tooltip = "II. Сведения, содержащиеся в документах, представленных для проведения экспертизы" +
     " проектной документации";
             // 
             // xtraTabControl1
@@ -2020,6 +2035,7 @@
             this.xtraTabControl1.Location = new System.Drawing.Point(0, 0);
             this.xtraTabControl1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.xtraTabControl1.MultiLine = DevExpress.Utils.DefaultBoolean.True;
+            this.xtraTabControl1.ShowToolTips = DevExpress.Utils.DefaultBoolean.True;
             this.xtraTabControl1.Name = "xtraTabControl1";
             this.xtraTabControl1.SelectedTabPage = this.xtraTabPage7;
             this.xtraTabControl1.Size = new System.Drawing.Size(784, 538);
@@ -2039,7 +2055,8 @@
             this.xtraTabPage7.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.xtraTabPage7.Name = "xtraTabPage7";
             this.xtraTabPage7.Size = new System.Drawing.Size(782, 375);
-            this.xtraTabPage7.Text = "Сведения об объекте капитального строитвельства, применительно к которому подгото" +
+            this.xtraTabPage7.Text = "Объект капитального строительства";
+            this.xtraTabPage7.Tooltip = "Сведения об объекте капитального строительства, применительно к которому подгото" +
     "влена проектная документация";
             // 
             // layoutControl_Page_II_1
@@ -2079,6 +2096,7 @@
             this.gridViewObjectPart.GridControl = this.gridControlObjectPart;
             this.gridViewObjectPart.Name = "gridViewObjectPart";
             this.gridViewObjectPart.OptionsBehavior.Editable = false;
+            DialogLayout.ShowRowFocus(this.gridViewObjectPart);
             this.gridViewObjectPart.OptionsView.ColumnHeaderAutoHeight = DevExpress.Utils.DefaultBoolean.True;
             this.gridViewObjectPart.OptionsView.RowAutoHeight = true;
             this.gridViewObjectPart.OptionsView.ShowGroupPanel = false;
@@ -2298,7 +2316,8 @@
             this.xtraTabPage8.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.xtraTabPage8.Name = "xtraTabPage8";
             this.xtraTabPage8.Size = new System.Drawing.Size(782, 375);
-            this.xtraTabPage8.Text = "Сведения об источнике (источниках) и размере финансирования строительства, реконс" +
+            this.xtraTabPage8.Text = "Финансирование";
+            this.xtraTabPage8.Tooltip = "Сведения об источнике (источниках) и размере финансирования строительства, реконс" +
     "трукции, капитального ремонта, сноса объекта капитального строительства";
             // 
             // layoutControl2
@@ -2334,6 +2353,7 @@
             this.gridViewFinances.GridControl = this.gridControlFinances;
             this.gridViewFinances.Name = "gridViewFinances";
             this.gridViewFinances.OptionsBehavior.Editable = false;
+            DialogLayout.ShowRowFocus(this.gridViewFinances);
             this.gridViewFinances.OptionsView.ColumnHeaderAutoHeight = DevExpress.Utils.DefaultBoolean.True;
             this.gridViewFinances.OptionsView.RowAutoHeight = true;
             this.gridViewFinances.OptionsView.ShowGroupPanel = false;
@@ -2570,7 +2590,8 @@
             this.xtraTabPage10.Controls.Add(this.gridControlDesigners);
             this.xtraTabPage10.Name = "xtraTabPage10";
             this.xtraTabPage10.Size = new System.Drawing.Size(782, 375);
-            this.xtraTabPage10.Text = "Сведения об индивидуальных предпринимателях и (или) юридических лицах, подготовив" +
+            this.xtraTabPage10.Text = "Проектировщики";
+            this.xtraTabPage10.Tooltip = "Сведения об индивидуальных предпринимателях и (или) юридических лицах, подготовив" +
     "ших проектную документацию";
             // 
             // gridControlDesigners
@@ -2594,6 +2615,7 @@
             this.gridViewDesigners.GridControl = this.gridControlDesigners;
             this.gridViewDesigners.Name = "gridViewDesigners";
             this.gridViewDesigners.OptionsBehavior.Editable = false;
+            DialogLayout.ShowRowFocus(this.gridViewDesigners);
             this.gridViewDesigners.OptionsView.ColumnHeaderAutoHeight = DevExpress.Utils.DefaultBoolean.True;
             this.gridViewDesigners.OptionsView.RowAutoHeight = true;
             this.gridViewDesigners.OptionsView.ShowGroupPanel = false;
@@ -2603,7 +2625,8 @@
             this.xtraTabPage11.Controls.Add(this.layoutControlEEPDUse);
             this.xtraTabPage11.Name = "xtraTabPage11";
             this.xtraTabPage11.Size = new System.Drawing.Size(782, 375);
-            this.xtraTabPage11.Text = "Сведения об использовании при подготовке проектной документации экономически эффе" +
+            this.xtraTabPage11.Text = "Повторное использование проектной документации";
+            this.xtraTabPage11.Tooltip = "Сведения об использовании при подготовке проектной документации экономически эффе" +
     "ктивной проектной документации повторного использования";
             // 
             // layoutControlEEPDUse
@@ -2760,7 +2783,8 @@
             this.xtraTabPage12.Controls.Add(this.layoutControl_Page_II_6);
             this.xtraTabPage12.Name = "xtraTabPage12";
             this.xtraTabPage12.Size = new System.Drawing.Size(782, 375);
-            this.xtraTabPage12.Text = "Кадастровый номер земельного участка (земельных участков), в пределах которого (к" +
+            this.xtraTabPage12.Text = "Кадастровые номера участков";
+            this.xtraTabPage12.Tooltip = "Кадастровый номер земельного участка (земельных участков), в пределах которого (к" +
     "оторых) расположен или планируется расположение объекта капитального строительст" +
     "ва, не являющегося линейным объектом";
             // 
@@ -2823,7 +2847,8 @@
             this.xtraTabPage13.Controls.Add(this.layoutControlPage_II_7);
             this.xtraTabPage13.Name = "xtraTabPage13";
             this.xtraTabPage13.Size = new System.Drawing.Size(782, 375);
-            this.xtraTabPage13.Text = "Сведения о застройщике (техническом заказчике), обеспечившим подготовку проектной" +
+            this.xtraTabPage13.Text = "Застройщик и технический заказчик";
+            this.xtraTabPage13.Tooltip = "Сведения о застройщике (техническом заказчике), обеспечившим подготовку проектной" +
     " документации";
             // 
             // layoutControlPage_II_7
@@ -2862,6 +2887,7 @@
             this.gridViewProjectDocumentsTechnicalCustomer.GridControl = this.gridControlProjectDocumentsTechnicalCustomer;
             this.gridViewProjectDocumentsTechnicalCustomer.Name = "gridViewProjectDocumentsTechnicalCustomer";
             this.gridViewProjectDocumentsTechnicalCustomer.OptionsBehavior.Editable = false;
+            DialogLayout.ShowRowFocus(this.gridViewProjectDocumentsTechnicalCustomer);
             this.gridViewProjectDocumentsTechnicalCustomer.OptionsView.ColumnHeaderAutoHeight = DevExpress.Utils.DefaultBoolean.True;
             this.gridViewProjectDocumentsTechnicalCustomer.OptionsView.RowAutoHeight = true;
             this.gridViewProjectDocumentsTechnicalCustomer.OptionsView.ShowGroupPanel = false;
@@ -2886,6 +2912,7 @@
             this.gridViewProjectDocumentsDeveloper.GridControl = this.gridControlProjectDocumentsDeveloper;
             this.gridViewProjectDocumentsDeveloper.Name = "gridViewProjectDocumentsDeveloper";
             this.gridViewProjectDocumentsDeveloper.OptionsBehavior.Editable = false;
+            DialogLayout.ShowRowFocus(this.gridViewProjectDocumentsDeveloper);
             this.gridViewProjectDocumentsDeveloper.OptionsView.ColumnHeaderAutoHeight = DevExpress.Utils.DefaultBoolean.True;
             this.gridViewProjectDocumentsDeveloper.OptionsView.RowAutoHeight = true;
             this.gridViewProjectDocumentsDeveloper.OptionsView.ShowGroupPanel = false;
@@ -2910,6 +2937,7 @@
             this.gridViewEngineeringSurveyDeveloper.GridControl = this.gridControlEngineeringSurveyDeveloper;
             this.gridViewEngineeringSurveyDeveloper.Name = "gridViewEngineeringSurveyDeveloper";
             this.gridViewEngineeringSurveyDeveloper.OptionsBehavior.Editable = false;
+            DialogLayout.ShowRowFocus(this.gridViewEngineeringSurveyDeveloper);
             this.gridViewEngineeringSurveyDeveloper.OptionsView.ColumnHeaderAutoHeight = DevExpress.Utils.DefaultBoolean.True;
             this.gridViewEngineeringSurveyDeveloper.OptionsView.RowAutoHeight = true;
             this.gridViewEngineeringSurveyDeveloper.OptionsView.ShowGroupPanel = false;
@@ -2934,6 +2962,7 @@
             this.gridViewEngineeringSurveyTechnicalCustomer.GridControl = this.gridControlEngineeringSurveyTechnicalCustomer;
             this.gridViewEngineeringSurveyTechnicalCustomer.Name = "gridViewEngineeringSurveyTechnicalCustomer";
             this.gridViewEngineeringSurveyTechnicalCustomer.OptionsBehavior.Editable = false;
+            DialogLayout.ShowRowFocus(this.gridViewEngineeringSurveyTechnicalCustomer);
             this.gridViewEngineeringSurveyTechnicalCustomer.OptionsView.ColumnHeaderAutoHeight = DevExpress.Utils.DefaultBoolean.True;
             this.gridViewEngineeringSurveyTechnicalCustomer.OptionsView.RowAutoHeight = true;
             this.gridViewEngineeringSurveyTechnicalCustomer.OptionsView.ShowGroupPanel = false;
@@ -3026,7 +3055,8 @@
             this.xtraTabPageForm3.Controls.Add(this.layoutControlPageIII);
             this.xtraTabPageForm3.Name = "xtraTabPageForm3";
             this.xtraTabPageForm3.Size = new System.Drawing.Size(784, 538);
-            this.xtraTabPageForm3.Text = "III. Описание рассмотренной документации (материалов)";
+            this.xtraTabPageForm3.Text = "III. Рассмотренная документация";
+            this.xtraTabPageForm3.Tooltip = "III. Описание рассмотренной документации (материалов)";
             // 
             // layoutControlPageIII
             // 
@@ -3064,6 +3094,7 @@
             this.gridViewExpertEngineeringSurveys.GridControl = this.gridControlExpertEngineeringSurveys;
             this.gridViewExpertEngineeringSurveys.Name = "gridViewExpertEngineeringSurveys";
             this.gridViewExpertEngineeringSurveys.OptionsBehavior.Editable = false;
+            DialogLayout.ShowRowFocus(this.gridViewExpertEngineeringSurveys);
             this.gridViewExpertEngineeringSurveys.OptionsView.ColumnHeaderAutoHeight = DevExpress.Utils.DefaultBoolean.True;
             this.gridViewExpertEngineeringSurveys.OptionsView.RowAutoHeight = true;
             this.gridViewExpertEngineeringSurveys.OptionsView.ShowGroupPanel = false;
@@ -3088,6 +3119,7 @@
             this.gridViewExpertProjectDocuments.GridControl = this.gridControlExpertProjectDocuments;
             this.gridViewExpertProjectDocuments.Name = "gridViewExpertProjectDocuments";
             this.gridViewExpertProjectDocuments.OptionsBehavior.Editable = false;
+            DialogLayout.ShowRowFocus(this.gridViewExpertProjectDocuments);
             this.gridViewExpertProjectDocuments.OptionsView.ColumnHeaderAutoHeight = DevExpress.Utils.DefaultBoolean.True;
             this.gridViewExpertProjectDocuments.OptionsView.RowAutoHeight = true;
             this.gridViewExpertProjectDocuments.OptionsView.ShowGroupPanel = false;
@@ -3112,6 +3144,7 @@
             this.gridViewExpertEstimate.GridControl = this.gridControlExpertEstimate;
             this.gridViewExpertEstimate.Name = "gridViewExpertEstimate";
             this.gridViewExpertEstimate.OptionsBehavior.Editable = false;
+            DialogLayout.ShowRowFocus(this.gridViewExpertEstimate);
             this.gridViewExpertEstimate.OptionsView.ColumnHeaderAutoHeight = DevExpress.Utils.DefaultBoolean.True;
             this.gridViewExpertEstimate.OptionsView.RowAutoHeight = true;
             this.gridViewExpertEstimate.OptionsView.ShowGroupPanel = false;
@@ -3136,6 +3169,7 @@
             this.gridViewEngineeringSurveyAddress.GridControl = this.gridControlEngineeringSurveyAddress;
             this.gridViewEngineeringSurveyAddress.Name = "gridViewEngineeringSurveyAddress";
             this.gridViewEngineeringSurveyAddress.OptionsBehavior.Editable = false;
+            DialogLayout.ShowRowFocus(this.gridViewEngineeringSurveyAddress);
             this.gridViewEngineeringSurveyAddress.OptionsView.ColumnHeaderAutoHeight = DevExpress.Utils.DefaultBoolean.True;
             this.gridViewEngineeringSurveyAddress.OptionsView.RowAutoHeight = true;
             this.gridViewEngineeringSurveyAddress.OptionsView.ShowGroupPanel = false;
@@ -3268,6 +3302,7 @@
             this.gridViewMismatches.GridControl = this.gridControlMismatches;
             this.gridViewMismatches.Name = "gridViewMismatches";
             this.gridViewMismatches.OptionsBehavior.Editable = false;
+            DialogLayout.ShowRowFocus(this.gridViewMismatches);
             this.gridViewMismatches.OptionsView.ColumnHeaderAutoHeight = DevExpress.Utils.DefaultBoolean.True;
             this.gridViewMismatches.OptionsView.RowAutoHeight = true;
             this.gridViewMismatches.OptionsView.ShowGroupPanel = false;
@@ -3680,8 +3715,8 @@
             this.xtraTabPageForm7.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.xtraTabPageForm7.Name = "xtraTabPageForm7";
             this.xtraTabPageForm7.Size = new System.Drawing.Size(784, 538);
-            this.xtraTabPageForm7.Text = "VI. Перечени лиц, атестованных на право подготовки заключений экспертизы, подписа" +
-    "вших заключение экспертизы";
+            this.xtraTabPageForm7.Text = "VI. Эксперты";
+            this.xtraTabPageForm7.Tooltip = "VI. Перечень лиц, аттестованных на право подготовки заключений экспертизы, подписавших заключение";
             // 
             // gridControlExpert
             // 
@@ -3704,6 +3739,7 @@
             this.gridViewExpert.GridControl = this.gridControlExpert;
             this.gridViewExpert.Name = "gridViewExpert";
             this.gridViewExpert.OptionsBehavior.Editable = false;
+            DialogLayout.ShowRowFocus(this.gridViewExpert);
             this.gridViewExpert.OptionsView.ColumnHeaderAutoHeight = DevExpress.Utils.DefaultBoolean.True;
             this.gridViewExpert.OptionsView.RowAutoHeight = true;
             this.gridViewExpert.OptionsView.ShowGroupPanel = false;

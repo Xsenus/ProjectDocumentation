@@ -14,12 +14,22 @@ namespace ProjectDocumentation.NET.Forms.ObjectChange
 {
     public partial class PostAddressEdit : XtraForm
     {
-        public PostAddressEdit()
+        public PostAddressEdit() : this(requirePostIndex: true)
         {
-            InitializeComponent();
         }
 
-        public PostAddressEdit(TPostAddress address) : this()
+        internal PostAddressEdit(bool requirePostIndex)
+        {
+            InitializeComponent();
+            ClassicRequiredFields.HighlightExisting(this);
+            if (requirePostIndex) ClassicRequiredFields.Mark(txtPostIndex);
+        }
+
+        public PostAddressEdit(TPostAddress address) : this(address, requirePostIndex: true)
+        {
+        }
+
+        internal PostAddressEdit(TPostAddress address, bool requirePostIndex) : this(requirePostIndex)
         {
             PostAddress = address;
         }

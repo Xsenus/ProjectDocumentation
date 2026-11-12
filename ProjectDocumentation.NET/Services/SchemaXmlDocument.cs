@@ -92,7 +92,8 @@ namespace ProjectDocumentation.NET.Services
         }
 
         public static async Task<T> SaveAsync<T>(ConclusionSchemaService service, string xml, string name,
-            Guid guid, string rootName, string version, string guidAttribute, Func<Session, T> create, T existing) where T : XmlObjXPO
+            Guid guid, string rootName, string version, string guidAttribute, Func<Session, T> create, T existing,
+            DocumentStatus initialStatus = DocumentStatus.New) where T : XmlObjXPO
         {
             if (string.IsNullOrWhiteSpace(name))
             {
@@ -113,11 +114,12 @@ namespace ProjectDocumentation.NET.Services
             }
 
             RequireValid(await service.ValidateAsync(xml), version);
-            return await PersistAsync(xml, name, guid, create, existing, previousName, previousXml);
+            return await PersistAsync(xml, name, guid, create, existing, previousName, previousXml, initialStatus);
         }
 
         internal static async Task<T> PersistAsync<T>(string xml, string name, Guid guid, Func<Session, T> create,
-            T existing = null, string previousName = null, string previousXml = null) where T : XmlObjXPO
+            T existing = null, string previousName = null, string previousXml = null,
+            DocumentStatus initialStatus = DocumentStatus.New) where T : XmlObjXPO
         {
             var session = SessionController.GetSession();
             int oid;
@@ -134,6 +136,7 @@ namespace ProjectDocumentation.NET.Services
 
                     record = create(unit);
                     record.SetGuid(guid);
+                    record.SetStatus(initialStatus);
                 }
                 else
                 {
@@ -144,8 +147,7 @@ namespace ProjectDocumentation.NET.Services
                     }
                 }
 
-                record.Name = name?.Trim();
-                record.SetObj(xml);
+                record.SetDocument(name?.Trim(), xml);
                 unit.Save(record);
                 await unit.CommitChangesAsync();
                 oid = record.Oid;

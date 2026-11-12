@@ -75,7 +75,7 @@ namespace ProjectDocumentation.NET.Forms
                 foreach (var warning in warnings) FileOperationJournal.AddDiagnostic(attempt, warning);
 
             using (var editor = new Conclusion0104Form(conclusionSchema, Conclusion0104Document.WithGuid(document, guid), name,
-                (xml, title) => Conclusion0104Document.SaveAsync(conclusionSchema, xml, title, guid, replace), warnings: warnings)
+                (xml, title) => Conclusion0104Document.SaveAsync(conclusionSchema, xml, title, guid, replace, DocumentStatus.InProgress), warnings: warnings)
                 { ImportAttempt = attempt })
             {
                 if (editor.ShowDialog(this) == DialogResult.OK && editor.Document != null)
