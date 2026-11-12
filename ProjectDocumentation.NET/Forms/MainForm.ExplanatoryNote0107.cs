@@ -75,7 +75,7 @@ namespace ProjectDocumentation.NET.Forms
         {
             var version = ExplanatoryNote0107Document.ReadVersion(xml);
             using (var editor = new ExplanatoryNote0107Form(conclusionSchema, xml, name,
-                (document, title) => ExplanatoryNote0107Document.SaveAsync(conclusionSchema, document, title, guid, existing, version), warnings))
+                (document, title) => ExplanatoryNote0107Document.SaveAsync(conclusionSchema, document, title, guid, existing, version, allowIncomplete: true), warnings))
             {
                 if (editor.ShowDialog(this) == DialogResult.OK && editor.Document != null)
                 {

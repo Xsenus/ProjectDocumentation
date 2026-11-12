@@ -59,7 +59,7 @@ namespace ProjectDocumentation.NET.Forms
                 var document = Conclusion0104Document.Parse(await conclusionSchema.CreateAsync());
                 var guid = Conclusion0104Document.ReadGuid(document) ?? Guid.NewGuid();
                 using (var editor = new Conclusion0104Form(conclusionSchema, Conclusion0104Document.WithGuid(document, guid), "",
-                    (xml, name) => Conclusion0104Document.SaveAsync(conclusionSchema, xml, name, guid)))
+                    (xml, name) => Conclusion0104Document.SaveAsync(conclusionSchema, xml, name, guid, allowIncomplete: true)))
                 {
                     if (editor.ShowDialog(this) == DialogResult.OK && editor.Document != null)
                     {
@@ -79,7 +79,7 @@ namespace ProjectDocumentation.NET.Forms
             {
                 var guid = record.Guid ?? throw new InvalidOperationException("У заключения отсутствует идентификатор в базе.");
                 using (var editor = new Conclusion0104Form(conclusionSchema, record.GetObj(), record.Name,
-                    (xml, name) => Conclusion0104Document.SaveAsync(conclusionSchema, xml, name, guid, record), section))
+                    (xml, name) => Conclusion0104Document.SaveAsync(conclusionSchema, xml, name, guid, record, allowIncomplete: true), section))
                 {
                     if (editor.ShowDialog(this) == DialogResult.OK && editor.Document != null)
                     {
@@ -122,7 +122,7 @@ namespace ProjectDocumentation.NET.Forms
                 var document = Conclusion0104Document.Parse(migration.Xml);
                 var guid = Guid.NewGuid();
                 using (var editor = new Conclusion0104Form(conclusionSchema, Conclusion0104Document.WithGuid(document, guid),
-                    $"{source.Name} (01.04)", (xml, name) => Conclusion0104Document.SaveAsync(conclusionSchema, xml, name, guid),
+                    $"{source.Name} (01.04)", (xml, name) => Conclusion0104Document.SaveAsync(conclusionSchema, xml, name, guid, allowIncomplete: true),
                     warnings: migration.Warnings))
                 {
                     if (editor.ShowDialog(this) == DialogResult.OK && editor.Document != null)
