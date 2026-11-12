@@ -66,14 +66,31 @@ try {
             $env:NUGET_HTTP_CACHE_PATH = $oldHttpCache
         }
     }
-    Invoke-Checked $msbuild @('ProjectDocumentation.sln', '/t:Rebuild', '/p:Configuration=Release', "/p:OutDir=$desktop/", '/m', '/nr:false', '/v:minimal')
-
     $schemaData = Join-Path $repo 'schema_engine\schemas'
     $portalData = Join-Path $repo 'portal\dist'
     # PyInstaller's nested lxml resources need room under the Windows path limit.
     $tempRoot = (Resolve-Path -LiteralPath ([IO.Path]::GetTempPath())).Path.TrimEnd('\')
     $bundleWork = (New-Item -ItemType Directory -Path (Join-Path $tempRoot ('PD-' + [guid]::NewGuid().ToString('N').Substring(0, 10)))).FullName
     try {
+        $winforms = Join-Path $bundleWork 'winforms'
+        Invoke-Checked $msbuild @('ProjectDocumentation.sln', '/t:Rebuild', '/p:Configuration=Release', "/p:OutDir=$winforms/", '/m', '/nr:false', '/v:minimal')
+
+        $dll = (New-Item -ItemType Directory -Path (Join-Path $desktop 'dll')).FullName
+        $launchFiles = 'ProjectDocumentation.NET.exe', 'ProjectDocumentation.NET.exe.config' |
+            ForEach-Object { Join-Path $winforms $_ }
+        Copy-Item -LiteralPath $launchFiles -Destination $desktop
+        $libraries = Get-ChildItem -LiteralPath $winforms -File | Where-Object {
+            $_.Extension -eq '.dll' -or $_.Name.EndsWith('.dll.config', [StringComparison]::OrdinalIgnoreCase)
+        }
+        Copy-Item -LiteralPath $libraries.FullName -Destination $dll
+        foreach ($folder in @('ru', 'x86', 'x64', 'runtimes')) {
+            $dependency = Join-Path $winforms $folder
+            if (Test-Path -LiteralPath $dependency -PathType Container) {
+                Copy-Item -LiteralPath $dependency -Destination $dll -Recurse
+            }
+        }
+        Copy-Item -LiteralPath (Join-Path $winforms 'licenses') -Destination $desktop -Recurse
+
         $bundles = Join-Path $bundleWork 'dist'
         $bundleArguments = @(
             '-m', 'PyInstaller', '--noconfirm', '--onedir', '--name', 'ProjectDocumentation.Schema',
@@ -91,20 +108,37 @@ try {
             Remove-Item -LiteralPath $resolved -Recurse -Force
         }
     }
-    $requiredFiles = @('ProjectDocumentation.NET.exe', 'engine\ProjectDocumentation.Schema.exe')
+    Copy-Item -LiteralPath (Join-Path $repo 'LICENSE.txt') -Destination $desktop
+    $licenses = Join-Path $desktop 'licenses'
+    $findPythonLicenses = @'
+from importlib.metadata import distribution
+from sys import argv
+
+package = distribution(argv[1])
+for path in package.files or ():
+    if any(part.endswith('.dist-info') for part in path.parts) and path.name.lower().startswith(('license', 'copying')):
+        print(package.locate_file(path))
+'@
+    foreach ($package in @('xmlschema', 'elementpath', 'lxml')) {
+        $files = @(Invoke-Checked $SchemaPython @('-c', $findPythonLicenses, $package))
+        if (-not $files) { throw "Не найдена лицензия $package." }
+        $destination = (New-Item -ItemType Directory -Path (Join-Path $licenses $package)).FullName
+        Copy-Item -LiteralPath $files -Destination $destination
+    }
+
+    $requiredFiles = @(
+        'ProjectDocumentation.NET.exe', 'ProjectDocumentation.NET.exe.config', 'dll\Core.NET.dll',
+        'dll\System.Data.SQLite.dll', 'dll\x86\SQLite.Interop.dll', 'dll\x64\SQLite.Interop.dll',
+        'dll\Microsoft.Web.WebView2.Core.dll', 'dll\Microsoft.Web.WebView2.WinForms.dll',
+        'dll\runtimes\win-x86\native\WebView2Loader.dll', 'dll\runtimes\win-x64\native\WebView2Loader.dll',
+        'dll\runtimes\win-arm64\native\WebView2Loader.dll', 'engine\ProjectDocumentation.Schema.exe'
+    )
     if (-not $DesktopOnly) {
         $requiredFiles += 'engine\_internal\portal\dist\index.html'
+        foreach ($package in @('react', 'react-dom')) {
+            Copy-Item -LiteralPath (Join-Path $repo "portal\node_modules\$package\LICENSE") -Destination (Join-Path $licenses "$package.txt")
+        }
     }
-    Copy-Item -LiteralPath (Join-Path $repo 'docs') -Destination $desktop -Recurse
-    $portalDocs = Join-Path $desktop 'portal'
-    New-Item -ItemType Directory -Path $portalDocs -Force | Out-Null
-    Copy-Item -LiteralPath (Join-Path $repo 'portal\README.md') -Destination $portalDocs
-    $examples = Join-Path $desktop 'schema_engine\tests\fixtures'
-    New-Item -ItemType Directory -Path $examples -Force | Out-Null
-    foreach ($example in @('conclusion-01-04.xml', 'explanatorynote-01-07.xml')) {
-        Copy-Item -LiteralPath (Join-Path $repo "schema_engine\tests\fixtures\$example") -Destination $examples
-    }
-    $requiredFiles += 'docs\user-guide.md'
     foreach ($required in $requiredFiles) {
         if (-not (Test-Path -LiteralPath (Join-Path $desktop $required) -PathType Leaf)) {
             throw "Отсутствует файл комплекта $required."
