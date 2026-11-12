@@ -11,18 +11,32 @@ const host = window.chrome?.webview;
 const initialFamily = familyForId(new URLSearchParams(window.location.search).get('family'));
 const previewCsp = `<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; img-src data:; base-uri 'none'; form-action 'none'">`;
 
+function readFamilyDrafts(family) {
+  const saved = JSON.parse(localStorage.getItem(family.draftsKey) || '[]');
+  if (!Array.isArray(saved)) throw new Error('Не удалось прочитать черновики из хранилища браузера.');
+  return saved.filter(item => item && typeof item.id === 'string' &&
+    typeof item.name === 'string' && typeof item.xml === 'string');
+}
+
 function loadDrafts() {
   if (host) return {};
   return Object.fromEntries(Object.values(documentFamilies).map(family => {
     try {
-      const saved = JSON.parse(localStorage.getItem(family.draftsKey) || '[]');
-      const documents = Array.isArray(saved) ? saved.filter(item => item && typeof item.id === 'string' &&
-        typeof item.name === 'string' && typeof item.xml === 'string') : [];
-      return [family.id, documents];
+      return [family.id, readFamilyDrafts(family)];
     } catch {
       return [family.id, []];
     }
   }));
+}
+
+function requireUnchangedDraft(expected, current) {
+  if (JSON.stringify(expected) !== JSON.stringify(current)) {
+    throw new Error('Черновик изменён или удалён в другой вкладке. Откройте его заново или скачайте текущий XML.');
+  }
+}
+
+function DocumentStatus({ completed }) {
+  return <span className={'document-status' + (completed ? ' is-completed' : '')}>{completed ? 'Завершён' : 'В работе'}</span>;
 }
 
 function requestMessage(error) {
@@ -326,7 +340,7 @@ function App() {
     setRaw(canonical);
     setRawBase(canonical);
     setDirty(Boolean(options.dirty));
-    setActiveDraft(options.draftId || null);
+    setActiveDraft(options.draft || null);
     setProblem('');
     setNotice('');
   }
@@ -441,6 +455,18 @@ function App() {
     window.addEventListener('beforeunload', unload);
     return () => window.removeEventListener('beforeunload', unload);
   }, [dirty, rawDirty]);
+
+  useEffect(() => {
+    if (host) return undefined;
+    const keys = Object.values(documentFamilies).map(item => item.draftsKey);
+    const syncDrafts = event => {
+      if (event.storageArea === localStorage && (event.key === null || keys.includes(event.key))) {
+        setDraftsByFamily(loadDrafts());
+      }
+    };
+    window.addEventListener('storage', syncDrafts);
+    return () => window.removeEventListener('storage', syncDrafts);
+  }, []);
 
   function change(callback) {
     if (readOnly || desktopSavePending.current) return;
@@ -718,7 +744,7 @@ function App() {
         warnings: migration.warnings,
         original: original || { xml: migration.snapshot, name, familyId: family.id, version: currentDocumentVersion },
         dirty: true,
-        draftId: activeDraft,
+        draft: activeDraft,
       });
       setNotice('Открыт результат преобразования. Проверьте обязательные поля.');
     } catch (error) {
@@ -726,11 +752,25 @@ function App() {
     }
   }
 
-  function saveDraft() {
-    const id = activeDraft || crypto.randomUUID();
-    try {
-      const draft = {
-        id, name: name.trim() || defaultName(document), xml: serializeXml(document), updatedAt: new Date().toISOString(),
+  function updateDrafts(changeStored, afterCommit) {
+    const commit = () => {
+      const updated = changeStored(readFamilyDrafts(family));
+      try {
+        localStorage.setItem(family.draftsKey, JSON.stringify(updated));
+      } catch {
+        throw new Error('Браузер не смог записать изменения. Скачайте текущий документ как XML-черновик.');
+      }
+      setDraftsByFamily(previous => ({ ...previous, [family.id]: updated }));
+      afterCommit(updated);
+    };
+    return navigator.locks ? navigator.locks.request(family.draftsKey, commit) : commit();
+  }
+
+  function saveDraft(complete = false) {
+    const serial = revision.current;
+    run(complete ? 'Проверяю XML перед завершением' : 'Сохраняю в браузере', async () => {
+      const snapshot = {
+        id: activeDraft?.id || crypto.randomUUID(), name: name.trim() || defaultName(document), xml: serializeXml(document),
         original: original ? {
           name: original.name,
           familyId: original.familyId,
@@ -740,21 +780,34 @@ function App() {
         } : undefined,
         warnings: conversionWarnings,
       };
-      const updated = [draft, ...drafts.filter(item => item.id !== id)];
-      localStorage.setItem(family.draftsKey, JSON.stringify(updated));
-      setDraftsByFamily(previous => ({ ...previous, [family.id]: updated }));
-      setActiveDraft(id);
-      setDirty(false);
-      setNotice('Черновик сохранён в этом браузере.');
-    } catch {
-      setProblem('Браузер не смог сохранить черновик. Скачайте его в XML.');
-    }
+      if (complete) {
+        const result = await validateSnapshot(snapshot.xml, serial);
+        if (!result) {
+          setNotice('Документ изменился во время проверки. Повторите завершение.');
+          return;
+        }
+        if (result.valid !== true) return;
+      }
+      await updateDrafts(stored => {
+        if (!isExactRevision(revision, serial)) throw new Error('Документ изменился. Повторите сохранение.');
+        const previous = stored.find(item => item.id === snapshot.id) || null;
+        requireUnchangedDraft(activeDraft, previous);
+        const completed = complete || (previous?.status === 'completed' &&
+          previous.xml === snapshot.xml && previous.name === snapshot.name);
+        const saved = { ...snapshot, updatedAt: new Date().toISOString(), status: completed ? 'completed' : 'in-progress' };
+        return [saved, ...stored.filter(item => item.id !== snapshot.id)];
+      }, ([saved]) => {
+        setActiveDraft(saved);
+        setDirty(false);
+        setNotice(complete ? 'Документ завершён и сохранён в этом браузере.' : 'Черновик сохранён в этом браузере.');
+      });
+    });
   }
 
   function openDraft(draft) {
     if (!permitReplacement()) return;
     try {
-      replaceDocument(draft.xml, draft.name, { draftId: draft.id, original: draft.original, warnings: draft.warnings });
+      replaceDocument(draft.xml, draft.name, { draft, original: draft.original, warnings: draft.warnings });
       setWorkspace('editor');
     } catch (error) {
       setProblem(error.message);
@@ -763,17 +816,15 @@ function App() {
 
   function deleteDraft(draft) {
     if (!window.confirm('Удалить черновик «' + draft.name + '» из браузера?')) return;
-    const updated = drafts.filter(item => item.id !== draft.id);
-    try {
-      localStorage.setItem(family.draftsKey, JSON.stringify(updated));
-      setDraftsByFamily(previous => ({ ...previous, [family.id]: updated }));
-      if (activeDraft === draft.id) {
+    run('Удаляю черновик', () => updateDrafts(stored => {
+      requireUnchangedDraft(draft, stored.find(item => item.id === draft.id) || null);
+      return stored.filter(item => item.id !== draft.id);
+    }, () => {
+      if (activeDraft?.id === draft.id) {
         setActiveDraft(null);
         setDirty(true);
       }
-    } catch {
-      setProblem('Не удалось удалить черновик из хранилища браузера.');
-    }
+    }));
   }
 
   function navigateField(path) {
@@ -828,6 +879,7 @@ function App() {
 
   const readingFiles = fileReads > 0;
   const actionsDisabled = Boolean(busy || desktopSaving || readingFiles || rawDirty || !document);
+  const completed = activeDraft?.status === 'completed' && !dirty && !rawDirty;
   const editorLocked = readOnly || desktopSaving;
   const hasSchemaAssets = family.schemaVersions.includes(currentDocumentVersion);
   const hasPreview = family.stylesheetVersions.includes(currentDocumentVersion);
@@ -920,11 +972,14 @@ function App() {
               <p className="muted">{family.collection}, сохранённые в этом браузере.</p>
               {drafts.length ? <ul className="draft-list">{drafts.map(draft => (
                 <li key={draft.id}>
-                  <button type="button" className="draft-item" onClick={() => openDraft(draft)}>
+                  <button type="button" className="draft-item" disabled={Boolean(busy || readingFiles)} onClick={() => openDraft(draft)}>
                     <strong>{draft.name}</strong>
-                    <span>{new Date(draft.updatedAt).toLocaleString('ru-RU')}</span>
+                    <span className="draft-meta">
+                      <DocumentStatus completed={draft.status === 'completed'} />
+                      <span>{new Date(draft.updatedAt).toLocaleString('ru-RU')}</span>
+                    </span>
                   </button>
-                  <button type="button" className="text-button" onClick={() => deleteDraft(draft)}>Удалить</button>
+                  <button type="button" className="text-button" disabled={Boolean(busy || readingFiles)} onClick={() => deleteDraft(draft)}>Удалить</button>
                 </li>
               ))}</ul> : <p className="empty-state">Сохранённых черновиков пока нет.</p>}
             </section>
@@ -944,12 +999,15 @@ function App() {
                 <div>
                   <div className="document-meta">
                     <span className="version-label">XML {versionLabel(currentDocumentVersion)}</span>
+                    {!host && <DocumentStatus completed={completed} />}
                     {(dirty || rawDirty) && <span>Есть несохранённые изменения</span>}
                   </div>
                   <h1>{name.trim() || family.title}</h1>
                 </div>
                 <div className="document-actions">
                   <button type="button" className="button button-quiet" disabled={actionsDisabled} onClick={validateCurrent}>Проверить XML</button>
+                  {!host && <button type="button" className="button button-quiet" disabled={actionsDisabled || completed}
+                    onClick={() => saveDraft(true)}>Проверить XML и завершить</button>}
                   {host && !readOnly
                     ? <button type="button" className="button button-primary" disabled={actionsDisabled || currentDocumentVersion !== currentVersion}
                         onClick={desktopSave}>Сохранить</button>
@@ -974,7 +1032,7 @@ function App() {
                       </button>
                     )}
                     <FileActions>
-                      {!host && <button type="button" disabled={actionsDisabled} onClick={saveDraft}>Сохранить в браузере</button>}
+                      {!host && <button type="button" disabled={actionsDisabled} onClick={() => saveDraft()}>Сохранить в браузере</button>}
                       {host && currentDocumentVersion !== currentVersion && (
                         <button type="button" disabled={actionsDisabled} onClick={exportCurrent}>Выгрузить XML</button>
                       )}
